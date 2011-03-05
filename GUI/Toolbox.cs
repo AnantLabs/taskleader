@@ -17,7 +17,7 @@ namespace TaskLeader.GUI
         }
 
         /// <summary>
-        /// Chargement des différents composants
+        /// Chargement des différents composants au lancement de la toolbox
         /// </summary>
         private void Toolbox_Load(object sender, EventArgs e)
         {
@@ -36,8 +36,7 @@ namespace TaskLeader.GUI
 
             // Si un filtre est actif on l'affiche
             if (Filtre.CurrentFilter != null)
-                afficheActions(Filtre.CurrentFilter);
-
+                this.showFilter(Filtre.CurrentFilter);
         }
         
         // Rafraîchissement de la page
@@ -230,42 +229,45 @@ namespace TaskLeader.GUI
             }    
         }
 
-        // Application d'un filtre enregistré
+        /// <summary>
+        /// Application d'un filtre sur les différents widgets + affichage
+        /// </summary>
+        private void showFilter(Filtre filtre)
+        {              
+            // Passage de toutes les checkboxes à ALL
+            CtxtAllRadio.Checked = true;
+            destAllRadio.Checked = true;
+            statAllRadio.Checked = true;
+
+            // Tickage des bons critères
+            foreach (Criterium critere in filtre.criteria)
+            {
+                switch (critere.champ)
+                {
+                    case(0): //Contexte
+                        checkSelection(CtxtSelRadio, ctxtListBox, critere.selected);                          
+                        break;
+                    case(1): //Sujet
+                        checkSelection(SujSelRadio, sujetListBox, critere.selected);                          
+                        break;
+                    case(2): //Destinataire
+                        checkSelection(destSelRadio, destListBox, critere.selected);                          
+                        break;
+                    case(3): //Statut
+                        checkSelection(statSelRadio, statutListBox, critere.selected);
+                        break;
+                }
+            }
+
+            // Application du filtre
+            afficheActions(filtre);
+        }
+
+        // Ouverture d'un filtre enregistré
         private void openFilterBut_Click(object sender, EventArgs e)
         {
             if (filterCombo.Text != "")
-            {
-                // Récupération du filtre correspondant
-                Filtre filtre = ReadDB.Instance.getFilter(filterCombo.Text);
-                
-                // Passage de toutes les checkboxes à ALL
-                CtxtAllRadio.Checked = true;
-                destAllRadio.Checked = true;
-                statAllRadio.Checked = true;
-
-                // Tickage des bons critères
-                foreach (Criterium critere in filtre.criteria)
-                {
-                    switch (critere.champ)
-                    {
-                        case(0): //Contexte
-                            checkSelection(CtxtSelRadio, ctxtListBox, critere.selected);                          
-                            break;
-                        case(1): //Sujet
-                            checkSelection(SujSelRadio, sujetListBox, critere.selected);                          
-                            break;
-                        case(2): //Destinataire
-                            checkSelection(destSelRadio, destListBox, critere.selected);                          
-                            break;
-                        case(3): //Statut
-                            checkSelection(statSelRadio, statutListBox, critere.selected);
-                            break;
-                    }
-                }
-
-                // Application du filtre
-                afficheActions(filtre);
-            }
+                this.showFilter(ReadDB.Instance.getFilter(filterCombo.Text));
             else
                 MessageBox.Show("Veuillez entrer un nom de filtre", "Application d'un filtre", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
         }
