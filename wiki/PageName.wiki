@@ -1,0 +1,13 @@
+Changelog
+
+= Introduction =
+
+*v0.5.1*
+- Issue#5: affichage du dernier filtre quand toolbox affichée
+
+= Details =
+
+Add your content here.  Format your content with:
+  * Text in *bold* or _italic_
+  * Headings, paragraphs, and lists
+  * Automatic links to other wiki pages
