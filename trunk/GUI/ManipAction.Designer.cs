@@ -198,7 +198,7 @@
             this.MaximizeBox = false;
             this.Name = "ManipAction";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Titre de la fenetre dynamique";
+            this.Text = "TaskLeader - ";
             this.ResumeLayout(false);
             this.PerformLayout();
 

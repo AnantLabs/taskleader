@@ -57,7 +57,7 @@ namespace TaskLeader.GUI
 
             // On est dans le cas 1: création d'une nouvelle action
             type = 1;
-            this.Text = "Ajouter une action";
+            this.Text += "Ajouter une action";
 
             // Chargement des composants
             this.loadWidgets();
@@ -74,7 +74,7 @@ namespace TaskLeader.GUI
 
             // On est dans le cas 2: modification d'une action
             type = 2;
-            this.Text = "Modifier une action";
+            this.Text += "Modifier une action";
 
             // Chargement des composants
             this.loadWidgets();
