@@ -16,7 +16,9 @@ namespace TaskLeader.GUI
             InitializeComponent();
         }
 
-        // Chargement des différents composants.
+        /// <summary>
+        /// Chargement des différents composants
+        /// </summary>
         private void Toolbox_Load(object sender, EventArgs e)
         {
             this.Text += " v"+Application.ProductVersion;
@@ -31,6 +33,10 @@ namespace TaskLeader.GUI
 
             foreach (object item in ReadDB.Instance.getStatut()) // C'est pas bien mais il n'y a pas de code business
                 statutListBox.Items.Add(item,true); // Remplissage de la combobox statuts en sélectionnant par défaut
+
+            // Si un filtre est actif on l'affiche
+            if (Filtre.CurrentFilter != null)
+                afficheActions(Filtre.CurrentFilter);
 
         }
         
