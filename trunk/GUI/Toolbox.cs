@@ -114,15 +114,12 @@ namespace TaskLeader.GUI
         // Méthode générique d'affichage de la liste d'actions à partir d'un filtre
         private void afficheActions(Filtre filtre)
         {
+            // Récupération des résultats
             DataTable liste = DataManager.Instance.getActions(filtre);
+            grilleData.DataSource = liste.DefaultView; // Dans le pire des cas, seule la ligne de titre sera affichée
 
-            if (liste.Rows.Count > 0)
-                grilleData.DataSource = liste.DefaultView;
-            else
-            {
-                MessageBox.Show("Aucun résultat ne correspond au filtre", "Filtre d'actions", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                //grilleData.Rows.Clear(); //TODO:Il faut effacer la grille quand il n'y a pas de résultat
-            }
+            if (liste.Rows.Count == 0) // A voir si pas mieux en BalloonTip
+                MessageBox.Show("Aucun résultat ne correspond au filtre", "Filtre d'actions", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);                  
         }
 
         // Affichage des actions sur filtre manuel
