@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 using System.Configuration;
@@ -26,9 +27,15 @@ namespace TaskLeader.BLL
             }
         }
 
-        // Export vers presse-papier suivant un template
-        public void clipAction(String template,DataGridViewRow data)
+        /// <summary>
+        /// Export vers presse-papier à partir du template de la clé fournie
+        /// </summary>
+        public void clipAction(String key,DataGridViewRow data)
         {
+            //Récupération des templates d'export
+            NameValueCollection section = (NameValueCollection)ConfigurationManager.GetSection("ExportSection");
+            String template = section[key];
+
             // Remplacement des caractères spéciaux
             String resultat = template.Replace("(VIDE)", "");
             resultat = resultat.Replace("(TAB)", "\t");

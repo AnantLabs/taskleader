@@ -69,8 +69,6 @@
             this.button1 = new System.Windows.Forms.Button();
             this.outlookBout = new System.Windows.Forms.Button();
             this.listeContext = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.sensItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.sbaItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fermerLactionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grilleData)).BeginInit();
@@ -513,31 +511,15 @@
             // listeContext
             // 
             this.listeContext.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.sensItem,
-            this.sbaItem,
             this.fermerLactionToolStripMenuItem});
             this.listeContext.Name = "listeContext";
-            this.listeContext.Size = new System.Drawing.Size(189, 92);
-            // 
-            // sensItem
-            // 
-            this.sensItem.Name = "sensItem";
-            this.sensItem.Size = new System.Drawing.Size(188, 22);
-            this.sensItem.Text = "Copier vers suivi SEnS";
-            this.sensItem.Click += new System.EventHandler(this.copySens);
-            // 
-            // sbaItem
-            // 
-            this.sbaItem.Name = "sbaItem";
-            this.sbaItem.Size = new System.Drawing.Size(188, 22);
-            this.sbaItem.Text = "Copier vers PRM SBA";
-            this.sbaItem.Click += new System.EventHandler(this.copySBA);
+            this.listeContext.Size = new System.Drawing.Size(154, 48);
             // 
             // fermerLactionToolStripMenuItem
             // 
             this.fermerLactionToolStripMenuItem.Enabled = false;
             this.fermerLactionToolStripMenuItem.Name = "fermerLactionToolStripMenuItem";
-            this.fermerLactionToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
+            this.fermerLactionToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
             this.fermerLactionToolStripMenuItem.Text = "Fermer l\'action";
             // 
             // Toolbox
@@ -594,8 +576,6 @@
         private System.Windows.Forms.Button filtreBout;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.ContextMenuStrip listeContext;
-        private System.Windows.Forms.ToolStripMenuItem sensItem;
-        private System.Windows.Forms.ToolStripMenuItem sbaItem;
         private System.Windows.Forms.ToolStripMenuItem fermerLactionToolStripMenuItem;
         private System.Windows.Forms.ComboBox filterCombo;
         private System.Windows.Forms.Button saveFilterBut;
