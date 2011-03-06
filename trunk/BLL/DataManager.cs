@@ -101,14 +101,13 @@ namespace TaskLeader.BLL
         }
 
         // Update d'une action
-        public void updateAction(String contexte, String subject, String action, bool dateNotChosen, DateTime date, String destinataire, String stat, String id)
+        public void updateAction(String contexte, String subject, String action, bool dateNotChosen, DateTime date, String destinataire, bool statutChanged, String stat, String id)
         {
             String desAction = action;
 
-            // On rajoute une ligne d'historique si le statut est différent de Ouverte
-            if (stat != ReadDB.Instance.getDefaultStatus())
+            // On rajoute une ligne d'historique si le statut est différent de Ouverte et si le statut a changé
+            if (stat != ReadDB.Instance.getDefaultStatus() && statutChanged)
                 desAction += "\n Action "+stat+" le: " + DateTime.Now.ToString("dd-MM-yyyy");              
-            //Attention si l'utilisateur click sur sauvegarder alors que l'action a déjà été "clôturée" on écrit en double
             //TODO: griser le bouton Sauvegarder si rien n'a été édité
             //BUG: Pas de mise à la ligne dans ManipAction
 

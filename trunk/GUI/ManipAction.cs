@@ -10,6 +10,7 @@ namespace TaskLeader.GUI
     {
         int type;
         String idAction;
+        String initialStatus;
 
         // Partie commune au 2 constructeurs
         private void loadWidgets()
@@ -94,9 +95,11 @@ namespace TaskLeader.GUI
 
             destBox.Text = cells["Destinataire"].Value.ToString();
 
+            // On sauvegarde le statut initial
+            this.initialStatus = cells["Statut"].Value.ToString();
             // On sélectionne le statut
-            statutBox.SelectedItem = cells["Statut"].Value.ToString();
-
+            statutBox.SelectedItem = this.initialStatus;
+        
             // On récupère l'id de l'action qu'on veut modifier
             this.idAction = cells["id"].Value.ToString();
             
@@ -116,6 +119,7 @@ namespace TaskLeader.GUI
         private void sauveAction(object sender, EventArgs e)
         {       
             String action = desField.Text;
+            bool statusChanged;
 
             switch (type)
             {
@@ -137,8 +141,9 @@ namespace TaskLeader.GUI
                     break;
                 
             case 2:
+                statusChanged = !(statutBox.Text==this.initialStatus);
                 // Update de l'action avec les données entrées
-                DataManager.Instance.updateAction(contexteBox.Text, sujetBox.Text, action, dateChosen.Checked, actionDatePicker.Value, destBox.Text, statutBox.Text, idAction); 
+                DataManager.Instance.updateAction(contexteBox.Text, sujetBox.Text, action, dateChosen.Checked, actionDatePicker.Value, destBox.Text, statusChanged,statutBox.Text, idAction); 
                 // Fermeture de la fenêtre
                 this.Close();
                 break;            
