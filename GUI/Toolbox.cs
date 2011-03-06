@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Data;
 using System.Collections;
-using System.Windows.Forms;
+using System.Collections.Specialized;
 using System.Configuration;
+using System.Windows.Forms;
 using TaskLeader.DAL;
 using TaskLeader.BO;
 using TaskLeader.BLL;
@@ -37,6 +38,11 @@ namespace TaskLeader.GUI
             // Si un filtre est actif on l'affiche
             if (Filtre.CurrentFilter != null)
                 this.showFilter(Filtre.CurrentFilter);
+
+            // On rajoute les lignes qu'il faut dans le contextMenu de la liste d'actions
+            NameValueCollection section = (NameValueCollection)ConfigurationManager.GetSection("ExportSection");
+            foreach (string key in section)                
+                listeContext.Items.Add("Exporter vers " + key, null, this.exportRow);
         }
         
         // Rafraîchissement de la page
@@ -143,23 +149,23 @@ namespace TaskLeader.GUI
             {
                 //Sélection de la ligne
                 grilleData.Rows[e.RowIndex].Selected = true;
+
                 //Affichage du menu contextuel
                 listeContext.Show(Cursor.Position);
             }
         }
 
-        // Copie de l'action dans le presse papier avec le format SEnS => couche business
-        private void copySens(object sender, EventArgs e)
+        // Copie de l'action dans le presse-papier
+        private void exportRow(object sender, EventArgs e)
         {
-            Export.Instance.clipAction(ConfigurationManager.AppSettings["sensTemplate"], grilleData.SelectedRows[0]);
+            // Récupération de la clé d'export
+            String chaine = ((ToolStripItem)sender).Text;
+            String key = chaine.Substring(14, chaine.Length - 14);// Dépend du label du context menu
+
+            // On l'exporte
+            Export.Instance.clipAction(key, grilleData.SelectedRows[0]);
         }
 
-        // Copie de l'action dans le presse papier avec le format PRM SBA => couche business
-        private void copySBA(object sender, EventArgs e)
-        {
-            Export.Instance.clipAction(ConfigurationManager.AppSettings["sbaTemplate"], grilleData.SelectedRows[0]);
-        }
-        
         // Enregistrement du filtre renseigné
         private void saveFilterBut_Click(object sender, EventArgs e)
         {
