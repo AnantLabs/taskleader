@@ -107,9 +107,8 @@ namespace TaskLeader.BLL
 
             // On rajoute une ligne d'historique si le statut est différent de Ouverte et si le statut a changé
             if (stat != ReadDB.Instance.getDefaultStatus() && statutChanged)
-                desAction += "\n Action "+stat+" le: " + DateTime.Now.ToString("dd-MM-yyyy");              
+                desAction += Environment.NewLine+"Action "+stat+" le: " + DateTime.Now.ToString("dd-MM-yyyy");              
             //TODO: griser le bouton Sauvegarder si rien n'a été édité
-            //BUG: Pas de mise à la ligne dans ManipAction
 
             String bilan = "";
             int resultat;

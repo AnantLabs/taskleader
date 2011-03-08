@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Toolbox));
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.grilleData = new System.Windows.Forms.DataGridView();
@@ -69,7 +69,7 @@
             this.button1 = new System.Windows.Forms.Button();
             this.outlookBout = new System.Windows.Forms.Button();
             this.listeContext = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.fermerLactionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.statutTSMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grilleData)).BeginInit();
             this.flowLayoutPanel1.SuspendLayout();
@@ -114,14 +114,14 @@
             this.grilleData.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.DisplayedCells;
             this.grilleData.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.DisplayedCells;
             this.grilleData.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableAlwaysIncludeHeaderText;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.ControlDark;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.grilleData.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.ControlDark;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.grilleData.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
             this.grilleData.ColumnHeadersHeight = 30;
             this.grilleData.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.grilleData.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -130,12 +130,13 @@
             this.grilleData.Name = "grilleData";
             this.grilleData.ReadOnly = true;
             this.grilleData.RowHeadersVisible = false;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.grilleData.RowsDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.grilleData.RowsDefaultCellStyle = dataGridViewCellStyle4;
             this.grilleData.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.grilleData.Size = new System.Drawing.Size(238, 736);
             this.grilleData.TabIndex = 4;
             this.grilleData.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.modifAction);
+            this.grilleData.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.grilleData_CellFormatting);
             this.grilleData.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.grilleData_CellMouseClick);
             // 
             // flowLayoutPanel1
@@ -511,16 +512,15 @@
             // listeContext
             // 
             this.listeContext.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fermerLactionToolStripMenuItem});
+            this.statutTSMenuItem});
             this.listeContext.Name = "listeContext";
-            this.listeContext.Size = new System.Drawing.Size(154, 48);
+            this.listeContext.Size = new System.Drawing.Size(159, 48);
             // 
-            // fermerLactionToolStripMenuItem
+            // statutTSMenuItem
             // 
-            this.fermerLactionToolStripMenuItem.Enabled = false;
-            this.fermerLactionToolStripMenuItem.Name = "fermerLactionToolStripMenuItem";
-            this.fermerLactionToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
-            this.fermerLactionToolStripMenuItem.Text = "Fermer l\'action";
+            this.statutTSMenuItem.Name = "statutTSMenuItem";
+            this.statutTSMenuItem.Size = new System.Drawing.Size(158, 22);
+            this.statutTSMenuItem.Text = "Passer l\'action à";
             // 
             // Toolbox
             // 
@@ -576,7 +576,7 @@
         private System.Windows.Forms.Button filtreBout;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.ContextMenuStrip listeContext;
-        private System.Windows.Forms.ToolStripMenuItem fermerLactionToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem statutTSMenuItem;
         private System.Windows.Forms.ComboBox filterCombo;
         private System.Windows.Forms.Button saveFilterBut;
         private System.Windows.Forms.GroupBox groupBox3;
