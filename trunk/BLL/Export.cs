@@ -45,7 +45,7 @@ namespace TaskLeader.BLL
 
             // Remplacement de l'action en rentrant une formule excel pour les passages à la ligne
             String action = data.Cells["Titre"].Value.ToString().Replace("\"", "\"\"");
-            action = action.Replace("\r\n", "\"&CAR(10)&\""); // Attention compatible avec la version fr de excel seulement
+            action = action.Replace(Environment.NewLine, "\"&CAR(10)&\""); // Attention compatible avec la version fr de excel seulement
             action = "=\"" + action + "\"";
             resultat = resultat.Replace("(Action)", action);
 
