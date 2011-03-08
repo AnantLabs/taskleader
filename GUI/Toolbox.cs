@@ -1,4 +1,4 @@
-﻿using System;
+ using System;
 using System.Data;
 using System.Collections;
 using System.Collections.Specialized;
@@ -114,9 +114,24 @@ namespace TaskLeader.GUI
                 //Et on active "Sélection"
                 //SujSelRadio.Checked = true;
             }
-
         }
-
+        
+        // Mise en forme des cellules sous certaines conditions
+        //TODO: cette méthode donne l'impression de passer toutes les cellules, voir s'il existe la même méthode pour les rows
+        //TODO: lier cette méthode à l'évènement CellFormatting de grilleData
+        private void grilleData_CellFormatting(object sender,DataGridViewCellFormattingEventArgs e)
+        {
+            // Si la deadline est dépassée, la case est affichée sur fond rouge
+            if (grilleData.Columns[e.ColumnIndex].Name.Equals("Deadline"))
+            {
+                DateTime dateValue;
+                if (DateTime.TryParse((String)e.Value, out dateValue) && (dateValue.Compare(DateTime.Now)<0))
+                {
+                    e.CellStyle.BackColor = Color.Red;
+                    e.CellStyle.SelectionBackColor = Color.DarkRed;
+                }
+        }
+        
         // Méthode générique d'affichage de la liste d'actions à partir d'un filtre
         private void afficheActions(Filtre filtre)
         {
