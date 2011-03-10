@@ -1,4 +1,4 @@
-﻿using System;
+ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -133,6 +133,21 @@ namespace TaskLeader.BLL
             if (bilan.Length > 0) // On n'affiche un bilan que s'il s'est passé qqchose
                 TrayIcon.afficheMessage("Bilan modification",bilan.Substring(0, bilan.Length - 1)); // On supprime le dernier \n
         }
+        
+        public void updateAction(String action, String stat, String id)
+        {
+            // On rajoute une ligne d'historique si le statut est différent de Ouverte et si le statut a changé
+            action += Environment.NewLine+"Action "+stat+" le: " + DateTime.Now.ToString("dd-MM-yyyy");              
 
+            int resultat;
+
+            resultat = WriteDB.Instance.updateAction(action, stat,id);
+            if (resultat == 1)
+                String bilan = "Action mise à jour";
+
+            // On affiche un message de statut sur la TrayIcon
+            if (bilan.Length > 0) // On n'affiche un bilan que s'il s'est passé qqchose
+                TrayIcon.afficheMessage("Bilan modification",bilan);
+        }
     }
 }
