@@ -36,7 +36,7 @@ namespace TaskLeader.GUI
             foreach (object item in ReadDB.Instance.getStatut()) // C'est pas bien mais il n'y a pas de code business
             {
                 statutListBox.Items.Add(item, true); // Remplissage de la combobox statuts en sélectionnant par défaut
-                statutTSMenuItem.DropDown.Items.Add(item.ToString()); // Remplissage du DropDownMenu sur la liste
+                statutTSMenuItem.DropDown.Items.Add(item.ToString(),null,changeStatonClick); // Remplissage du DropDownMenu sur la liste
             }
             // Si un filtre est actif on l'affiche
             if (Filtre.CurrentFilter != null)
@@ -136,6 +136,18 @@ namespace TaskLeader.GUI
                     e.CellStyle.SelectionForeColor = Color.DarkRed;
                 }
             }
+        }
+        
+        // Mise à jour du statut d'une action via le menu contextuel
+        private void changeStatonClick(object sender,ToolStripItemClickedEventArgs e)
+        {
+            // Récupération du nouveauStatut
+            String newStat = e.ClickedItem.Text;
+            
+            // On met à jour le statut de l'action que s'il a changé
+            if (grilleData.SelectedRows[0].Cells["Statut"].Value.ToString()!= newStat)
+                // La méthode updateAction est trop lourde pour juste modifier un statut
+                // TODO: créer un object action qui permet de mettre à jour certains paramètres
         }
         
         // Méthode générique d'affichage de la liste d'actions à partir d'un filtre
