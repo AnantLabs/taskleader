@@ -124,7 +124,7 @@ namespace TaskLeader.BLL
 
             if (desAction != "")
             {
-                resultat = WriteDB.Instance.updateAction(contexte, subject, desAction, dueDate, destinataire, stat,id);
+                resultat = WriteDB.Instance.updateAction(true,contexte, true,subject, true,desAction, true, dueDate, true,destinataire, true,stat,id);
                 if (resultat == 1)
                     bilan += "Action mise à jour\n";
             }
@@ -134,20 +134,23 @@ namespace TaskLeader.BLL
                 TrayIcon.afficheMessage("Bilan modification",bilan.Substring(0, bilan.Length - 1)); // On supprime le dernier \n
         }
         
+        // Update d'une méthode
         public void updateAction(String action, String stat, String id)
         {
-            // On rajoute une ligne d'historique si le statut est différent de Ouverte et si le statut a changé
+            // On rajoute une ligne d'historique car on est sûr que le statut a changé
             action += Environment.NewLine+"Action "+stat+" le: " + DateTime.Now.ToString("dd-MM-yyyy");              
 
             int resultat;
+            String bilan = "";
 
-            resultat = WriteDB.Instance.updateAction(action, stat,id);
+            resultat = WriteDB.Instance.updateAction(false,"",false,"",true,action,false,"",false,"",true,stat,id);
             if (resultat == 1)
-                String bilan = "Action mise à jour";
-
+                bilan = "Action mise à jour";
+            
             // On affiche un message de statut sur la TrayIcon
             if (bilan.Length > 0) // On n'affiche un bilan que s'il s'est passé qqchose
                 TrayIcon.afficheMessage("Bilan modification",bilan);
+            
         }
     }
 }
