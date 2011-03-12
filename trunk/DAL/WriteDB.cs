@@ -131,7 +131,7 @@ namespace TaskLeader.DAL
         }
     
         // Insertion d'une nouvelle action
-        public int insertAction(String contexte, String subject, String desAction, String dueDate, String destinataire, String stat)
+        public int insertAction(String contexte, String subject, String desAction, String dueDate, String destinataire, String mailID, String stat)
         {
             //Syntaxe: INSERT INTO Actions (nom des colonnes avec ,) VALUES(valeurs avec ' et ,)     
 
@@ -171,9 +171,12 @@ namespace TaskLeader.DAL
                 valuePart += "(SELECT rowid FROM Destinataires WHERE Nom ="+dest+"),";
             }
 
-            insertPart += "IDMail,";
-            valuePart += "'N/A',"; // Pour l'instant l'IDmail n'est pas géré
-
+            if (mailID != "")
+            {
+                insertPart += "IDMail,";
+                valuePart += "'" + mailID.Replace("'", "''") + "',";
+            }
+ 
             String statut = "'" + stat.Replace("'", "''") + "'";
             insertPart += "StatID)";
             valuePart += "(SELECT rowid FROM Statuts WHERE Titre="+statut+"))";
