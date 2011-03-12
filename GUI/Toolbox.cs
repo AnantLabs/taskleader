@@ -312,5 +312,10 @@ namespace TaskLeader.GUI
                 MessageBox.Show("Veuillez entrer un nom de filtre", "Application d'un filtre", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
         }
 
+        private void outlookBout_Click(object sender, EventArgs e)
+        {
+            OutlookIF.Instance.displayTask();
+        }
+
     }
 }

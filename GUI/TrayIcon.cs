@@ -7,12 +7,15 @@ namespace TaskLeader.GUI
 {
     public class TrayIcon: ApplicationContext
     {
-
+        // Déclaration des composants IHM
         private static NotifyIcon trayIcon = new NotifyIcon();
         private ContextMenuStrip trayContext = new ContextMenuStrip();
         private ToolStripMenuItem newActionItem = new ToolStripMenuItem();
+        private ToolStripMenuItem newOutlookActionItem = new ToolStripMenuItem();
         private ToolStripMenuItem closeItem = new ToolStripMenuItem();
         private ToolStripMenuItem maximItem = new ToolStripMenuItem();
+
+        // Déclaration des composants métiers
 
         // Déclaration de tous les composants
         private void loadComponents()
@@ -25,7 +28,7 @@ namespace TaskLeader.GUI
             trayIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon1_MouseDoubleClick);
 
             // Menu contextuel de la trayIcon
-            this.trayContext.Items.AddRange(new ToolStripItem[] { this.newActionItem, this.maximItem, this.closeItem });
+            this.trayContext.Items.AddRange(new ToolStripItem[] { this.newActionItem, this.newOutlookActionItem, this.maximItem, this.closeItem });
             this.trayContext.Name = "trayContext";
             this.trayContext.ShowImageMargin = false;
             this.trayContext.Size = new System.Drawing.Size(126, 70);
@@ -37,6 +40,14 @@ namespace TaskLeader.GUI
             this.newActionItem.Text = "Nouvelle action";
             this.newActionItem.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.newActionItem.Click += new System.EventHandler(this.ajoutAction);
+
+            // Item "nouvelle action Outlook" du menu contextuel
+            this.newOutlookActionItem.Name = "newOutlookActionItem";
+            this.newOutlookActionItem.ShowShortcutKeys = false;
+            this.newOutlookActionItem.Size = new System.Drawing.Size(125, 22);
+            this.newOutlookActionItem.Text = "Nouvelle action Outlook";
+            this.newOutlookActionItem.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.newOutlookActionItem.Click += new System.EventHandler(this.ajoutAction);
 
             // Item "afficher Toolbox" du menu contextuel
             this.maximItem.Name = "maximItem";
@@ -88,7 +99,17 @@ namespace TaskLeader.GUI
         // Ajout d'action
         private void ajoutAction(object sender, EventArgs e)
         {
-            ManipAction fenetre = new ManipAction();
+            ToolStripMenuItem item = (ToolStripMenuItem)sender;
+            ManipAction fenetre;
+
+            if (item.Name=="newActionItem")
+                fenetre = new ManipAction();
+            else // C'est une nouvelle action Outlook
+            {
+                String[] outlookData = OutlookIF.Instance.getSelectedItem();
+                fenetre = new ManipAction(outlookData[0], outlookData[1]); //O:Sujet, 1:IDMail
+            }
+                
             fenetre.Show();
         }
 

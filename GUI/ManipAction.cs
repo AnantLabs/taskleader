@@ -11,6 +11,7 @@ namespace TaskLeader.GUI
         int type;
         String idAction;
         String initialStatus;
+        String mailID;
 
         // Partie commune au 2 constructeurs
         private void loadWidgets()
@@ -51,7 +52,7 @@ namespace TaskLeader.GUI
             destBox.Items.Clear();
         }
 
-        // Constructeur pour une création
+        // Constructeur pour une création from scratch
         public ManipAction()
         {
             InitializeComponent();
@@ -67,6 +68,29 @@ namespace TaskLeader.GUI
             statutBox.Text = ReadDB.Instance.getDefaultStatus();
         }
 
+        // Constructeur pour une création depuis Outlook
+        public ManipAction(String sujet, String IDMail)
+        {
+            InitializeComponent();
+
+            // On est dans le cas 1: création d'une nouvelle action
+            type = 1;
+            this.Text += "Ajouter une action";
+
+            // Chargement des composants
+            this.loadWidgets();
+
+            // On sélectionne le statut par défaut
+            statutBox.Text = ReadDB.Instance.getDefaultStatus();
+
+            // On affiche le sujet du mail dans la case action
+            desField.Text = sujet;
+
+            // On active le lien "Source Outlook"
+            lienMail.Visible = true;
+            this.mailID = IDMail;
+        }
+        
         // Constructeur pour un update
         public ManipAction(DataGridViewCellCollection cells)
         {
@@ -125,7 +149,7 @@ namespace TaskLeader.GUI
             {
             case 1:
                     // On crée une nouvelle action à partir des données rentrées
-                    DataManager.Instance.createAction(contexteBox.Text, sujetBox.Text, action, dateChosen.Checked, actionDatePicker.Value, destBox.Text, statutBox.Text);                    
+                    DataManager.Instance.createAction(contexteBox.Text, sujetBox.Text, action, dateChosen.Checked, actionDatePicker.Value, destBox.Text, mailID,statutBox.Text);                    
                     if (ConfigurationManager.AppSettings["newActionChained"] == "true")
                     {
                         // On simule la fermeture de la form pour rafraîchir la Toolbox

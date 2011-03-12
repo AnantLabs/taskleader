@@ -74,7 +74,7 @@ namespace TaskLeader.BLL
         }
 
         // Création d'une nouvelle action
-        public void createAction(String contexte, String subject, String desAction, bool dateNotChosen, DateTime date, String destinataire, String stat)
+        public void createAction(String contexte, String subject, String desAction, bool dateNotChosen, DateTime date, String destinataire, String mailID, String stat)
         {
             String bilan = "";
             int resultat;
@@ -90,7 +90,7 @@ namespace TaskLeader.BLL
 
             if (desAction != "")
             {
-                resultat = WriteDB.Instance.insertAction(contexte, subject, desAction, dueDate, destinataire, stat);
+                resultat = WriteDB.Instance.insertAction(contexte, subject, desAction, dueDate, destinataire, mailID, stat);
                 if (resultat == 1)
                     bilan += "Nouvelle action enregistrée\n";
             }
@@ -124,7 +124,7 @@ namespace TaskLeader.BLL
 
             if (desAction != "")
             {
-                resultat = WriteDB.Instance.updateAction(true,contexte, true,subject, true,desAction, true, dueDate, true,destinataire, true,stat,id);
+                resultat = WriteDB.Instance.updateAction(true,contexte, true,subject, true,desAction, true, dueDate, true,destinataire, statutChanged,stat,id);
                 if (resultat == 1)
                     bilan += "Action mise à jour\n";
             }
