@@ -181,22 +181,40 @@ namespace TaskLeader.DAL
             return execSQL(insertPart + valuePart);
         }
 
-        // Mise à jour d'une action
-        public int updateAction(String contexte, String subject, String desAction, String dueDate, String destinataire, String stat, String id)
+        // Mise à jour d'une action (flexible)
+        public int updateAction(bool ctxtUpdated, String contexte, bool sujtUpdated, String subject, bool actUpdated, String desAction, bool dateUpdated, String dueDate, bool destUpdated, String destinataire, bool statUpdated, String stat, String id)
         {
             // Préparation des sous requêtes
-            String ctxtPart = "(SELECT rowid FROM Contextes WHERE Titre=" + "'" + contexte.Replace("'", "''") + "')";
-            String sujetPart = "(SELECT rowid FROM Sujets WHERE Titre=" + "'" + subject.Replace("'", "''") + "')";
-            String action = "'" + desAction.Replace("'", "''") + "'";
-            String date = "'" + dueDate + "'";
-            String destPart = "(SELECT rowid FROM Destinataires WHERE Nom=" + "'" + destinataire.Replace("'", "''") + "')";
-            String statPart = "(SELECT rowid FROM Statuts WHERE Titre=" + "'" + stat.Replace("'", "''") + "')";
+            String ctxtPart = "";
+            if (ctxtUpdated)
+                ctxtPart = "CtxtID=(SELECT rowid FROM Contextes WHERE Titre=" + "'" + contexte.Replace("'", "''") + "'),";
 
-            String requete = "UPDATE Actions SET CtxtID=" + ctxtPart + ",SujtID=" + sujetPart + ",Titre=" + action + "," +
-                "DueDate=" + date + ",DestID=" + destPart + ",StatID=" + statPart + " WHERE rowid='" + id + "'";
+            String sujetPart = "";
+            if (sujtUpdated)
+                sujetPart = "SujtID=(SELECT rowid FROM Sujets WHERE Titre=" + "'" + subject.Replace("'", "''") + "'),";
+
+            String actionPart = "";
+            if (actUpdated)
+                actionPart = "Titre='" + desAction.Replace("'", "''") + "',";
+
+            String datePart = "";
+            if (dateUpdated)
+                datePart = "DueDate='" + dueDate + "',";
+
+            String destPart = "";
+            if (destUpdated)
+                destPart = "DestID=(SELECT rowid FROM Destinataires WHERE Nom=" + "'" + destinataire.Replace("'", "''") + "'),";
+
+            String statPart = "";
+            if (statUpdated)
+                statPart = "StatID=(SELECT rowid FROM Statuts WHERE Titre=" + "'" + stat.Replace("'", "''") + "'),";
+                // Il y a volontairement une virgule à la fin dans le cas où le statut n'a pas été mis à jour
+
+            String updatePart = ctxtPart + sujetPart + actionPart + datePart + destPart + statPart;
+
+            String requete = "UPDATE Actions SET " + updatePart.Substring(0,updatePart.Length-1) + " WHERE rowid='" + id + "'";
 
             return execSQL(requete);
         }
-
     }
 }
