@@ -501,13 +501,13 @@
             // 
             // outlookBout
             // 
+            this.outlookBout.Enabled = false;
             this.outlookBout.Image = global::TaskLeader.Properties.Resources.outlook;
             this.outlookBout.Location = new System.Drawing.Point(3, 85);
             this.outlookBout.Name = "outlookBout";
             this.outlookBout.Size = new System.Drawing.Size(35, 35);
             this.outlookBout.TabIndex = 1;
             this.outlookBout.UseVisualStyleBackColor = true;
-            this.outlookBout.Click += new System.EventHandler(this.outlookBout_Click);
             // 
             // listeContext
             // 

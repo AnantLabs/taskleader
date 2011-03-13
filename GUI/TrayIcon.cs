@@ -2,6 +2,7 @@
 using System.Configuration;
 using System.Windows.Forms;
 using TaskLeader.BLL;
+using System.Threading;
 
 namespace TaskLeader.GUI
 {
@@ -14,8 +15,10 @@ namespace TaskLeader.GUI
         private ToolStripMenuItem newOutlookActionItem = new ToolStripMenuItem();
         private ToolStripMenuItem closeItem = new ToolStripMenuItem();
         private ToolStripMenuItem maximItem = new ToolStripMenuItem();
-
+        
         // Déclaration des composants métiers
+        OutlookIF outlook;
+        ManipAction guiAction = new ManipAction();
 
         // Déclaration de tous les composants
         private void loadComponents()
@@ -70,7 +73,12 @@ namespace TaskLeader.GUI
 
             // Vérification de démarrage
             if (Init.Instance.canLaunch())
+            {
                 this.displayToolbox(); // Affichage de la Toolbox
+                this.outlook = new OutlookIF();
+                outlook.NewActionEvent += new NewActionHandler(outlook_NewActionEvent);
+                trayContext.CreateControl();
+            }
             else
                 this.closeApp(); // On ferme l'appli
         }
@@ -106,12 +114,31 @@ namespace TaskLeader.GUI
                 fenetre = new ManipAction();
             else // C'est une nouvelle action Outlook
             {
-                String[] outlookData = OutlookIF.Instance.getSelectedItem();
+                //String[] outlookData = OutlookIF.Instance.getSelectedItem(null,null);
+                String[] outlookData = { "Titi", "" };
                 fenetre = new ManipAction(outlookData[0], outlookData[1]); //O:Sujet, 1:IDMail
             }
                 
             fenetre.Show();
         }
+        
+
+        private void outlook_NewActionEvent(object sender, NewActionFromOutlook e)
+        {
+
+          this.guiAction.Invoke(new newActionfromOulookCallback(afficheActionForm), new object[] { e.sujet, e.id });
+            
+        }
+
+        delegate void newActionfromOulookCallback(String sujet, String id);
+
+        private void afficheActionForm(String sujet, String id)
+        {
+            this.guiAction.TopMost = true;
+            this.guiAction.updateField(sujet, id);
+            this.guiAction.Show();           
+        }
+        
 
         // Demande d'affichage de la Toolbox via le ContextMenuStrip
         private void maximItem_Click(object sender, EventArgs e)
