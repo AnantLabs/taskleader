@@ -56,6 +56,7 @@ namespace TaskLeader.GUI
         public ManipAction()
         {
             InitializeComponent();
+            this.CreateHandle();
 
             // On est dans le cas 1: création d'une nouvelle action
             type = 1;
@@ -66,6 +67,19 @@ namespace TaskLeader.GUI
 
             // On sélectionne le statut par défaut
             statutBox.Text = ReadDB.Instance.getDefaultStatus();
+        }
+
+        public void updateField(String sujet, String IDMail)
+        {
+            // On sélectionne le statut par défaut
+            statutBox.Text = ReadDB.Instance.getDefaultStatus();
+
+            // On affiche le sujet du mail dans la case action
+            desField.Text = sujet;
+
+            // On active le lien "Source Outlook"
+            lienMail.Visible = true;
+            this.mailID = IDMail;
         }
 
         // Constructeur pour une création depuis Outlook

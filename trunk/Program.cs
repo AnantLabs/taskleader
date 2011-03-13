@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using TaskLeader.GUI;
+using TaskLeader.BLL;
 
 namespace TaskLeader
 {
@@ -13,8 +14,8 @@ namespace TaskLeader
         static void Main()
         {
             Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-    
+            Application.SetCompatibleTextRenderingDefault(false);          
+
             //Affichage de la TrayIcon
             Application.Run(new TrayIcon());          
         }
