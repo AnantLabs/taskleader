@@ -12,13 +12,12 @@ namespace TaskLeader.GUI
         private static NotifyIcon trayIcon = new NotifyIcon();
         private ContextMenuStrip trayContext = new ContextMenuStrip();
         private ToolStripMenuItem newActionItem = new ToolStripMenuItem();
-        private ToolStripMenuItem newOutlookActionItem = new ToolStripMenuItem();
         private ToolStripMenuItem closeItem = new ToolStripMenuItem();
         private ToolStripMenuItem maximItem = new ToolStripMenuItem();
         
         // Déclaration des composants métiers
         OutlookIF outlook;
-        ManipAction guiAction = new ManipAction();
+        static Control invokeControl = new Control();
 
         // Déclaration de tous les composants
         private void loadComponents()
@@ -31,7 +30,7 @@ namespace TaskLeader.GUI
             trayIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon1_MouseDoubleClick);
 
             // Menu contextuel de la trayIcon
-            this.trayContext.Items.AddRange(new ToolStripItem[] { this.newActionItem, this.newOutlookActionItem, this.maximItem, this.closeItem });
+            this.trayContext.Items.AddRange(new ToolStripItem[] { this.newActionItem, this.maximItem, this.closeItem });
             this.trayContext.Name = "trayContext";
             this.trayContext.ShowImageMargin = false;
             this.trayContext.Size = new System.Drawing.Size(126, 70);
@@ -44,18 +43,10 @@ namespace TaskLeader.GUI
             this.newActionItem.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.newActionItem.Click += new System.EventHandler(this.ajoutAction);
 
-            // Item "nouvelle action Outlook" du menu contextuel
-            this.newOutlookActionItem.Name = "newOutlookActionItem";
-            this.newOutlookActionItem.ShowShortcutKeys = false;
-            this.newOutlookActionItem.Size = new System.Drawing.Size(125, 22);
-            this.newOutlookActionItem.Text = "Nouvelle action Outlook";
-            this.newOutlookActionItem.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.newOutlookActionItem.Click += new System.EventHandler(this.ajoutAction);
-
             // Item "afficher Toolbox" du menu contextuel
             this.maximItem.Name = "maximItem";
             this.maximItem.Size = new System.Drawing.Size(125, 22);
-            this.maximItem.Text = "Afficher toolbox";
+            this.maximItem.Text = "Afficher la liste";
             this.maximItem.Click += new System.EventHandler(this.maximItem_Click);
 
             // Item "fermer" du menu contextuel
@@ -76,8 +67,7 @@ namespace TaskLeader.GUI
             {
                 this.displayToolbox(); // Affichage de la Toolbox
                 this.outlook = new OutlookIF();
-                outlook.NewActionEvent += new NewActionHandler(outlook_NewActionEvent);
-                trayContext.CreateControl();
+                invokeControl.CreateControl();
             }
             else
                 this.closeApp(); // On ferme l'appli
@@ -104,41 +94,27 @@ namespace TaskLeader.GUI
             this.displayToolbox();
         }
 
-        // Ajout d'action
+        // Méthode permettant d'afficher le formulaire nouvelle action vide
         private void ajoutAction(object sender, EventArgs e)
         {
-            ToolStripMenuItem item = (ToolStripMenuItem)sender;
-            ManipAction fenetre;
+            new ManipAction().Show();
+        }
 
-            if (item.Name=="newActionItem")
-                fenetre = new ManipAction();
-            else // C'est une nouvelle action Outlook
+        //Délégué pour méthode newActionOutlook
+        delegate void newActionOutlookCallback(String sujet, String id);
+        // Méthode permettant d'afficher le formulaire nouvelle action avec les paramètres spécifiés
+        public static void newActionOutlook(String sujet, String id)
+        {
+            if (invokeControl.InvokeRequired)
+                invokeControl.Invoke(new newActionOutlookCallback(newActionOutlook), new object[] { sujet, id });
+            else
             {
-                //String[] outlookData = OutlookIF.Instance.getSelectedItem(null,null);
-                String[] outlookData = { "Titi", "" };
-                fenetre = new ManipAction(outlookData[0], outlookData[1]); //O:Sujet, 1:IDMail
-            }
-                
-            fenetre.Show();
-        }
-        
-
-        private void outlook_NewActionEvent(object sender, NewActionFromOutlook e)
-        {
-
-          this.guiAction.Invoke(new newActionfromOulookCallback(afficheActionForm), new object[] { e.sujet, e.id });
-            
-        }
-
-        delegate void newActionfromOulookCallback(String sujet, String id);
-
-        private void afficheActionForm(String sujet, String id)
-        {
-            this.guiAction.TopMost = true;
-            this.guiAction.updateField(sujet, id);
-            this.guiAction.Show();           
-        }
-        
+                ManipAction guiAction = new ManipAction(sujet, id);
+                guiAction.TopMost = true;
+                //TODO: il faut gérer le refresh de la toolbox si nécessaire
+                guiAction.Show();
+            }           
+        }      
 
         // Demande d'affichage de la Toolbox via le ContextMenuStrip
         private void maximItem_Click(object sender, EventArgs e)
