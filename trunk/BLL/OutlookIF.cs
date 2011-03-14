@@ -5,13 +5,10 @@ using TaskLeader.GUI;
 
 namespace TaskLeader
 {
-    public delegate void NewActionHandler(object sender, NewActionFromOutlook e);
-
     public class OutlookIF
     {
         // Variable locale pour la référence à l'application Outlook
         private Application outlook;
-        public event NewActionHandler NewActionEvent;
 
         // Constructeur
         public OutlookIF()
@@ -53,8 +50,8 @@ namespace TaskLeader
                 // Et du PR_INTERNET_MESSAGE_ID
                 String id = (String)props.GetProperty("http://schemas.microsoft.com/mapi/proptag/0x1035001E");
 
-                // On lève l'évènement "Nouvelle action depuis Outlook
-                NewActionEvent(this, new NewActionFromOutlook(sujet, id));
+                // On affiche la fenêtre nouvelle action Outlook
+                TrayIcon.newActionOutlook(sujet, id);
             }
             catch (System.Exception Ex)
             {
@@ -66,25 +63,6 @@ namespace TaskLeader
         private void search(String id)
         {
             outlook.ActiveExplorer().Search("",Microsoft.Office.Interop.Outlook.OlSearchScope.olSearchScopeAllFolders);
-        }
-    }
-
-    public class NewActionFromOutlook : EventArgs
-    {
-        // Sujet du mail sélectionné
-        private String v_sujet;
-        public string sujet {get{return v_sujet;}}
-
-        // ID du mail sélectionné
-        private String v_id;
-        public string id {get{return v_id;}}
-        
-
-        // The constructor will set the message
-        public NewActionFromOutlook(String subject, String mailID)
-        {
-            this.v_sujet = subject;
-            this.v_id = mailID;
         }
     }
 }
