@@ -2,6 +2,7 @@
 using System.Configuration;
 using System.Windows.Forms;
 using TaskLeader.BLL;
+using TaskLeader.BO;
 using System.Threading;
 
 namespace TaskLeader.GUI
@@ -97,19 +98,19 @@ namespace TaskLeader.GUI
         // Méthode permettant d'afficher le formulaire nouvelle action vide
         private void ajoutAction(object sender, EventArgs e)
         {
-            new ManipAction().Show();
+            new ManipAction(new TLaction()).Show();
         }
 
         //Délégué pour méthode newActionOutlook
-        delegate void newActionOutlookCallback(String sujet, String id);
+        delegate void newActionOutlookCallback(TLaction action);
         // Méthode permettant d'afficher le formulaire nouvelle action avec les paramètres spécifiés
-        public static void newActionOutlook(String sujet, String id)
+        public static void newActionOutlook(TLaction action)
         {
             if (invokeControl.InvokeRequired)
-                invokeControl.Invoke(new newActionOutlookCallback(newActionOutlook), new object[] { sujet, id });
+                invokeControl.Invoke(new newActionOutlookCallback(newActionOutlook), new object[] { action });
             else
             {
-                ManipAction guiAction = new ManipAction(sujet, id);
+                ManipAction guiAction = new ManipAction(action);
                 guiAction.TopMost = true;
                 //TODO: il faut gérer le refresh de la toolbox si nécessaire
                 guiAction.Show();

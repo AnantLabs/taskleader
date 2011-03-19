@@ -74,23 +74,18 @@ namespace TaskLeader.BLL
         }
 
         // Création d'une nouvelle action
-        public void createAction(String contexte, String subject, String desAction, bool dateNotChosen, DateTime date, String destinataire, String mailID, String stat)
+        //public void createAction(String contexte, String subject, String desAction, bool dateNotChosen, DateTime date, String destinataire, String mailID, String stat)
+        public void createAction(TLaction action)
         {
             String bilan = "";
             int resultat;
 
             // Vérification des nouveautés
-            bilan += verifAndInsert(contexte, subject, destinataire);
+            bilan += verifAndInsert(action.Texte, action.Sujet, action.Destinataire);               
 
-            String dueDate;
-            if (dateNotChosen)
-                dueDate = "";
-            else
-                dueDate = date.ToString("yyyy-MM-dd");                    
-
-            if (desAction != "")
+            if (action.Texte != "")
             {
-                resultat = WriteDB.Instance.insertAction(contexte, subject, desAction, dueDate, destinataire, mailID, stat);
+                resultat = WriteDB.Instance.insertAction(action);
                 if (resultat == 1)
                     bilan += "Nouvelle action enregistrée\n";
             }
