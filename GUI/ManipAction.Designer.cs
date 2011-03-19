@@ -188,6 +188,7 @@
             this.lienMail.Text = "Source Outlook";
             this.lienMail.Visible = false;
             this.lienMail.VisitedLinkColor = System.Drawing.Color.Blue;
+            this.lienMail.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lienMail_LinkClicked);
             // 
             // ManipAction
             // 

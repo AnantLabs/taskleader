@@ -43,8 +43,8 @@
   <ItemGroup>
     <Compile Include="BLL\DataManager.cs" />
     <Compile Include="BLL\Export.cs" />
-    <Compile Include="BLL\Import.cs" />
     <Compile Include="BLL\Init.cs" />
+    <Compile Include="BO\Action.cs" />
     <Compile Include="BO\Filtre.cs" />
     <Compile Include="DAL\ConnexionDB.cs" />
     <Compile Include="DAL\ReadDB.cs" />

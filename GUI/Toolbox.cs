@@ -79,7 +79,7 @@ namespace TaskLeader.GUI
         // Ouverture de la gui création d'action
         private void ajoutAction(object sender, EventArgs e)
         {
-            ManipAction fenetre = new ManipAction();
+            ManipAction fenetre = new ManipAction(new TLaction());
             fenetre.FormClosed += new FormClosedEventHandler(this.miseAjour); // Sur fermeture de ManipAction on update la Toolbox
             fenetre.Show();
         }
@@ -88,7 +88,17 @@ namespace TaskLeader.GUI
         private void modifAction(object sender, DataGridViewCellEventArgs e)
         {
             // Ouverture de la fenêtre ManipAction en mode édition
-            ManipAction fenetre = new ManipAction(grilleData.Rows[e.RowIndex].Cells);
+            DataGridViewCellCollection ligne = grilleData.Rows[e.RowIndex].Cells;
+
+            TLaction action = new TLaction(ligne["Titre"].Value.ToString());
+            action.ID = Convert.ToInt32(ligne["id"].Value);
+            action.Contexte = ligne["Contexte"].Value.ToString();
+            action.Sujet = ligne["Sujet"].Value.ToString();
+            action.parseDueDate(ligne["Deadline"].Value.ToString());
+            action.Destinataire = ligne["Destinataire"].Value.ToString();
+            action.Statut = ligne["Statut"].Value.ToString();
+            
+            ManipAction fenetre = new ManipAction(action);
             fenetre.FormClosed += new FormClosedEventHandler(this.miseAjour); // Sur fermeture de ManipAction on update la Toolbox
             fenetre.Show();
         }

@@ -131,7 +131,8 @@ namespace TaskLeader.DAL
         }
     
         // Insertion d'une nouvelle action
-        public int insertAction(String contexte, String subject, String desAction, String dueDate, String destinataire, String mailID, String stat)
+        //public int insertAction(String contexte, String subject, String desAction, String dueDate, String destinataire, String mailID, String stat)
+        public int insertAction(TLaction action)
         {
             //Syntaxe: INSERT INTO Actions (nom des colonnes avec ,) VALUES(valeurs avec ' et ,)     
 
@@ -140,46 +141,41 @@ namespace TaskLeader.DAL
             String valuePart = " VALUES (";
             String ctxt;
 
-            if (contexte != "")
+            if (action.Contexte != "")
             {
-                ctxt = "'" + contexte.Replace("'", "''") + "'";
                 insertPart += "CtxtID,";
-                valuePart += "(SELECT rowid FROM Contextes WHERE Titre = "+ctxt+"),";
+                valuePart += "(SELECT rowid FROM Contextes WHERE Titre = " + action.ContexteSQL + "),";
             }
 
-            if (subject != "")
+            if (action.Sujet != "")
             {
-                ctxt = "'" + contexte.Replace("'", "''") + "'";
-                String sujet = "'" + subject.Replace("'", "''") + "'";
                 insertPart += "SujtID,";
-                valuePart += "(SELECT id FROM VueSujets WHERE Contexte="+ctxt+" AND Titre="+sujet+"),";
+                valuePart += "(SELECT id FROM VueSujets WHERE Contexte=" + action.ContexteSQL + " AND Titre=" + action.SujetSQL + "),";
             }
 
-            insertPart += "Titre,";
-            valuePart += "'" + desAction.Replace("'", "''") + "',";
+            insertPart += "Titre,"; // On a déjà vérifier que la chaîne n'était pas nulle
+            valuePart += action.TexteSQL + ",";
 
-            if (dueDate != "")
+            if (action.hasDueDate)
             {
                 insertPart += "DueDate,";
-                valuePart += "'" + dueDate + "',";
+                valuePart += action.DueDateSQL + ",";
             }
 
-            if (destinataire != "")
+            if (action.Destinataire != "")
             {
-                String dest = "'" + destinataire.Replace("'", "''") + "'";
                 insertPart += "DestID,";
-                valuePart += "(SELECT rowid FROM Destinataires WHERE Nom ="+dest+"),";
+                valuePart += "(SELECT rowid FROM Destinataires WHERE Nom ="+action.DestinataireSQL+"),";
             }
 
-            if (mailID != "")
+            if (action.hasMailAttached)
             {
-                insertPart += "IDMail,";
-                valuePart += "'" + mailID.Replace("'", "''") + "',";
+                insertPart += "IDMail,";//TODO: il faut modifier la table
+                //valuePart += "'" + mailID.Replace("'", "''") + "',";
             }
  
-            String statut = "'" + stat.Replace("'", "''") + "'";
             insertPart += "StatID)";
-            valuePart += "(SELECT rowid FROM Statuts WHERE Titre="+statut+"))";
+            valuePart += "(SELECT rowid FROM Statuts WHERE Titre="+action.StatutSQL+"))";
 
             return execSQL(insertPart + valuePart);
         }

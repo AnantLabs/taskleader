@@ -16,6 +16,17 @@ namespace TaskLeader.DAL
 
         // Connexion à la base SQLite
         private SQLiteConnection SQLC = null;
+        // Renvoie la connection
+        public SQLiteConnection getConnection()
+        {
+            if (SQLC == null)
+                SQLC = new SQLiteConnection("Data Source=" + cheminDB);
+
+            if (SQLC.State == System.Data.ConnectionState.Closed)
+                SQLC.Open();
+
+            return SQLC;
+        }
 
         // "Schéma de base"
         // Colonne dans vueActions, Nom table principale, Nom champ titre, Nom table de filtre, Colonne All dans Filtres
@@ -42,17 +53,7 @@ namespace TaskLeader.DAL
             }
         }
 
-        // Renvoie la connection
-        public SQLiteConnection getConnection()
-        {
-            if (SQLC == null)
-                SQLC = new SQLiteConnection("Data Source=" + cheminDB);
-
-            if (SQLC.State == System.Data.ConnectionState.Closed)
-                SQLC.Open();
-                        
-            return SQLC;
-        }
+        
 
         // Ferme la connection
         public void closeConnection()
