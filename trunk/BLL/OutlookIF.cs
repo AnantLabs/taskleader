@@ -56,7 +56,9 @@ namespace TaskLeader
                 // Récupération du message-ID (PR_INTERNET_MESSAGE_ID)
                 action.MessageID = (String)item.PropertyAccessor.GetProperty(this.messageIDParam);
 
-                // On affiche la fenêtre nouvelle action OutlooSk
+                action.freezeInitState();
+
+                // On affiche la fenêtre nouvelle action Outlook
                 TrayIcon.newActionOutlook(action);
             }
             catch (System.Runtime.InteropServices.COMException e)

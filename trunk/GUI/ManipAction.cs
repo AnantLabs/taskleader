@@ -38,18 +38,7 @@ namespace TaskLeader.GUI
             this.loadWidgets();
             
             if (action.isScratchpad)
-            {
-                this.Text += "Ajouter une action";
-
-                // On sélectionne le statut par défaut
-                statutBox.Text = ReadDB.Instance.getDefaultStatus();
-
-                // On affiche le sujet du mail dans la case action
-                desField.Text = action.Texte;
-
-                // On active le lien "Source Outlook"
-                lienMail.Visible = action.mailIsAttached;
-            }
+                this.Text += "Ajouter une action";               
             else
             {
                 this.Text += "Modifier une action";
@@ -58,19 +47,25 @@ namespace TaskLeader.GUI
                 contexteBox.Text = action.Contexte;
                 sujetBox.Text = action.Sujet;
                 updateSujet(); // Mise à jour de la liste des sujets
-                desField.Text = action.Texte;
 
                 // Récupération de la dueDate entrée
                 if (action.hasDueDate)
                     actionDatePicker.Value = action.DueDate;
                 else
-                    dateChosen.Checked = true;
+                    noDueDate.Checked = true;              
+            }
 
-                destBox.Text = action.Destinataire;
+            // On active le lien "Source Outlook" si nécessaire
+            lienMail.Visible = action.hasMailAttached;
 
-                // On sélectionne le statut
-                statutBox.SelectedItem = action.Statut;
-            }                    
+            // On affiche le sujet du mail dans la case action
+            desField.Text = action.Texte;
+
+            // On affiche le destinataire
+            destBox.Text = action.Destinataire;
+
+            // On sélectionne le statut
+            statutBox.SelectedItem = action.Statut;        
         }
 
         // Mise à jour de la combobox présentant les sujets
@@ -99,7 +94,7 @@ namespace TaskLeader.GUI
 
             // On reset la date
             actionDatePicker.Value = DateTime.Now;
-            dateChosen.Checked = false;
+            noDueDate.Checked = false;
 
             // On reset les destinataires
             destBox.Text = "";
@@ -108,41 +103,34 @@ namespace TaskLeader.GUI
 
         // Sauvegarde de l'action
         private void sauveAction(object sender, EventArgs e)
-        {       
-            String action = desField.Text;
-            //bool statusChanged;
+        {
+            //TODO: griser le bouton Sauvegarder si rien n'a été édité
 
-            if(v_action.isScratchpad)
-            {
-                // Update de l'action avec les nouveaux champs
-                v_action.updateDefault(contexteBox.Text, sujetBox.Text, desField.Text, destBox.Text, statutBox.Text);
-                // Update de la DueDate que si c'est nécessaire
-                if (dateChosen.Checked)
-                    v_action.DueDate = actionDatePicker.Value;
+            // Update de l'action avec les nouveaux champs
+            v_action.updateDefault(contexteBox.Text, sujetBox.Text, desField.Text, destBox.Text, statutBox.Text);
 
-                // On crée une nouvelle action à partir des données rentrées
-                //DataManager.Instance.createAction(v_action);
-                    
-                if (ConfigurationManager.AppSettings["newActionChained"] == "true")
-                {
-                    // On simule la fermeture de la form pour rafraîchir la Toolbox
-                    this.OnFormClosed(new FormClosedEventArgs(CloseReason.None));                        
-                    // On reset tous les champs
-                    this.clearAllFields();
-                    // Et on recharge
-                    this.loadWidgets();   
-                }
-                else
-                    this.Close();// Fermeture de la fenêtre
-            }
+            // Update de la DueDate que si c'est nécessaire
+            if (noDueDate.Checked)
+                v_action.DueDate = DateTime.MinValue; // Remise à zéro de la dueDate
             else
+                v_action.DueDate = actionDatePicker.Value;
+
+            // On sauvegarde l'action
+            DataManager.Instance.saveAction(v_action);
+
+            if (v_action.isScratchpad && ConfigurationManager.AppSettings["newActionChained"] == "true")
             {
-                //statusChanged = !(statutBox.Text==this.initialStatus);
-                // Update de l'action avec les données entrées
-                //DataManager.Instance.updateAction(contexteBox.Text, sujetBox.Text, action, dateChosen.Checked, actionDatePicker.Value, destBox.Text, statusChanged,statutBox.Text, idAction); 
-                // Fermeture de la fenêtre
-                this.Close();          
-            }                   
+                // On simule la fermeture de la form pour rafraîchir la Toolbox
+                this.OnFormClosed(new FormClosedEventArgs(CloseReason.None));
+                // On reset tous les champs
+                this.clearAllFields();
+                // Et on recharge
+                this.loadWidgets();
+                return;
+            }
+
+            // Fermeture de la fenêtre
+            this.Close();                         
         }
 
         // Demande de mise à jour des sujets quand le contexte sélectionné change
@@ -154,7 +142,7 @@ namespace TaskLeader.GUI
         // Mise à jour du widget date en fonction de la sélection de la checkbox
         private void dateChosen_CheckedChanged(object sender, EventArgs e)
         {
-            actionDatePicker.Enabled = !dateChosen.Checked;
+            actionDatePicker.Enabled = !noDueDate.Checked;
         }
 
         private void lienMail_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

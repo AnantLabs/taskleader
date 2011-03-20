@@ -79,28 +79,55 @@ namespace TaskLeader.GUI
         // Ouverture de la gui création d'action
         private void ajoutAction(object sender, EventArgs e)
         {
-            ManipAction fenetre = new ManipAction(new TLaction());
+            TLaction action = new TLaction();
+            action.freezeInitState();
+
+            ManipAction fenetre = new ManipAction(action);
             fenetre.FormClosed += new FormClosedEventHandler(this.miseAjour); // Sur fermeture de ManipAction on update la Toolbox
             fenetre.Show();
         }
 
-        // Ouverture de la gui édition d'action
-        private void modifAction(object sender, DataGridViewCellEventArgs e)
+        // Méthode permettant de récupérer un objet TLaction à partir d'une collection de cellules
+        private TLaction getActionFromRow(DataGridViewCellCollection ligne)
         {
-            // Ouverture de la fenêtre ManipAction en mode édition
-            DataGridViewCellCollection ligne = grilleData.Rows[e.RowIndex].Cells;
-
             TLaction action = new TLaction(ligne["Titre"].Value.ToString());
-            action.ID = Convert.ToInt32(ligne["id"].Value);
+            action.ID = ligne["id"].Value.ToString();
             action.Contexte = ligne["Contexte"].Value.ToString();
             action.Sujet = ligne["Sujet"].Value.ToString();
             action.parseDueDate(ligne["Deadline"].Value.ToString());
             action.Destinataire = ligne["Destinataire"].Value.ToString();
             action.Statut = ligne["Statut"].Value.ToString();
-            
+
+            return action;
+        }
+
+        // Ouverture de la gui édition d'action
+        private void modifAction(object sender, DataGridViewCellEventArgs e)
+        {
+            // Récupération de l'action correspondant à la ligne
+            TLaction action = getActionFromRow(grilleData.Rows[e.RowIndex].Cells);
+            action.freezeInitState();
+
             ManipAction fenetre = new ManipAction(action);
             fenetre.FormClosed += new FormClosedEventHandler(this.miseAjour); // Sur fermeture de ManipAction on update la Toolbox
             fenetre.Show();
+        }
+
+        // Mise à jour du statut d'une action via le menu contextuel
+        private void changeStat(object sender, EventArgs e)
+        {
+            // Récupération de l'action
+            TLaction action = getActionFromRow(grilleData.SelectedRows[0].Cells);
+            action.freezeInitState();
+
+            // On récupère le nouveau statut
+            action.Statut = ((ToolStripItem)sender).Text;
+            
+            // On met à jour le statut de l'action que s'il a changé
+            if (action.statusHasChanged)
+                DataManager.Instance.saveAction(action);
+
+            this.miseAjour(null,null);
         }
 
         // Méthode appelée quand checks des contextes changent
@@ -148,21 +175,7 @@ namespace TaskLeader.GUI
             }
         }
         
-        // Mise à jour du statut d'une action via le menu contextuel
-        private void changeStat(object sender, EventArgs e)
-        {
-            // Récupération du nouveauStatut
-            ToolStripItem item = (ToolStripItem)sender;  
-            String newStat = item.Text;
-            
-            // On met à jour le statut de l'action que s'il a changé
-            if (grilleData.SelectedRows[0].Cells["Statut"].Value.ToString() != newStat)
-                DataManager.Instance.updateAction(grilleData.SelectedRows[0].Cells["Titre"].Value.ToString(),newStat,grilleData.SelectedRows[0].Cells["id"].Value.ToString());
-                // La méthode updateAction est trop lourde pour juste modifier un statut
-                // TODO: créer un object action qui permet de mettre à jour certains paramètres
-
-            this.miseAjour(null,null);
-        }
+        
         
         // Méthode générique d'affichage de la liste d'actions à partir d'un filtre
         private void afficheActions(Filtre filtre)
