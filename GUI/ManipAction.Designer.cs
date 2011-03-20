@@ -41,7 +41,7 @@
             this.contexteBox = new System.Windows.Forms.ComboBox();
             this.label6 = new System.Windows.Forms.Label();
             this.statutBox = new System.Windows.Forms.ComboBox();
-            this.dateChosen = new System.Windows.Forms.CheckBox();
+            this.noDueDate = new System.Windows.Forms.CheckBox();
             this.lienMail = new System.Windows.Forms.LinkLabel();
             this.SuspendLayout();
             // 
@@ -165,16 +165,16 @@
             this.statutBox.Size = new System.Drawing.Size(134, 21);
             this.statutBox.TabIndex = 23;
             // 
-            // dateChosen
+            // noDueDate
             // 
-            this.dateChosen.AutoSize = true;
-            this.dateChosen.Location = new System.Drawing.Point(280, 207);
-            this.dateChosen.Name = "dateChosen";
-            this.dateChosen.Size = new System.Drawing.Size(63, 17);
-            this.dateChosen.TabIndex = 24;
-            this.dateChosen.Text = "Aucune";
-            this.dateChosen.UseVisualStyleBackColor = true;
-            this.dateChosen.CheckedChanged += new System.EventHandler(this.dateChosen_CheckedChanged);
+            this.noDueDate.AutoSize = true;
+            this.noDueDate.Location = new System.Drawing.Point(280, 207);
+            this.noDueDate.Name = "noDueDate";
+            this.noDueDate.Size = new System.Drawing.Size(63, 17);
+            this.noDueDate.TabIndex = 24;
+            this.noDueDate.Text = "Aucune";
+            this.noDueDate.UseVisualStyleBackColor = true;
+            this.noDueDate.CheckedChanged += new System.EventHandler(this.dateChosen_CheckedChanged);
             // 
             // lienMail
             // 
@@ -196,7 +196,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(429, 305);
             this.Controls.Add(this.lienMail);
-            this.Controls.Add(this.dateChosen);
+            this.Controls.Add(this.noDueDate);
             this.Controls.Add(this.statutBox);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.saveButton);
@@ -235,7 +235,7 @@
         private System.Windows.Forms.ComboBox contexteBox;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.ComboBox statutBox;
-        private System.Windows.Forms.CheckBox dateChosen;
+        private System.Windows.Forms.CheckBox noDueDate;
         private System.Windows.Forms.LinkLabel lienMail;
 
 

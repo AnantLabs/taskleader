@@ -131,87 +131,106 @@ namespace TaskLeader.DAL
         }
     
         // Insertion d'une nouvelle action
-        //public int insertAction(String contexte, String subject, String desAction, String dueDate, String destinataire, String mailID, String stat)
-        public int insertAction(TLaction action)
+        public void insertAction(TLaction action)
         {
-            //Syntaxe: INSERT INTO Actions (nom des colonnes avec ,) VALUES(valeurs avec ' et ,)     
-
-            // Préparation des différents morceaux de la requête
-            String insertPart = "INSERT INTO Actions (";
-            String valuePart = " VALUES (";
-            String ctxt;
-
-            if (action.Contexte != "")
+            using (SQLiteTransaction mytransaction = ConnexionDB.Instance.getConnection().BeginTransaction())
             {
-                insertPart += "CtxtID,";
-                valuePart += "(SELECT rowid FROM Contextes WHERE Titre = " + action.ContexteSQL + "),";
+                using (SQLiteCommand SQLCmd = new SQLiteCommand(ConnexionDB.Instance.getConnection()))
+                {
+                    // Insertion des infos du mail joint si nécessaire
+                    if (action.hasMailAttached)
+                    {
+                        SQLCmd.CommandText = "INSERT INTO Mails VALUES("+action.StoreIDSQL+","+action.EntryIDSQL+","+action.MessageIDSQL+");";
+                        SQLCmd.ExecuteNonQuery();
+                    }
+
+                    //Syntaxe: INSERT INTO Actions (nom des colonnes avec ,) VALUES(valeurs avec ' et ,)     
+
+                    // Préparation des différents morceaux de la requête
+                    String insertPart = "INSERT INTO Actions (";
+                    String valuePart = " VALUES (";
+
+                    if (action.Contexte != "")
+                    {
+                        insertPart += "CtxtID,";
+                        valuePart += "(SELECT rowid FROM Contextes WHERE Titre = " + action.ContexteSQL + "),";
+                    }
+
+                    if (action.Sujet != "")
+                    {
+                        insertPart += "SujtID,";
+                        valuePart += "(SELECT id FROM VueSujets WHERE Contexte=" + action.ContexteSQL + " AND Titre=" + action.SujetSQL + "),";
+                    }
+
+                    insertPart += "Titre,"; // On a déjà vérifier que la chaîne n'était pas nulle
+                    valuePart += action.TexteSQL + ",";
+
+                    if (action.hasDueDate)
+                    {
+                        insertPart += "DueDate,";
+                        valuePart += action.DueDateSQL + ",";
+                    }
+
+                    if (action.Destinataire != "")
+                    {
+                        insertPart += "DestID,";
+                        valuePart += "(SELECT rowid FROM Destinataires WHERE Nom =" + action.DestinataireSQL + "),";
+                    }
+
+                    if (action.hasMailAttached)
+                    {
+                        insertPart += "IDMail,";
+                        valuePart += "(SELECT max(rowid) FROM Mails),";
+                    }
+
+                    insertPart += "StatID)";
+                    valuePart += "(SELECT rowid FROM Statuts WHERE Titre=" + action.StatutSQL + "))";
+
+                    SQLCmd.CommandText = insertPart + valuePart;
+                    SQLCmd.ExecuteNonQuery();
+                }
+                mytransaction.Commit();
             }
-
-            if (action.Sujet != "")
-            {
-                insertPart += "SujtID,";
-                valuePart += "(SELECT id FROM VueSujets WHERE Contexte=" + action.ContexteSQL + " AND Titre=" + action.SujetSQL + "),";
-            }
-
-            insertPart += "Titre,"; // On a déjà vérifier que la chaîne n'était pas nulle
-            valuePart += action.TexteSQL + ",";
-
-            if (action.hasDueDate)
-            {
-                insertPart += "DueDate,";
-                valuePart += action.DueDateSQL + ",";
-            }
-
-            if (action.Destinataire != "")
-            {
-                insertPart += "DestID,";
-                valuePart += "(SELECT rowid FROM Destinataires WHERE Nom ="+action.DestinataireSQL+"),";
-            }
-
-            if (action.hasMailAttached)
-            {
-                insertPart += "IDMail,";//TODO: il faut modifier la table
-                //valuePart += "'" + mailID.Replace("'", "''") + "',";
-            }
- 
-            insertPart += "StatID)";
-            valuePart += "(SELECT rowid FROM Statuts WHERE Titre="+action.StatutSQL+"))";
-
-            return execSQL(insertPart + valuePart);
         }
 
         // Mise à jour d'une action (flexible)
-        public int updateAction(bool ctxtUpdated, String contexte, bool sujtUpdated, String subject, bool actUpdated, String desAction, bool dateUpdated, String dueDate, bool destUpdated, String destinataire, bool statUpdated, String stat, String id)
+        public int updateAction(TLaction action)
         {
             // Préparation des sous requêtes
             String ctxtPart = "";
-            if (ctxtUpdated)
-                ctxtPart = "CtxtID=(SELECT rowid FROM Contextes WHERE Titre=" + "'" + contexte.Replace("'", "''") + "'),";
+            if (action.ctxtHasChanged)
+                ctxtPart = "CtxtID=(SELECT rowid FROM Contextes WHERE Titre=" + action.ContexteSQL+"),";
 
             String sujetPart = "";
-            if (sujtUpdated)
-                sujetPart = "SujtID=(SELECT rowid FROM Sujets WHERE Titre=" + "'" + subject.Replace("'", "''") + "'),";
+            if (action.sujetHasChanged)
+                sujetPart = "SujtID=(SELECT rowid FROM Sujets WHERE Titre=" + action.SujetSQL + "),";
 
             String actionPart = "";
-            if (actUpdated)
-                actionPart = "Titre='" + desAction.Replace("'", "''") + "',";
+            if (action.texteHasChanged)
+                actionPart = "Titre=" + action.TexteSQL + ",";
 
             String datePart = "";
-            if (dateUpdated)
-                datePart = "DueDate='" + dueDate + "',";
+            if (action.dueDateHasChanged)
+            {
+                if (action.hasDueDate)
+                    datePart = "DueDate=" + action.DueDateSQL + ",";
+                else
+                    datePart = "DueDate=NULL,";
+            }             
 
             String destPart = "";
-            if (destUpdated)
-                destPart = "DestID=(SELECT rowid FROM Destinataires WHERE Nom=" + "'" + destinataire.Replace("'", "''") + "'),";
+            if (action.destHasChanged)
+                destPart = "DestID=(SELECT rowid FROM Destinataires WHERE Nom=" + action.DestinataireSQL + "),";
 
             String statPart = "";
-            if (statUpdated)
-                statPart = "StatID=(SELECT rowid FROM Statuts WHERE Titre=" + "'" + stat.Replace("'", "''") + "'),";
+            if (action.statusHasChanged)
+                statPart = "StatID=(SELECT rowid FROM Statuts WHERE Titre=" + action.StatutSQL + "),";
                 // Il y a volontairement une virgule à la fin dans le cas où le statut n'a pas été mis à jour
 
             String updatePart = ctxtPart + sujetPart + actionPart + datePart + destPart + statPart;
 
-            String requete = "UPDATE Actions SET " + updatePart.Substring(0,updatePart.Length-1) + " WHERE rowid='" + id + "'";
+            String requete = "UPDATE Actions SET " + updatePart.Substring(0,updatePart.Length-1) + " WHERE rowid='" + action.ID + "'";
+            //TODO: et si rien n'a changé ?
 
             return execSQL(requete);
         }
