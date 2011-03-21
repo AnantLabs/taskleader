@@ -97,7 +97,21 @@ namespace TaskLeader.GUI
             action.parseDueDate(ligne["Deadline"].Value.ToString());
             action.Destinataire = ligne["Destinataire"].Value.ToString();
             action.Statut = ligne["Statut"].Value.ToString();
-
+            
+            // Récupération des informations du mail lié le cas échéant
+            if(ligne["Mail"]!=null)
+            {
+                // Récupération du tooltip de la cellule
+                String tooltip = ligne["Mail"].ToolTipText;
+                String mailID = tooltip.Substring(1, tooltip.Length - 1); // On élimine le '#'
+                
+                // Récupération des informations du mail
+                DataTable mailData = ReadDB.Instance.getMailData(mailID);
+                action.StoreID = mailData[0]["StoreID"].ToString();
+                action.EntryID = mailData[0]["EntryID"].ToString();
+                action.MessageID = mailData[0]["MessageID"].ToString();
+            }
+            
             return action;
         }
 
@@ -175,7 +189,7 @@ namespace TaskLeader.GUI
             // Si un mail est attaché, on affiche l'image de mail
             if (grilleData.Columns[e.ColumnIndex].Name.Equals("Mail") && e.Value != null)
             {
-              grilleData[e.ColumnIndex, e.RowIndex].ToolTipText = "Mail id:"+e.Value.ToString();
+              grilleData[e.ColumnIndex, e.RowIndex].ToolTipText = "#"+e.Value.ToString();
               e.Value = global::TaskLeader.Properties.Resources.mail;
             }
         }
