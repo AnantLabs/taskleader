@@ -120,9 +120,6 @@
     <None Include="Resources\outlook.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\refresh.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\sauve.png" />
   </ItemGroup>
   <ItemGroup>

@@ -38,14 +38,22 @@ namespace TaskLeader.GUI
                 statutListBox.Items.Add(item, true); // Remplissage de la combobox statuts en sélectionnant par défaut
                 statutTSMenuItem.DropDown.Items.Add(item.ToString(),null,this.changeStat); // Remplissage du DropDownMenu sur la liste
             }
-            // Si un filtre est actif on l'affiche
-            if (Filtre.CurrentFilter != null)
-                this.showFilter(Filtre.CurrentFilter);
+
+            // Création de la colonne mail
+            DataGridViewImageColumn mailCol = new DataGridViewImageColumn();
+            mailCol.Name = "Mail";
+            mailCol.DataPropertyName = "Mail";
+            mailCol.Visible = false;
+            grilleData.Columns.Add(mailCol);
 
             // On rajoute les lignes qu'il faut dans le contextMenu de la liste d'actions
             NameValueCollection section = (NameValueCollection)ConfigurationManager.GetSection("ExportSection");
-            foreach (string key in section)                
+            foreach (string key in section)
                 listeContext.Items.Add("Exporter vers " + key, null, this.exportRow);
+
+            // Si un filtre est actif on l'affiche
+            if (Filtre.CurrentFilter != null)
+                this.showFilter(Filtre.CurrentFilter);           
         }
         
         // Rafraîchissement de la page
@@ -99,17 +107,18 @@ namespace TaskLeader.GUI
             action.Statut = ligne["Statut"].Value.ToString();
             
             // Récupération des informations du mail lié le cas échéant
-            if(ligne["Mail"]!=null)
+            if(ligne["Mail"].Value.ToString() != "")//TODO: modifier quand les images seront gérées
             {
                 // Récupération du tooltip de la cellule
-                String tooltip = ligne["Mail"].ToolTipText;
-                String mailID = tooltip.Substring(1, tooltip.Length - 1); // On élimine le '#'
-                
+                //String tooltip = ligne["Mail"].ToolTipText;
+                //String mailID = tooltip.Substring(1, tooltip.Length - 1); // On élimine le '#'
+                String mailID = ligne["Mail"].Value.ToString();
+
                 // Récupération des informations du mail
                 DataTable mailData = ReadDB.Instance.getMailData(mailID);
-                action.StoreID = mailData[0]["StoreID"].ToString();
-                action.EntryID = mailData[0]["EntryID"].ToString();
-                action.MessageID = mailData[0]["MessageID"].ToString();
+                action.StoreID = mailData.Rows[0]["StoreID"].ToString();
+                action.EntryID = mailData.Rows[0]["EntryID"].ToString();
+                action.MessageID = mailData.Rows[0]["MessageID"].ToString();
             }
             
             return action;
@@ -187,19 +196,29 @@ namespace TaskLeader.GUI
             }
             
             // Si un mail est attaché, on affiche l'image de mail
-            if (grilleData.Columns[e.ColumnIndex].Name.Equals("Mail") && e.Value != null)
+            if (grilleData.Columns[e.ColumnIndex].Name.Equals("Mail"))
             {
-              grilleData[e.ColumnIndex, e.RowIndex].ToolTipText = "#"+e.Value.ToString();
-              e.Value = global::TaskLeader.Properties.Resources.mail;
+                if (e.Value as String != null)
+                {
+                    grilleData[e.ColumnIndex, e.RowIndex].ToolTipText = "#" + e.Value as String;
+                    e.Value = TaskLeader.Properties.Resources.outlook;
+                }
+                else
+                    e.CellStyle.NullValue = null;
             }
+            
         }
                 
         // Méthode générique d'affichage de la liste d'actions à partir d'un filtre
         private void afficheActions(Filtre filtre)
         {
-            // Récupération des résultats
-            DataTable liste = DataManager.Instance.getActions(filtre);
-            grilleData.DataSource = liste.DefaultView; // Dans le pire des cas, seule la ligne de titre sera affichée
+            // Récupération des résultats et association au tableau
+            DataTable liste = DataManager.Instance.getActions(filtre);                     
+            grilleData.DataSource = liste;
+
+            // Réorganisation des colonnes
+            grilleData.Columns["Mail"].DisplayIndex = 4;
+            grilleData.Columns["Mail"].Visible = true;
 
             if (liste.Rows.Count == 0) // A voir si pas mieux en BalloonTip
                 MessageBox.Show("Aucun résultat ne correspond au filtre", "Filtre d'actions", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);                  

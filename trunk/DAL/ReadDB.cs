@@ -160,7 +160,7 @@ namespace TaskLeader.DAL
         public DataTable getActions(Object[] criteria)
         {
             // Création de la requête de filtrage
-            String requete = "SELECT id, Contexte, Sujet, Titre, Deadline, Destinataire, Statut FROM VueActions";
+            String requete = "SELECT * FROM VueActions";
 
             String selection, nomColonne;
 
