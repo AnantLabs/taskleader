@@ -1,4 +1,4 @@
- /* 1. Suppression des valeurs de la colonne IDMail */
+﻿ /* 1. Suppression des valeurs de la colonne IDMail */
 
 UPDATE Actions SET IDMail=NULL WHERE IDMail IS NOT NULL; 
 
@@ -7,11 +7,11 @@ UPDATE Actions SET IDMail=NULL WHERE IDMail IS NOT NULL;
 CREATE TABLE [Mails] ([StoreID] VARCHAR NOT NULL, [EntryID] VARCHAR NOT NULL, [MessageID] VARCHAR NOT NULL);
 
 /* 3. Mise à jour de la vueActions */
-
+/* En fait çà n'est pas nécessaire vu que l'IDMAil était déjà récupéré*/
 DROP VIEW VueActions;
 
 CREATE VIEW VueActions AS
-   SELECT A.rowid as 'id', C.Titre as 'Contexte', Su.Titre as 'Sujet', A.Titre, A.IDMail as 'Mail', strftime("%d-%m-%Y",A.DueDate) as 'Deadline', D.Nom as 'Destinataire', A.IDMail, St.Titre as 'Statut'
+   SELECT A.rowid as 'id', C.Titre as 'Contexte', Su.Titre as 'Sujet', A.Titre, A.IDMail as 'Mail', strftime("%d-%m-%Y",A.DueDate) as 'Deadline', D.Nom as 'Destinataire', St.Titre as 'Statut'
    FROM Actions A
       LEFT OUTER JOIN Contextes C
          ON A.CtxtID = C.rowid
