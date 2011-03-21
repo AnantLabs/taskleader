@@ -1,4 +1,4 @@
-﻿using System;
+ using System;
 using System.Collections;
 using System.Data;
 using System.Data.SQLite;
@@ -275,6 +275,13 @@ namespace TaskLeader.DAL
                 return true;
             else
                 return false;
+        }
+        
+        // Récupération des informations d'un mail à partir de son ID
+        public DataTable getMailData(String id)
+        {
+            String requete = "SELECT * FROM Mails WHERE rowid='"+id+"'";
+            return getTable(requete);
         }
     }
 }
