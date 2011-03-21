@@ -159,24 +159,27 @@ namespace TaskLeader.GUI
         // Mise en forme des cellules sous certaines conditions
         private void grilleData_CellFormatting(object sender,DataGridViewCellFormattingEventArgs e)
         {
+            DateTime dateValue;
+            
             // Si la deadline est dépassée, la case est affichée sur fond rouge
-            if (grilleData.Columns[e.ColumnIndex].Name.Equals("Deadline"))
+            if (grilleData.Columns[e.ColumnIndex].Name.Equals("Deadline") && DateTime.TryParse(e.Value.ToString(), out dateValue) && dateValue.CompareTo(DateTime.Now) < 0)
             {
-                DateTime dateValue;
-                if (DateTime.TryParse(e.Value.ToString(), out dateValue) && (dateValue.CompareTo(DateTime.Now) < 0))
-                {
                     // On affiche la date en rouge et en gras
                     e.CellStyle.ForeColor = Color.Red;
                     e.CellStyle.Font = new Font(e.CellStyle.Font, FontStyle.Bold);
 
                     // Et en darkRed sur sélection
                     e.CellStyle.SelectionForeColor = Color.DarkRed;
-                }
+            }
+            
+            // Si un mail est attaché, on affiche l'image de mail
+            if (grilleData.Columns[e.ColumnIndex].Name.Equals("Mail") && e.Value != null)
+            {
+              grilleData[e.ColumnIndex, e.RowIndex].ToolTipText = "Mail id:"+e.Value.ToString();
+              e.Value = global::TaskLeader.Properties.Resources.mail;
             }
         }
-        
-        
-        
+                
         // Méthode générique d'affichage de la liste d'actions à partir d'un filtre
         private void afficheActions(Filtre filtre)
         {
