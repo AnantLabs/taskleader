@@ -1,5 +1,9 @@
-﻿using System;
-using Outlook=Microsoft.Office.Interop.Outlook;
+using System;
+using System.Diagnostics;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.InteropServices;
+using Outlook = Microsoft.Office.Interop.Outlook;
 using Microsoft.Office.Core;
 using TaskLeader.GUI;
 using TaskLeader.BO;
@@ -9,8 +13,21 @@ namespace TaskLeader
     public class OutlookIF
     {
         // Variable locale pour la référence à l'application Outlook
-        private Outlook.Application outlook;
+        private Outlook.Application outlook = null;
         private String messageIDParam = "http://schemas.microsoft.com/mapi/proptag/0x1035001E";
+        
+        // Vérification de la présence d'un process Outlook running
+        private bool outlookIsLaunched = (Process.GetProcessesByName("OUTLOOK").Count() > 0);
+        
+        // 'Connexion' à Outlook
+        private void connectToOutlook()
+        {
+            if(this.outlookIsLaunched)
+                outlook = Marshal.GetActiveObject("Outlook.Application") as Outlook.Application;
+            else
+                outlook = new Outlook.Application();
+                //Cela n'affiche pas l'application à priori              
+        }
 
         // Constructeur
         public OutlookIF()
@@ -28,10 +45,12 @@ namespace TaskLeader
         {
             if (Selection.Count == 1 && Selection[1] is Outlook.MailItem)
             {
+                //TODO: récupérer d'abord Controls pour pouvoir le libérer ensuite
                 CommandBarButton item = (CommandBarButton)menu.Controls.Add(MsoControlType.msoControlButton, 1, "", Type.Missing, true);
                 item.Caption = "Créer une action";
                 item.Visible = true;
-                item.Click += new Microsoft.Office.Core._CommandBarButtonEvents_ClickEventHandler(getSelectedItem); // declare event handler 
+                item.Click += new Microsoft.Office.Core._CommandBarButtonEvents_ClickEventHandler(getSelectedItem);
+                //TODO: libérer la ressource CommandBarButton  
             }
         }
 
@@ -60,6 +79,8 @@ namespace TaskLeader
 
                 // On affiche la fenêtre nouvelle action Outlook
                 TrayIcon.newActionOutlook(action);
+                
+              //TODO: libérer le MAPIFolder + le MailItem
             }
             catch (System.Runtime.InteropServices.COMException e)
             {
