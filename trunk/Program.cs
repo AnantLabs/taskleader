@@ -16,6 +16,9 @@ namespace TaskLeader
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);          
 
+            //Hook d'outlook
+            OutlookIF.Instance.hookOutlook();
+
             //Affichage de la TrayIcon
             Application.Run(new TrayIcon());          
         }

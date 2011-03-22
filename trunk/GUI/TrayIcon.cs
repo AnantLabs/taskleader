@@ -17,7 +17,6 @@ namespace TaskLeader.GUI
         private ToolStripMenuItem maximItem = new ToolStripMenuItem();
         
         // Déclaration des composants métiers
-        OutlookIF outlook;
         static Control invokeControl = new Control();
 
         // Déclaration de tous les composants
@@ -67,7 +66,6 @@ namespace TaskLeader.GUI
             if (Init.Instance.canLaunch())
             {
                 this.displayToolbox(); // Affichage de la Toolbox
-                this.outlook = new OutlookIF();
                 invokeControl.CreateControl();
             }
             else

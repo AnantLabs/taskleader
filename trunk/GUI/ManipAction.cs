@@ -147,8 +147,7 @@ namespace TaskLeader.GUI
 
         private void lienMail_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            OutlookIF outlook = new OutlookIF();
-            outlook.searchMail(this.v_action);
+            OutlookIF.Instance.displayMail(this.v_action);
         }
     }
 }
