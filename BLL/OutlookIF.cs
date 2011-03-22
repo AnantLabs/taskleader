@@ -1,7 +1,7 @@
 using System;
 using System.Diagnostics;
+using System.Management;
 using System.Linq;
-using System.Reflection;
 using System.Runtime.InteropServices;
 using Outlook = Microsoft.Office.Interop.Outlook;
 using Microsoft.Office.Core;
@@ -37,14 +37,30 @@ namespace TaskLeader
         // Ajout du menu contextuel à Outlook s'il est ouvert
         public void hookOutlook()
         {
-            if(this.outlookIsLaunched && this.outlook == null) // A priori outlook sera toujours nul mais mieux vaut vérifier
+            // Dans le cas suivant: this.outlookIsLaunched && this.outlook != null
+            // En théorie tout est ok sauf si on a pas releasé l'objet Application
+
+            if (this.outlookIsLaunched)
             {
                 this.outlook = Marshal.GetActiveObject("Outlook.Application") as Outlook.Application;
                 this.outlook.ItemContextMenuDisplay += new Outlook.ApplicationEvents_11_ItemContextMenuDisplayEventHandler(addEntrytoContextMenu);
                 //this.outlook.Quit += Outlook.ApplicationEvents_11_QuitEventHandler(); //Compléter avec le nom de la méthode
             }
-            //TODO: sinon lancer le process de surveillance des process
-        }              
+            else
+            {
+                ManagementEventWatcher startWatch =
+                    new ManagementEventWatcher(new WqlEventQuery("SELECT * FROM Win32_ProcessStartTrace WHERE ProcessName = 'OUTLOOK.EXE'"));
+                startWatch.EventArrived += new EventArrivedEventHandler(startWatch_EventArrived);
+                startWatch.Start();
+            }
+        }
+
+        private void startWatch_EventArrived(object sender, EventArrivedEventArgs e)
+        {
+            TrayIcon.afficheMessage("ProcessWatch", "Ouverture d'Outlook");
+            this.hookOutlook();
+            // On arrête le watch ?
+        }
 
         // Méthode jouée si contextmenu affiché sur une entrée
         private void addEntrytoContextMenu(CommandBar menu, Outlook.Selection Selection)
@@ -98,13 +114,17 @@ namespace TaskLeader
         // Affichage d'un mail à partir de son ID
         public void displayMail(TLaction action)
         {
-            // On s'assure que l'objet application est créé
-            if(this.outlook == null)
-                if(this.outlookIsLaunched)
+            // Récupération de l'objet Application
+            if (this.outlook == null && this.outlookIsLaunched)
                     outlook = Marshal.GetActiveObject("Outlook.Application") as Outlook.Application;
-                else
-                    outlook = new Outlook.Application(); //Cela n'affiche pas l'application à priori
-      
+            else if (this.outlook == null && !this.outlookIsLaunched)  
+                    outlook = new Outlook.ApplicationClass(); //Cela n'affiche pas l'application
+            else if (this.outlook != null && !this.outlookIsLaunched)
+            {
+                //TODO: l'objet application doit être relaché
+                outlook = new Outlook.ApplicationClass();
+            }                    
+
             /*
             Look into the database for all records that have value of our data equal to x.
             For each such record:
