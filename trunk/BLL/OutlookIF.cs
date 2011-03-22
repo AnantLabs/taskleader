@@ -16,29 +16,35 @@ namespace TaskLeader
         private Outlook.Application outlook = null;
         private String messageIDParam = "http://schemas.microsoft.com/mapi/proptag/0x1035001E";
         
+        // Variable locale pour stocker une référence vers l'instance
+        private static OutlookIF v_instance = null;
+
+        // Renvoie l'instance ou la crée
+        public static OutlookIF Instance
+        {
+            get
+            {
+                if (v_instance == null)
+                    v_instance = new OutlookIF();
+
+                return v_instance;
+            }
+        }
+        
         // Vérification de la présence d'un process Outlook running
         private bool outlookIsLaunched = (Process.GetProcessesByName("OUTLOOK").Count() > 0);
         
-        // 'Connexion' à Outlook
-        private void connectToOutlook()
+        // Ajout du menu contextuel à Outlook s'il est ouvert
+        public void hookOutlook()
         {
-            if(this.outlookIsLaunched)
-                outlook = Marshal.GetActiveObject("Outlook.Application") as Outlook.Application;
-            else
-                outlook = new Outlook.Application();
-                //Cela n'affiche pas l'application à priori              
-        }
-
-        // Constructeur
-        public OutlookIF()
-        {
-            // Création de l'object Outlook 
-            this.outlook = new Outlook.ApplicationClass();
-
-            // Récupération de l'évènement ItemContextMenuDisplay
-            this.outlook.ItemContextMenuDisplay += new Outlook.ApplicationEvents_11_ItemContextMenuDisplayEventHandler(addEntrytoContextMenu);
-            this.outlook.AdvancedSearchComplete += new Outlook.ApplicationEvents_11_AdvancedSearchCompleteEventHandler(outlook_AdvancedSearchComplete);
-        }
+            if(this.outlookIsLaunched && this.outlook == null) // A priori outlook sera toujours nul mais mieux vaut vérifier
+            {
+                this.outlook = Marshal.GetActiveObject("Outlook.Application") as Outlook.Application;
+                this.outlook.ItemContextMenuDisplay += new Outlook.ApplicationEvents_11_ItemContextMenuDisplayEventHandler(addEntrytoContextMenu);
+                //this.outlook.Quit += Outlook.ApplicationEvents_11_QuitEventHandler(); //Compléter avec le nom de la méthode
+            }
+            //TODO: sinon lancer le process de surveillance des process
+        }              
 
         // Méthode jouée si contextmenu affiché sur une entrée
         private void addEntrytoContextMenu(CommandBar menu, Outlook.Selection Selection)
@@ -88,7 +94,51 @@ namespace TaskLeader
                 TrayIcon.afficheMessage("Exception sur récupération Outlook", e.Message+"\n"+e.ErrorCode.ToString());
             }
         }
+        
+        // Affichage d'un mail à partir de son ID
+        public void displayMail(TLaction action)
+        {
+            // On s'assure que l'objet application est créé
+            if(this.outlook == null)
+                if(this.outlookIsLaunched)
+                    outlook = Marshal.GetActiveObject("Outlook.Application") as Outlook.Application;
+                else
+                    outlook = new Outlook.Application(); //Cela n'affiche pas l'application à priori
+      
+            /*
+            Look into the database for all records that have value of our data equal to x.
+            For each such record:
+                Find email in Outlook by record’s EntryId (fast). If found, done.
+                If not found it means the email has been moved or deleted:
+                    Find email in Outlook by record’s MessageId.
+                    If found, update the EntryId of the record in the database so that future searches are fast.
+                    If not found, the email does not exist (was deleted).
+            */
+            
+            Outlook.MailItem mail;
 
+            if (tryGetMailFromId(action.EntryID, action.StoreID, out mail))
+                mail.Display();
+            else
+            {
+                // Le mail a été déplacé où supprimé
+                TrayIcon.afficheMessage("Recherche", "çà va être long");
+                /*
+                const String PROPTAG = "http://schemas.microsoft.com/mapi/proptag/";
+                const String PR_INTERNETID = "0x1035001E";
+                String propName = PROPTAG + PR_INTERNETID;
+
+                String query = propName + "='" + messageID + "'";
+
+                String scope = "'" + outlook.ActiveExplorer().CurrentFolder.FolderPath + "'";
+                // Hook de l'évènement AdvancedSearchComplete
+                this.outlook.AdvancedSearchComplete += new Outlook.ApplicationEvents_11_AdvancedSearchCompleteEventHandler(outlook_AdvancedSearchComplete);
+                // Perform the search, asynchronously.
+                outlook.AdvancedSearch(scope, query, true, "SearchMail");
+               */
+            }      
+        }
+        
         // Récupération d'un mail en fonction de son entryID dans le store storeID
         private bool tryGetMailFromId(String entryId, String storeID, out Outlook.MailItem mail)
         {
@@ -108,41 +158,6 @@ namespace TaskLeader
                 throw;
             }
         }
-        
-        // Recherche un mail et l'affiche
-        public void searchMail(TLaction action)
-        {
-            /*
-            Look into the database for all records that have value of our data equal to x.
-            For each such record:
-                Find email in Outlook by record’s EntryId (fast). If found, done.
-                If not found it means the email has been moved or deleted:
-                    Find email in Outlook by record’s MessageId.
-                    If found, update the EntryId of the record in the database so that future searches are fast.
-                    If not found, the email does not exist (was deleted).
-            */
-            Outlook.MailItem mail;
-
-            if (tryGetMailFromId(action.EntryID, action.StoreID, out mail))
-                mail.Display();
-            else
-            {
-                // Le mail a été déplacé où supprimé
-                TrayIcon.afficheMessage("Recherche", "çà va être long");
-                /*
-                const String PROPTAG = "http://schemas.microsoft.com/mapi/proptag/";
-                const String PR_INTERNETID = "0x1035001E";
-                String propName = PROPTAG + PR_INTERNETID;
-
-                String query = propName + "='" + messageID + "'";
-
-                String scope = "'" + outlook.ActiveExplorer().CurrentFolder.FolderPath + "'";
-
-                // Perform the search, asynchronously.
-                outlook.AdvancedSearch(scope, query, true, "SearchMail");
-               */
-            }
-        }
 
         private void outlook_AdvancedSearchComplete(Outlook.Search searchObject)
         {
@@ -154,10 +169,8 @@ namespace TaskLeader
             }
             else
                 TrayIcon.afficheMessage("Recherche Outlook", "pas de résultats");
-
-            // Remove the handler, so you do not end up with multiple
-            // handlers for the same event. 
-            //outlook.AdvancedSearchComplete -= outlook_AdvancedSearchComplete; //pas sûr là.
+ 
+            outlook.AdvancedSearchComplete -= outlook_AdvancedSearchComplete;
         }
     }
 }
