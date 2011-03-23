@@ -56,10 +56,14 @@ namespace TaskLeader
         
         // Ajout du menu contextuel à Outlook
         private void hookOutlook()
-        {                          
-            // Création de l'entrée dans le menu contextuel
-            // TODO: attention si l'objet Application a été créé par displayMail ne rien faire! (sauf le hook de l'évènement)
-            this.outlook = Marshal.GetActiveObject("Outlook.Application") as Outlook.Application;
+        {
+            // Création de l'objet application
+            if (this.outlookIsLaunched)
+                this.outlook = Marshal.GetActiveObject("Outlook.Application") as Outlook.Application;
+            else
+                this.outlook = new Outlook.ApplicationClass();
+                
+            // Création de l'entrée dans le menu contextuel           
             this.outlook.ItemContextMenuDisplay += new Outlook.ApplicationEvents_11_ItemContextMenuDisplayEventHandler(addEntrytoContextMenu);          
         }
         
@@ -147,15 +151,8 @@ namespace TaskLeader
         public void displayMail(TLaction action)
         {
             // Récupération de l'objet Application
-            if (this.outlook == null && this.outlookIsLaunched)
-                    outlook = Marshal.GetActiveObject("Outlook.Application") as Outlook.Application;
-            else if (this.outlook == null && !this.outlookIsLaunched)  
-                    outlook = new Outlook.ApplicationClass(); //Cela n'affiche pas l'application
-            else if (this.outlook != null && !this.outlookIsLaunched)
-            {
-                //TODO: l'objet application doit être relaché
-                outlook = new Outlook.ApplicationClass();
-            }                    
+            if (this.outlook == null)
+                this.startWatch_EventArrived(null,null); //Simulation de l'évènement ouverture d'Outlook     
 
             /*
             Look into the database for all records that have value of our data equal to x.
