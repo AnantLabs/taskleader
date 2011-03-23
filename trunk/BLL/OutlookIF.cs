@@ -12,14 +12,18 @@ namespace TaskLeader
 {
     public class OutlookIF
     {
-        // Variable locale pour la référence à l'application Outlook
+        // Attributs métiers       
         private Outlook.Application outlook = null;
         private String messageIDParam = "http://schemas.microsoft.com/mapi/proptag/0x1035001E";
         
-        // Variable locale pour stocker une référence vers l'instance
-        private static OutlookIF v_instance = null;
+        // Process watch
+        private ManagementEventWatcher startWatch =
+            new ManagementEventWatcher(new WqlEventQuery("SELECT * FROM Win32_ProcessStartTrace WHERE ProcessName = 'OUTLOOK.EXE'"));
+        private ManagementEventWatcher stopWatch =
+            new ManagementEventWatcher(new WqlEventQuery("SELECT * FROM Win32_ProcessStopTrace WHERE ProcessName = 'OUTLOOK.EXE'"));      
 
-        // Renvoie l'instance ou la crée
+        // Gestion du singleton
+        private static OutlookIF v_instance = null;
         public static OutlookIF Instance
         {
             get
@@ -31,35 +35,63 @@ namespace TaskLeader
             }
         }
         
+        private OutlookIF()
+        {
+            // Récupération des évènements EventArrived
+            startWatch.EventArrived += new EventArrivedEventHandler(startWatch_EventArrived);
+            stopWatch.EventArrived += new EventArrivedEventHandler(stopWatch_EventArrived);         
+        }
+        
         // Vérification de la présence d'un process Outlook running
         private bool outlookIsLaunched = (Process.GetProcessesByName("OUTLOOK").Count() > 0);
         
-        // Ajout du menu contextuel à Outlook s'il est ouvert
-        public void hookOutlook()
+        //Tentative de connexion à Outlook
+        public void tryHook()
         {
-            // Dans le cas suivant: this.outlookIsLaunched && this.outlook != null
-            // En théorie tout est ok sauf si on a pas releasé l'objet Application
-
             if (this.outlookIsLaunched)
-            {
-                this.outlook = Marshal.GetActiveObject("Outlook.Application") as Outlook.Application;
-                this.outlook.ItemContextMenuDisplay += new Outlook.ApplicationEvents_11_ItemContextMenuDisplayEventHandler(addEntrytoContextMenu);
-                //this.outlook.Quit += Outlook.ApplicationEvents_11_QuitEventHandler(); //Compléter avec le nom de la méthode
-            }
+                this.hookOutlook();
             else
-            {
-                ManagementEventWatcher startWatch =
-                    new ManagementEventWatcher(new WqlEventQuery("SELECT * FROM Win32_ProcessStartTrace WHERE ProcessName = 'OUTLOOK.EXE'"));
-                startWatch.EventArrived += new EventArrivedEventHandler(startWatch_EventArrived);
-                startWatch.Start();
-            }
+                this.startWatch.Start();     
+        }
+        
+        // Ajout du menu contextuel à Outlook
+        private void hookOutlook()
+        {                          
+            // Création de l'entrée dans le menu contextuel
+            // TODO: attention si l'objet Application a été créé par displayMail ne rien faire! (sauf le hook de l'évènement)
+            this.outlook = Marshal.GetActiveObject("Outlook.Application") as Outlook.Application;
+            this.outlook.ItemContextMenuDisplay += new Outlook.ApplicationEvents_11_ItemContextMenuDisplayEventHandler(addEntrytoContextMenu);          
+        }
+        
+        // Nettoyage des objets
+        private void clean()
+        {
+            Marshal.FinalReleaseComObject(this.outlook); 
+            this.outlook = null;
         }
 
         private void startWatch_EventArrived(object sender, EventArrivedEventArgs e)
         {
-            TrayIcon.afficheMessage("ProcessWatch", "Ouverture d'Outlook");
+            // Arrêt de l'écoute de l'ouverture
+            this.startWatch.Stop();
+            
+            TrayIcon.afficheMessage("ProcessWatch", "Ouverture d'Outlook");           
             this.hookOutlook();
-            // On arrête le watch ?
+            
+            // Démarrage de l'écoute de la fermeture
+            this.stopWatch.Start();
+        }
+        
+        private void stopWatch_EventArrived(object sender, EventArrivedEventArgs e)
+        {
+            // Arrêt de l'écoute de la fermeture
+            this.stopWatch.Stop();
+            
+            TrayIcon.afficheMessage("ProcessWatch", "Fermeture d'Outlook");           
+            this.clean();
+            
+            // Démarrage de l'écoute de l'ouverture
+            this.startWatch.Start();
         }
 
         // Méthode jouée si contextmenu affiché sur une entrée
