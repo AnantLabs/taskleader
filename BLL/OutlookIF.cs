@@ -43,7 +43,7 @@ namespace TaskLeader
         }
         
         // Vérification de la présence d'un process Outlook running
-        private bool outlookIsLaunched = (Process.GetProcessesByName("OUTLOOK").Count() > 0);
+        private bool outlookIsLaunched = (Process.GetProcessesByName("outlook").Count() > 0);
         
         //Tentative de connexion à Outlook
         public void tryHook()
