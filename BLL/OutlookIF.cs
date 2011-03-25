@@ -40,7 +40,10 @@ namespace TaskLeader
         public void tryHook()
         {
             if (this.outlookIsLaunched)
+            {
                 this.hookOutlook();
+                this.stopWatch.Start();
+            }               
             else
                 this.startWatch.Start();     
         }
