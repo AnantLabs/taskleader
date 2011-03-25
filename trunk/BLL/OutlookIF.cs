@@ -17,28 +17,19 @@ namespace TaskLeader
         private String messageIDParam = "http://schemas.microsoft.com/mapi/proptag/0x1035001E";
         
         // Process watch
-        private ManagementEventWatcher startWatch =
-            new ManagementEventWatcher(new WqlEventQuery("SELECT * FROM Win32_ProcessStartTrace WHERE ProcessName = 'OUTLOOK.EXE'"));
-        private ManagementEventWatcher stopWatch =
-            new ManagementEventWatcher(new WqlEventQuery("SELECT * FROM Win32_ProcessStopTrace WHERE ProcessName = 'OUTLOOK.EXE'"));      
+        private ManagementEventWatcher startWatch;
+        private ManagementEventWatcher stopWatch;
 
-        // Gestion du singleton
-        private static OutlookIF v_instance = null;
-        public static OutlookIF Instance
-        {
-            get
-            {
-                if (v_instance == null)
-                    v_instance = new OutlookIF();
-
-                return v_instance;
-            }
-        }
+        // Static Initialization Singleton Pattern
+        private static readonly OutlookIF v_instance = new OutlookIF();
+        public static OutlookIF Instance{get{return v_instance;}}
         
         private OutlookIF()
         {
-            // Récupération des évènements EventArrived
+            // Création des processWatchers
+            startWatch = new ManagementEventWatcher(new WqlEventQuery("SELECT * FROM Win32_ProcessStartTrace WHERE ProcessName = 'OUTLOOK.EXE'"));
             startWatch.EventArrived += new EventArrivedEventHandler(startWatch_EventArrived);
+            stopWatch = new ManagementEventWatcher(new WqlEventQuery("SELECT * FROM Win32_ProcessStopTrace WHERE ProcessName = 'OUTLOOK.EXE'"));
             stopWatch.EventArrived += new EventArrivedEventHandler(stopWatch_EventArrived);         
         }
         
