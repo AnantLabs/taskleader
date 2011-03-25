@@ -28,9 +28,9 @@ namespace TaskLeader
         {
             // Création des processWatchers
             startWatch = new ManagementEventWatcher(new WqlEventQuery("SELECT * FROM Win32_ProcessStartTrace WHERE ProcessName = 'OUTLOOK.EXE'"));
-            startWatch.EventArrived += new EventArrivedEventHandler(startWatch_EventArrived);
+            //startWatch.EventArrived += new EventArrivedEventHandler(startWatch_EventArrived);
             stopWatch = new ManagementEventWatcher(new WqlEventQuery("SELECT * FROM Win32_ProcessStopTrace WHERE ProcessName = 'OUTLOOK.EXE'"));
-            stopWatch.EventArrived += new EventArrivedEventHandler(stopWatch_EventArrived);         
+            //stopWatch.EventArrived += new EventArrivedEventHandler(stopWatch_EventArrived);         
         }
         
         // Vérification de la présence d'un process Outlook running
@@ -39,13 +39,15 @@ namespace TaskLeader
         //Tentative de connexion à Outlook
         public void tryHook()
         {
-            if (this.outlookIsLaunched)
+            while(true)
             {
+                if (!this.outlookIsLaunched)
+                    startWatch.WaitForNextEvent();
+                
                 this.hookOutlook();
-                this.stopWatch.Start();
-            }               
-            else
-                this.startWatch.Start();     
+                stopWatch.WaitForNextEvent();
+                this.clean();
+            }  
         }
         
         // Ajout du menu contextuel à Outlook
@@ -67,7 +69,7 @@ namespace TaskLeader
             Marshal.FinalReleaseComObject(this.outlook); 
             this.outlook = null;
         }
-
+        /*
         private void startWatch_EventArrived(object sender, EventArrivedEventArgs e)
         {
             // Arrêt de l'écoute de l'ouverture
@@ -91,7 +93,8 @@ namespace TaskLeader
             // Démarrage de l'écoute de l'ouverture
             this.startWatch.Start();
         }
-
+        */
+        
         // Méthode jouée si contextmenu affiché sur une entrée
         private void addEntrytoContextMenu(CommandBar menu, Outlook.Selection Selection)
         {
