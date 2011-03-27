@@ -13,6 +13,7 @@ namespace TaskLeader.GUI
         private static NotifyIcon trayIcon = new NotifyIcon();
         private ContextMenuStrip trayContext = new ContextMenuStrip();
         private ToolStripMenuItem newActionItem = new ToolStripMenuItem();
+        private ToolStripMenuItem outlookItem = new ToolStripMenuItem();
         private ToolStripMenuItem closeItem = new ToolStripMenuItem();
         private ToolStripMenuItem maximItem = new ToolStripMenuItem();
         
@@ -30,10 +31,11 @@ namespace TaskLeader.GUI
             trayIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon1_MouseDoubleClick);
 
             // Menu contextuel de la trayIcon
-            this.trayContext.Items.AddRange(new ToolStripItem[] { this.newActionItem, this.maximItem, this.closeItem });
+            this.trayContext.Items.AddRange(new ToolStripItem[] { this.newActionItem, this.maximItem, this.outlookItem, this.closeItem });
             this.trayContext.Name = "trayContext";
             this.trayContext.ShowImageMargin = false;
             this.trayContext.Size = new System.Drawing.Size(126, 70);
+            this.trayContext.Opened += new EventHandler(trayContext_Opened);
 
             // Item "nouvelle action" du menu contextuel
             this.newActionItem.Name = "newActionItem";
@@ -48,6 +50,12 @@ namespace TaskLeader.GUI
             this.maximItem.Size = new System.Drawing.Size(125, 22);
             this.maximItem.Text = "Afficher la liste";
             this.maximItem.Click += new System.EventHandler(this.maximItem_Click);
+
+            // Item "nouvelle action" du menu contextuel
+            this.outlookItem.Text = "Connecter à Outlook";
+            this.outlookItem.Size = new System.Drawing.Size(125, 22);
+            this.outlookItem.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.outlookItem.Click += new System.EventHandler(this.connectOutlook);
 
             // Item "fermer" du menu contextuel
             this.closeItem.Name = "closeItem";
@@ -113,7 +121,19 @@ namespace TaskLeader.GUI
                 //TODO: il faut gérer le refresh de la toolbox si nécessaire
                 guiAction.Show();
             }           
-        }      
+        }
+
+        // Activation si nécessaire de l'item outlook
+        private void trayContext_Opened(object sender, EventArgs e)
+        {
+            this.outlookItem.Visible = OutlookIF.Instance.connectionNeeded;
+        }
+
+        // Tentative de connexion à Outlook
+        private void connectOutlook(object sender, EventArgs e)
+        {
+            OutlookIF.Instance.tryHook(false);
+        }
 
         // Demande d'affichage de la Toolbox via le ContextMenuStrip
         private void maximItem_Click(object sender, EventArgs e)

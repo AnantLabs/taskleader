@@ -9,51 +9,42 @@ using TaskLeader.GUI;
 using TaskLeader.BO;
 using System.Windows.Forms;
 
-namespace TaskLeader
+namespace TaskLeader.BLL
 {
+    // Classe de conversion d'image pour affichage dans Outlook
+    sealed public class ConvertImage : System.Windows.Forms.AxHost
+    {
+        private ConvertImage() : base(null){}
+
+        public static stdole.IPictureDisp Convert(System.Drawing.Image image)
+        {
+            return (stdole.IPictureDisp)System.Windows.Forms.AxHost.GetIPictureDispFromPicture(image);
+        }
+    }
+
     public class OutlookIF
     {
         // Attributs métiers       
-        private Outlook.Application outlook;
+        private Outlook.Application outlook = null;
         private String messageIDParam = "http://schemas.microsoft.com/mapi/proptag/0x1035001E";
-        
-        // Process watch
-        private ManagementEventWatcher startWatch;
-        private ManagementEventWatcher stopWatch;
 
         // Static Initialization Singleton Pattern
         private static readonly OutlookIF v_instance = new OutlookIF();
         public static OutlookIF Instance{get{return v_instance;}}
         
-        private OutlookIF()
-        {
-            // Création des processWatchers
-            startWatch = new ManagementEventWatcher(new WqlEventQuery("SELECT * FROM Win32_ProcessStartTrace WHERE ProcessName = 'OUTLOOK.EXE'"));
-            stopWatch = new ManagementEventWatcher(new WqlEventQuery("SELECT * FROM Win32_ProcessStopTrace WHERE ProcessName = 'OUTLOOK.EXE'"));      
-        }
-        
+        private OutlookIF(){}
+
+        public bool connectionNeeded{get{return Process.GetProcessesByName("outlook").Length != 0 && this.outlook == null;}}
+
         //Tentative de connexion à Outlook
-        public void tryHook()
+        public void tryHook(bool forceCreation)
         {
-            while(true)
+            if (this.connectionNeeded || forceCreation)
             {
-                if (Process.GetProcessesByName("outlook").Length == 0)
-                    startWatch.WaitForNextEvent();
-
-                try
-                {
-                    this.outlook = new Outlook.ApplicationClass();      
-                    this.outlook.ItemContextMenuDisplay += new Outlook.ApplicationEvents_11_ItemContextMenuDisplayEventHandler(addEntrytoContextMenu);
-                }
-                catch(Exception e)
-                {
-                    MessageBox.Show(e.ToString());
-                }
-
-                stopWatch.WaitForNextEvent();
-                Marshal.FinalReleaseComObject(this.outlook);
-                this.outlook = null;
-            }  
+                this.outlook = new Outlook.ApplicationClass();
+                this.outlook.ItemContextMenuDisplay += new Outlook.ApplicationEvents_11_ItemContextMenuDisplayEventHandler(addEntrytoContextMenu);
+                ((Outlook.ApplicationEvents_11_Event)outlook).Quit += new Outlook.ApplicationEvents_11_QuitEventHandler(clean);
+            }
         }
         
         // Méthode jouée si contextmenu affiché sur une entrée
@@ -61,14 +52,26 @@ namespace TaskLeader
         {
             if (Selection.Count == 1 && Selection[1] is Outlook.MailItem)
             {
-                //TODO: récupérer d'abord Controls pour pouvoir le libérer ensuite
-                CommandBarControl item = menu.Controls.Add(MsoControlType.msoControlButton, 1, "", Type.Missing, true);
-                CommandBarButton button = (CommandBarButton)item;
-                button.Caption = "Créer une action";
-                button.Visible = true;
-                button.Click += new Microsoft.Office.Core._CommandBarButtonEvents_ClickEventHandler(getSelectedItem);
-                //TODO: libérer la ressource CommandBarButton  
+                CommandBarControls controls = menu.Controls;
+                CommandBarButton item = (CommandBarButton)controls.Add(MsoControlType.msoControlButton, 1, "", Type.Missing, true);
+                item.Caption = "Créer une action";
+                //item.Style = MsoButtonStyle.msoButtonIconAndCaption;               
+                //item.Picture = ConvertImage.Convert(TaskLeader.Properties.Resources.task_coach.ToBitmap());
+                //Clipboard.SetDataObject(TaskLeader.Properties.Resources.task_coach.ToBitmap(), false);
+                //item.PasteFace();
+                item.Click += new Microsoft.Office.Core._CommandBarButtonEvents_ClickEventHandler(getSelectedItem);
+                item.Visible = true;
+
+                Marshal.FinalReleaseComObject(item);
+                Marshal.FinalReleaseComObject(controls);
             }
+        }
+
+        // Méthode de nettoyage de l'objet COM Outlook Application
+        private void clean()
+        {
+            Marshal.FinalReleaseComObject(this.outlook);
+            this.outlook = null;
         }
 
         // Récupération des informations du mail
@@ -96,8 +99,9 @@ namespace TaskLeader
 
                 // On affiche la fenêtre nouvelle action Outlook
                 TrayIcon.newActionOutlook(action);
-                
-              //TODO: libérer le MAPIFolder + le MailItem
+
+                Marshal.FinalReleaseComObject(store);
+                Marshal.FinalReleaseComObject(item);
             }
             catch (System.Runtime.InteropServices.COMException e)
             {
@@ -110,18 +114,8 @@ namespace TaskLeader
         public void displayMail(TLaction action)
         {
             // Récupération de l'objet Application
-            //if (this.outlook == null)
-                //this.startWatch_EventArrived(null,null); //Simulation de l'évènement ouverture d'Outlook     
-
-            /*
-            Look into the database for all records that have value of our data equal to x.
-            For each such record:
-                Find email in Outlook by record’s EntryId (fast). If found, done.
-                If not found it means the email has been moved or deleted:
-                    Find email in Outlook by record’s MessageId.
-                    If found, update the EntryId of the record in the database so that future searches are fast.
-                    If not found, the email does not exist (was deleted).
-            */
+            if (this.outlook == null)
+                this.tryHook(true);   
             
             Outlook.MailItem mail;
 
@@ -130,8 +124,9 @@ namespace TaskLeader
             else
             {
                 // Le mail a été déplacé où supprimé
-                TrayIcon.afficheMessage("Recherche", "çà va être long");
+                TrayIcon.afficheMessage("I/F Outlook", "Le mail a été déplacé ou supprimé.");
                 /*
+                //TODO:Find email in Outlook by record’s MessageId
                 const String PROPTAG = "http://schemas.microsoft.com/mapi/proptag/";
                 const String PR_INTERNETID = "0x1035001E";
                 String propName = PROPTAG + PR_INTERNETID;
@@ -144,7 +139,9 @@ namespace TaskLeader
                 // Perform the search, asynchronously.
                 outlook.AdvancedSearch(scope, query, true, "SearchMail");
                */
-            }      
+            }
+
+            Marshal.FinalReleaseComObject(mail);
         }
         
         // Récupération d'un mail en fonction de son entryID dans le store storeID
@@ -167,6 +164,7 @@ namespace TaskLeader
             }
         }
 
+        // Méthode permettant de catcher la fin de la recherche
         private void outlook_AdvancedSearchComplete(Outlook.Search searchObject)
         {
             // Vérification du nom de la recherche
@@ -174,10 +172,12 @@ namespace TaskLeader
             {
                 Outlook.MailItem mail = (Outlook.MailItem)searchObject.Results.GetFirst();
                 mail.Display();//Affichage du mail
+                //TODO: If found, update the EntryId of the record in the database so that future searches are fast.
             }
             else
                 TrayIcon.afficheMessage("Recherche Outlook", "pas de résultats");
- 
+
+            // On sé désabonne de toutes les recherches avancées qui pourront être effectuées
             outlook.AdvancedSearchComplete -= outlook_AdvancedSearchComplete;
         }
     }

@@ -145,6 +145,7 @@ namespace TaskLeader.GUI
             actionDatePicker.Enabled = !noDueDate.Checked;
         }
 
+        // Affichage du mail source
         private void lienMail_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             OutlookIF.Instance.displayMail(this.v_action);
