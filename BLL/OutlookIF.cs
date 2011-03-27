@@ -1,19 +1,20 @@
 using System;
 using System.Diagnostics;
 using System.Management;
-using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading;
 using Outlook = Microsoft.Office.Interop.Outlook;
 using Microsoft.Office.Core;
 using TaskLeader.GUI;
 using TaskLeader.BO;
+using System.Windows.Forms;
 
 namespace TaskLeader
 {
     public class OutlookIF
     {
         // Attributs métiers       
-        private Outlook.Application outlook = null;
+        private Outlook.Application outlook;
         private String messageIDParam = "http://schemas.microsoft.com/mapi/proptag/0x1035001E";
         
         // Process watch
@@ -28,72 +29,32 @@ namespace TaskLeader
         {
             // Création des processWatchers
             startWatch = new ManagementEventWatcher(new WqlEventQuery("SELECT * FROM Win32_ProcessStartTrace WHERE ProcessName = 'OUTLOOK.EXE'"));
-            //startWatch.EventArrived += new EventArrivedEventHandler(startWatch_EventArrived);
-            stopWatch = new ManagementEventWatcher(new WqlEventQuery("SELECT * FROM Win32_ProcessStopTrace WHERE ProcessName = 'OUTLOOK.EXE'"));
-            //stopWatch.EventArrived += new EventArrivedEventHandler(stopWatch_EventArrived);         
+            stopWatch = new ManagementEventWatcher(new WqlEventQuery("SELECT * FROM Win32_ProcessStopTrace WHERE ProcessName = 'OUTLOOK.EXE'"));      
         }
-        
-        // Vérification de la présence d'un process Outlook running
-        private bool outlookIsLaunched = (Process.GetProcessesByName("outlook").Count() > 0);
         
         //Tentative de connexion à Outlook
         public void tryHook()
         {
             while(true)
             {
-                if (!this.outlookIsLaunched)
+                if (Process.GetProcessesByName("outlook").Length == 0)
                     startWatch.WaitForNextEvent();
-                
-                this.hookOutlook();
+
+                try
+                {
+                    this.outlook = new Outlook.ApplicationClass();      
+                    this.outlook.ItemContextMenuDisplay += new Outlook.ApplicationEvents_11_ItemContextMenuDisplayEventHandler(addEntrytoContextMenu);
+                }
+                catch(Exception e)
+                {
+                    MessageBox.Show(e.ToString());
+                }
+
                 stopWatch.WaitForNextEvent();
-                this.clean();
+                Marshal.FinalReleaseComObject(this.outlook);
+                this.outlook = null;
             }  
         }
-        
-        // Ajout du menu contextuel à Outlook
-        private void hookOutlook()
-        {
-            // Création de l'objet application
-            if (this.outlookIsLaunched)
-                this.outlook = Marshal.GetActiveObject("Outlook.Application") as Outlook.Application;
-            else
-                this.outlook = new Outlook.ApplicationClass();
-                
-            // Création de l'entrée dans le menu contextuel           
-            this.outlook.ItemContextMenuDisplay += new Outlook.ApplicationEvents_11_ItemContextMenuDisplayEventHandler(addEntrytoContextMenu);          
-        }
-        
-        // Nettoyage des objets
-        private void clean()
-        {
-            Marshal.FinalReleaseComObject(this.outlook); 
-            this.outlook = null;
-        }
-        /*
-        private void startWatch_EventArrived(object sender, EventArrivedEventArgs e)
-        {
-            // Arrêt de l'écoute de l'ouverture
-            this.startWatch.Stop();
-            
-            TrayIcon.afficheMessage("ProcessWatch", "Ouverture d'Outlook");           
-            this.hookOutlook();
-            
-            // Démarrage de l'écoute de la fermeture
-            this.stopWatch.Start();
-        }
-        
-        private void stopWatch_EventArrived(object sender, EventArrivedEventArgs e)
-        {
-            // Arrêt de l'écoute de la fermeture
-            this.stopWatch.Stop();
-            
-            TrayIcon.afficheMessage("ProcessWatch", "Fermeture d'Outlook");           
-            this.clean();
-            
-            // Démarrage de l'écoute de l'ouverture
-            this.startWatch.Start();
-        }
-        */
         
         // Méthode jouée si contextmenu affiché sur une entrée
         private void addEntrytoContextMenu(CommandBar menu, Outlook.Selection Selection)
@@ -101,10 +62,11 @@ namespace TaskLeader
             if (Selection.Count == 1 && Selection[1] is Outlook.MailItem)
             {
                 //TODO: récupérer d'abord Controls pour pouvoir le libérer ensuite
-                CommandBarButton item = (CommandBarButton)menu.Controls.Add(MsoControlType.msoControlButton, 1, "", Type.Missing, true);
-                item.Caption = "Créer une action";
-                item.Visible = true;
-                item.Click += new Microsoft.Office.Core._CommandBarButtonEvents_ClickEventHandler(getSelectedItem);
+                CommandBarControl item = menu.Controls.Add(MsoControlType.msoControlButton, 1, "", Type.Missing, true);
+                CommandBarButton button = (CommandBarButton)item;
+                button.Caption = "Créer une action";
+                button.Visible = true;
+                button.Click += new Microsoft.Office.Core._CommandBarButtonEvents_ClickEventHandler(getSelectedItem);
                 //TODO: libérer la ressource CommandBarButton  
             }
         }
@@ -148,8 +110,8 @@ namespace TaskLeader
         public void displayMail(TLaction action)
         {
             // Récupération de l'objet Application
-            if (this.outlook == null)
-                this.startWatch_EventArrived(null,null); //Simulation de l'évènement ouverture d'Outlook     
+            //if (this.outlook == null)
+                //this.startWatch_EventArrived(null,null); //Simulation de l'évènement ouverture d'Outlook     
 
             /*
             Look into the database for all records that have value of our data equal to x.

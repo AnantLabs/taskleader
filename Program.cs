@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Windows.Forms;
 using TaskLeader.GUI;
 using TaskLeader.BLL;
@@ -17,7 +18,8 @@ namespace TaskLeader
             Application.SetCompatibleTextRenderingDefault(false);          
 
             //Hook d'outlook
-            OutlookIF.Instance.hookOutlook();
+            Thread outlThread = new Thread(new ThreadStart(OutlookIF.Instance.tryHook));
+            outlThread.Start();
 
             //Affichage de la TrayIcon
             Application.Run(new TrayIcon());          
