@@ -69,7 +69,9 @@
             this.button1 = new System.Windows.Forms.Button();
             this.outlookBout = new System.Windows.Forms.Button();
             this.listeContext = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.editActionItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statutTSMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exportMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grilleData)).BeginInit();
             this.flowLayoutPanel1.SuspendLayout();
@@ -512,15 +514,30 @@
             // listeContext
             // 
             this.listeContext.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.statutTSMenuItem});
+            this.editActionItem,
+            this.statutTSMenuItem,
+            this.exportMenuItem});
             this.listeContext.Name = "listeContext";
-            this.listeContext.Size = new System.Drawing.Size(159, 48);
+            this.listeContext.Size = new System.Drawing.Size(159, 92);
+            // 
+            // editActionItem
+            // 
+            this.editActionItem.Name = "editActionItem";
+            this.editActionItem.Size = new System.Drawing.Size(158, 22);
+            this.editActionItem.Text = "Editer l\'action";
+            this.editActionItem.Click += new System.EventHandler(this.modifAction);
             // 
             // statutTSMenuItem
             // 
             this.statutTSMenuItem.Name = "statutTSMenuItem";
             this.statutTSMenuItem.Size = new System.Drawing.Size(158, 22);
             this.statutTSMenuItem.Text = "Passer l\'action à";
+            // 
+            // exportMenuItem
+            // 
+            this.exportMenuItem.Name = "exportMenuItem";
+            this.exportMenuItem.Size = new System.Drawing.Size(158, 22);
+            this.exportMenuItem.Text = "Exporter vers";
             // 
             // Toolbox
             // 
@@ -602,6 +619,8 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button outlookBout;
         private System.Windows.Forms.Button openFilterBut;
+        private System.Windows.Forms.ToolStripMenuItem editActionItem;
+        private System.Windows.Forms.ToolStripMenuItem exportMenuItem;
 
     }
 }
