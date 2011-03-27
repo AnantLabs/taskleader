@@ -17,9 +17,8 @@ namespace TaskLeader
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);          
 
-            //Hook d'outlook
-            Thread outlThread = new Thread(new ThreadStart(OutlookIF.Instance.tryHook));
-            outlThread.Start();
+            //Hook d'outlook si possible
+            OutlookIF.Instance.tryHook(false);
 
             //Affichage de la TrayIcon
             Application.Run(new TrayIcon());          
