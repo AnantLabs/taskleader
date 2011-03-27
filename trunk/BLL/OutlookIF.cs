@@ -1,18 +1,15 @@
 using System;
 using System.Diagnostics;
-using System.Management;
 using System.Runtime.InteropServices;
-using System.Threading;
 using Outlook = Microsoft.Office.Interop.Outlook;
 using Microsoft.Office.Core;
 using TaskLeader.GUI;
 using TaskLeader.BO;
-using System.Windows.Forms;
 
 namespace TaskLeader.BLL
 {
     // Classe de conversion d'image pour affichage dans Outlook
-    sealed public class ConvertImage : System.Windows.Forms.AxHost
+    public class ConvertImage : System.Windows.Forms.AxHost
     {
         private ConvertImage() : base(null){}
 
@@ -26,6 +23,7 @@ namespace TaskLeader.BLL
     {
         // Attributs métiers       
         private Outlook.Application outlook = null;
+        private CommandBarButton addActionButton;
         private String messageIDParam = "http://schemas.microsoft.com/mapi/proptag/0x1035001E";
 
         // Static Initialization Singleton Pattern
@@ -53,16 +51,15 @@ namespace TaskLeader.BLL
             if (Selection.Count == 1 && Selection[1] is Outlook.MailItem)
             {
                 CommandBarControls controls = menu.Controls;
-                CommandBarButton item = (CommandBarButton)controls.Add(MsoControlType.msoControlButton, 1, "", Type.Missing, true);
-                item.Caption = "Créer une action";
+                this.addActionButton = (CommandBarButton)controls.Add(MsoControlType.msoControlButton, 1, "", Type.Missing, true);
+                this.addActionButton.Caption = "Créer une action";
                 //item.Style = MsoButtonStyle.msoButtonIconAndCaption;               
                 //item.Picture = ConvertImage.Convert(TaskLeader.Properties.Resources.task_coach.ToBitmap());
                 //Clipboard.SetDataObject(TaskLeader.Properties.Resources.task_coach.ToBitmap(), false);
                 //item.PasteFace();
-                item.Click += new Microsoft.Office.Core._CommandBarButtonEvents_ClickEventHandler(getSelectedItem);
-                item.Visible = true;
+                this.addActionButton.Click += new Microsoft.Office.Core._CommandBarButtonEvents_ClickEventHandler(getSelectedItem);
+                this.addActionButton.Visible = true;
 
-                Marshal.FinalReleaseComObject(item);
                 Marshal.FinalReleaseComObject(controls);
             }
         }
@@ -70,6 +67,8 @@ namespace TaskLeader.BLL
         // Méthode de nettoyage de l'objet COM Outlook Application
         private void clean()
         {
+            Marshal.FinalReleaseComObject(this.addActionButton);
+            this.addActionButton = null;
             Marshal.FinalReleaseComObject(this.outlook);
             this.outlook = null;
         }

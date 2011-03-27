@@ -53,7 +53,13 @@ namespace TaskLeader.BLL
                 if (ReadDB.Instance.getLastVerComp() == "0.4.0.0")
                 {
                     TrayIcon.afficheMessage("Migration", "La base est obsolète, migration en cours");
-                    migrationv05();
+                    migration("04-06");
+                    return true;
+                }
+                else if (ReadDB.Instance.getLastVerComp() == "0.5")
+                {
+                    TrayIcon.afficheMessage("Migration", "La base est obsolète, migration en cours");
+                    migration("05-06");
                     return true;
                 }
                 else
@@ -66,7 +72,7 @@ namespace TaskLeader.BLL
                 return true; // La base est compatible, rien à faire.
         }
 
-        private void migrationv05() //A partir d'une v0.4
+        private void migration(String change)
         {
             // Copie de sauvegarde du fichier db avant toute manip
             TrayIcon.afficheMessage("Migration","Copie de sauvegarde de la base");
@@ -75,16 +81,23 @@ namespace TaskLeader.BLL
             System.IO.File.Copy(sourceFile, backupFile,true);
 
             // Récupération du script de migration
-            String script = System.IO.File.ReadAllText(@"../Migration/04-05.sql", System.Text.Encoding.UTF8);
-            //TODO: Et si le fichier n'est pas présent ?
+            try
+            {
+                String script = System.IO.File.ReadAllText(@"../Migration/" + change + ".sql", System.Text.Encoding.UTF8);
 
-            // Exécution du script
-            TrayIcon.afficheMessage("Migration", "Exécution du script de migration");
-            WriteDB.Instance.execSQL(script);
+                // Exécution du script
+                TrayIcon.afficheMessage("Migration", "Exécution du script de migration");
+                WriteDB.Instance.execSQL(script);
 
-            // Nettoyage de la base
-            WriteDB.Instance.execSQL("VACUUM;");
-            TrayIcon.afficheMessage("Migration", "Migration de la base effectuée");
+                // Nettoyage de la base
+                WriteDB.Instance.execSQL("VACUUM;");
+                TrayIcon.afficheMessage("Migration", "Migration de la base effectuée");
+            }
+            catch(Exception e)
+            {
+                //TODO:affiner le pourquoi
+                TrayIcon.afficheMessage("Migration", "Fichier de migration introuvable");
+            }           
         }
     }
 }

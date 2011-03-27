@@ -42,14 +42,16 @@ namespace TaskLeader.GUI
             // Création de la colonne mail
             DataGridViewImageColumn mailCol = new DataGridViewImageColumn();
             mailCol.Name = "Mail";
-            mailCol.DataPropertyName = "Mail";
+            mailCol.DataPropertyName = "IDMail";
             mailCol.Visible = false;
             grilleData.Columns.Add(mailCol);
 
             // On rajoute les lignes qu'il faut dans le contextMenu de la liste d'actions
             NameValueCollection section = (NameValueCollection)ConfigurationManager.GetSection("ExportSection");
+            // Affichage de l'item dans le menu uniquement si une valeur d'export
+            this.exportMenuItem.Visible = (section.Count > 0);
             foreach (string key in section)
-                listeContext.Items.Add("Exporter vers " + key, null, this.exportRow);
+                this.exportMenuItem.DropDown.Items.Add(key, null, this.exportRow);
 
             // Si un filtre est actif on l'affiche
             if (Filtre.CurrentFilter != null)
@@ -125,10 +127,10 @@ namespace TaskLeader.GUI
         }
 
         // Ouverture de la gui édition d'action
-        private void modifAction(object sender, DataGridViewCellEventArgs e)
+        private void modifAction(object sender, EventArgs e)
         {
             // Récupération de l'action correspondant à la ligne
-            TLaction action = getActionFromRow(grilleData.Rows[e.RowIndex].Cells);
+            TLaction action = getActionFromRow(grilleData.SelectedRows[0].Cells);
             action.freezeInitState();
 
             ManipAction fenetre = new ManipAction(action);
@@ -254,12 +256,7 @@ namespace TaskLeader.GUI
         // Copie de l'action dans le presse-papier
         private void exportRow(object sender, EventArgs e)
         {
-            // Récupération de la clé d'export
-            String chaine = ((ToolStripItem)sender).Text;
-            String key = chaine.Substring(14, chaine.Length - 14);// Dépend du label du context menu
-
-            // On l'exporte
-            Export.Instance.clipAction(key, grilleData.SelectedRows[0]);
+            Export.Instance.clipAction(((ToolStripItem)sender).Text, grilleData.SelectedRows[0]);
         }
 
         // Enregistrement du filtre renseigné
