@@ -129,7 +129,7 @@ namespace TaskLeader.DAL
         // Renvoie un tableau de tous les sujets correspondant au contexte
         public object[] getSujet(String contexte)
         {
-            return getList("SELECT Titre FROM VueSujets WHERE Contexte ='" + contexte + "'");
+            return getList("SELECT Titre FROM VueSujets WHERE Contexte ='" + contexte + "' ORDER BY Titre ASC");
         }
         
         // Renvoie un tableau de tous les destinataires présents dans la base
