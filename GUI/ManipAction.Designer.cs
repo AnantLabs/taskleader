@@ -42,7 +42,8 @@
             this.label6 = new System.Windows.Forms.Label();
             this.statutBox = new System.Windows.Forms.ComboBox();
             this.noDueDate = new System.Windows.Forms.CheckBox();
-            this.lienMail = new System.Windows.Forms.LinkLabel();
+            this.outlookPic = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.outlookPic)).BeginInit();
             this.SuspendLayout();
             // 
             // saveButton
@@ -176,26 +177,23 @@
             this.noDueDate.UseVisualStyleBackColor = true;
             this.noDueDate.CheckedChanged += new System.EventHandler(this.dateChosen_CheckedChanged);
             // 
-            // lienMail
+            // outlookPic
             // 
-            this.lienMail.AutoSize = true;
-            this.lienMail.LinkColor = System.Drawing.Color.Blue;
-            this.lienMail.Location = new System.Drawing.Point(9, 92);
-            this.lienMail.Name = "lienMail";
-            this.lienMail.Size = new System.Drawing.Size(81, 13);
-            this.lienMail.TabIndex = 25;
-            this.lienMail.TabStop = true;
-            this.lienMail.Text = "Source Outlook";
-            this.lienMail.Visible = false;
-            this.lienMail.VisitedLinkColor = System.Drawing.Color.Blue;
-            this.lienMail.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lienMail_LinkClicked);
+            this.outlookPic.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.outlookPic.Image = global::TaskLeader.Properties.Resources.outlook;
+            this.outlookPic.Location = new System.Drawing.Point(55, 85);
+            this.outlookPic.Name = "outlookPic";
+            this.outlookPic.Size = new System.Drawing.Size(30, 30);
+            this.outlookPic.TabIndex = 26;
+            this.outlookPic.TabStop = false;
+            this.outlookPic.Click += new System.EventHandler(this.outlookPic_Click);
             // 
             // ManipAction
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(429, 305);
-            this.Controls.Add(this.lienMail);
+            this.Controls.Add(this.outlookPic);
             this.Controls.Add(this.noDueDate);
             this.Controls.Add(this.statutBox);
             this.Controls.Add(this.label6);
@@ -215,6 +213,7 @@
             this.Name = "ManipAction";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "TaskLeader - ";
+            ((System.ComponentModel.ISupportInitialize)(this.outlookPic)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -236,7 +235,7 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.ComboBox statutBox;
         private System.Windows.Forms.CheckBox noDueDate;
-        private System.Windows.Forms.LinkLabel lienMail;
+        private System.Windows.Forms.PictureBox outlookPic;
 
 
     }
