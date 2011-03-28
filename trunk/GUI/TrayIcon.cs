@@ -80,7 +80,7 @@ namespace TaskLeader.GUI
                 this.closeApp(); // On ferme l'appli
         }
 
-        private Toolbox v_toolbox = null;
+        private static Toolbox v_toolbox = null;
 
         // Méthode générique d'affichage de la Toolbox
         private void displayToolbox()
@@ -118,7 +118,7 @@ namespace TaskLeader.GUI
             {
                 ManipAction guiAction = new ManipAction(action);
                 guiAction.TopMost = true;
-                //TODO: il faut gérer le refresh de la toolbox si nécessaire
+                guiAction.FormClosed += new FormClosedEventHandler(v_toolbox.miseAjour);
                 guiAction.Show();
             }           
         }
