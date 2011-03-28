@@ -140,7 +140,8 @@ namespace TaskLeader.BLL
                */
             }
 
-            Marshal.FinalReleaseComObject(mail);
+            if(mail !=null)
+                Marshal.FinalReleaseComObject(mail);
         }
         
         // Récupération d'un mail en fonction de son entryID dans le store storeID
@@ -153,13 +154,9 @@ namespace TaskLeader.BLL
             }
             catch (System.Runtime.InteropServices.COMException e)
             {
-                if ((uint)e.ErrorCode == 0x80040107)
-                {
-                    // MAPI_E_NOT_FOUND
-                    mail = null;
-                    return false;
-                }
-                throw;
+                //Quelle que soit l'erreur le mail n'a pas été trouvé
+                mail = null;
+                return false;
             }
         }
 
