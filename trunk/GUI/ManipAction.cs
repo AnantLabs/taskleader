@@ -56,7 +56,7 @@ namespace TaskLeader.GUI
             }
 
             // On active le lien "Source Outlook" si nécessaire
-            lienMail.Visible = action.hasMailAttached;
+            this.outlookPic.Visible = action.hasMailAttached;
 
             // On affiche le sujet du mail dans la case action
             desField.Text = action.Texte;
@@ -146,7 +146,7 @@ namespace TaskLeader.GUI
         }
 
         // Affichage du mail source
-        private void lienMail_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void outlookPic_Click(object sender, EventArgs e)
         {
             OutlookIF.Instance.displayMail(this.v_action);
         }
