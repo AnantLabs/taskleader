@@ -67,7 +67,6 @@
             this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
             this.addBout = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
-            this.outlookBout = new System.Windows.Forms.Button();
             this.listeContext = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.editActionItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statutTSMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -465,7 +464,7 @@
             this.groupBox1.Controls.Add(this.flowLayoutPanel2);
             this.groupBox1.Location = new System.Drawing.Point(3, 3);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(56, 148);
+            this.groupBox1.Size = new System.Drawing.Size(56, 101);
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Ajouter action";
@@ -474,11 +473,10 @@
             // 
             this.flowLayoutPanel2.Controls.Add(this.addBout);
             this.flowLayoutPanel2.Controls.Add(this.button1);
-            this.flowLayoutPanel2.Controls.Add(this.outlookBout);
             this.flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel2.Location = new System.Drawing.Point(3, 16);
             this.flowLayoutPanel2.Name = "flowLayoutPanel2";
-            this.flowLayoutPanel2.Size = new System.Drawing.Size(50, 129);
+            this.flowLayoutPanel2.Size = new System.Drawing.Size(50, 82);
             this.flowLayoutPanel2.TabIndex = 0;
             // 
             // addBout
@@ -500,16 +498,6 @@
             this.button1.Size = new System.Drawing.Size(35, 35);
             this.button1.TabIndex = 0;
             this.button1.UseVisualStyleBackColor = true;
-            // 
-            // outlookBout
-            // 
-            this.outlookBout.Enabled = false;
-            this.outlookBout.Image = global::TaskLeader.Properties.Resources.outlook;
-            this.outlookBout.Location = new System.Drawing.Point(3, 85);
-            this.outlookBout.Name = "outlookBout";
-            this.outlookBout.Size = new System.Drawing.Size(35, 35);
-            this.outlookBout.TabIndex = 1;
-            this.outlookBout.UseVisualStyleBackColor = true;
             // 
             // listeContext
             // 
@@ -617,7 +605,6 @@
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel2;
         private System.Windows.Forms.Button addBout;
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button outlookBout;
         private System.Windows.Forms.Button openFilterBut;
         private System.Windows.Forms.ToolStripMenuItem editActionItem;
         private System.Windows.Forms.ToolStripMenuItem exportMenuItem;
