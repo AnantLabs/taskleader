@@ -93,7 +93,7 @@ namespace TaskLeader.BLL
                 WriteDB.Instance.execSQL("VACUUM;");
                 TrayIcon.afficheMessage("Migration", "Migration de la base effectuée");
             }
-            catch(Exception e)
+            catch
             {
                 //TODO:affiner le pourquoi
                 TrayIcon.afficheMessage("Migration", "Fichier de migration introuvable");

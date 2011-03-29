@@ -214,6 +214,9 @@ namespace TaskLeader.GUI
         // Méthode générique d'affichage de la liste d'actions à partir d'un filtre
         private void afficheActions(Filtre filtre)
         {
+            // Si le filtre a un nom, on l'affiche
+            filterCombo.Text = filtre.nom;
+
             // Récupération des résultats et association au tableau
             DataTable liste = DataManager.Instance.getActions(filtre);                     
             grilleData.DataSource = liste;
