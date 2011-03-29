@@ -1,4 +1,4 @@
-﻿using System;
+ using System;
 using System.Configuration;
 using System.Windows.Forms;
 using TaskLeader.BLL;
@@ -80,8 +80,8 @@ namespace TaskLeader.GUI
                 this.closeApp(); // On ferme l'appli
         }
 
-        private static Toolbox v_toolbox = null;
-
+        private Toolbox v_toolbox = null;
+        
         // Méthode générique d'affichage de la Toolbox
         private void displayToolbox()
         {
@@ -94,7 +94,14 @@ namespace TaskLeader.GUI
             else
                 v_toolbox.BringToFront(); // Sinon on l'affiche au premier plan     
         }
-
+        
+        // Update de la Toolbox si elle est affichée
+        private void updateToolbox(object sender, EventArgs e)
+        {
+            if(v_toolbox != null && !v_toolbox.IsDisposed)
+                v_toolbox.miseAjour();
+        }
+        
         // Double-click sur la trayIcon
         private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
@@ -104,7 +111,12 @@ namespace TaskLeader.GUI
         // Méthode permettant d'afficher le formulaire nouvelle action vide
         private void ajoutAction(object sender, EventArgs e)
         {
-            new ManipAction(new TLaction()).Show();
+            TLaction action = new TLaction();
+            action.freezeInitState();
+
+            ManipAction fenetre = new ManipAction(action);
+            fenetre.Disposed += new EventHandler(this.updateToolbox); // Sur fermeture de ManipAction on update la Toolbox
+            fenetre.Show();
         }
 
         //Délégué pour méthode newActionOutlook
@@ -118,7 +130,7 @@ namespace TaskLeader.GUI
             {
                 ManipAction guiAction = new ManipAction(action);
                 guiAction.TopMost = true;
-                guiAction.FormClosed += new FormClosedEventHandler(v_toolbox.miseAjour);
+                guiAction.Disposed += new EventHandler(this.updateToolbox);
                 guiAction.Show();
             }           
         }
