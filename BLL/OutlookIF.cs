@@ -152,7 +152,7 @@ namespace TaskLeader.BLL
                 mail = outlook.Session.GetItemFromID(entryId, storeID) as Outlook.MailItem;
                 return true;
             }
-            catch (System.Runtime.InteropServices.COMException e)
+            catch
             {
                 //Quelle que soit l'erreur le mail n'a pas été trouvé
                 mail = null;

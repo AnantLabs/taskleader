@@ -121,7 +121,7 @@ namespace TaskLeader.GUI
             if (v_action.isScratchpad && ConfigurationManager.AppSettings["newActionChained"] == "true")
             {
                 // On simule la fermeture de la form pour rafraîchir la Toolbox
-                this.Disposed(new EventArgs());
+                //this.Disposed(new EventArgs());
                 // On reset tous les champs
                 this.clearAllFields();
                 // Et on recharge

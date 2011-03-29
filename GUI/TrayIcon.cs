@@ -1,4 +1,4 @@
- using System;
+﻿ using System;
 using System.Configuration;
 using System.Windows.Forms;
 using TaskLeader.BLL;
@@ -80,7 +80,7 @@ namespace TaskLeader.GUI
                 this.closeApp(); // On ferme l'appli
         }
 
-        private Toolbox v_toolbox = null;
+        private static Toolbox v_toolbox = null;
         
         // Méthode générique d'affichage de la Toolbox
         private void displayToolbox()
@@ -96,10 +96,10 @@ namespace TaskLeader.GUI
         }
         
         // Update de la Toolbox si elle est affichée
-        private void updateToolbox(object sender, EventArgs e)
+        private static void updateToolbox(object sender, EventArgs e)
         {
             if(v_toolbox != null && !v_toolbox.IsDisposed)
-                v_toolbox.miseAjour();
+                v_toolbox.miseAjour(sender,e);
         }
         
         // Double-click sur la trayIcon
@@ -115,7 +115,7 @@ namespace TaskLeader.GUI
             action.freezeInitState();
 
             ManipAction fenetre = new ManipAction(action);
-            fenetre.Disposed += new EventHandler(this.updateToolbox); // Sur fermeture de ManipAction on update la Toolbox
+            fenetre.Disposed += new EventHandler(updateToolbox); // Sur fermeture de ManipAction on update la Toolbox
             fenetre.Show();
         }
 
@@ -130,7 +130,7 @@ namespace TaskLeader.GUI
             {
                 ManipAction guiAction = new ManipAction(action);
                 guiAction.TopMost = true;
-                guiAction.Disposed += new EventHandler(this.updateToolbox);
+                guiAction.Disposed += new EventHandler(updateToolbox);
                 guiAction.Show();
             }           
         }
