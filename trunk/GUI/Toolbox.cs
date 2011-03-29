@@ -93,7 +93,7 @@ namespace TaskLeader.GUI
             action.freezeInitState();
 
             ManipAction fenetre = new ManipAction(action);
-            fenetre.FormClosed += new FormClosedEventHandler(this.miseAjour); // Sur fermeture de ManipAction on update la Toolbox
+            fenetre.Disposed += new EventHandler(this.miseAjour); // Sur fermeture de ManipAction on update la Toolbox
             fenetre.Show();
         }
 
@@ -134,7 +134,7 @@ namespace TaskLeader.GUI
             action.freezeInitState();
 
             ManipAction fenetre = new ManipAction(action);
-            fenetre.FormClosed += new FormClosedEventHandler(this.miseAjour); // Sur fermeture de ManipAction on update la Toolbox
+            fenetre.Disposed += new EventHandler(this.miseAjour); // Sur fermeture de ManipAction on update la Toolbox
             fenetre.Show();
         }
 
