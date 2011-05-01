@@ -52,19 +52,19 @@ namespace TaskLeader.DAL
         }
 
         // Insertion en base d'un nouveau filtre
-        public void insertFiltre(String titre, Object[] criteria)
+        public void insertFiltre(Filtre filtre)
         {
             using (SQLiteTransaction mytransaction = ConnexionDB.Instance.getConnection().BeginTransaction())
             {
                 using (SQLiteCommand SQLCmd = new SQLiteCommand(ConnexionDB.Instance.getConnection()))
                 {
                     // On insère le nom du filtre
-                    String nomFiltre = "'" + titre.Replace("'", "''") + "'"; // Le titre du filtre ne doit pas contenir de quote
+                    String nomFiltre = "'" + filtre.nom.Replace("'", "''") + "'"; // Le titre du filtre ne doit pas contenir de quote
                     SQLCmd.CommandText = "INSERT INTO Filtres (Titre) VALUES ("+nomFiltre+");";
                     SQLCmd.ExecuteNonQuery();
 
                     // On insère ensuite dans les tables annexes les données sélectionnées
-                    foreach (Criterium critere in criteria)
+                    foreach (Criterium critere in filtre.criteria)
                     {
                         String selection;
 
@@ -94,7 +94,7 @@ namespace TaskLeader.DAL
             }
 
             // On affiche un message de statut sur la TrayIcon
-            TrayIcon.afficheMessage("Bilan création/modification","Nouveau filtre ajouté: "+titre);
+            TrayIcon.afficheMessage("Bilan création/modification","Nouveau filtre ajouté: "+filtre.nom);
 
         }
 
@@ -140,7 +140,7 @@ namespace TaskLeader.DAL
                     // Insertion des infos du mail joint si nécessaire
                     if (action.hasMailAttached)
                     {
-                        SQLCmd.CommandText = "INSERT INTO Mails VALUES("+action.StoreIDSQL+","+action.EntryIDSQL+","+action.MessageIDSQL+");";
+                        SQLCmd.CommandText = "INSERT INTO Mails VALUES(" + action.mail.StoreIDSQL + "," + action.mail.EntryIDSQL + "," + action.mail.MessageIDSQL + ");";
                         SQLCmd.ExecuteNonQuery();
                     }
 
