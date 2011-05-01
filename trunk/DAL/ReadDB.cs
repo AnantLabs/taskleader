@@ -206,6 +206,7 @@ namespace TaskLeader.DAL
             
             // On crée le filtre correspondant
             Filtre filtre = new Filtre(resultat);
+            filtre.nom = name;
             object[] liste;
 
             // On récupère les sélections si nécessaire
@@ -226,9 +227,9 @@ namespace TaskLeader.DAL
         }
 
         // Vérification de l'existence du nom du filtre
-        public bool isNvoFiltre(String nom)
+        public bool isNvoFiltre(Filtre filtre)
         {
-            String name = "'" + nom.Replace("'", "''") + "'";
+            String name = "'" + filtre.nom.Replace("'", "''") + "'";
 
             // On compte le nombre d'occurences de ce filtre dans la table
             String requete = "SELECT count(rowid) FROM Filtres WHERE Titre=" + name;

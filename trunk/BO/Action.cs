@@ -115,34 +115,13 @@ namespace TaskLeader.BO
                 }
             }
         }
-        public String StatutSQL { get { return sqlFactory(v_stat); } } 
-
-        // booléen pour savoir si l'action est reliée à un mail
-        public bool hasMailAttached
-        {
-            get
-            {
-                if (v_entryID != "" && v_storeID != "" && v_messageID != "")
-                    return true;
-                else
-                    return false;
-            } 
-        }
+        public String StatutSQL { get { return sqlFactory(v_stat); } }       
 
         // storeID du dossier contenant le mail si relié à l'action
-        private String v_storeID = "";
-        public String StoreID { get { return v_storeID; } set { v_storeID = value; } }
-        public String StoreIDSQL { get { return sqlFactory(v_storeID); } } 
-
-        // entryID du mail si relié à l'action
-        private String v_entryID = "";
-        public String EntryID { get { return v_entryID; } set { v_entryID = value; } }
-        public String EntryIDSQL { get { return sqlFactory(v_entryID); } } 
-
-        // messageID du mail si relié à l'action
-        private String v_messageID = "";
-        public String MessageID { get { return v_messageID; } set { v_messageID = value; } }
-        public String MessageIDSQL { get { return sqlFactory(v_messageID); } } 
+        private Mail v_mail = null;
+        public Mail mail { get { return v_mail; } set { v_mail = value; } }
+        // booléen pour savoir si l'action est reliée à un mail
+        public bool hasMailAttached { get { return (v_mail != null); } }
 
         //Constructeur simple
         public TLaction(String sujet)
@@ -152,6 +131,9 @@ namespace TaskLeader.BO
 
         // Constructeur permettant d'initialiser les valeurs par défaut
         public TLaction(){}
+
+        // Constructeur permettant de créer une action à partir de son ID
+        //TODO ?
 
         // Méthode permettant d'updater les champs principaux
         public void updateDefault(String contexte, String subject, String desAction, String destinataire,  String stat)

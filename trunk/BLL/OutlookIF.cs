@@ -51,13 +51,12 @@ namespace TaskLeader.BLL
             if (Selection.Count == 1 && Selection[1] is Outlook.MailItem)
             {
                 CommandBarControls controls = menu.Controls;
-                this.addActionButton = (CommandBarButton)controls.Add(MsoControlType.msoControlButton, 1, "", Type.Missing, true);
-                this.addActionButton.Caption = "Créer une action";
-                //item.Style = MsoButtonStyle.msoButtonIconAndCaption;               
-                //item.Picture = ConvertImage.Convert(TaskLeader.Properties.Resources.task_coach.ToBitmap());
-                //Clipboard.SetDataObject(TaskLeader.Properties.Resources.task_coach.ToBitmap(), false);
-                //item.PasteFace();
+                this.addActionButton = (CommandBarButton)controls.Add(MsoControlType.msoControlButton, 1, "", 1, true);
+                this.addActionButton.FaceId = 341;
+                this.addActionButton.Style = MsoButtonStyle.msoButtonIconAndCaption;
+                this.addActionButton.Caption = "TaskLeader: nouvelle action";
                 this.addActionButton.Click += new Microsoft.Office.Core._CommandBarButtonEvents_ClickEventHandler(getSelectedItem);
+                
                 this.addActionButton.Visible = true;
 
                 Marshal.FinalReleaseComObject(controls);
@@ -81,24 +80,21 @@ namespace TaskLeader.BLL
                 // Récupération de l'item sélectionné
                 Outlook.MailItem item = (Outlook.MailItem)outlook.ActiveExplorer().Selection[1];
 
-                // Création de l'action scratchpad
-                TLaction action = new TLaction(item.Subject);
-
                 //Récupération du store ID
                 Outlook.MAPIFolder store = (Outlook.MAPIFolder)item.Parent;
-                action.StoreID = store.StoreID;
 
-                // Récupération de l'entryID
-                action.EntryID = item.EntryID;
+                // Création du PropertyAccessor
+                Outlook.PropertyAccessor props = item.PropertyAccessor;
 
-                // Récupération du message-ID (PR_INTERNET_MESSAGE_ID)
-                action.MessageID = (String)item.PropertyAccessor.GetProperty(this.messageIDParam);
-
+                // Création de l'action
+                TLaction action = new TLaction(item.Subject);
+                action.mail = new Mail(store.StoreID, item.EntryID, (String)props.GetProperty(this.messageIDParam));
                 action.freezeInitState();
 
                 // On affiche la fenêtre nouvelle action Outlook
                 TrayIcon.newActionOutlook(action);
 
+                Marshal.FinalReleaseComObject(props);
                 Marshal.FinalReleaseComObject(store);
                 Marshal.FinalReleaseComObject(item);
             }
@@ -110,7 +106,7 @@ namespace TaskLeader.BLL
         }
         
         // Affichage d'un mail à partir de son ID
-        public void displayMail(TLaction action)
+        public void displayMail(Mail mailData)
         {
             // Récupération de l'objet Application
             if (this.outlook == null)
@@ -118,7 +114,7 @@ namespace TaskLeader.BLL
             
             Outlook.MailItem mail;
 
-            if (tryGetMailFromId(action.EntryID, action.StoreID, out mail))
+            if (tryGetMailFromId(mailData.EntryID, mailData.StoreID, out mail))
                 mail.Display();
             else
             {

@@ -148,7 +148,7 @@ namespace TaskLeader.GUI
         // Affichage du mail source
         private void outlookPic_Click(object sender, EventArgs e)
         {
-            OutlookIF.Instance.displayMail(this.v_action);
+            OutlookIF.Instance.displayMail(v_action.mail);
         }
     }
 }

@@ -109,19 +109,8 @@ namespace TaskLeader.GUI
             action.Statut = ligne["Statut"].Value.ToString();
             
             // Récupération des informations du mail lié le cas échéant
-            if(ligne["Mail"].Value.ToString() != "")//TODO: modifier quand les images seront gérées
-            {
-                // Récupération du tooltip de la cellule
-                //String tooltip = ligne["Mail"].ToolTipText;
-                //String mailID = tooltip.Substring(1, tooltip.Length - 1); // On élimine le '#'
-                String mailID = ligne["Mail"].Value.ToString();
-
-                // Récupération des informations du mail
-                DataTable mailData = ReadDB.Instance.getMailData(mailID);
-                action.StoreID = mailData.Rows[0]["StoreID"].ToString();
-                action.EntryID = mailData.Rows[0]["EntryID"].ToString();
-                action.MessageID = mailData.Rows[0]["MessageID"].ToString();
-            }
+            if(ligne["Mail"].Value.ToString() != "")
+                action.mail = new Mail(ligne["Mail"].Value.ToString()); // Quand on formatte une cellule on ne modifie pas sa Value
             
             return action;
         }
@@ -201,10 +190,7 @@ namespace TaskLeader.GUI
             if (grilleData.Columns[e.ColumnIndex].Name.Equals("Mail"))
             {
                 if (e.Value as String != null)
-                {
-                    grilleData[e.ColumnIndex, e.RowIndex].ToolTipText = "#" + e.Value as String;
-                    e.Value = TaskLeader.Properties.Resources.outlook;
-                }
+                    e.Value = TaskLeader.Properties.Resources.outlook;                  
                 else
                     e.CellStyle.NullValue = null;
             }
@@ -233,6 +219,7 @@ namespace TaskLeader.GUI
         private void filtreAction(object sender, EventArgs e)
         {
             Filtre filtre = new Filtre(CtxtAllRadio.Checked,ctxtListBox.CheckedItems,SujAllRadio.Checked,sujetListBox.CheckedItems,destAllRadio.Checked,destListBox.CheckedItems,statAllRadio.Checked,statutListBox.CheckedItems);
+            // Pas de nom de filtre, il s'agit d'un filtre manuel
             this.afficheActions(filtre);
         }
 
@@ -254,6 +241,26 @@ namespace TaskLeader.GUI
                 //Affichage du menu contextuel
                 listeContext.Show(Cursor.Position);
             }
+
+            if (e.Button == MouseButtons.Left &&
+                grilleData.Columns[e.ColumnIndex].Name.Equals("Mail") &&
+                grilleData[e.ColumnIndex, e.RowIndex].Value.ToString() != "")
+                OutlookIF.Instance.displayMail(new Mail(grilleData.Rows[e.RowIndex].Cells["Mail"].Value.ToString()));
+        }
+
+        // Affichade d'un curseur doigt si mail attaché.
+        private void grilleData_CellMouseEnter(object sender, DataGridViewCellEventArgs e)
+        {
+            if (grilleData.Columns[e.ColumnIndex].Name.Equals("Mail") &&
+                grilleData[e.ColumnIndex, e.RowIndex].Value.ToString() != "")
+                this.Cursor = Cursors.Hand;
+        }
+
+        private void grilleData_CellMouseLeave(object sender, DataGridViewCellEventArgs e)
+        {
+            if (grilleData.Columns[e.ColumnIndex].Name.Equals("Mail") &&
+                grilleData[e.ColumnIndex, e.RowIndex].Value.ToString() != "")
+                this.Cursor = Cursors.Default;
         }
 
         // Copie de l'action dans le presse-papier
@@ -268,9 +275,10 @@ namespace TaskLeader.GUI
             if (filterCombo.Text != "")
             {
                 Filtre filtre = new Filtre(CtxtAllRadio.Checked,ctxtListBox.CheckedItems,SujAllRadio.Checked,sujetListBox.CheckedItems,destAllRadio.Checked,destListBox.CheckedItems,statAllRadio.Checked,statutListBox.CheckedItems);
-                if(ReadDB.Instance.isNvoFiltre(filterCombo.Text))
+                filtre.nom = filterCombo.Text;
+                if (ReadDB.Instance.isNvoFiltre(filtre))
                 {
-                    WriteDB.Instance.insertFiltre(filterCombo.Text, filtre.criteria);
+                    WriteDB.Instance.insertFiltre(filtre);
                     // On vide la liste des filtres et on efface la sélection
                     filterCombo.Items.Clear();
                     filterCombo.Text = "";
@@ -370,5 +378,7 @@ namespace TaskLeader.GUI
             else
                 MessageBox.Show("Veuillez entrer un nom de filtre", "Application d'un filtre", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
         }
+
+        
     }
 }
