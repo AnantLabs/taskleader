@@ -260,6 +260,7 @@ namespace TaskLeader.GUI
         private void grilleData_CellMouseLeave(object sender, DataGridViewCellEventArgs e)
         {
             if (grilleData.Columns[e.ColumnIndex].Name.Equals("Mail") &&
+                e.RowIndex >= 0 &&
                 grilleData[e.ColumnIndex, e.RowIndex].Value.ToString() != "")
                 this.Cursor = Cursors.Default;
         }
