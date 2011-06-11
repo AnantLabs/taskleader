@@ -23,20 +23,17 @@ namespace TaskLeader.GUI
         /// </summary>
         private void Toolbox_Load(object sender, EventArgs e)
         {
+            // Mention du nom de la version dans le titre de la fenêtre
             this.Text += " v"+Application.ProductVersion;
 
-            filterCombo.Items.AddRange(ReadDB.Instance.getFiltersName()); 
-            
-            foreach (object item in ReadDB.Instance.getCtxt())
-                ctxtListBox.Items.Add(item,true); // Remplissage de la combobox contextes en sélectionnant par défaut
+            // Remplissage de la combo des filtres
+            filterCombo.Items.AddRange(ReadDB.Instance.getFiltersName());
 
-            foreach (object item in ReadDB.Instance.getDest()) // C'est pas bien mais il n'y a pas de code business
-                destListBox.Items.Add(item,true); // Remplissage de la combobox destinataires en sélectionnant par défaut
-
-            foreach (object item in ReadDB.Instance.getStatut()) // C'est pas bien mais il n'y a pas de code business
+            // Remplissage de la ListBox des statuts + menu contextuel
+            foreach (object item in ReadDB.Instance.getStatut())
             {
-                statutListBox.Items.Add(item, true); // Remplissage de la combobox statuts en sélectionnant par défaut
-                statutTSMenuItem.DropDown.Items.Add(item.ToString(),null,this.changeStat); // Remplissage du DropDownMenu sur la liste
+                statutListBox.Items.Add(item, true); // Sélection des statuts par défaut
+                statutTSMenuItem.DropDown.Items.Add(item.ToString(), null, this.changeStat);
             }
 
             // Création de la colonne mail
@@ -53,37 +50,28 @@ namespace TaskLeader.GUI
             foreach (string key in section)
                 this.exportMenuItem.DropDown.Items.Add(key, null, this.exportRow);
 
-            // Si un filtre est actif on l'affiche
-            if (Filtre.CurrentFilter != null)
-                this.showFilter(Filtre.CurrentFilter);           
+            // Remplissage des dernières ListBox
+            this.miseAjour(sender, e);
         }
         
         // Rafraîchissement de la page
         public void miseAjour(object sender, EventArgs e)
-        {           
-            // Mise à jour de la liste avec le dernier filtre joué
-            if(Filtre.CurrentFilter != null)
-                afficheActions(Filtre.CurrentFilter);
+        {
+            // Vidage de toutes les ListBox
+            this.ctxtListBox.Items.Clear();
+            this.destListBox.Items.Clear();           
 
-            /*
-            //Mise à jour de la liste des contextes
-            if(bilan.Contains("Nouveau contexte"))
-                foreach (String item in services.getCtxt())
-                    if (!ctxtListBox.Items.Contains(item))
-                        ctxtListBox.Items.Add(item);
+            // Remplissage de la ListBox des contextes
+            foreach (object item in ReadDB.Instance.getCtxt())
+                ctxtListBox.Items.Add(item, true); // Sélection des contextes par défaut
 
-            // Mise à jour de la liste des sujets
-            if(ctxtListBox.CheckedItems.Count==1 && bilan.Contains("Nouveau sujet"))
-                foreach (String item in services.getSujet((String)ctxtListBox.CheckedItems[0]))
-                    if (!sujetListBox.Items.Contains(item))
-                        sujetListBox.Items.Add(item);
+            // Remplissage de la ListBox des destinataires
+            foreach (object item in ReadDB.Instance.getDest())
+                destListBox.Items.Add(item, true); // Sélection des destinataires par défaut
 
-            //Mise à jour de la liste des destinataires
-            if (bilan.Contains("Nouveau destinataire"))
-                foreach (String item in services.getDest())
-                    if (!destListBox.Items.Contains(item))
-                        destListBox.Items.Add(item);
-             */
+            // Si un filtre est actif on l'affiche
+            if (Filtre.CurrentFilter != null)
+                this.showFilter(Filtre.CurrentFilter);  
         }
 
         // Ouverture de la gui création d'action
