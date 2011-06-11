@@ -229,10 +229,14 @@ namespace TaskLeader.DAL
 
             String updatePart = ctxtPart + sujetPart + actionPart + datePart + destPart + statPart;
 
-            String requete = "UPDATE Actions SET " + updatePart.Substring(0,updatePart.Length-1) + " WHERE rowid='" + action.ID + "'";
-            //TODO: et si rien n'a changé ?
-
-            return execSQL(requete);
+            String requete;
+            if (updatePart.Length > 0)
+            {
+                requete = "UPDATE Actions SET " + updatePart.Substring(0, updatePart.Length - 1) + " WHERE rowid='" + action.ID + "'";
+                return execSQL(requete);
+            }
+            else
+                return 0;           
         }
     }
 }
