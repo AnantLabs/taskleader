@@ -118,18 +118,7 @@ namespace TaskLeader.GUI
         // Mise à jour du statut d'une action via le menu contextuel
         private void changeStat(object sender, EventArgs e)
         {
-            // Récupération de l'action
-            TLaction action = getActionFromRow(grilleData.SelectedRows[0].Cells);
-            action.freezeInitState();
 
-            // On récupère le nouveau statut
-            action.Statut = ((ToolStripItem)sender).Text;
-            
-            // On met à jour le statut de l'action que s'il a changé
-            if (action.statusHasChanged)
-                DataManager.Instance.saveAction(action);
-
-            this.miseAjour(null,null);
         }
 
         // Méthode appelée quand checks des contextes changent
@@ -138,12 +127,11 @@ namespace TaskLeader.GUI
             // Dans tous les cas de changements de séléction on vide la liste
             sujetListBox.Items.Clear();
 
-            // On n'affiche la liste des sujets que si un seul contexte est sélectionné
+            // On n'affiche la liste des sujets que si un seul contexte est tické
             if (ctxtListBox.CheckedItems.Count == 1)
             {
-                //Activation des radio buttons
-                SujSelRadio.Enabled = true;
-                SujAllRadio.Enabled = true;
+                //Activation de la checkBox all
+                allSujt.Enabled = true;
                 //Remplissage de la liste
                 foreach (object item in ReadDB.Instance.getSujet((String)ctxtListBox.CheckedItems[0].ToString()))
                     sujetListBox.Items.Add(item, true);
@@ -151,10 +139,7 @@ namespace TaskLeader.GUI
             else
             {
                 //Dans tous les autres cas on grise les radio buttons
-                SujSelRadio.Enabled = false;
-                SujAllRadio.Enabled = false;
-                //Et on active "Sélection"
-                //SujSelRadio.Checked = true;
+                allSujt.Enabled = false;
             }
         }
         
@@ -206,7 +191,7 @@ namespace TaskLeader.GUI
         // Affichage des actions sur filtre manuel
         private void filtreAction(object sender, EventArgs e)
         {
-            Filtre filtre = new Filtre(CtxtAllRadio.Checked,ctxtListBox.CheckedItems,SujAllRadio.Checked,sujetListBox.CheckedItems,destAllRadio.Checked,destListBox.CheckedItems,statAllRadio.Checked,statutListBox.CheckedItems);
+            Filtre filtre = new Filtre(allCtxt.Checked,ctxtListBox.CheckedItems,allSujt.Checked,sujetListBox.CheckedItems,allDest.Checked,destListBox.CheckedItems,allStat.Checked,statutListBox.CheckedItems);
             // Pas de nom de filtre, il s'agit d'un filtre manuel
             this.afficheActions(filtre);
         }
@@ -236,7 +221,7 @@ namespace TaskLeader.GUI
                 OutlookIF.Instance.displayMail(new Mail(grilleData.Rows[e.RowIndex].Cells["Mail"].Value.ToString()));
         }
 
-        // Affichade d'un curseur doigt si mail attaché.
+        // Affichage d'un curseur doigt si mail attaché.
         private void grilleData_CellMouseEnter(object sender, DataGridViewCellEventArgs e)
         {
             if (grilleData.Columns[e.ColumnIndex].Name.Equals("Mail") &&
@@ -264,7 +249,7 @@ namespace TaskLeader.GUI
         {
             if (filterCombo.Text != "")
             {
-                Filtre filtre = new Filtre(CtxtAllRadio.Checked,ctxtListBox.CheckedItems,SujAllRadio.Checked,sujetListBox.CheckedItems,destAllRadio.Checked,destListBox.CheckedItems,statAllRadio.Checked,statutListBox.CheckedItems);
+                Filtre filtre = new Filtre(allCtxt.Checked, ctxtListBox.CheckedItems, allSujt.Checked, sujetListBox.CheckedItems, allDest.Checked, destListBox.CheckedItems, allStat.Checked, statutListBox.CheckedItems);
                 filtre.nom = filterCombo.Text;
                 if (ReadDB.Instance.isNvoFiltre(filtre))
                 {
@@ -282,48 +267,55 @@ namespace TaskLeader.GUI
                 MessageBox.Show("Le nom du filtre ne peut être vide", "Sauvegarde de filtre", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);     
         }
 
-        //Routine générique permettant de griser les listes et sélectionner tous les items
-        private void DisableAndSelectAll(CheckedListBox list, RadioButton radio)
+        //Routine générique permettant de (dé)sélectionner tous les items
+        private void allBox_Click(object sender, EventArgs e)
         {
-            for (int i = 0; i < list.Items.Count; i++)
-                list.SetItemChecked(i, true);
+            CheckedListBox list = new CheckedListBox();
 
-            list.Enabled = !radio.Checked;
-        }
-
-        //Application sur liste contexte
-        private void CtxtAllRadio_CheckedChanged(object sender, EventArgs e)
-        {
-            DisableAndSelectAll(ctxtListBox, (RadioButton)sender);
-        }
-
-        //Application sur liste destinataires
-        private void destAllRadio_CheckedChanged(object sender, EventArgs e)
-        {
-            DisableAndSelectAll(destListBox, (RadioButton)sender);
-        }
-
-        //Application sur liste sujets
-        private void SujAllRadio_CheckedChanged(object sender, EventArgs e)
-        {
-            DisableAndSelectAll(sujetListBox, (RadioButton)sender);
-        }
-
-        //Application sur liste statuts
-        private void statAllRadio_CheckedChanged(object sender, EventArgs e)
-        {
-            DisableAndSelectAll(statutListBox, (RadioButton)sender);
-        }
-
-        // Méthode générique utilisée pour appliquer un filtre dans les CheckedListBox
-        private void checkSelection(RadioButton selRadio,CheckedListBox liste, IList criteres)
-        {
-            selRadio.Checked = true; // Sélection du radio Sélection
-            for (int i = 0; i < liste.Items.Count; i++) // Parcours de la ListBox
+            switch (((Control)sender).Name)
             {
-                int index = criteres.IndexOf(liste.Items[i]); // Recherche de l'item dans le filtre
-                liste.SetItemChecked(i, !(index == -1));
-            }    
+                case ("allCtxt"): //Contexte
+                    list = ctxtListBox;
+                    break;
+                case ("allSujt"): //Contexte
+                    list = sujetListBox;
+                    break;
+                case ("allDest"): //Contexte
+                    list = destListBox;
+                    break;
+                case ("allStat"): //Contexte
+                    list = statutListBox;
+                    break;
+            }
+
+            for (int i = 0; i < list.Items.Count; i++)
+                list.SetItemChecked(i, ((CheckBox)sender).Checked);
+        }
+        
+        //Routine générique pour activation checkbox all
+        private void listBox_Click(object sender, EventArgs e)
+        {
+            CheckBox box = new CheckBox();
+
+            switch (((Control)sender).Name)
+            {
+                case ("ctxtListBox"):
+                    //updateSujet(sender,e);
+                    box = allCtxt;
+                    break;
+                case ("sujetListBox"):
+                    box = allSujt;
+                    break;
+                case ("destListBox"): 
+                    box = allDest;
+                    break;
+                case ("statutListBox"):
+                    box = allStat;
+                    break;
+            }
+
+            if (box.Checked)
+                box.Checked = false;
         }
 
         /// <summary>
@@ -332,9 +324,15 @@ namespace TaskLeader.GUI
         private void showFilter(Filtre filtre)
         {              
             // Passage de toutes les checkboxes à ALL
-            CtxtAllRadio.Checked = true;
-            destAllRadio.Checked = true;
-            statAllRadio.Checked = true;
+            allCtxt.Checked = true;
+            allBox_Click(allCtxt, new EventArgs());
+            allDest.Checked = true;
+            allBox_Click(allDest, new EventArgs());
+            allStat.Checked = true;
+            allBox_Click(allStat, new EventArgs());
+
+            CheckBox box = new CheckBox();
+            CheckedListBox list = new CheckedListBox();
 
             // Tickage des bons critères
             foreach (Criterium critere in filtre.criteria)
@@ -342,17 +340,28 @@ namespace TaskLeader.GUI
                 switch (critere.champ)
                 {
                     case(0): //Contexte
-                        checkSelection(CtxtSelRadio, ctxtListBox, critere.selected);                          
+                        box = allCtxt;
+                        list = ctxtListBox;                         
                         break;
                     case(1): //Sujet
-                        checkSelection(SujSelRadio, sujetListBox, critere.selected);                          
+                        box = allSujt;
+                        list = sujetListBox;                         
                         break;
                     case(2): //Destinataire
-                        checkSelection(destSelRadio, destListBox, critere.selected);                          
+                        box = allDest;
+                        list = destListBox;                         
                         break;
                     case(3): //Statut
-                        checkSelection(statSelRadio, statutListBox, critere.selected);
+                        box = allStat;
+                        list = statutListBox;
                         break;
+                }
+
+                box.Checked = false; // La checkbox "Tous" n'est pas sélectionnée
+                for (int i = 0; i < list.Items.Count; i++) // Parcours de la ListBox
+                {
+                    int index = critere.selected.IndexOf(list.Items[i]); // Recherche de l'item dans le filtre
+                    list.SetItemChecked(i, !(index == -1));
                 }
             }
 
@@ -368,7 +377,5 @@ namespace TaskLeader.GUI
             else
                 MessageBox.Show("Veuillez entrer un nom de filtre", "Application d'un filtre", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
         }
-
-        
     }
 }
