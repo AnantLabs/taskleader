@@ -33,60 +33,54 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Toolbox));
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.grilleData = new System.Windows.Forms.DataGridView();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.flowLayoutPanel4 = new System.Windows.Forms.FlowLayoutPanel();
             this.filterCombo = new System.Windows.Forms.ComboBox();
             this.openFilterBut = new System.Windows.Forms.Button();
             this.saveFilterBut = new System.Windows.Forms.Button();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
-            this.CtxtSelRadio = new System.Windows.Forms.RadioButton();
-            this.CtxtAllRadio = new System.Windows.Forms.RadioButton();
+            this.groupBox7 = new System.Windows.Forms.GroupBox();
+            this.flowLayoutPanel10 = new System.Windows.Forms.FlowLayoutPanel();
+            this.allCtxt = new System.Windows.Forms.CheckBox();
+            this.label2 = new System.Windows.Forms.Label();
             this.ctxtListBox = new System.Windows.Forms.CheckedListBox();
-            this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.flowLayoutPanel5 = new System.Windows.Forms.FlowLayoutPanel();
-            this.SujSelRadio = new System.Windows.Forms.RadioButton();
-            this.SujAllRadio = new System.Windows.Forms.RadioButton();
+            this.allSujt = new System.Windows.Forms.CheckBox();
+            this.label3 = new System.Windows.Forms.Label();
             this.sujetListBox = new System.Windows.Forms.CheckedListBox();
-            this.groupBox5 = new System.Windows.Forms.GroupBox();
-            this.flowLayoutPanel6 = new System.Windows.Forms.FlowLayoutPanel();
-            this.destSelRadio = new System.Windows.Forms.RadioButton();
-            this.destAllRadio = new System.Windows.Forms.RadioButton();
+            this.allDest = new System.Windows.Forms.CheckBox();
+            this.label4 = new System.Windows.Forms.Label();
             this.destListBox = new System.Windows.Forms.CheckedListBox();
-            this.groupBox6 = new System.Windows.Forms.GroupBox();
-            this.flowLayoutPanel7 = new System.Windows.Forms.FlowLayoutPanel();
-            this.statSelRadio = new System.Windows.Forms.RadioButton();
-            this.statAllRadio = new System.Windows.Forms.RadioButton();
+            this.allStat = new System.Windows.Forms.CheckBox();
+            this.label5 = new System.Windows.Forms.Label();
             this.statutListBox = new System.Windows.Forms.CheckedListBox();
             this.filtreBout = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
             this.flowLayoutPanel8 = new System.Windows.Forms.FlowLayoutPanel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
             this.addBout = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
+            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+            this.flowLayoutPanel9 = new System.Windows.Forms.FlowLayoutPanel();
+            this.label1 = new System.Windows.Forms.Label();
+            this.searchBox = new System.Windows.Forms.TextBox();
+            this.searchButton = new System.Windows.Forms.Button();
+            this.grilleData = new System.Windows.Forms.DataGridView();
             this.listeContext = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.editActionItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statutTSMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tableLayoutPanel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.grilleData)).BeginInit();
             this.flowLayoutPanel1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.flowLayoutPanel4.SuspendLayout();
-            this.groupBox3.SuspendLayout();
-            this.flowLayoutPanel3.SuspendLayout();
-            this.groupBox4.SuspendLayout();
-            this.flowLayoutPanel5.SuspendLayout();
-            this.groupBox5.SuspendLayout();
-            this.flowLayoutPanel6.SuspendLayout();
-            this.groupBox6.SuspendLayout();
-            this.flowLayoutPanel7.SuspendLayout();
+            this.groupBox7.SuspendLayout();
+            this.flowLayoutPanel10.SuspendLayout();
             this.flowLayoutPanel8.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
+            this.tableLayoutPanel2.SuspendLayout();
+            this.flowLayoutPanel9.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.grilleData)).BeginInit();
             this.listeContext.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -96,71 +90,33 @@
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 170F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 70F));
-            this.tableLayoutPanel1.Controls.Add(this.grilleData, 1, 0);
             this.tableLayoutPanel1.Controls.Add(this.flowLayoutPanel1, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.flowLayoutPanel8, 2, 0);
+            this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel2, 1, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 1;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(484, 742);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(614, 662);
             this.tableLayoutPanel1.TabIndex = 4;
-            // 
-            // grilleData
-            // 
-            this.grilleData.AllowUserToAddRows = false;
-            this.grilleData.AllowUserToDeleteRows = false;
-            this.grilleData.AllowUserToResizeRows = false;
-            this.grilleData.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.DisplayedCells;
-            this.grilleData.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.DisplayedCells;
-            this.grilleData.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableAlwaysIncludeHeaderText;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.ControlDark;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.grilleData.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
-            this.grilleData.ColumnHeadersHeight = 30;
-            this.grilleData.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
-            this.grilleData.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.grilleData.Location = new System.Drawing.Point(173, 3);
-            this.grilleData.MultiSelect = false;
-            this.grilleData.Name = "grilleData";
-            this.grilleData.ReadOnly = true;
-            this.grilleData.RowHeadersVisible = false;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.grilleData.RowsDefaultCellStyle = dataGridViewCellStyle2;
-            this.grilleData.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.grilleData.Size = new System.Drawing.Size(238, 736);
-            this.grilleData.TabIndex = 4;
-            this.grilleData.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.modifAction);
-            this.grilleData.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.grilleData_CellFormatting);
-            this.grilleData.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.grilleData_CellMouseClick);
-            this.grilleData.CellMouseEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.grilleData_CellMouseEnter);
-            this.grilleData.CellMouseLeave += new System.Windows.Forms.DataGridViewCellEventHandler(this.grilleData_CellMouseLeave);
             // 
             // flowLayoutPanel1
             // 
             this.flowLayoutPanel1.Controls.Add(this.groupBox2);
-            this.flowLayoutPanel1.Controls.Add(this.groupBox3);
-            this.flowLayoutPanel1.Controls.Add(this.groupBox4);
-            this.flowLayoutPanel1.Controls.Add(this.groupBox5);
-            this.flowLayoutPanel1.Controls.Add(this.groupBox6);
+            this.flowLayoutPanel1.Controls.Add(this.groupBox7);
             this.flowLayoutPanel1.Controls.Add(this.filtreBout);
-            this.flowLayoutPanel1.Controls.Add(this.button2);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 3);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(164, 736);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(164, 656);
             this.flowLayoutPanel1.TabIndex = 5;
             // 
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.flowLayoutPanel4);
-            this.groupBox2.Location = new System.Drawing.Point(3, 3);
+            this.groupBox2.Location = new System.Drawing.Point(4, 3);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(157, 90);
             this.groupBox2.TabIndex = 1;
@@ -207,231 +163,181 @@
             this.saveFilterBut.UseVisualStyleBackColor = true;
             this.saveFilterBut.Click += new System.EventHandler(this.saveFilterBut_Click);
             // 
-            // groupBox3
+            // groupBox7
             // 
-            this.groupBox3.Controls.Add(this.flowLayoutPanel3);
-            this.groupBox3.Location = new System.Drawing.Point(3, 99);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(157, 146);
-            this.groupBox3.TabIndex = 3;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Contextes";
+            this.groupBox7.Controls.Add(this.flowLayoutPanel10);
+            this.groupBox7.Location = new System.Drawing.Point(4, 99);
+            this.groupBox7.Name = "groupBox7";
+            this.groupBox7.Size = new System.Drawing.Size(157, 500);
+            this.groupBox7.TabIndex = 11;
+            this.groupBox7.TabStop = false;
+            this.groupBox7.Text = "Filtres manuels";
             // 
-            // flowLayoutPanel3
+            // flowLayoutPanel10
             // 
-            this.flowLayoutPanel3.Controls.Add(this.CtxtSelRadio);
-            this.flowLayoutPanel3.Controls.Add(this.CtxtAllRadio);
-            this.flowLayoutPanel3.Controls.Add(this.ctxtListBox);
-            this.flowLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel3.Location = new System.Drawing.Point(3, 16);
-            this.flowLayoutPanel3.Name = "flowLayoutPanel3";
-            this.flowLayoutPanel3.Size = new System.Drawing.Size(151, 127);
-            this.flowLayoutPanel3.TabIndex = 15;
+            this.flowLayoutPanel10.Controls.Add(this.allCtxt);
+            this.flowLayoutPanel10.Controls.Add(this.label2);
+            this.flowLayoutPanel10.Controls.Add(this.ctxtListBox);
+            this.flowLayoutPanel10.Controls.Add(this.allSujt);
+            this.flowLayoutPanel10.Controls.Add(this.label3);
+            this.flowLayoutPanel10.Controls.Add(this.sujetListBox);
+            this.flowLayoutPanel10.Controls.Add(this.allDest);
+            this.flowLayoutPanel10.Controls.Add(this.label4);
+            this.flowLayoutPanel10.Controls.Add(this.destListBox);
+            this.flowLayoutPanel10.Controls.Add(this.allStat);
+            this.flowLayoutPanel10.Controls.Add(this.label5);
+            this.flowLayoutPanel10.Controls.Add(this.statutListBox);
+            this.flowLayoutPanel10.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanel10.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
+            this.flowLayoutPanel10.Location = new System.Drawing.Point(3, 16);
+            this.flowLayoutPanel10.Name = "flowLayoutPanel10";
+            this.flowLayoutPanel10.Size = new System.Drawing.Size(151, 481);
+            this.flowLayoutPanel10.TabIndex = 0;
             // 
-            // CtxtSelRadio
+            // allCtxt
             // 
-            this.CtxtSelRadio.AutoSize = true;
-            this.CtxtSelRadio.Location = new System.Drawing.Point(3, 3);
-            this.CtxtSelRadio.Name = "CtxtSelRadio";
-            this.CtxtSelRadio.Size = new System.Drawing.Size(69, 17);
-            this.CtxtSelRadio.TabIndex = 13;
-            this.CtxtSelRadio.Text = "Sélection";
-            this.CtxtSelRadio.UseVisualStyleBackColor = true;
+            this.allCtxt.AutoSize = true;
+            this.allCtxt.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.allCtxt.Checked = true;
+            this.allCtxt.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.allCtxt.Location = new System.Drawing.Point(98, 3);
+            this.allCtxt.Name = "allCtxt";
+            this.allCtxt.Size = new System.Drawing.Size(50, 17);
+            this.allCtxt.TabIndex = 10;
+            this.allCtxt.Text = "Tous";
+            this.allCtxt.UseVisualStyleBackColor = true;
+            this.allCtxt.Click += new System.EventHandler(this.allBox_Click);
             // 
-            // CtxtAllRadio
+            // label2
             // 
-            this.CtxtAllRadio.AutoSize = true;
-            this.CtxtAllRadio.Checked = true;
-            this.CtxtAllRadio.Location = new System.Drawing.Point(78, 3);
-            this.CtxtAllRadio.Name = "CtxtAllRadio";
-            this.CtxtAllRadio.Size = new System.Drawing.Size(49, 17);
-            this.CtxtAllRadio.TabIndex = 14;
-            this.CtxtAllRadio.TabStop = true;
-            this.CtxtAllRadio.Text = "Tous";
-            this.CtxtAllRadio.UseVisualStyleBackColor = true;
-            this.CtxtAllRadio.CheckedChanged += new System.EventHandler(this.CtxtAllRadio_CheckedChanged);
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(3, 4);
+            this.label2.Margin = new System.Windows.Forms.Padding(3, 4, 38, 0);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(54, 13);
+            this.label2.TabIndex = 9;
+            this.label2.Text = "Contextes";
             // 
             // ctxtListBox
             // 
             this.ctxtListBox.CheckOnClick = true;
-            this.ctxtListBox.Enabled = false;
             this.ctxtListBox.FormattingEnabled = true;
-            this.ctxtListBox.Location = new System.Drawing.Point(3, 26);
+            this.ctxtListBox.Location = new System.Drawing.Point(0, 26);
             this.ctxtListBox.Name = "ctxtListBox";
             this.ctxtListBox.Size = new System.Drawing.Size(148, 94);
             this.ctxtListBox.TabIndex = 1;
-            this.ctxtListBox.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.updateSujet);
+            this.ctxtListBox.Click += new System.EventHandler(this.listBox_Click);
             this.ctxtListBox.SelectedIndexChanged += new System.EventHandler(this.updateSujet);
             // 
-            // groupBox4
+            // allSujt
             // 
-            this.groupBox4.Controls.Add(this.flowLayoutPanel5);
-            this.groupBox4.Location = new System.Drawing.Point(3, 251);
-            this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(157, 146);
-            this.groupBox4.TabIndex = 4;
-            this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "Sujets";
+            this.allSujt.AutoSize = true;
+            this.allSujt.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.allSujt.Checked = true;
+            this.allSujt.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.allSujt.Enabled = false;
+            this.allSujt.Location = new System.Drawing.Point(98, 126);
+            this.allSujt.Name = "allSujt";
+            this.allSujt.Size = new System.Drawing.Size(50, 17);
+            this.allSujt.TabIndex = 10;
+            this.allSujt.Text = "Tous";
+            this.allSujt.UseVisualStyleBackColor = true;
+            this.allSujt.Click += new System.EventHandler(this.allBox_Click);
             // 
-            // flowLayoutPanel5
+            // label3
             // 
-            this.flowLayoutPanel5.Controls.Add(this.SujSelRadio);
-            this.flowLayoutPanel5.Controls.Add(this.SujAllRadio);
-            this.flowLayoutPanel5.Controls.Add(this.sujetListBox);
-            this.flowLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel5.Location = new System.Drawing.Point(3, 16);
-            this.flowLayoutPanel5.Name = "flowLayoutPanel5";
-            this.flowLayoutPanel5.Size = new System.Drawing.Size(151, 127);
-            this.flowLayoutPanel5.TabIndex = 0;
-            // 
-            // SujSelRadio
-            // 
-            this.SujSelRadio.AutoSize = true;
-            this.SujSelRadio.Enabled = false;
-            this.SujSelRadio.Location = new System.Drawing.Point(3, 3);
-            this.SujSelRadio.Name = "SujSelRadio";
-            this.SujSelRadio.Size = new System.Drawing.Size(69, 17);
-            this.SujSelRadio.TabIndex = 13;
-            this.SujSelRadio.Text = "Sélection";
-            this.SujSelRadio.UseVisualStyleBackColor = true;
-            // 
-            // SujAllRadio
-            // 
-            this.SujAllRadio.AutoSize = true;
-            this.SujAllRadio.Checked = true;
-            this.SujAllRadio.Enabled = false;
-            this.SujAllRadio.Location = new System.Drawing.Point(78, 3);
-            this.SujAllRadio.Name = "SujAllRadio";
-            this.SujAllRadio.Size = new System.Drawing.Size(49, 17);
-            this.SujAllRadio.TabIndex = 14;
-            this.SujAllRadio.TabStop = true;
-            this.SujAllRadio.Text = "Tous";
-            this.SujAllRadio.UseVisualStyleBackColor = true;
-            this.SujAllRadio.CheckedChanged += new System.EventHandler(this.SujAllRadio_CheckedChanged);
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(3, 127);
+            this.label3.Margin = new System.Windows.Forms.Padding(3, 4, 56, 0);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(36, 13);
+            this.label3.TabIndex = 9;
+            this.label3.Text = "Sujets";
             // 
             // sujetListBox
             // 
             this.sujetListBox.CheckOnClick = true;
             this.sujetListBox.Enabled = false;
             this.sujetListBox.FormattingEnabled = true;
-            this.sujetListBox.Location = new System.Drawing.Point(3, 26);
+            this.sujetListBox.Location = new System.Drawing.Point(0, 149);
             this.sujetListBox.Name = "sujetListBox";
             this.sujetListBox.Size = new System.Drawing.Size(148, 94);
             this.sujetListBox.TabIndex = 3;
+            this.sujetListBox.Click += new System.EventHandler(this.listBox_Click);
             // 
-            // groupBox5
+            // allDest
             // 
-            this.groupBox5.Controls.Add(this.flowLayoutPanel6);
-            this.groupBox5.Location = new System.Drawing.Point(3, 403);
-            this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(157, 146);
-            this.groupBox5.TabIndex = 5;
-            this.groupBox5.TabStop = false;
-            this.groupBox5.Text = "Destinataires";
+            this.allDest.AutoSize = true;
+            this.allDest.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.allDest.Checked = true;
+            this.allDest.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.allDest.Location = new System.Drawing.Point(98, 249);
+            this.allDest.Name = "allDest";
+            this.allDest.Size = new System.Drawing.Size(50, 17);
+            this.allDest.TabIndex = 10;
+            this.allDest.Text = "Tous";
+            this.allDest.UseVisualStyleBackColor = true;
+            this.allDest.Click += new System.EventHandler(this.allBox_Click);
             // 
-            // flowLayoutPanel6
+            // label4
             // 
-            this.flowLayoutPanel6.Controls.Add(this.destSelRadio);
-            this.flowLayoutPanel6.Controls.Add(this.destAllRadio);
-            this.flowLayoutPanel6.Controls.Add(this.destListBox);
-            this.flowLayoutPanel6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel6.Location = new System.Drawing.Point(3, 16);
-            this.flowLayoutPanel6.Name = "flowLayoutPanel6";
-            this.flowLayoutPanel6.Size = new System.Drawing.Size(151, 127);
-            this.flowLayoutPanel6.TabIndex = 0;
-            // 
-            // destSelRadio
-            // 
-            this.destSelRadio.AutoSize = true;
-            this.destSelRadio.Location = new System.Drawing.Point(3, 3);
-            this.destSelRadio.Name = "destSelRadio";
-            this.destSelRadio.Size = new System.Drawing.Size(69, 17);
-            this.destSelRadio.TabIndex = 13;
-            this.destSelRadio.Text = "Sélection";
-            this.destSelRadio.UseVisualStyleBackColor = true;
-            // 
-            // destAllRadio
-            // 
-            this.destAllRadio.AutoSize = true;
-            this.destAllRadio.Checked = true;
-            this.destAllRadio.Location = new System.Drawing.Point(78, 3);
-            this.destAllRadio.Name = "destAllRadio";
-            this.destAllRadio.Size = new System.Drawing.Size(49, 17);
-            this.destAllRadio.TabIndex = 14;
-            this.destAllRadio.TabStop = true;
-            this.destAllRadio.Text = "Tous";
-            this.destAllRadio.UseVisualStyleBackColor = true;
-            this.destAllRadio.CheckedChanged += new System.EventHandler(this.destAllRadio_CheckedChanged);
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(3, 250);
+            this.label4.Margin = new System.Windows.Forms.Padding(3, 4, 24, 0);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(68, 13);
+            this.label4.TabIndex = 9;
+            this.label4.Text = "Destinataires";
             // 
             // destListBox
             // 
             this.destListBox.CheckOnClick = true;
-            this.destListBox.Enabled = false;
             this.destListBox.FormattingEnabled = true;
-            this.destListBox.Location = new System.Drawing.Point(3, 26);
+            this.destListBox.Location = new System.Drawing.Point(0, 272);
             this.destListBox.Name = "destListBox";
             this.destListBox.Size = new System.Drawing.Size(148, 94);
             this.destListBox.TabIndex = 5;
+            this.destListBox.Click += new System.EventHandler(this.listBox_Click);
             // 
-            // groupBox6
+            // allStat
             // 
-            this.groupBox6.Controls.Add(this.flowLayoutPanel7);
-            this.groupBox6.Location = new System.Drawing.Point(3, 555);
-            this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(157, 130);
-            this.groupBox6.TabIndex = 6;
-            this.groupBox6.TabStop = false;
-            this.groupBox6.Text = "Statuts";
+            this.allStat.AutoSize = true;
+            this.allStat.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.allStat.Checked = true;
+            this.allStat.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.allStat.Location = new System.Drawing.Point(98, 372);
+            this.allStat.Name = "allStat";
+            this.allStat.Size = new System.Drawing.Size(50, 17);
+            this.allStat.TabIndex = 10;
+            this.allStat.Text = "Tous";
+            this.allStat.UseVisualStyleBackColor = true;
+            this.allStat.Click += new System.EventHandler(this.allBox_Click);
             // 
-            // flowLayoutPanel7
+            // label5
             // 
-            this.flowLayoutPanel7.Controls.Add(this.statSelRadio);
-            this.flowLayoutPanel7.Controls.Add(this.statAllRadio);
-            this.flowLayoutPanel7.Controls.Add(this.statutListBox);
-            this.flowLayoutPanel7.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel7.Location = new System.Drawing.Point(3, 16);
-            this.flowLayoutPanel7.Name = "flowLayoutPanel7";
-            this.flowLayoutPanel7.Size = new System.Drawing.Size(151, 111);
-            this.flowLayoutPanel7.TabIndex = 0;
-            // 
-            // statSelRadio
-            // 
-            this.statSelRadio.AutoSize = true;
-            this.statSelRadio.Location = new System.Drawing.Point(3, 3);
-            this.statSelRadio.Name = "statSelRadio";
-            this.statSelRadio.Size = new System.Drawing.Size(69, 17);
-            this.statSelRadio.TabIndex = 13;
-            this.statSelRadio.Text = "Sélection";
-            this.statSelRadio.UseVisualStyleBackColor = true;
-            // 
-            // statAllRadio
-            // 
-            this.statAllRadio.AutoSize = true;
-            this.statAllRadio.Checked = true;
-            this.statAllRadio.Location = new System.Drawing.Point(78, 3);
-            this.statAllRadio.Name = "statAllRadio";
-            this.statAllRadio.Size = new System.Drawing.Size(49, 17);
-            this.statAllRadio.TabIndex = 14;
-            this.statAllRadio.TabStop = true;
-            this.statAllRadio.Text = "Tous";
-            this.statAllRadio.UseVisualStyleBackColor = true;
-            this.statAllRadio.CheckedChanged += new System.EventHandler(this.statAllRadio_CheckedChanged);
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(3, 373);
+            this.label5.Margin = new System.Windows.Forms.Padding(3, 4, 52, 0);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(40, 13);
+            this.label5.TabIndex = 9;
+            this.label5.Text = "Statuts";
             // 
             // statutListBox
             // 
             this.statutListBox.CheckOnClick = true;
-            this.statutListBox.Enabled = false;
             this.statutListBox.FormattingEnabled = true;
-            this.statutListBox.Location = new System.Drawing.Point(3, 26);
+            this.statutListBox.Location = new System.Drawing.Point(0, 395);
             this.statutListBox.Name = "statutListBox";
             this.statutListBox.Size = new System.Drawing.Size(148, 79);
             this.statutListBox.TabIndex = 7;
+            this.statutListBox.Click += new System.EventHandler(this.listBox_Click);
             // 
             // filtreBout
             // 
             this.filtreBout.Image = global::TaskLeader.Properties.Resources.liste;
             this.filtreBout.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.filtreBout.Location = new System.Drawing.Point(3, 691);
+            this.filtreBout.Location = new System.Drawing.Point(57, 605);
             this.filtreBout.Name = "filtreBout";
             this.filtreBout.Size = new System.Drawing.Size(104, 35);
             this.filtreBout.TabIndex = 8;
@@ -440,25 +346,13 @@
             this.filtreBout.UseVisualStyleBackColor = true;
             this.filtreBout.Click += new System.EventHandler(this.filtreAction);
             // 
-            // button2
-            // 
-            this.button2.Enabled = false;
-            this.button2.Image = global::TaskLeader.Properties.Resources.alerte;
-            this.button2.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button2.Location = new System.Drawing.Point(113, 691);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(40, 37);
-            this.button2.TabIndex = 2;
-            this.button2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.button2.UseVisualStyleBackColor = true;
-            // 
             // flowLayoutPanel8
             // 
             this.flowLayoutPanel8.Controls.Add(this.groupBox1);
             this.flowLayoutPanel8.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel8.Location = new System.Drawing.Point(417, 3);
+            this.flowLayoutPanel8.Location = new System.Drawing.Point(547, 3);
             this.flowLayoutPanel8.Name = "flowLayoutPanel8";
-            this.flowLayoutPanel8.Size = new System.Drawing.Size(64, 736);
+            this.flowLayoutPanel8.Size = new System.Drawing.Size(64, 656);
             this.flowLayoutPanel8.TabIndex = 6;
             // 
             // groupBox1
@@ -493,13 +387,102 @@
             // 
             // button1
             // 
-            this.button1.Enabled = false;
             this.button1.Image = global::TaskLeader.Properties.Resources.evernote;
             this.button1.Location = new System.Drawing.Point(3, 44);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(35, 35);
             this.button1.TabIndex = 0;
             this.button1.UseVisualStyleBackColor = true;
+            this.button1.Visible = false;
+            // 
+            // tableLayoutPanel2
+            // 
+            this.tableLayoutPanel2.ColumnCount = 1;
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel2.Controls.Add(this.flowLayoutPanel9, 0, 0);
+            this.tableLayoutPanel2.Controls.Add(this.grilleData, 0, 1);
+            this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel2.Location = new System.Drawing.Point(170, 0);
+            this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(0);
+            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
+            this.tableLayoutPanel2.RowCount = 2;
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(374, 662);
+            this.tableLayoutPanel2.TabIndex = 7;
+            // 
+            // flowLayoutPanel9
+            // 
+            this.flowLayoutPanel9.Controls.Add(this.label1);
+            this.flowLayoutPanel9.Controls.Add(this.searchBox);
+            this.flowLayoutPanel9.Controls.Add(this.searchButton);
+            this.flowLayoutPanel9.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanel9.Location = new System.Drawing.Point(3, 3);
+            this.flowLayoutPanel9.Name = "flowLayoutPanel9";
+            this.flowLayoutPanel9.Size = new System.Drawing.Size(368, 24);
+            this.flowLayoutPanel9.TabIndex = 5;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(3, 6);
+            this.label1.Margin = new System.Windows.Forms.Padding(3, 6, 3, 3);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(66, 13);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "Rechercher:";
+            // 
+            // searchBox
+            // 
+            this.searchBox.Location = new System.Drawing.Point(75, 3);
+            this.searchBox.Name = "searchBox";
+            this.searchBox.Size = new System.Drawing.Size(200, 20);
+            this.searchBox.TabIndex = 1;
+            // 
+            // searchButton
+            // 
+            this.searchButton.Location = new System.Drawing.Point(281, 3);
+            this.searchButton.Name = "searchButton";
+            this.searchButton.Size = new System.Drawing.Size(30, 20);
+            this.searchButton.TabIndex = 2;
+            this.searchButton.Text = "OK";
+            this.searchButton.UseVisualStyleBackColor = true;
+            // 
+            // grilleData
+            // 
+            this.grilleData.AllowUserToAddRows = false;
+            this.grilleData.AllowUserToDeleteRows = false;
+            this.grilleData.AllowUserToResizeRows = false;
+            this.grilleData.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.DisplayedCells;
+            this.grilleData.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.DisplayedCells;
+            this.grilleData.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableAlwaysIncludeHeaderText;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.ControlDark;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.grilleData.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            this.grilleData.ColumnHeadersHeight = 30;
+            this.grilleData.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+            this.grilleData.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.grilleData.Location = new System.Drawing.Point(0, 30);
+            this.grilleData.Margin = new System.Windows.Forms.Padding(0);
+            this.grilleData.MultiSelect = false;
+            this.grilleData.Name = "grilleData";
+            this.grilleData.ReadOnly = true;
+            this.grilleData.RowHeadersVisible = false;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.grilleData.RowsDefaultCellStyle = dataGridViewCellStyle2;
+            this.grilleData.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.grilleData.Size = new System.Drawing.Size(374, 632);
+            this.grilleData.TabIndex = 4;
+            this.grilleData.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.modifAction);
+            this.grilleData.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.grilleData_CellFormatting);
+            this.grilleData.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.grilleData_CellMouseClick);
+            this.grilleData.CellMouseEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.grilleData_CellMouseEnter);
+            this.grilleData.CellMouseLeave += new System.Windows.Forms.DataGridViewCellEventHandler(this.grilleData_CellMouseLeave);
             // 
             // listeContext
             // 
@@ -508,7 +491,7 @@
             this.statutTSMenuItem,
             this.exportMenuItem});
             this.listeContext.Name = "listeContext";
-            this.listeContext.Size = new System.Drawing.Size(159, 92);
+            this.listeContext.Size = new System.Drawing.Size(159, 70);
             // 
             // editActionItem
             // 
@@ -535,7 +518,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(484, 742);
+            this.ClientSize = new System.Drawing.Size(614, 662);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Location = new System.Drawing.Point(435, 10);
@@ -545,25 +528,19 @@
             this.Load += new System.EventHandler(this.Toolbox_Load);
             this.Resize += new System.EventHandler(this.Toolbox_Resize);
             this.tableLayoutPanel1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.grilleData)).EndInit();
             this.flowLayoutPanel1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.flowLayoutPanel4.ResumeLayout(false);
-            this.groupBox3.ResumeLayout(false);
-            this.flowLayoutPanel3.ResumeLayout(false);
-            this.flowLayoutPanel3.PerformLayout();
-            this.groupBox4.ResumeLayout(false);
-            this.flowLayoutPanel5.ResumeLayout(false);
-            this.flowLayoutPanel5.PerformLayout();
-            this.groupBox5.ResumeLayout(false);
-            this.flowLayoutPanel6.ResumeLayout(false);
-            this.flowLayoutPanel6.PerformLayout();
-            this.groupBox6.ResumeLayout(false);
-            this.flowLayoutPanel7.ResumeLayout(false);
-            this.flowLayoutPanel7.PerformLayout();
+            this.groupBox7.ResumeLayout(false);
+            this.flowLayoutPanel10.ResumeLayout(false);
+            this.flowLayoutPanel10.PerformLayout();
             this.flowLayoutPanel8.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.flowLayoutPanel2.ResumeLayout(false);
+            this.tableLayoutPanel2.ResumeLayout(false);
+            this.flowLayoutPanel9.ResumeLayout(false);
+            this.flowLayoutPanel9.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.grilleData)).EndInit();
             this.listeContext.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -581,27 +558,10 @@
         private System.Windows.Forms.CheckedListBox destListBox;
         private System.Windows.Forms.CheckedListBox statutListBox;
         private System.Windows.Forms.Button filtreBout;
-        private System.Windows.Forms.Button button2;
         private System.Windows.Forms.ContextMenuStrip listeContext;
         private System.Windows.Forms.ToolStripMenuItem statutTSMenuItem;
         private System.Windows.Forms.ComboBox filterCombo;
         private System.Windows.Forms.Button saveFilterBut;
-        private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel3;
-        private System.Windows.Forms.RadioButton CtxtSelRadio;
-        private System.Windows.Forms.RadioButton CtxtAllRadio;
-        private System.Windows.Forms.GroupBox groupBox4;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel5;
-        private System.Windows.Forms.RadioButton SujSelRadio;
-        private System.Windows.Forms.RadioButton SujAllRadio;
-        private System.Windows.Forms.GroupBox groupBox5;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel6;
-        private System.Windows.Forms.RadioButton destSelRadio;
-        private System.Windows.Forms.RadioButton destAllRadio;
-        private System.Windows.Forms.GroupBox groupBox6;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel7;
-        private System.Windows.Forms.RadioButton statSelRadio;
-        private System.Windows.Forms.RadioButton statAllRadio;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel8;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel2;
@@ -610,6 +570,21 @@
         private System.Windows.Forms.Button openFilterBut;
         private System.Windows.Forms.ToolStripMenuItem editActionItem;
         private System.Windows.Forms.ToolStripMenuItem exportMenuItem;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel9;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox searchBox;
+        private System.Windows.Forms.Button searchButton;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.CheckBox allCtxt;
+        private System.Windows.Forms.GroupBox groupBox7;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel10;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.CheckBox allSujt;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.CheckBox allDest;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.CheckBox allStat;
 
     }
 }
