@@ -284,5 +284,12 @@ namespace TaskLeader.DAL
             String requete = "SELECT * FROM Mails WHERE rowid='"+id+"'";
             return getTable(requete);
         }
+
+        // Recherche de mots clés dans la colonne Action
+        public DataTable searchActions(String keywords)
+        {
+            String requete = "SELECT * FROM VueActions WHERE Titre LIKE '%"+keywords.Replace("'", "''")+"%';";
+            return getTable(requete);
+        }
     }
 }

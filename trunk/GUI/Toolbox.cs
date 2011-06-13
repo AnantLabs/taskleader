@@ -138,7 +138,7 @@ namespace TaskLeader.GUI
             }
             else
             {
-                //Dans tous les autres cas on grise les radio buttons
+                //Dans tous les autres cas on grise la checkbox All
                 allSujt.Enabled = false;
             }
         }
@@ -173,6 +173,10 @@ namespace TaskLeader.GUI
         // Méthode générique d'affichage de la liste d'actions à partir d'un filtre
         private void afficheActions(Filtre filtre)
         {
+            // Si le résultat d'une recherche est affiché, on efface l'étiquette
+            if (searchFlowLayoutPanel.Visible)
+                searchFlowLayoutPanel.Visible = false;
+
             // Si le filtre a un nom, on l'affiche
             filterCombo.Text = filtre.nom;
 
@@ -191,6 +195,10 @@ namespace TaskLeader.GUI
         // Affichage des actions sur filtre manuel
         private void filtreAction(object sender, EventArgs e)
         {
+            // Si le résultat d'une recherche est affiché, on efface l'étiquette
+            if (searchFlowLayoutPanel.Visible)
+                searchFlowLayoutPanel.Visible = false;
+
             Filtre filtre = new Filtre(allCtxt.Checked,ctxtListBox.CheckedItems,allSujt.Checked,sujetListBox.CheckedItems,allDest.Checked,destListBox.CheckedItems,allStat.Checked,statutListBox.CheckedItems);
             // Pas de nom de filtre, il s'agit d'un filtre manuel
             this.afficheActions(filtre);
@@ -318,18 +326,31 @@ namespace TaskLeader.GUI
                 box.Checked = false;
         }
 
+        //Remise à zéro de tous les filtres
+        private void razFiltres()
+        {
+            // Contextes
+            allCtxt.Checked = true;
+            allBox_Click(allCtxt, new EventArgs());
+
+            // Sujets
+            updateSujet(new Object(), new EventArgs());
+
+            // Destinataires
+            allDest.Checked = true;
+            allBox_Click(allDest, new EventArgs());
+
+            // Statuts
+            allStat.Checked = true;
+            allBox_Click(allStat, new EventArgs());
+        }
+
         /// <summary>
         /// Application d'un filtre sur les différents widgets + affichage
         /// </summary>
         private void showFilter(Filtre filtre)
-        {              
-            // Passage de toutes les checkboxes à ALL
-            allCtxt.Checked = true;
-            allBox_Click(allCtxt, new EventArgs());
-            allDest.Checked = true;
-            allBox_Click(allDest, new EventArgs());
-            allStat.Checked = true;
-            allBox_Click(allStat, new EventArgs());
+        {
+            razFiltres();
 
             CheckBox box = new CheckBox();
             CheckedListBox list = new CheckedListBox();
@@ -376,6 +397,51 @@ namespace TaskLeader.GUI
                 this.showFilter(ReadDB.Instance.getFilter(filterCombo.Text));
             else
                 MessageBox.Show("Veuillez entrer un nom de filtre", "Application d'un filtre", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+        }
+
+        // Affichage du résultat de la recherche
+        private void searchButton_Click(object sender, EventArgs e)
+        {
+            // Remise à zéro de tous les filtres + Nom du filtre
+            razFiltres();
+            filterCombo.Text = "";
+
+            // Récupération des résultats et association au tableau
+            DataTable liste = ReadDB.Instance.searchActions(searchBox.Text);
+            grilleData.DataSource = liste;
+
+            // Affichage de l'étiquette correspondant à la recherche
+            searchedText.Text = searchBox.Text;
+            searchFlowLayoutPanel.Visible = true;
+
+            // Remise à zéro de la textbox de recherche
+            searchBox.Text = "";
+
+            // Réorganisation des colonnes
+            grilleData.Columns["Mail"].DisplayIndex = 4;
+            grilleData.Columns["Mail"].Visible = true;
+
+            if (liste.Rows.Count == 0) // A voir si pas mieux en BalloonTip
+                MessageBox.Show("Aucun résultat", "Recherche d'actions", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+        }
+
+        // Permet la validation de la recherche par la touche ENTER
+        private void searchBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Enter)
+                searchButton_Click(sender, e);
+        }
+
+        // Suppression de la recherche après click sur l'étiquette
+        private void exitSearchBut_Click(object sender, EventArgs e)
+        {
+            // On cache l'étiquette de recherche
+            searchFlowLayoutPanel.Visible = false;
+
+            // Si un filtre est actif on l'affiche
+            if (Filtre.CurrentFilter != null)
+                this.showFilter(Filtre.CurrentFilter);
+            // Sinon ?
         }
     }
 }

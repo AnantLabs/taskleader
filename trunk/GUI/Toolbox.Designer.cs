@@ -64,6 +64,9 @@
             this.label1 = new System.Windows.Forms.Label();
             this.searchBox = new System.Windows.Forms.TextBox();
             this.searchButton = new System.Windows.Forms.Button();
+            this.searchFlowLayoutPanel = new System.Windows.Forms.FlowLayoutPanel();
+            this.searchedText = new System.Windows.Forms.Label();
+            this.exitSearchBut = new System.Windows.Forms.Button();
             this.grilleData = new System.Windows.Forms.DataGridView();
             this.listeContext = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.editActionItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -80,6 +83,7 @@
             this.flowLayoutPanel2.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.flowLayoutPanel9.SuspendLayout();
+            this.searchFlowLayoutPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grilleData)).BeginInit();
             this.listeContext.SuspendLayout();
             this.SuspendLayout();
@@ -98,7 +102,7 @@
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 1;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(614, 662);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(721, 662);
             this.tableLayoutPanel1.TabIndex = 4;
             // 
             // flowLayoutPanel1
@@ -350,7 +354,7 @@
             // 
             this.flowLayoutPanel8.Controls.Add(this.groupBox1);
             this.flowLayoutPanel8.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel8.Location = new System.Drawing.Point(547, 3);
+            this.flowLayoutPanel8.Location = new System.Drawing.Point(654, 3);
             this.flowLayoutPanel8.Name = "flowLayoutPanel8";
             this.flowLayoutPanel8.Size = new System.Drawing.Size(64, 656);
             this.flowLayoutPanel8.TabIndex = 6;
@@ -408,7 +412,7 @@
             this.tableLayoutPanel2.RowCount = 2;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(374, 662);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(481, 662);
             this.tableLayoutPanel2.TabIndex = 7;
             // 
             // flowLayoutPanel9
@@ -416,17 +420,19 @@
             this.flowLayoutPanel9.Controls.Add(this.label1);
             this.flowLayoutPanel9.Controls.Add(this.searchBox);
             this.flowLayoutPanel9.Controls.Add(this.searchButton);
+            this.flowLayoutPanel9.Controls.Add(this.searchFlowLayoutPanel);
             this.flowLayoutPanel9.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel9.Location = new System.Drawing.Point(3, 3);
+            this.flowLayoutPanel9.Location = new System.Drawing.Point(0, 0);
+            this.flowLayoutPanel9.Margin = new System.Windows.Forms.Padding(0);
             this.flowLayoutPanel9.Name = "flowLayoutPanel9";
-            this.flowLayoutPanel9.Size = new System.Drawing.Size(368, 24);
+            this.flowLayoutPanel9.Size = new System.Drawing.Size(481, 30);
             this.flowLayoutPanel9.TabIndex = 5;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 6);
-            this.label1.Margin = new System.Windows.Forms.Padding(3, 6, 3, 3);
+            this.label1.Location = new System.Drawing.Point(3, 8);
+            this.label1.Margin = new System.Windows.Forms.Padding(3, 8, 3, 3);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(66, 13);
             this.label1.TabIndex = 0;
@@ -434,19 +440,58 @@
             // 
             // searchBox
             // 
-            this.searchBox.Location = new System.Drawing.Point(75, 3);
+            this.searchBox.Location = new System.Drawing.Point(75, 5);
+            this.searchBox.Margin = new System.Windows.Forms.Padding(3, 5, 3, 3);
             this.searchBox.Name = "searchBox";
             this.searchBox.Size = new System.Drawing.Size(200, 20);
             this.searchBox.TabIndex = 1;
+            this.searchBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.searchBox_KeyPress);
             // 
             // searchButton
             // 
-            this.searchButton.Location = new System.Drawing.Point(281, 3);
+            this.searchButton.Location = new System.Drawing.Point(281, 5);
+            this.searchButton.Margin = new System.Windows.Forms.Padding(3, 5, 3, 3);
             this.searchButton.Name = "searchButton";
             this.searchButton.Size = new System.Drawing.Size(30, 20);
             this.searchButton.TabIndex = 2;
             this.searchButton.Text = "OK";
             this.searchButton.UseVisualStyleBackColor = true;
+            this.searchButton.Click += new System.EventHandler(this.searchButton_Click);
+            // 
+            // searchFlowLayoutPanel
+            // 
+            this.searchFlowLayoutPanel.AutoSize = true;
+            this.searchFlowLayoutPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.searchFlowLayoutPanel.BackColor = System.Drawing.Color.LightSteelBlue;
+            this.searchFlowLayoutPanel.Controls.Add(this.searchedText);
+            this.searchFlowLayoutPanel.Controls.Add(this.exitSearchBut);
+            this.searchFlowLayoutPanel.Location = new System.Drawing.Point(319, 4);
+            this.searchFlowLayoutPanel.Margin = new System.Windows.Forms.Padding(5, 4, 0, 4);
+            this.searchFlowLayoutPanel.Name = "searchFlowLayoutPanel";
+            this.searchFlowLayoutPanel.Size = new System.Drawing.Size(87, 22);
+            this.searchFlowLayoutPanel.TabIndex = 5;
+            this.searchFlowLayoutPanel.Visible = false;
+            // 
+            // searchedText
+            // 
+            this.searchedText.AutoSize = true;
+            this.searchedText.Location = new System.Drawing.Point(3, 4);
+            this.searchedText.Margin = new System.Windows.Forms.Padding(3, 4, 0, 0);
+            this.searchedText.Name = "searchedText";
+            this.searchedText.Size = new System.Drawing.Size(60, 13);
+            this.searchedText.TabIndex = 4;
+            this.searchedText.Text = "Recherche";
+            // 
+            // exitSearchBut
+            // 
+            this.exitSearchBut.Location = new System.Drawing.Point(66, 1);
+            this.exitSearchBut.Margin = new System.Windows.Forms.Padding(3, 1, 1, 1);
+            this.exitSearchBut.Name = "exitSearchBut";
+            this.exitSearchBut.Size = new System.Drawing.Size(20, 20);
+            this.exitSearchBut.TabIndex = 3;
+            this.exitSearchBut.Text = "X";
+            this.exitSearchBut.UseVisualStyleBackColor = true;
+            this.exitSearchBut.Click += new System.EventHandler(this.exitSearchBut_Click);
             // 
             // grilleData
             // 
@@ -476,7 +521,7 @@
             dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.grilleData.RowsDefaultCellStyle = dataGridViewCellStyle2;
             this.grilleData.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.grilleData.Size = new System.Drawing.Size(374, 632);
+            this.grilleData.Size = new System.Drawing.Size(481, 632);
             this.grilleData.TabIndex = 4;
             this.grilleData.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.modifAction);
             this.grilleData.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.grilleData_CellFormatting);
@@ -518,7 +563,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(614, 662);
+            this.ClientSize = new System.Drawing.Size(721, 662);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Location = new System.Drawing.Point(435, 10);
@@ -540,6 +585,8 @@
             this.tableLayoutPanel2.ResumeLayout(false);
             this.flowLayoutPanel9.ResumeLayout(false);
             this.flowLayoutPanel9.PerformLayout();
+            this.searchFlowLayoutPanel.ResumeLayout(false);
+            this.searchFlowLayoutPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grilleData)).EndInit();
             this.listeContext.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -585,6 +632,9 @@
         private System.Windows.Forms.CheckBox allDest;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.CheckBox allStat;
+        private System.Windows.Forms.FlowLayoutPanel searchFlowLayoutPanel;
+        private System.Windows.Forms.Label searchedText;
+        private System.Windows.Forms.Button exitSearchBut;
 
     }
 }
