@@ -34,8 +34,17 @@ namespace TaskLeader.BLL
             // Stockage du filtre
             Filtre.CurrentFilter = filtre;
 
-            // Récupération de la liste d'actions
-            DataTable data = ReadDB.Instance.getActions(filtre.criteria);
+            DataTable data = new DataTable();
+
+            switch (filtre.type)
+            {
+                case(1):
+                    data = ReadDB.Instance.getActions(filtre.criteria);
+                    break;
+                case(2):
+                    data = ReadDB.Instance.searchActions(filtre.nom);
+                    break;
+            }
 
             return data;
         }
