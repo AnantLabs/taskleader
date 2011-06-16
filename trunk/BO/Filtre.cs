@@ -30,6 +30,10 @@ namespace TaskLeader.BO
 
     public class Filtre
     {
+        // Type du filtre: 1=Critères, 2=Recherche
+        private int v_type;
+        public int type { get { return v_type; } }
+
         // Tableau qui donne la liste des critères sélectionnés autre que ALL        
         private Object[] v_criteria;
         public Object[] criteria { get { return v_criteria; } }
@@ -38,19 +42,25 @@ namespace TaskLeader.BO
         private String v_nomFiltre = "";
         public String nom { get { return v_nomFiltre; } set { v_nomFiltre = value; } }
 
-        // Variable locale pour stocker une référence vers le filtre en cours
-        private static Filtre v_currentFilter = null;      
-
-        // Renvoie le filtre courant ou le crée
+        // Variable locale pour stocker une référence vers le filtre en cours et le précédent de type 1
+        private static Filtre v_currentFilter = null;
+        private static Filtre v_oldFilter = null;
         public static Filtre CurrentFilter
         {
             get { return v_currentFilter; }
-            set { v_currentFilter = value; }
+            set {
+                if (v_currentFilter != null && v_currentFilter.type == 1)
+                    v_oldFilter = v_currentFilter; // Mémorisation du dernier filtre de type 1
+                v_currentFilter = value;
+            }
         }
+        public static Filtre OldFilter{get { return v_oldFilter; }}
         
         // Constructeur de filtre à partir de la GUI
         public Filtre(bool allCtxt,IList ctxt, bool allSuj, IList suj, bool allDest, IList dest, bool allStat, IList stat)
         {
+            this.v_type = 1;
+
             ArrayList criteres = new ArrayList();
 
             if (!allCtxt) // Champ = 0 pour les contextes
@@ -71,6 +81,8 @@ namespace TaskLeader.BO
         // Constructeur pour récupération base
         public Filtre(DataTable allSelected)
         {
+            this.v_type = 1;
+
             ArrayList criteres = new ArrayList();
 
             // On récupère la ligne de la table
@@ -83,6 +95,15 @@ namespace TaskLeader.BO
                     criteres.Add(new Criterium(i));
 
             this.v_criteria = criteres.ToArray();
+        }
+
+        /// <summary>
+        /// Constructeur pour une recherche
+        /// </summary>
+        public Filtre(String recherche)
+        {
+            this.v_type = 2;
+            this.v_nomFiltre = recherche;
         }
     }
 }

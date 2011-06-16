@@ -184,13 +184,6 @@ namespace TaskLeader.GUI
         // Méthode générique d'affichage de la liste d'actions à partir d'un filtre
         private void afficheActions(Filtre filtre)
         {
-            // Si le résultat d'une recherche est affiché, on efface l'étiquette
-            if (searchFlowLayoutPanel.Visible)
-                searchFlowLayoutPanel.Visible = false;
-
-            // Si le filtre a un nom, on l'affiche
-            filterCombo.Text = filtre.nom;
-
             // Récupération des résultats et association au tableau
             DataTable liste = DataManager.Instance.getActions(filtre);                     
             grilleData.DataSource = liste;
@@ -200,7 +193,7 @@ namespace TaskLeader.GUI
             grilleData.Columns["Mail"].Visible = true;
 
             if (liste.Rows.Count == 0) // A voir si pas mieux en BalloonTip
-                MessageBox.Show("Aucun résultat ne correspond au filtre", "Filtre d'actions", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);                  
+                MessageBox.Show("Aucun résultat", "Filtre d'actions", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);                  
         }
 
         // Affichage des actions sur filtre manuel
@@ -357,45 +350,68 @@ namespace TaskLeader.GUI
         }
 
         /// <summary>
-        /// Application d'un filtre sur les différents widgets + affichage
+        /// Application d'un filtre sur les différents widgets + affichage des actions correspondantes
         /// </summary>
         private void showFilter(Filtre filtre)
         {
-            razFiltres();
+            razFiltres();            
 
-            CheckBox box = new CheckBox();
-            CheckedListBox list = new CheckedListBox();
-
-            // Tickage des bons critères
-            foreach (Criterium critere in filtre.criteria)
+            switch(filtre.type)
             {
-                switch (critere.champ)
-                {
-                    case(0): //Contexte
-                        box = allCtxt;
-                        list = ctxtListBox;                         
-                        break;
-                    case(1): //Sujet
-                        box = allSujt;
-                        list = sujetListBox;                         
-                        break;
-                    case(2): //Destinataire
-                        box = allDest;
-                        list = destListBox;                         
-                        break;
-                    case(3): //Statut
-                        box = allStat;
-                        list = statutListBox;
-                        break;
-                }
+                case (2): // C'est une recherche
 
-                box.Checked = false; // La checkbox "Tous" n'est pas sélectionnée
-                for (int i = 0; i < list.Items.Count; i++) // Parcours de la ListBox
-                {
-                    int index = critere.selected.IndexOf(list.Items[i]); // Recherche de l'item dans le filtre
-                    list.SetItemChecked(i, !(index == -1));
-                }
+                    // Pas de nom de filtre pour une recherche
+                    filterCombo.Text = "";
+                    // Affichage de l'étiquette correspondant à la recherche
+                    searchedText.Text = filtre.nom;
+                    // Remise à zéro de la textbox de recherche
+                    searchBox.Text = "";                   
+                    break;
+
+                case (1):
+
+                    CheckBox box = new CheckBox();
+                    CheckedListBox list = new CheckedListBox();
+
+                    // Tickage des bons critères
+                    foreach (Criterium critere in filtre.criteria)
+                    {
+                        switch (critere.champ)
+                        {
+                            case (0): //Contexte
+                                box = allCtxt;
+                                list = ctxtListBox;
+                                break;
+                            case (1): //Sujet
+                                box = allSujt;
+                                list = sujetListBox;
+                                break;
+                            case (2): //Destinataire
+                                box = allDest;
+                                list = destListBox;
+                                break;
+                            case (3): //Statut
+                                box = allStat;
+                                list = statutListBox;
+                                break;
+                        }
+
+                        box.Checked = false; // La checkbox "Tous" n'est pas sélectionnée
+                        for (int i = 0; i < list.Items.Count; i++) // Parcours de la ListBox
+                        {
+                            int index = critere.selected.IndexOf(list.Items[i]); // Recherche de l'item dans le filtre
+                            list.SetItemChecked(i, !(index == -1));
+                        }
+                    }
+
+                    // Si le filtre a un nom, on l'affiche
+                    filterCombo.Text = filtre.nom;
+
+                break;
             }
+
+            // On affiche l'étiquette de recherche que dans le cas 2
+            searchFlowLayoutPanel.Visible = (filtre.type == 2);
 
             // Application du filtre
             afficheActions(filtre);
@@ -410,37 +426,20 @@ namespace TaskLeader.GUI
                 MessageBox.Show("Veuillez entrer un nom de filtre", "Application d'un filtre", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
         }
 
-        // Affichage du résultat de la recherche
+        // Validation de la recherche après click sur OK
         private void searchButton_Click(object sender, EventArgs e)
         {
-            // Remise à zéro de tous les filtres + Nom du filtre
-            razFiltres();
-            filterCombo.Text = "";
-
-            // Récupération des résultats et association au tableau
-            DataTable liste = ReadDB.Instance.searchActions(searchBox.Text);
-            grilleData.DataSource = liste;
-
-            // Affichage de l'étiquette correspondant à la recherche
-            searchedText.Text = searchBox.Text;
-            searchFlowLayoutPanel.Visible = true;
-
-            // Remise à zéro de la textbox de recherche
-            searchBox.Text = "";
-
-            // Réorganisation des colonnes
-            grilleData.Columns["Mail"].DisplayIndex = 4;
-            grilleData.Columns["Mail"].Visible = true;
-
-            if (liste.Rows.Count == 0) // A voir si pas mieux en BalloonTip
-                MessageBox.Show("Aucun résultat", "Recherche d'actions", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            if (searchBox.Text != "")
+                this.showFilter(new Filtre(searchBox.Text));
+            else
+                MessageBox.Show("Veuillez entrer un mot clé pour la recherche", "Recherche", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
         }
 
         // Permet la validation de la recherche par la touche ENTER
         private void searchBox_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == (char)Keys.Enter)
-                searchButton_Click(sender, e);
+                this.searchButton_Click(sender,e);
         }
 
         // Suppression de la recherche après click sur l'étiquette
@@ -449,10 +448,11 @@ namespace TaskLeader.GUI
             // On cache l'étiquette de recherche
             searchFlowLayoutPanel.Visible = false;
 
-            // Si un filtre est actif on l'affiche
-            if (Filtre.CurrentFilter != null)
-                this.showFilter(Filtre.CurrentFilter);
-            // Sinon ?
+            // Si un filtre était actif avant la (ou les) recherche(s), on l'affiche
+            if (Filtre.OldFilter != null)
+                this.showFilter(Filtre.OldFilter);
+            else
+                grilleData.DataSource = null; // Suppression des lignes du tableau
         }
     }
 }
