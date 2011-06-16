@@ -118,7 +118,18 @@ namespace TaskLeader.GUI
         // Mise à jour du statut d'une action via le menu contextuel
         private void changeStat(object sender, EventArgs e)
         {
+            // Récupération de l'action
+            TLaction action = getActionFromRow(grilleData.SelectedRows[0].Cells);
+            action.freezeInitState();
 
+            // On récupère le nouveau statut
+            action.Statut = ((ToolStripItem)sender).Text;
+
+            // On met à jour le statut de l'action que s'il a changé
+            if (action.statusHasChanged)
+                DataManager.Instance.saveAction(action);
+
+            this.miseAjour(null, null);
         }
 
         // Méthode appelée quand checks des contextes changent
