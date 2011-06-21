@@ -13,6 +13,8 @@ namespace TaskLeader.GUI
 {
     public partial class Toolbox : Form
     {
+        DataGridViewImageColumn mailCol;
+
         public Toolbox()
         {
             InitializeComponent();
@@ -27,7 +29,9 @@ namespace TaskLeader.GUI
             this.Text += " v"+Application.ProductVersion;
 
             // Remplissage de la combo des filtres
+            filterCombo.Items.Add("Sélectionner...");
             filterCombo.Items.AddRange(ReadDB.Instance.getFiltersName());
+            filterCombo.SelectedIndex = 0;
 
             // Remplissage de la ListBox des statuts + menu contextuel
             foreach (object item in ReadDB.Instance.getStatut())
@@ -37,11 +41,9 @@ namespace TaskLeader.GUI
             }
 
             // Création de la colonne mail
-            DataGridViewImageColumn mailCol = new DataGridViewImageColumn();
+            mailCol = new DataGridViewImageColumn();
             mailCol.Name = "Mail";
             mailCol.DataPropertyName = "IDMail";
-            mailCol.Visible = false;
-            grilleData.Columns.Add(mailCol);
 
             // On rajoute les lignes qu'il faut dans le contextMenu de la liste d'actions
             NameValueCollection section = (NameValueCollection)ConfigurationManager.GetSection("ExportSection");
@@ -188,24 +190,35 @@ namespace TaskLeader.GUI
             DataTable liste = DataManager.Instance.getActions(filtre);                     
             grilleData.DataSource = liste;
 
-            // Réorganisation des colonnes
-            grilleData.Columns["Mail"].DisplayIndex = 4;
-            grilleData.Columns["Mail"].Visible = true;
+            // Ajout si nécessaire de la colonne Mail
+            if (!grilleData.Columns.Contains("Mail"))
+            {
+                mailCol.DisplayIndex = 4;
+                grilleData.Columns.Add(mailCol);
+            }            
 
-            if (liste.Rows.Count == 0) // A voir si pas mieux en BalloonTip
-                MessageBox.Show("Aucun résultat", "Filtre d'actions", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);                  
+            // Définition du label de résultat
+            if (liste.Rows.Count == 0)
+                resultLabel.Text = "Aucune action trouvée";
+            else if (liste.Rows.Count == 1)
+                resultLabel.Text = "1 action trouvée";
+            else
+                resultLabel.Text = liste.Rows.Count.ToString() + " actions trouvées";
+            // Affichage du label
+            resultLabel.Visible = true;
         }
 
         // Affichage des actions sur filtre manuel
         private void filtreAction(object sender, EventArgs e)
         {
-            // Si le résultat d'une recherche est affiché, on efface l'étiquette
+            /* Si le résultat d'une recherche est affiché, on efface l'étiquette
             if (searchFlowLayoutPanel.Visible)
                 searchFlowLayoutPanel.Visible = false;
-
+            */
             Filtre filtre = new Filtre(allCtxt.Checked,ctxtListBox.CheckedItems,allSujt.Checked,sujetListBox.CheckedItems,allDest.Checked,destListBox.CheckedItems,allStat.Checked,statutListBox.CheckedItems);
             // Pas de nom de filtre, il s'agit d'un filtre manuel
-            this.afficheActions(filtre);
+            //this.afficheActions(filtre);
+            this.showFilter(filtre);
         }
 
         // Fermeture de la Form si minimisée
@@ -257,7 +270,7 @@ namespace TaskLeader.GUI
         }
 
         // Enregistrement du filtre renseigné
-        private void saveFilterBut_Click(object sender, EventArgs e)
+        private void saveFilter()
         {
             if (filterCombo.Text != "")
             {
@@ -266,11 +279,12 @@ namespace TaskLeader.GUI
                 if (ReadDB.Instance.isNvoFiltre(filtre))
                 {
                     WriteDB.Instance.insertFiltre(filtre);
-                    // On vide la liste des filtres et on efface la sélection
+                    // On vide la liste des filtres et on efface la sélection                    
                     filterCombo.Items.Clear();
-                    filterCombo.Text = "";
                     // On la remplit à nouveau
-                    filterCombo.Items.AddRange(ReadDB.Instance.getFiltersName()); 
+                    filterCombo.Items.Add("Sélectionner...");
+                    filterCombo.Items.AddRange(ReadDB.Instance.getFiltersName());
+                    filterCombo.SelectedIndex = 0;
                 }                  
                 else
                     MessageBox.Show("Ce nom de filtre existe déjà.", "Nom du filtre", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);               
@@ -333,6 +347,10 @@ namespace TaskLeader.GUI
         //Remise à zéro de tous les filtres
         private void razFiltres()
         {
+            // Reset des champs recherches et filtres enregistrés
+            filterCombo.SelectedIndex = 0;
+            searchBox.Text = ""; 
+
             // Contextes
             allCtxt.Checked = true;
             allBox_Click(allCtxt, new EventArgs());
@@ -354,21 +372,26 @@ namespace TaskLeader.GUI
         /// </summary>
         private void showFilter(Filtre filtre)
         {
-            razFiltres();            
+            // Reset des checkedlistbox de filtre
+            razFiltres();      
 
             switch(filtre.type)
             {
                 case (2): // C'est une recherche
 
-                    // Pas de nom de filtre pour une recherche
-                    filterCombo.Text = "";
                     // Affichage de l'étiquette correspondant à la recherche
-                    searchedText.Text = filtre.nom;
-                    // Remise à zéro de la textbox de recherche
-                    searchBox.Text = "";                   
+                    typeLabel.Text = "Recherche:";
+                    searchedText.Text = filtre.nom;                                    
                     break;
 
                 case (1):
+
+                    // Affichage de l'étiquette correspondant au filtre
+                    typeLabel.Text = "Filtre:";
+                    if (filtre.nom != "")
+                        searchedText.Text = filtre.nom;
+                    else
+                        searchedText.Text = "manuel";
 
                     CheckBox box = new CheckBox();
                     CheckedListBox list = new CheckedListBox();
@@ -404,26 +427,21 @@ namespace TaskLeader.GUI
                         }
                     }
 
-                    // Si le filtre a un nom, on l'affiche
-                    filterCombo.Text = filtre.nom;
-
                 break;
             }
 
-            // On affiche l'étiquette de recherche que dans le cas 2
-            searchFlowLayoutPanel.Visible = (filtre.type == 2);
+            // Affichage de l'étiquette
+            searchFlowLayoutPanel.Visible = true;
 
             // Application du filtre
             afficheActions(filtre);
         }
 
         // Ouverture d'un filtre enregistré
-        private void openFilterBut_Click(object sender, EventArgs e)
+        private void openFilter(object sender, EventArgs e)
         {
-            if (filterCombo.Text != "")
+            if (((ComboBox)sender).SelectedIndex > 0)
                 this.showFilter(ReadDB.Instance.getFilter(filterCombo.Text));
-            else
-                MessageBox.Show("Veuillez entrer un nom de filtre", "Application d'un filtre", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
         }
 
         // Validation de la recherche après click sur OK
@@ -444,15 +462,18 @@ namespace TaskLeader.GUI
 
         // Suppression de la recherche après click sur l'étiquette
         private void exitSearchBut_Click(object sender, EventArgs e)
-        {
-            // On cache l'étiquette de recherche
-            searchFlowLayoutPanel.Visible = false;
-
+        {    
             // Si un filtre était actif avant la (ou les) recherche(s), on l'affiche
-            if (Filtre.OldFilter != null)
+            if (Filtre.CurrentFilter.type == 2 && Filtre.OldFilter != null)
                 this.showFilter(Filtre.OldFilter);
             else
+            {
+                // On cache l'étiquette de recherche et le label de résultat
+                searchFlowLayoutPanel.Visible = false;
+                resultLabel.Visible = false;
                 grilleData.DataSource = null; // Suppression des lignes du tableau
+                razFiltres();
+            }
         }
     }
 }
