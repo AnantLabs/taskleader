@@ -50,12 +50,6 @@
     <Compile Include="DAL\ConnexionDB.cs" />
     <Compile Include="DAL\ReadDB.cs" />
     <Compile Include="DAL\WriteDB.cs" />
-    <Compile Include="GUI\InputDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="GUI\InputDialog.Designer.cs">
-      <DependentUpon>InputDialog.cs</DependentUpon>
-    </Compile>
     <Compile Include="GUI\ManipAction.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -115,10 +109,22 @@
     <None Include="Resources\add.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\alerte.png" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="Resources\evernote.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\liste.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\open.png" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="Resources\outlook.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\sauve.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\task_coach.ico" />
@@ -151,12 +157,6 @@
       <Isolated>False</Isolated>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\loupe.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\filtre.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
