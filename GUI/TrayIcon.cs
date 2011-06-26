@@ -3,7 +3,7 @@ using System.Configuration;
 using System.Windows.Forms;
 using TaskLeader.BLL;
 using TaskLeader.BO;
-using System.Threading;
+using System.Collections.Specialized;
 
 namespace TaskLeader.GUI
 {
@@ -28,7 +28,7 @@ namespace TaskLeader.GUI
             trayIcon.Icon = Properties.Resources.task_coach;
             trayIcon.Text = "TaskLeader";
             trayIcon.Visible = true;
-            trayIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon1_MouseDoubleClick);
+            trayIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(displayToolbox);
 
             // Menu contextuel de la trayIcon
             this.trayContext.Items.AddRange(new ToolStripItem[] { this.newActionItem, this.maximItem, this.outlookItem, this.closeItem });
@@ -49,7 +49,7 @@ namespace TaskLeader.GUI
             this.maximItem.Name = "maximItem";
             this.maximItem.Size = new System.Drawing.Size(125, 22);
             this.maximItem.Text = "Afficher la liste";
-            this.maximItem.Click += new System.EventHandler(this.maximItem_Click);
+            this.maximItem.Click += new System.EventHandler(this.displayToolbox);
 
             // Item "nouvelle action" du menu contextuel
             this.outlookItem.Text = "Connecter à Outlook";
@@ -64,6 +64,43 @@ namespace TaskLeader.GUI
             this.closeItem.Click += new System.EventHandler(this.closeItem_Click);
         }
 
+        // Déclaration des hotkeys
+        Hotkey hkNewAction = new Hotkey();
+        Hotkey hkListe = new Hotkey();
+
+        // Délégué pour les méthodes de raccourcis claviers
+        delegate void HotkeyMethodDelegate(object sender, EventArgs e);
+        // Récupération du raccourci de la hotkey
+        private void registerHotkey(String raccourci, ref Hotkey hotkey, HotkeyMethodDelegate callback)
+        {        
+            //Récupération et ajout des touches spéciales
+            if (raccourci.Contains("CTRL"))
+                hotkey.Control = true;
+            if (raccourci.Contains("ALT"))
+                hotkey.Alt = true;
+            if (raccourci.Contains("MAJ"))
+                hotkey.Shift = true;
+            if (raccourci.Contains("WIN"))
+                hotkey.Windows = true;
+
+            //Récupération de la lettre
+            String lettre = raccourci.Substring(raccourci.LastIndexOf("+") + 1);
+
+            //Si lettre reconnue, ajout de celle-ci et enregistrement de la combinaison
+            if (!Enum.IsDefined(typeof(Keys), lettre))
+                afficheMessage("Hotkey", "Erreur de formatage du fichier de config");                
+            else
+            {
+                hotkey.KeyCode = (Keys)Enum.Parse(typeof(Keys), lettre, false);
+                hotkey.Pressed += new System.ComponentModel.HandledEventHandler(callback);
+
+                if (!hotkey.GetCanRegister(invokeControl))
+                    afficheMessage("Hotkey", "Impossible d'enregistrer le raccourci");
+                else
+                    hotkey.Register(invokeControl);
+            }
+        }
+
         // Constructeur de la NotifyIcon
         public TrayIcon()
         {
@@ -73,17 +110,22 @@ namespace TaskLeader.GUI
             // Vérification de démarrage
             if (Init.Instance.canLaunch())
             {
-                this.displayToolbox(); // Affichage de la Toolbox
+                this.displayToolbox(new Object(),new EventArgs()); // Affichage de la Toolbox
                 invokeControl.CreateControl();
             }
             else
                 this.closeApp(); // On ferme l'appli
+
+            //Enregistrement des raccourcis clavier
+            NameValueCollection section = (NameValueCollection)ConfigurationManager.GetSection("Hotkey");
+            registerHotkey(section["NewAction"], ref hkNewAction, new HotkeyMethodDelegate(ajoutAction));
+            registerHotkey(section["ListeActions"], ref hkListe, new HotkeyMethodDelegate(displayToolbox));
         }
 
         private static Toolbox v_toolbox = null;
         
         // Méthode générique d'affichage de la Toolbox
-        private void displayToolbox()
+        private void displayToolbox(object sender, EventArgs e)
         {
             if (v_toolbox == null || v_toolbox.IsDisposed) // Si la fenêtre n'a jamais été ouverte ou fermée, on l'ouvre
             {
@@ -100,12 +142,6 @@ namespace TaskLeader.GUI
         {
             if(v_toolbox != null && !v_toolbox.IsDisposed)
                 v_toolbox.miseAjour(sender,e);
-        }
-        
-        // Double-click sur la trayIcon
-        private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
-        {
-            this.displayToolbox();
         }
 
         // Méthode permettant d'afficher le formulaire nouvelle action vide
@@ -129,7 +165,7 @@ namespace TaskLeader.GUI
             else
             {
                 ManipAction guiAction = new ManipAction(action);
-                guiAction.TopMost = true;
+                //guiAction.TopMost = true;// Plus nécessaire car de base dans la déf de ManipAction
                 guiAction.Disposed += new EventHandler(updateToolbox);
                 guiAction.Show();
             }           
@@ -147,15 +183,15 @@ namespace TaskLeader.GUI
             OutlookIF.Instance.tryHook(false);
         }
 
-        // Demande d'affichage de la Toolbox via le ContextMenuStrip
-        private void maximItem_Click(object sender, EventArgs e)
-        {
-            this.displayToolbox();
-        }
-
         // Méthode générique de fermeture de l'appli
         private void closeApp()
         {
+            //Désenregistrement des raccourcis claviers
+            if (hkNewAction.Registered)
+                hkNewAction.Unregister();
+            if (hkListe.Registered)
+                hkListe.Unregister();
+
             trayIcon.Visible = false; 
             Application.Exit();
         }

@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Linq;
-using System.Text;
 using System.Configuration;
 using System.Windows.Forms;
 
@@ -33,7 +30,7 @@ namespace TaskLeader.BLL
         public void clipAction(String key,DataGridViewRow data)
         {
             //Récupération des templates d'export
-            NameValueCollection section = (NameValueCollection)ConfigurationManager.GetSection("ExportSection");
+            NameValueCollection section = (NameValueCollection)ConfigurationManager.GetSection("Export");
             String template = section[key];
 
             // Remplacement des caractères spéciaux

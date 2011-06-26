@@ -46,6 +46,7 @@
     <Compile Include="BLL\Init.cs" />
     <Compile Include="BO\Action.cs" />
     <Compile Include="BO\Filtre.cs" />
+    <Compile Include="BO\Hotkey.cs" />
     <Compile Include="BO\Mail.cs" />
     <Compile Include="DAL\ConnexionDB.cs" />
     <Compile Include="DAL\ReadDB.cs" />

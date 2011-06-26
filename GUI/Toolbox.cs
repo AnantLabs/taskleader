@@ -45,7 +45,7 @@ namespace TaskLeader.GUI
             mailCol.DataPropertyName = "IDMail";
 
             // On rajoute les lignes qu'il faut dans le contextMenu de la liste d'actions
-            NameValueCollection section = (NameValueCollection)ConfigurationManager.GetSection("ExportSection");
+            NameValueCollection section = (NameValueCollection)ConfigurationManager.GetSection("Export");
             // Affichage de l'item dans le menu uniquement si une valeur d'export
             this.exportMenuItem.Visible = (section.Count > 0);
             foreach (string key in section)
@@ -216,7 +216,7 @@ namespace TaskLeader.GUI
                 // Désélection de la checkbox
                 saveFilterCheck.Checked = false;
 
-                string nomFiltre = "";
+                String nomFiltre = "";
 
                 if ((new SaveFilter()).getFilterName(ref nomFiltre) == DialogResult.OK)// Affichage de la Fom SaveFilter
                 {

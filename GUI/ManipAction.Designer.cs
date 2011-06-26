@@ -213,6 +213,7 @@
             this.Name = "ManipAction";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "TaskLeader - ";
+            this.TopMost = true;
             ((System.ComponentModel.ISupportInitialize)(this.outlookPic)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
