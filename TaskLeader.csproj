@@ -50,11 +50,11 @@
     <Compile Include="DAL\ConnexionDB.cs" />
     <Compile Include="DAL\ReadDB.cs" />
     <Compile Include="DAL\WriteDB.cs" />
-    <Compile Include="GUI\InputDialog.cs">
+    <Compile Include="GUI\SaveFilter.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="GUI\InputDialog.Designer.cs">
-      <DependentUpon>InputDialog.cs</DependentUpon>
+    <Compile Include="GUI\SaveFilter.Designer.cs">
+      <DependentUpon>SaveFilter.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\ManipAction.cs">
       <SubType>Form</SubType>
@@ -81,6 +81,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="GUI\SaveFilter.resx">
+      <DependentUpon>SaveFilter.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GUI\ManipAction.resx">
       <DependentUpon>ManipAction.cs</DependentUpon>
     </EmbeddedResource>
