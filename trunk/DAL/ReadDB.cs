@@ -227,9 +227,9 @@ namespace TaskLeader.DAL
         }
 
         // Vérification de l'existence du nom du filtre
-        public bool isNvoFiltre(Filtre filtre)
+        public bool isNvoFiltre(String nom)
         {
-            String name = "'" + filtre.nom.Replace("'", "''") + "'";
+            String name = "'" + nom.Replace("'", "''") + "'";
 
             // On compte le nombre d'occurences de ce filtre dans la table
             String requete = "SELECT count(rowid) FROM Filtres WHERE Titre=" + name;

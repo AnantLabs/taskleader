@@ -13,7 +13,7 @@ namespace TaskLeader.GUI
 {
     public partial class Toolbox : Form
     {
-        DataGridViewImageColumn mailCol;
+        DataGridViewImageColumn mailCol = new DataGridViewImageColumn();
 
         public Toolbox()
         {
@@ -41,7 +41,6 @@ namespace TaskLeader.GUI
             }
 
             // Création de la colonne mail
-            mailCol = new DataGridViewImageColumn();
             mailCol.Name = "Mail";
             mailCol.DataPropertyName = "IDMail";
 
@@ -186,16 +185,15 @@ namespace TaskLeader.GUI
         // Méthode générique d'affichage de la liste d'actions à partir d'un filtre
         private void afficheActions(Filtre filtre)
         {
+            // Ajout si nécessaire de la colonne Mail
+            if (!grilleData.Columns.Contains("Mail"))        
+                grilleData.Columns.Add(mailCol);  
+
             // Récupération des résultats et association au tableau
             DataTable liste = DataManager.Instance.getActions(filtre);                     
             grilleData.DataSource = liste;
 
-            // Ajout si nécessaire de la colonne Mail
-            if (!grilleData.Columns.Contains("Mail"))
-            {
-                mailCol.DisplayIndex = 4;
-                grilleData.Columns.Add(mailCol);
-            }            
+            grilleData.Columns["Mail"].DisplayIndex = 4;
 
             // Définition du label de résultat
             if (liste.Rows.Count == 0)
@@ -211,13 +209,32 @@ namespace TaskLeader.GUI
         // Affichage des actions sur filtre manuel
         private void filtreAction(object sender, EventArgs e)
         {
-            /* Si le résultat d'une recherche est affiché, on efface l'étiquette
-            if (searchFlowLayoutPanel.Visible)
-                searchFlowLayoutPanel.Visible = false;
-            */
-            Filtre filtre = new Filtre(allCtxt.Checked,ctxtListBox.CheckedItems,allSujt.Checked,sujetListBox.CheckedItems,allDest.Checked,destListBox.CheckedItems,allStat.Checked,statutListBox.CheckedItems);
-            // Pas de nom de filtre, il s'agit d'un filtre manuel
-            //this.afficheActions(filtre);
+            Filtre filtre = new Filtre(allCtxt.Checked,ctxtListBox.CheckedItems,allSujt.Checked,sujetListBox.CheckedItems,allDest.Checked,destListBox.CheckedItems,allStat.Checked,statutListBox.CheckedItems);            
+
+            if (saveFilterCheck.Checked) //Sauvegarde du filtre si checkbox cochée
+            {
+                // Désélection de la checkbox
+                saveFilterCheck.Checked = false;
+
+                string nomFiltre = "";
+
+                if ((new SaveFilter()).getFilterName(ref nomFiltre) == DialogResult.OK)// Affichage de la Fom SaveFilter
+                {
+                    //Sauvegarde du filtre
+                    filtre.nom = nomFiltre;
+                    WriteDB.Instance.insertFiltre(filtre);                   
+
+                    // On vide la liste des filtres                
+                    filterCombo.Items.Clear();
+
+                    // On la remplit à nouveau
+                    filterCombo.Items.Add("Sélectionner...");
+                    filterCombo.Items.AddRange(ReadDB.Instance.getFiltersName());
+                    filterCombo.SelectedIndex = 0;
+                }
+            }
+
+            // Quoiqu'il arrive, affichage du filtre
             this.showFilter(filtre);
         }
 
@@ -267,30 +284,6 @@ namespace TaskLeader.GUI
         private void exportRow(object sender, EventArgs e)
         {
             Export.Instance.clipAction(((ToolStripItem)sender).Text, grilleData.SelectedRows[0]);
-        }
-
-        // Enregistrement du filtre renseigné
-        private void saveFilter()
-        {
-            if (filterCombo.Text != "")
-            {
-                Filtre filtre = new Filtre(allCtxt.Checked, ctxtListBox.CheckedItems, allSujt.Checked, sujetListBox.CheckedItems, allDest.Checked, destListBox.CheckedItems, allStat.Checked, statutListBox.CheckedItems);
-                filtre.nom = filterCombo.Text;
-                if (ReadDB.Instance.isNvoFiltre(filtre))
-                {
-                    WriteDB.Instance.insertFiltre(filtre);
-                    // On vide la liste des filtres et on efface la sélection                    
-                    filterCombo.Items.Clear();
-                    // On la remplit à nouveau
-                    filterCombo.Items.Add("Sélectionner...");
-                    filterCombo.Items.AddRange(ReadDB.Instance.getFiltersName());
-                    filterCombo.SelectedIndex = 0;
-                }                  
-                else
-                    MessageBox.Show("Ce nom de filtre existe déjà.", "Nom du filtre", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);               
-            }
-            else
-                MessageBox.Show("Le nom du filtre ne peut être vide", "Sauvegarde de filtre", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);     
         }
 
         //Routine générique permettant de (dé)sélectionner tous les items
