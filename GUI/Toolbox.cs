@@ -204,6 +204,8 @@ namespace TaskLeader.GUI
                 resultLabel.Text = liste.Rows.Count.ToString() + " actions trouvées";
             // Affichage du label
             resultLabel.Visible = true;
+
+            grilleData.Focus();
         }
 
         // Affichage des actions sur filtre manuel
