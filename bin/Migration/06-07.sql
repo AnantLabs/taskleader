@@ -1,4 +1,4 @@
-﻿/* Mise à jour de la table Contextes */
+/* Mise à jour de la table Contextes */
 
 	CREATE TEMPORARY TABLE Contextes_backup(id,Titre);
 	INSERT INTO Contextes_backup SELECT rowid,Titre FROM Contextes;
@@ -92,7 +92,7 @@
 /* Gestion des pièces jointes */
 
 	-- Création de la table Enclosures
-	CREATE TABLE [Enclosures]([ActionID] REFERENCES [Contextes]([id]), [EncType] VARCHAR(1), [EncID] VARCHAR(5));
+	CREATE TABLE [Enclosures]([ActionID] REFERENCES [Contextes]([id]), [EncType] VARCHAR(50), [EncID] VARCHAR(5));
 
 	-- Ajout des mails déjà enregistrés
 	INSERT INTO Enclosures SELECT ActionID,'Mails',MailID FROM IDMailTemp;
@@ -102,31 +102,51 @@
 
 /* Mise à jour de la table Mails */
 
+	-- Ajout des colonnes ID et Titre
 	CREATE TEMPORARY TABLE Mails_backup(id,StoreID,EntryID,MessageID);
 	INSERT INTO Mails_backup SELECT rowid,StoreID,EntryID,MessageID FROM Mails;
 	DROP TABLE Mails;
-	CREATE TABLE [Mails]([id] INTEGER PRIMARY KEY AUTOINCREMENT, [StoreID] VARCHAR NOT NULL, [EntryID] VARCHAR NOT NULL, [MessageID] VARCHAR NOT NULL);
-	INSERT INTO Mails SELECT * FROM Mails_backup;
+	CREATE TABLE [Mails]([id] INTEGER PRIMARY KEY AUTOINCREMENT, [Titre] VARCHAR, [StoreID] VARCHAR NOT NULL, [EntryID] VARCHAR NOT NULL, [MessageID] VARCHAR NOT NULL);
+	INSERT INTO Mails(id,StoreID,EntryID,MessageID) SELECT * FROM Mails_backup;
 	DROP TABLE Mails_backup;
+	
+	-- Insertion de nom de mails génériques pour les mails déjà ajoutés en base
+	UPDATE Mails SET Titre=(SELECT 'Mail#' || id FROM Mails); 
 
 /* Mise à jour de la vueActions */
 
 	DROP VIEW VueActions;
 	
 	CREATE VIEW VueActions AS
-	SELECT A.rowid as 'id', C.Titre as 'Contexte', Su.Titre as 'Sujet', A.Titre, count(En.rowid) as 'Liens', strftime("%d-%m-%Y",A.DueDate) as 'Deadline', D.Nom as 'Destinataire', St.Titre as 'Statut'
+	SELECT
+		A.rowid as 'id',
+		C.Titre as 'Contexte',
+		Su.Titre as 'Sujet',
+		A.Titre,
+		CASE count(En.rowid)
+			WHEN 1 THEN En.EncType
+			WHEN 0 THEN NULL
+			ELSE count(En.rowid)
+		END
+		'Liens',
+		strftime("%d-%m-%Y",A.DueDate) as 'Deadline',
+		D.Nom as 'Destinataire',
+		St.Titre as 'Statut'
     FROM Actions A
-      LEFT OUTER JOIN Contextes C
-         ON A.CtxtID = C.id
-      LEFT OUTER JOIN Sujets Su
-         ON  A.SujtID = Su.id
-	  LEFT OUTER JOIN Enclosures En
-         ON  A.id = En.ActionID
-      LEFT OUTER JOIN Destinataires D
-         ON  A.DestID = D.id
-      LEFT OUTER JOIN Statuts St
-         ON  A.StatID = St.id
+		LEFT OUTER JOIN Contextes C
+			ON A.CtxtID = C.id
+		LEFT OUTER JOIN Sujets Su
+			ON  A.SujtID = Su.id
+		LEFT OUTER JOIN Enclosures En
+			ON  A.id = En.ActionID
+		LEFT OUTER JOIN Destinataires D
+			ON  A.DestID = D.id
+		LEFT OUTER JOIN Statuts St
+			ON  A.StatID = St.id
 	GROUP BY A.id
 	ORDER BY DueDate ASC;
+	
+/* Création de la table Links */
+	CREATE TABLE [Links]([id] INTEGER PRIMARY KEY AUTOINCREMENT, [Titre] VARCHAR NOT NULL, [Path] VARCHAR NOT NULL);
 
 
