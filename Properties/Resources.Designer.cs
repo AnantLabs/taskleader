@@ -95,6 +95,13 @@ namespace TaskLeader.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap PJ {
+            get {
+                object obj = ResourceManager.GetObject("PJ", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Icon task_coach {
             get {
                 object obj = ResourceManager.GetObject("task_coach", resourceCulture);

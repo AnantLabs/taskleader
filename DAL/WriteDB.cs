@@ -67,12 +67,12 @@ namespace TaskLeader.DAL
                     foreach (Criterium critere in filtre.criteria)
                     {
                         String selection;
+                        String table = ConnexionDB.Instance.schema[critere.champ, 1];
 
                         // On crée la requête pour insertion des critères dans les tables annexes
-                        String requete = "INSERT INTO " + ConnexionDB.Instance.schema[critere.champ, 3];
-                        requete += " VALUES ((SELECT max(rowid) FROM Filtres),"; // On récupère le rowid du filtre frâichement créé
-                        requete += "(SELECT rowid FROM " + ConnexionDB.Instance.schema[critere.champ, 1];
-                        requete += " WHERE " + ConnexionDB.Instance.schema[critere.champ, 2] + "=@Titre));";
+                        String requete = "INSERT INTO Filtres_cont VALUES (";
+                        requete += "(SELECT max(id) FROM Filtres),'"+table+"',(SELECT id FROM "+table+" WHERE Titre=@Titre));";
+                        // On récupère le rowid du filtre frâichement créé
 
                         SQLCmd.CommandText = requete;
                         SQLiteParameter p_Titre = new SQLiteParameter("@Titre");
@@ -86,7 +86,7 @@ namespace TaskLeader.DAL
                         }
 
                         // On précise que la case ALL n'a pas été sélectionnée pour ce critère
-                        SQLCmd.CommandText = "UPDATE Filtres SET " + ConnexionDB.Instance.schema[critere.champ, 4] + "=0 WHERE rowid = (SELECT max(rowid) FROM Filtres)";
+                        SQLCmd.CommandText = "UPDATE Filtres SET " + ConnexionDB.Instance.schema[critere.champ, 4] + "=0 WHERE id = (SELECT max(id) FROM Filtres)";
                         SQLCmd.ExecuteNonQuery();
                     }
                 }
@@ -113,7 +113,7 @@ namespace TaskLeader.DAL
             String sujet = "'" + subject.Replace("'", "''") + "'";
 
             String requete = "INSERT INTO Sujets (CtxtID,Titre)" +
-                            " SELECT C.rowid, " + sujet +
+                            " SELECT C.id, " + sujet +
                             " FROM Contextes C" +
                             " WHERE C.Titre = " + ctxt;
 
@@ -125,13 +125,13 @@ namespace TaskLeader.DAL
         {
             String dest = "'" + destinataire.Replace("'", "''") + "'";
 
-            String requete = "INSERT INTO Destinataires (Nom) VALUES (" + dest + ")";
+            String requete = "INSERT INTO Destinataires (Titre) VALUES (" + dest + ")";
 
             return execSQL(requete);
         }
     
         // Insertion d'une nouvelle action
-        public void insertAction(TLaction action)
+        public void insertAction(TLaction action)//TODO=========================================
         {
             using (SQLiteTransaction mytransaction = ConnexionDB.Instance.getConnection().BeginTransaction())
             {
@@ -199,11 +199,11 @@ namespace TaskLeader.DAL
             // Préparation des sous requêtes
             String ctxtPart = "";
             if (action.ctxtHasChanged)
-                ctxtPart = "CtxtID=(SELECT rowid FROM Contextes WHERE Titre=" + action.ContexteSQL+"),";
+                ctxtPart = "CtxtID=(SELECT id FROM Contextes WHERE Titre=" + action.ContexteSQL+"),";
 
             String sujetPart = "";
             if (action.sujetHasChanged)
-                sujetPart = "SujtID=(SELECT rowid FROM Sujets WHERE Titre=" + action.SujetSQL + "),";
+                sujetPart = "SujtID=(SELECT id FROM Sujets WHERE Titre=" + action.SujetSQL + "),";
 
             String actionPart = "";
             if (action.texteHasChanged)
@@ -220,11 +220,11 @@ namespace TaskLeader.DAL
 
             String destPart = "";
             if (action.destHasChanged)
-                destPart = "DestID=(SELECT rowid FROM Destinataires WHERE Nom=" + action.DestinataireSQL + "),";
+                destPart = "DestID=(SELECT id FROM Destinataires WHERE Titre=" + action.DestinataireSQL + "),";
 
             String statPart = "";
             if (action.statusHasChanged)
-                statPart = "StatID=(SELECT rowid FROM Statuts WHERE Titre=" + action.StatutSQL + "),";
+                statPart = "StatID=(SELECT id FROM Statuts WHERE Titre=" + action.StatutSQL + "),";
                 // Il y a volontairement une virgule à la fin dans le cas où le statut n'a pas été mis à jour
 
             String updatePart = ctxtPart + sujetPart + actionPart + datePart + destPart + statPart;
@@ -232,7 +232,7 @@ namespace TaskLeader.DAL
             String requete;
             if (updatePart.Length > 0)
             {
-                requete = "UPDATE Actions SET " + updatePart.Substring(0, updatePart.Length - 1) + " WHERE rowid='" + action.ID + "'";
+                requete = "UPDATE Actions SET " + updatePart.Substring(0, updatePart.Length - 1) + " WHERE id='" + action.ID + "'";
                 return execSQL(requete);
             }
             else

@@ -108,7 +108,8 @@ namespace TaskLeader.GUI
             this.loadComponents();
 
             // Vérification de démarrage
-            if (Init.Instance.canLaunch())
+            //if (Init.Instance.canLaunch())
+            if (true)
             {
                 this.displayToolbox(new Object(),new EventArgs()); // Affichage de la Toolbox
                 invokeControl.CreateControl();
