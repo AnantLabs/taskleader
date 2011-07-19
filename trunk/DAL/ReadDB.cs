@@ -280,6 +280,12 @@ namespace TaskLeader.DAL
                 return false;
         }
         
+        // Récupération des liens attachés à une action
+        public DataTable getLinks(String actionID)
+        {
+            return getTable("SELECT EncType,Titre,EncID FROM VueEnclosures WHERE ActionID="+actionID);
+        }
+
         // Récupération des informations d'un mail à partir de son ID
         public DataTable getMailData(String id)
         {
