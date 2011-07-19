@@ -108,14 +108,14 @@ namespace TaskLeader.DAL
         }
 
         // Vérification si un numéro de version est présent dans la table des compatibilités
-        public bool isVersionComp(String version)
+        public bool isVersionComp(String version) //TODO=========================================
         {
             // Si une ligne matche la base est compatible
-            return (getInteger("SELECT count(rowid) FROM VerComp WHERE Num='" + version + "'") == 1); 
+            return (getInteger("SELECT count(rowid) FROM Properties WHERE ActionsDBVer='" + version + "'") == 1);
         }
 
         // On vérifie la version la plus haute compatible avec cette base
-        public String getLastVerComp()
+        public String getLastVerComp() //TODO=========================================
         {
             return (String)getList("SELECT Num FROM VerComp WHERE rowid=(SELECT max(rowid) FROM VerComp)")[0];
         }
@@ -135,7 +135,7 @@ namespace TaskLeader.DAL
         // Renvoie un tableau de tous les destinataires présents dans la base
         public object[] getDest()
         {
-            return getList("SELECT Nom FROM Destinataires ORDER BY Nom ASC"); // On trie les noms dans l'ordre alphabétique
+            return getList("SELECT Titre FROM Destinataires ORDER BY Titre ASC"); // On trie les noms dans l'ordre alphabétique
         }
 
         // Renvoie un tableau de tous les statuts présents dans la base
@@ -212,9 +212,11 @@ namespace TaskLeader.DAL
             // On récupère les sélections si nécessaire
             foreach (Criterium critere in filtre.criteria)
             {
+                // Récupération du nom de la table correspondante
+                String table = ConnexionDB.Instance.schema[critere.champ, 1];
                 // Création de la requête
-                requete = "SELECT TP."+ConnexionDB.Instance.schema[critere.champ, 2]+" FROM " + ConnexionDB.Instance.schema[critere.champ, 1]+" TP, "+ConnexionDB.Instance.schema[critere.champ, 3] + " TF, Filtres F ";
-                requete += "WHERE F.Titre =" + titre + " AND TF.FiltreID=F.rowid AND TF.SelectedID=TP.rowid";
+                requete = "SELECT TP.Titre FROM "+table+" TP, Filtres_cont TF, Filtres F ";
+                requete += "WHERE F.Titre =" + titre + " AND TF.FiltreID=F.rowid AND TF.FiltreType='"+table+"' AND TF.SelectedID=TP.rowid";
                 // Récupération de la liste
                 liste = getList(requete);
 
@@ -270,7 +272,7 @@ namespace TaskLeader.DAL
         {
             String dest = "'" + destinataire.Replace("'", "''") + "'";
 
-            String requete = "SELECT count(Nom) FROM Destinataires WHERE Nom=" + dest;
+            String requete = "SELECT count(Titre) FROM Destinataires WHERE Titre=" + dest;
 
             if (this.getInteger(requete) == 0)
                 return true;
@@ -281,7 +283,7 @@ namespace TaskLeader.DAL
         // Récupération des informations d'un mail à partir de son ID
         public DataTable getMailData(String id)
         {
-            String requete = "SELECT * FROM Mails WHERE rowid='"+id+"'";
+            String requete = "SELECT * FROM Mails WHERE id='"+id+"'";
             return getTable(requete);
         }
 

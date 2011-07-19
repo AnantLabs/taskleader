@@ -34,6 +34,7 @@ namespace TaskLeader.DAL
         private string[,] v_schema = new string[4, 5]
         { { "Contexte", "Contextes", "Titre", "Filtres_Ctxt","AllCtxt" }, { "Sujet", "Sujets", "Titre","Filtres_Suj","AllSuj" },
         { "Destinataire", "Destinataires", "Nom","Filtres_Dest","AllDest" },{"Statut","Statuts","Titre", "Filtres_Stat","AllStat"} };
+        // 3ème colonne inutile => label harmonisé, 4ème colonne inutile => Tables supprimées
         public string[,] schema { get { return v_schema; } }
 
         // Chemin d'accès à la base

@@ -13,7 +13,7 @@ namespace TaskLeader.GUI
 {
     public partial class Toolbox : Form
     {
-        DataGridViewImageColumn mailCol = new DataGridViewImageColumn();
+        DataGridViewImageColumn linkCol = new DataGridViewImageColumn();
 
         public Toolbox()
         {
@@ -36,13 +36,13 @@ namespace TaskLeader.GUI
             // Remplissage de la ListBox des statuts + menu contextuel
             foreach (object item in ReadDB.Instance.getStatut())
             {
-                statutListBox.Items.Add(item, true); // Sélection des statuts par défaut
+                statutListBox.Items.Add(item, true); // Sélection de tous les statuts par défaut
                 statutTSMenuItem.DropDown.Items.Add(item.ToString(), null, this.changeStat);
             }
 
-            // Création de la colonne mail
-            mailCol.Name = "Mail";
-            mailCol.DataPropertyName = "IDMail";
+            // Création de la colonne des liens
+            linkCol.Name = "Liens";
+            linkCol.DataPropertyName = "Liens";
 
             // On rajoute les lignes qu'il faut dans le contextMenu de la liste d'actions
             NameValueCollection section = (NameValueCollection)ConfigurationManager.GetSection("Export");
@@ -98,8 +98,8 @@ namespace TaskLeader.GUI
             action.Statut = ligne["Statut"].Value.ToString();
             
             // Récupération des informations du mail lié le cas échéant
-            if(ligne["Mail"].Value.ToString() != "")
-                action.mail = new Mail(ligne["Mail"].Value.ToString()); // Quand on formatte une cellule on ne modifie pas sa Value
+            //if(ligne["Mail"].Value.ToString() != "")
+            //    action.mail = new Mail(ligne["Mail"].Value.ToString()); // Quand on formatte une cellule on ne modifie pas sa Value
             
             return action;
         }
@@ -172,28 +172,30 @@ namespace TaskLeader.GUI
             }
             
             // Si un mail est attaché, on affiche l'image de mail
-            if (grilleData.Columns[e.ColumnIndex].Name.Equals("Mail"))
+            if (grilleData.Columns[e.ColumnIndex].Name.Equals("Liens"))
             {
-                if (e.Value as String != null)
+                String valeur = e.Value as String;
+                if (valeur == null)
+                    e.CellStyle.NullValue = null;
+                else if (valeur.Contains("Mails"))
                     e.Value = TaskLeader.Properties.Resources.outlook;                  
                 else
-                    e.CellStyle.NullValue = null;
-            }
-            
+                    e.Value = TaskLeader.Properties.Resources.PJ; 
+            }    
         }
                 
         // Méthode générique d'affichage de la liste d'actions à partir d'un filtre
         private void afficheActions(Filtre filtre)
         {
             // Ajout si nécessaire de la colonne Mail
-            if (!grilleData.Columns.Contains("Mail"))        
-                grilleData.Columns.Add(mailCol);  
+            if (!grilleData.Columns.Contains("Liens"))        
+                grilleData.Columns.Add(linkCol);  
 
             // Récupération des résultats et association au tableau
             DataTable liste = DataManager.Instance.getActions(filtre);                     
             grilleData.DataSource = liste;
 
-            grilleData.Columns["Mail"].DisplayIndex = 4;
+            grilleData.Columns["Liens"].DisplayIndex = 4;
 
             // Définition du label de résultat
             if (liste.Rows.Count == 0)
@@ -260,15 +262,19 @@ namespace TaskLeader.GUI
             }
 
             if (e.Button == MouseButtons.Left &&
-                grilleData.Columns[e.ColumnIndex].Name.Equals("Mail") &&
+                grilleData.Columns[e.ColumnIndex].Name.Equals("Liens") &&
                 grilleData[e.ColumnIndex, e.RowIndex].Value.ToString() != "")
-                OutlookIF.Instance.displayMail(new Mail(grilleData.Rows[e.RowIndex].Cells["Mail"].Value.ToString()));
+            {
+                String enclosure = grilleData.Rows[e.RowIndex].Cells["Liens"].Value.ToString();
+                OutlookIF.Instance.displayMail(new Mail(enclosure.Substring(enclosure.IndexOf("#")+1)));
+            }
+                
         }
 
         // Affichage d'un curseur doigt si mail attaché.
         private void grilleData_CellMouseEnter(object sender, DataGridViewCellEventArgs e)
         {
-            if (grilleData.Columns[e.ColumnIndex].Name.Equals("Mail") &&
+            if (grilleData.Columns[e.ColumnIndex].Name.Equals("Liens") &&
                 e.RowIndex >=0 &&
                 grilleData[e.ColumnIndex, e.RowIndex].Value.ToString() != "")
                 this.Cursor = Cursors.Hand;
@@ -276,7 +282,7 @@ namespace TaskLeader.GUI
 
         private void grilleData_CellMouseLeave(object sender, DataGridViewCellEventArgs e)
         {
-            if (grilleData.Columns[e.ColumnIndex].Name.Equals("Mail") &&
+            if (grilleData.Columns[e.ColumnIndex].Name.Equals("Liens") &&
                 e.RowIndex >= 0 &&
                 grilleData[e.ColumnIndex, e.RowIndex].Value.ToString() != "")
                 this.Cursor = Cursors.Default;

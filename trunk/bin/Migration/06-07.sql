@@ -30,8 +30,8 @@
 	CREATE TEMPORARY TABLE Destinataires_backup(id,Nom);
 	INSERT INTO Destinataires_backup SELECT rowid,Nom FROM Destinataires;
 	DROP TABLE Destinataires;
-	CREATE TABLE [Destinataires]([id] INTEGER PRIMARY KEY AUTOINCREMENT, [Nom] VARCHAR (100) NOT NULL UNIQUE, [Defaut] BOOLEAN);
-	INSERT INTO Destinataires (id,Nom) SELECT * FROM Destinataires_backup;
+	CREATE TABLE [Destinataires]([id] INTEGER PRIMARY KEY AUTOINCREMENT, [Titre] VARCHAR (100) NOT NULL UNIQUE, [Defaut] BOOLEAN);
+	INSERT INTO Destinataires (id,Titre) SELECT * FROM Destinataires_backup;
 	DROP TABLE Destinataires_backup;
 
 /* Mise à jour de la table Statuts */
@@ -124,13 +124,13 @@
 		Su.Titre as 'Sujet',
 		A.Titre,
 		CASE count(En.rowid)
-			WHEN 1 THEN En.EncType
+			WHEN 1 THEN En.EncType||'#'||En.EncID
 			WHEN 0 THEN NULL
 			ELSE count(En.rowid)
 		END
 		'Liens',
 		strftime("%d-%m-%Y",A.DueDate) as 'Deadline',
-		D.Nom as 'Destinataire',
+		D.Titre as 'Destinataire',
 		St.Titre as 'Statut'
     FROM Actions A
 		LEFT OUTER JOIN Contextes C
