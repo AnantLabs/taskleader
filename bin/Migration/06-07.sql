@@ -111,7 +111,7 @@
 	DROP TABLE Mails_backup;
 	
 	-- Insertion de nom de mails génériques pour les mails déjà ajoutés en base
-	UPDATE Mails SET Titre=(SELECT 'Mail#' || id FROM Mails); 
+	UPDATE Mails SET Titre='Mail#' || id; 
 
 /* Mise à jour de la vueActions */
 
@@ -149,4 +149,13 @@
 /* Création de la table Links */
 	CREATE TABLE [Links]([id] INTEGER PRIMARY KEY AUTOINCREMENT, [Titre] VARCHAR NOT NULL, [Path] VARCHAR NOT NULL);
 
+/* Mise à jour de la table VerComp */
 
+	-- Suppression de l'ancienne table
+	DROP TABLE VerComp;
+	
+	-- Création de la nouvelle table
+	CREATE TABLE [Properties]([Cle] VARCHAR,[Valeur] VARCHAR);
+	
+	-- Insertion de la version de la base Actions
+	INSERT INTO Properties VALUES('ActionsDBVer','0.7');
