@@ -103,16 +103,36 @@
 /* Mise à jour de la table Mails */
 
 	-- Ajout des colonnes ID et Titre
-	CREATE TEMPORARY TABLE Mails_backup(id,StoreID,EntryID,MessageID);
-	INSERT INTO Mails_backup SELECT rowid,StoreID,EntryID,MessageID FROM Mails;
-	DROP TABLE Mails;
-	CREATE TABLE [Mails]([id] INTEGER PRIMARY KEY AUTOINCREMENT, [Titre] VARCHAR, [StoreID] VARCHAR NOT NULL, [EntryID] VARCHAR NOT NULL, [MessageID] VARCHAR NOT NULL);
-	INSERT INTO Mails(id,StoreID,EntryID,MessageID) SELECT * FROM Mails_backup;
-	DROP TABLE Mails_backup;
-	
-	-- Insertion de nom de mails génériques pour les mails déjà ajoutés en base
-	UPDATE Mails SET Titre='Mail#' || id; 
+    CREATE TEMPORARY TABLE Mails_backup(id,StoreID,EntryID,MessageID);
+    INSERT INTO Mails_backup SELECT rowid,StoreID,EntryID,MessageID FROM Mails;
+    DROP TABLE Mails;
+    CREATE TABLE [Mails]([id] INTEGER PRIMARY KEY AUTOINCREMENT, [Titre] VARCHAR, [StoreID] VARCHAR NOT NULL, [EntryID] VARCHAR NOT NULL, [MessageID] VARCHAR NOT NULL);
+    INSERT INTO Mails(id,StoreID,EntryID,MessageID) SELECT * FROM Mails_backup;
+    DROP TABLE Mails_backup;
 
+    -- Insertion de nom de mails génériques pour les mails déjà ajoutés en base
+    UPDATE Mails SET Titre='Mail#' || id; 	
+	
+/* Création de la table Links */
+	CREATE TABLE [Links]([id] INTEGER PRIMARY KEY AUTOINCREMENT, [Titre] VARCHAR, [Path] VARCHAR NOT NULL);
+	
+/* Création de la vue des pièces jointes */
+
+	CREATE VIEW VueEnclosures AS
+	SELECT ActionID,
+	EncType,
+	CASE EncType
+		WHEN 'Mails' THEN M.Titre
+		WHEN 'Links' THEN L.Titre
+	END
+	'Titre',
+	EncID
+	FROM Enclosures E
+	LEFT OUTER JOIN Mails M
+		ON E.EncID=M.id
+	LEFT OUTER JOIN Links L 
+		ON E.EncID=L.id;
+		
 /* Mise à jour de la vueActions */
 
 	DROP VIEW VueActions;
@@ -146,8 +166,7 @@
 	GROUP BY A.id
 	ORDER BY DueDate ASC;
 	
-/* Création de la table Links */
-	CREATE TABLE [Links]([id] INTEGER PRIMARY KEY AUTOINCREMENT, [Titre] VARCHAR NOT NULL, [Path] VARCHAR NOT NULL);
+
 
 /* Mise à jour de la table VerComp */
 

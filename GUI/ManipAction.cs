@@ -4,6 +4,7 @@ using System.Configuration;
 using TaskLeader.DAL;
 using TaskLeader.BLL;
 using TaskLeader.BO;
+using System.Data;
 
 namespace TaskLeader.GUI
 {
@@ -25,6 +26,9 @@ namespace TaskLeader.GUI
             // On remplit la liste des statuts
             foreach (String item in ReadDB.Instance.getStatut())
                 statutBox.Items.Add(item);
+
+            // Remplissage de la liste des images
+            this.images.Images.Add(TaskLeader.Properties.Resources.outlook); 
         }
 
         // Constructeur pour une création depuis Outlook
@@ -53,6 +57,19 @@ namespace TaskLeader.GUI
                     actionDatePicker.Value = action.DueDate;
                 else
                     noDueDate.Checked = true;              
+            }
+
+            // Ajout des différents liens
+            DataTable links = DAL.ReadDB.Instance.getLinks(action.ID);
+            foreach (DataRow link in links.Rows)
+            {
+                // Remplissage de la ListView
+                if (link["EncType"].ToString()=="Mails")
+                    this.linksView.Items.Add(link["Titre"].ToString(), 0);
+
+                // Affichage de la ListView
+                this.linksLabel.Visible = true;
+                this.linksView.Visible = true;
             }
 
             // On active le lien "Source Outlook" si nécessaire
