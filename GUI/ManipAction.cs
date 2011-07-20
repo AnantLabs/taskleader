@@ -1,4 +1,4 @@
- using System;
+using System;
 using System.Windows.Forms;
 using System.Configuration;
 using TaskLeader.DAL;
@@ -45,40 +45,58 @@ namespace TaskLeader.GUI
             else
             {
                 this.Text += "Modifier une action";
-
-                // On remplit tous les champs avec les données de l'action
-                contexteBox.Text = action.Contexte;
-                sujetBox.Text = action.Sujet;
-                updateSujet(); // Mise à jour de la liste des sujets
-
-                // Récupération de la dueDate entrée
+				
+                destBox.Text = action.Destinataire;	
+				
                 if (action.hasDueDate)
                     actionDatePicker.Value = action.DueDate;
                 else
-                    noDueDate.Checked = true;              
-            }
-
-            // Ajout des différents liens
-            DataTable links = DAL.ReadDB.Instance.getLinks(action.ID);
-            foreach (DataRow link in links.Rows)
-            {
-                // Remplissage de la ListView
-                if (link["EncType"].ToString()=="Mails")
-                    this.linksView.Items.Add(link["Titre"].ToString(), 0);
-
-                // Affichage de la ListView
-                this.linksLabel.Visible = true;
-                this.linksView.Visible = true;
+                    noDueDate.Checked = true; 
+				
+                contexteBox.Text = action.Contexte;
+                sujetBox.Text = action.Sujet;
+                updateSujet(); // Mise à jour de la liste des sujets					                           
             }
 
             // On affiche le sujet du mail dans la case action
             desField.Text = action.Texte;
 
-            // On affiche le destinataire
-            destBox.Text = action.Destinataire;
-
             // On sélectionne le statut
-            statutBox.SelectedItem = action.Statut;        
+            statutBox.SelectedItem = action.Statut; 			
+			
+            // Récupération des différents liens
+            DataTable links = ReadDB.Instance.getLinks(action.ID);
+			
+           ListViewItem link = new ListViewItem();
+			
+            foreach (DataRow linkData in links.Rows)
+            {
+				// Définition du label du lien
+				link.Text = linkData["Titre"].ToString();
+				
+				// Définition de l'image correspondante au lien
+				switch(link["EncType"].ToString())
+				{
+					case "Mails":
+						link.ImageIndex = 0;
+						break;
+				}
+				
+				// Ajout des infos additionnelles
+				link.SubItems.Clear();
+				link.SubItems.Add(link["EncType"].ToString());
+				link.SubItems.Add(link["EncID"].ToString());
+				
+				// Ajout du lien à la listeView
+				linksView.Items.Add(link);
+			}
+			
+			if(links.Rows.Count > 0)
+			{
+                // Affichage de la ListView
+                this.linksLabel.Visible = true;
+                this.linksView.Visible = true;
+            }		
         }
 
         // Mise à jour de la combobox présentant les sujets
@@ -92,6 +110,7 @@ namespace TaskLeader.GUI
         }
 
         // Remise à zéro de tous les champs sauf le statut
+		// A SUPPRIMER
         private void clearAllFields()
         {
             // On efface les contextes
@@ -130,7 +149,8 @@ namespace TaskLeader.GUI
 
             // On sauvegarde l'action
             DataManager.Instance.saveAction(v_action);
-
+			
+			// A SUPPRIMER avec les raccourcis clavier
             if (v_action.isScratchpad && ConfigurationManager.AppSettings["newActionChained"] == "true")
             {
                 // On simule la fermeture de la form pour rafraîchir la Toolbox
@@ -157,11 +177,14 @@ namespace TaskLeader.GUI
         {
             actionDatePicker.Enabled = !noDueDate.Checked;
         }
-
-        // Affichage du mail source
-        private void outlookPic_Click(object sender, EventArgs e)
-        {
-            OutlookIF.Instance.displayMail(v_action.mail);
-        }
+		
+		private void link_Click( object sender, EventArgs e )
+		{
+			// Récupération du lien sélectionné
+			ListViewItem link = linksView.SelectedItems[0];
+			
+			DataManager.Instance.openLink(link.SubItems[0].Text, link.SubItems[1].Text);
+			// OutlookIF.Instance.displayMail(v_action.mail);
+		}
     }
 }
