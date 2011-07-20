@@ -88,7 +88,7 @@ namespace TaskLeader.BLL
 
                 // Création de l'action
                 TLaction action = new TLaction(item.Subject);
-                action.mail = new Mail(store.StoreID, item.EntryID, (String)props.GetProperty(this.messageIDParam));
+                action.addLink(new Mail(item.Subject,store.StoreID, item.EntryID, (String)props.GetProperty(this.messageIDParam)));
                 action.freezeInitState();
 
                 // On affiche la fenêtre nouvelle action Outlook

@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Data;
 using TaskLeader.DAL;
+using TaskLeader.BLL;
 
 namespace TaskLeader.BO
 {
-    public class Mail
+    public class Mail : Enclosure
     {
         // Méthode privée pour fabriquer des string compatible sql
         private String sqlFactory(String original) { return "'" + original.Replace("'", "''") + "'"; }
@@ -30,9 +31,11 @@ namespace TaskLeader.BO
         /// <summary>
         /// Création d'un objet Mail à partir de son ID dans la base
         /// </summary>
-        public Mail(String ID)
+        public Mail(String ID):base("","Mails")
         {
             DataTable mailData = ReadDB.Instance.getMailData(ID);
+
+            base.Titre = mailData.Rows[0]["Titre"].ToString();
             this.v_storeID = mailData.Rows[0]["StoreID"].ToString();
             this.v_entryID = mailData.Rows[0]["EntryID"].ToString();
             this.v_messageID = mailData.Rows[0]["MessageID"].ToString();
@@ -41,11 +44,23 @@ namespace TaskLeader.BO
         /// <summary>
         /// Création d'un objet Mail à partir des différents ID
         /// </summary>
-        public Mail(String storeID, String entryID, String messageID)
+        public Mail(String titre,String storeID, String entryID, String messageID):base(titre,"Mails")
         {
             this.v_storeID = storeID;
             this.v_entryID = entryID;
             this.v_messageID = messageID;
+        }
+
+        // Ouverture du mail
+        public override void open()
+        {
+            OutlookIF.Instance.displayMail(this);
+        }
+
+        // Stockage du mail
+        public override String store()
+        {
+            return WriteDB.Instance.insertMail(this);
         }
     }
 }

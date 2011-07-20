@@ -115,23 +115,6 @@
 	
 /* Création de la table Links */
 	CREATE TABLE [Links]([id] INTEGER PRIMARY KEY AUTOINCREMENT, [Titre] VARCHAR, [Path] VARCHAR NOT NULL);
-	
-/* Création de la vue des pièces jointes */
-
-	CREATE VIEW VueEnclosures AS
-	SELECT ActionID,
-	EncType,
-	CASE EncType
-		WHEN 'Mails' THEN M.Titre
-		WHEN 'Links' THEN L.Titre
-	END
-	'Titre',
-	EncID
-	FROM Enclosures E
-	LEFT OUTER JOIN Mails M
-		ON E.EncID=M.id
-	LEFT OUTER JOIN Links L 
-		ON E.EncID=L.id;
 		
 /* Mise à jour de la vueActions */
 
@@ -165,8 +148,6 @@
 			ON  A.StatID = St.id
 	GROUP BY A.id
 	ORDER BY DueDate ASC;
-	
-
 
 /* Mise à jour de la table VerComp */
 

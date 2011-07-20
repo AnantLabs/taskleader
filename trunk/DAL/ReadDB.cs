@@ -281,16 +281,26 @@ namespace TaskLeader.DAL
         }
         
         // Récupération des liens attachés à une action
-        public DataTable getLinks(String actionID)
+        public Array getLinks(String actionID)
         {
-            return getTable("SELECT EncType,Titre,EncID FROM VueEnclosures WHERE ActionID="+actionID);
+            DataTable linksData = getTable("SELECT EncType,EncID FROM Enclosures WHERE ActionID=" + actionID);
+            ArrayList liste = new ArrayList();
+
+            foreach (DataRow link in linksData.Rows)
+                switch (link["EncType"].ToString())
+                {
+                    case("Mails"):
+                        liste.Add(new Mail(link["EncID"].ToString()));
+                        break;
+                }
+
+            return liste.ToArray();
         }
 
         // Récupération des informations d'un mail à partir de son ID
         public DataTable getMailData(String id)
         {
-            String requete = "SELECT * FROM Mails WHERE id='"+id+"'";
-            return getTable(requete);
+            return getTable("SELECT * FROM Mails WHERE id='" + id + "'");
         }
 
         // Recherche de mots clés dans la colonne Action

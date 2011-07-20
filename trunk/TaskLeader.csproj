@@ -45,6 +45,7 @@
     <Compile Include="BLL\Export.cs" />
     <Compile Include="BLL\Init.cs" />
     <Compile Include="BO\Action.cs" />
+    <Compile Include="BO\Enclosure.cs" />
     <Compile Include="BO\Filtre.cs" />
     <Compile Include="BO\Hotkey.cs" />
     <Compile Include="BO\Mail.cs" />
