@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using TaskLeader.DAL;
 
 namespace TaskLeader.BO
@@ -117,11 +118,11 @@ namespace TaskLeader.BO
         }
         public String StatutSQL { get { return sqlFactory(v_stat); } }       
 
-        // storeID du dossier contenant le mail si relié à l'action
-        private Mail v_mail = null;
-        public Mail mail { get { return v_mail; } set { v_mail = value; } }
-        // booléen pour savoir si l'action est reliée à un mail
-        public bool hasMailAttached { get { return (v_mail != null); } }
+        // PJ à l'action
+        private ArrayList v_links = new ArrayList();
+        public void addLink(Enclosure link) { v_links.Add(link); }
+        public bool hasLinks { get { return (v_links.Count > 0); } }
+        public Array Links { get { return v_links.ToArray(); } }
 
         //Constructeur simple
         public TLaction(String sujet)

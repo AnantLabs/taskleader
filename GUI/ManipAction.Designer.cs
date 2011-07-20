@@ -42,7 +42,6 @@
             this.label6 = new System.Windows.Forms.Label();
             this.statutBox = new System.Windows.Forms.ComboBox();
             this.noDueDate = new System.Windows.Forms.CheckBox();
-            this.outlookPic = new System.Windows.Forms.PictureBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.label3 = new System.Windows.Forms.Label();
@@ -52,7 +51,6 @@
             this.linksView = new System.Windows.Forms.ListView();
             this.images = new System.Windows.Forms.ImageList(this.components);
             this.flowLayoutPanel4 = new System.Windows.Forms.FlowLayoutPanel();
-            ((System.ComponentModel.ISupportInitialize)(this.outlookPic)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
@@ -194,18 +192,6 @@
             this.noDueDate.UseVisualStyleBackColor = true;
             this.noDueDate.CheckedChanged += new System.EventHandler(this.dateChosen_CheckedChanged);
             // 
-            // outlookPic
-            // 
-            this.outlookPic.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.flowLayoutPanel4.SetFlowBreak(this.outlookPic, true);
-            this.outlookPic.Image = global::TaskLeader.Properties.Resources.outlook;
-            this.outlookPic.Location = new System.Drawing.Point(167, 30);
-            this.outlookPic.Name = "outlookPic";
-            this.outlookPic.Size = new System.Drawing.Size(30, 30);
-            this.outlookPic.TabIndex = 26;
-            this.outlookPic.TabStop = false;
-            this.outlookPic.Click += new System.EventHandler(this.outlookPic_Click);
-            // 
             // tableLayoutPanel1
             // 
             this.tableLayoutPanel1.ColumnCount = 2;
@@ -285,6 +271,7 @@
             // 
             // linksView
             // 
+            this.linksView.Activation = System.Windows.Forms.ItemActivation.OneClick;
             this.linksView.LabelEdit = true;
             this.linksView.Location = new System.Drawing.Point(61, 57);
             this.linksView.MultiSelect = false;
@@ -295,6 +282,7 @@
             this.linksView.UseCompatibleStateImageBehavior = false;
             this.linksView.View = System.Windows.Forms.View.List;
             this.linksView.Visible = false;
+            this.linksView.ItemActivate += new System.EventHandler(this.link_Click);
             // 
             // images
             // 
@@ -307,7 +295,6 @@
             this.flowLayoutPanel4.Controls.Add(this.statutBox);
             this.flowLayoutPanel4.Controls.Add(this.label6);
             this.flowLayoutPanel4.Controls.Add(this.saveButton);
-            this.flowLayoutPanel4.Controls.Add(this.outlookPic);
             this.flowLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel4.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
             this.flowLayoutPanel4.Location = new System.Drawing.Point(333, 166);
@@ -328,7 +315,6 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "TaskLeader - ";
             this.TopMost = true;
-            ((System.ComponentModel.ISupportInitialize)(this.outlookPic)).EndInit();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.flowLayoutPanel1.ResumeLayout(false);
             this.flowLayoutPanel1.PerformLayout();
@@ -357,7 +343,6 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.ComboBox statutBox;
         private System.Windows.Forms.CheckBox noDueDate;
-        private System.Windows.Forms.PictureBox outlookPic;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel2;

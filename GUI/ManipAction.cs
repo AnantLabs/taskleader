@@ -28,7 +28,7 @@ namespace TaskLeader.GUI
                 statutBox.Items.Add(item);
 
             // Remplissage de la liste des images
-            this.images.Images.Add(TaskLeader.Properties.Resources.outlook); 
+            this.images.Images.Add(TaskLeader.Properties.Resources.outlook);
         }
 
         public ManipAction(TLaction action)
@@ -39,64 +39,59 @@ namespace TaskLeader.GUI
             this.v_action = action;
             // Chargement des widgets
             this.loadWidgets();
-            
+
+            Array links;
+
             if (action.isScratchpad)
-                this.Text += "Ajouter une action";               
+            {
+                this.Text += "Ajouter une action";
+                links = action.Links; // Dans le cas où la création d'action vient d'une interface
+            }
             else
             {
                 this.Text += "Modifier une action";
-				
-                destBox.Text = action.Destinataire;	
-				
+
+                destBox.Text = action.Destinataire;
+
                 if (action.hasDueDate)
                     actionDatePicker.Value = action.DueDate;
                 else
-                    noDueDate.Checked = true; 
-				
+                    noDueDate.Checked = true;
+
                 contexteBox.Text = action.Contexte;
                 sujetBox.Text = action.Sujet;
-                updateSujet(); // Mise à jour de la liste des sujets					                           
+                updateSujet(); // Mise à jour de la liste des sujets
+
+                // Récupération des différents liens
+                links = ReadDB.Instance.getLinks(action.ID);
+            }
+
+            // Affichage des liens le cas échéant
+            if (links.Length > 0)
+            {
+                ListViewItem linkItem;
+
+                foreach (Enclosure link in links)
+                {
+                    // Définition du label du lien
+                    linkItem = new ListViewItem(link.Titre, link.Type);
+                    linkItem.Tag = link;
+
+                    // Ajout du lien à la listView
+                    linksView.Items.Add(linkItem);
+                }
+
+                // Affichage de la ListView
+                this.linksLabel.Visible = true;
+                this.linksView.Visible = true;
             }
 
             // On affiche le sujet du mail dans la case action
             desField.Text = action.Texte;
+            desField.Select(0, 0);
 
             // On sélectionne le statut
-            statutBox.SelectedItem = action.Statut; 			
-			
-            // Récupération des différents liens
-            DataTable links = ReadDB.Instance.getLinks(action.ID);
-			
-           ListViewItem link = new ListViewItem();
-			
-            foreach (DataRow linkData in links.Rows)
-            {
-				// Définition du label du lien
-				link.Text = linkData["Titre"].ToString();
-				
-				// Définition de l'image correspondante au lien
-				switch(link["EncType"].ToString())
-				{
-					case "Mails":
-						link.ImageIndex = 0;
-						break;
-				}
-				
-				// Ajout des infos additionnelles
-				link.SubItems.Clear();
-				link.SubItems.Add(link["EncType"].ToString());
-				link.SubItems.Add(link["EncID"].ToString());
-				
-				// Ajout du lien à la listeView
-				linksView.Items.Add(link);
-			}
-			
-			if(links.Rows.Count > 0)
-			{
-                // Affichage de la ListView
-                this.linksLabel.Visible = true;
-                this.linksView.Visible = true;
-            }		
+            statutBox.SelectedItem = action.Statut;
         }
 
         // Mise à jour de la combobox présentant les sujets
@@ -107,30 +102,6 @@ namespace TaskLeader.GUI
 
             foreach (String item in ReadDB.Instance.getSujet(contexteBox.Text))
                 sujetBox.Items.Add(item);
-        }
-
-        // Remise à zéro de tous les champs sauf le statut
-		// A SUPPRIMER
-        private void clearAllFields()
-        {
-            // On efface les contextes
-            contexteBox.Text = "";
-            contexteBox.Items.Clear();
-
-            //On efface les sujets
-            sujetBox.Text = "";
-            sujetBox.Items.Clear();
-
-            // On efface l'action
-            desField.Text = "";
-
-            // On reset la date
-            actionDatePicker.Value = DateTime.Now;
-            noDueDate.Checked = false;
-
-            // On reset les destinataires
-            destBox.Text = "";
-            destBox.Items.Clear();
         }
 
         // Sauvegarde de l'action
@@ -149,21 +120,9 @@ namespace TaskLeader.GUI
 
             // On sauvegarde l'action
             DataManager.Instance.saveAction(v_action);
-			
-			// A SUPPRIMER avec les raccourcis clavier
-            if (v_action.isScratchpad && ConfigurationManager.AppSettings["newActionChained"] == "true")
-            {
-                // On simule la fermeture de la form pour rafraîchir la Toolbox
-                //this.Disposed(new EventArgs());
-                // On reset tous les champs
-                this.clearAllFields();
-                // Et on recharge
-                this.loadWidgets();
-                return;
-            }
 
             // Fermeture de la fenêtre
-            this.Close();                         
+            this.Close();
         }
 
         // Demande de mise à jour des sujets quand le contexte sélectionné change
@@ -177,14 +136,11 @@ namespace TaskLeader.GUI
         {
             actionDatePicker.Enabled = !noDueDate.Checked;
         }
-		
-		private void link_Click( object sender, EventArgs e )
-		{
-			// Récupération du lien sélectionné
-			ListViewItem link = linksView.SelectedItems[0];
-			
-			DataManager.Instance.openLink(link.SubItems[0].Text, link.SubItems[1].Text);
-			// OutlookIF.Instance.displayMail(v_action.mail);
-		}
+
+        private void link_Click(object sender, EventArgs e)
+        {
+            // On ouvre le lien
+            ((Enclosure)linksView.SelectedItems[0].Tag).open();
+        }
     }
 }

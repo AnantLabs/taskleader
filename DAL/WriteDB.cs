@@ -130,20 +130,38 @@ namespace TaskLeader.DAL
             return execSQL(requete);
         }
     
+        // Insertion d'un nouveau mail en base
+        public String insertMail(Mail mail)
+        {
+            String EncID = "";
+            String titre = "'" + mail.Titre.Replace("'", "''") + "'";
+
+            using (SQLiteTransaction mytransaction = ConnexionDB.Instance.getConnection().BeginTransaction())
+            {
+                using (SQLiteCommand SQLCmd = new SQLiteCommand(ConnexionDB.Instance.getConnection()))
+                {
+                    // Insertion du mail
+                    SQLCmd.CommandText = "INSERT INTO Mails (Titre,StoreID,EntryID,MessageID) ";
+                    SQLCmd.CommandText += "VALUES(" + titre + "," + mail.StoreIDSQL + "," + mail.EntryIDSQL + "," + mail.MessageIDSQL + ");";
+                    SQLCmd.ExecuteNonQuery();
+
+                    // Récupération du EncID
+                    SQLCmd.CommandText = "SELECT max(id) FROM Mails";
+                    EncID = SQLCmd.ExecuteScalar().ToString();
+                }
+                mytransaction.Commit();
+            }
+
+            return EncID;
+        }
+
         // Insertion d'une nouvelle action
-        public void insertAction(TLaction action)//TODO=========================================
+        public void insertAction(TLaction action)
         {
             using (SQLiteTransaction mytransaction = ConnexionDB.Instance.getConnection().BeginTransaction())
             {
                 using (SQLiteCommand SQLCmd = new SQLiteCommand(ConnexionDB.Instance.getConnection()))
                 {
-                    // Insertion des infos du mail joint si nécessaire
-                    if (action.hasMailAttached)
-                    {
-                        SQLCmd.CommandText = "INSERT INTO Mails VALUES(" + action.mail.StoreIDSQL + "," + action.mail.EntryIDSQL + "," + action.mail.MessageIDSQL + ");";
-                        SQLCmd.ExecuteNonQuery();
-                    }
-
                     //Syntaxe: INSERT INTO Actions (nom des colonnes avec ,) VALUES(valeurs avec ' et ,)     
 
                     // Préparation des différents morceaux de la requête
@@ -153,7 +171,7 @@ namespace TaskLeader.DAL
                     if (action.Contexte != "")
                     {
                         insertPart += "CtxtID,";
-                        valuePart += "(SELECT rowid FROM Contextes WHERE Titre = " + action.ContexteSQL + "),";
+                        valuePart += "(SELECT id FROM Contextes WHERE Titre = " + action.ContexteSQL + "),";
                     }
 
                     if (action.Sujet != "")
@@ -174,20 +192,30 @@ namespace TaskLeader.DAL
                     if (action.Destinataire != "")
                     {
                         insertPart += "DestID,";
-                        valuePart += "(SELECT rowid FROM Destinataires WHERE Nom =" + action.DestinataireSQL + "),";
-                    }
-
-                    if (action.hasMailAttached)
-                    {
-                        insertPart += "IDMail,";
-                        valuePart += "(SELECT max(rowid) FROM Mails),";
+                        valuePart += "(SELECT id FROM Destinataires WHERE Titre =" + action.DestinataireSQL + "),";
                     }
 
                     insertPart += "StatID)";
-                    valuePart += "(SELECT rowid FROM Statuts WHERE Titre=" + action.StatutSQL + "))";
+                    valuePart += "(SELECT id FROM Statuts WHERE Titre=" + action.StatutSQL + "))";
 
                     SQLCmd.CommandText = insertPart + valuePart;
                     SQLCmd.ExecuteNonQuery();
+
+                    // Insertion des infos des pièces jointes
+                    foreach (Enclosure link in action.Links)
+                    {
+                        //Enregistrement de la PJ dans la bonne table et récupération de l'ID
+                        String EncID = link.store();
+                        
+                        // Création de la requête
+                        String requete = "INSERT INTO Enclosures VALUES(";
+                        requete += "(SELECT max(id) FROM Actions),";
+                        requete += link.TypeSQL+",";
+                        requete += "'" + EncID + "');";
+
+                        SQLCmd.CommandText = requete;
+                        SQLCmd.ExecuteNonQuery();
+                    }
                 }
                 mytransaction.Commit();
             }
