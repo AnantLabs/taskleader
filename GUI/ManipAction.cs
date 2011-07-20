@@ -12,7 +12,7 @@ namespace TaskLeader.GUI
     {
         private TLaction v_action;
 
-        // Remplissage des combobox
+        // Préparation des widgets
         private void loadWidgets()
         {
             //Ajout des contextes à la combobox
@@ -31,14 +31,13 @@ namespace TaskLeader.GUI
             this.images.Images.Add(TaskLeader.Properties.Resources.outlook); 
         }
 
-        // Constructeur pour une création depuis Outlook
         public ManipAction(TLaction action)
         {
             InitializeComponent();
 
             // On mémorise l'action
             this.v_action = action;
-
+            // Chargement des widgets
             this.loadWidgets();
             
             if (action.isScratchpad)
@@ -71,9 +70,6 @@ namespace TaskLeader.GUI
                 this.linksLabel.Visible = true;
                 this.linksView.Visible = true;
             }
-
-            // On active le lien "Source Outlook" si nécessaire
-            this.outlookPic.Visible = action.hasMailAttached;
 
             // On affiche le sujet du mail dans la case action
             desField.Text = action.Texte;
