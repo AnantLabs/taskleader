@@ -1,30 +1,24 @@
 ﻿using System;
 using System.Collections;
-using System.Linq;
-using System.Text;
 using System.Data;
+using TaskLeader.DAL;
 
 namespace TaskLeader.BO
 {
     public class Criterium
     {
-        private int v_champ; //0=contexte, 1=sujet, 2=destinataire, 3=statut
-        public int champ { get { return v_champ; } }
+        private DBentity v_champ;
+        public DBentity entity { get { return v_champ; } }
  
         private ArrayList v_selected = new ArrayList();
         public ArrayList selected { get { return v_selected; } }
 
-        // Constructeur quand on connaît les critères
-        public Criterium(int table, IList criteres)
+        public Criterium(DBentity entity, IList criteres)
         {
-            this.v_champ = table;
-            this.v_selected.AddRange(criteres);
-        }
+            this.v_champ = entity;
 
-        // Constructeur quand on connaît uniquement les champs
-        public Criterium(int table)
-        {
-            this.v_champ = table;
+            if (criteres!=null)
+                v_selected.AddRange(criteres);
         }
     }
 
@@ -55,42 +49,25 @@ namespace TaskLeader.BO
             }
         }
         public static Filtre OldFilter{get { return v_oldFilter; }}
-        
-        // Constructeur de filtre à partir de la GUI
-        public Filtre(bool allCtxt,IList ctxt, bool allSuj, IList suj, bool allDest, IList dest, bool allStat, IList stat)
+
+        // Constructeur complet
+        public Filtre(bool allCtxt, bool allSuj, bool allDest, bool allStat, IList ctxt = null, IList suj = null, IList dest = null, IList stat = null)
         {
             this.v_type = 1;
-
+            
             ArrayList criteres = new ArrayList();
 
-            if (!allCtxt) // Champ = 0 pour les contextes
-                criteres.Add(new Criterium(0,ctxt));
+            if (!allCtxt)
+                criteres.Add(new Criterium(DB.Instance.contexte, ctxt));
 
-            if (ctxt.Count == 1 && !allSuj) // Champ = 1 pour les sujets
-                criteres.Add(new Criterium(1, suj));
+            if (ctxt != null && ctxt.Count == 1 && !allSuj)
+                criteres.Add(new Criterium(DB.Instance.sujet, suj));
 
             if (!allDest)
-                criteres.Add(new Criterium(2, dest));
+                criteres.Add(new Criterium(DB.Instance.destinataire, dest));
 
             if (!allStat)
-                criteres.Add(new Criterium(3, stat));
-
-            this.v_criteria = criteres.ToArray();
-        }
-    
-        // Constructeur pour récupération base
-        public Filtre(DataRow allList)
-        {
-            this.v_type = 1;
-
-            ArrayList criteres = new ArrayList();
-
-            // On récupère la ligne de la table
-            //Col 0=AllCtxt 1=AllSuj 2=AllDest 3=AllStat
-
-            for (int i = 0; i < 4; i++)
-                if (!(bool)allList[i])
-                    criteres.Add(new Criterium(i));
+                criteres.Add(new Criterium(DB.Instance.statut, stat));
 
             this.v_criteria = criteres.ToArray();
         }

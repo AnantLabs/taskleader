@@ -20,7 +20,7 @@ namespace TaskLeader.BO
         public bool isScratchpad { get { return (v_TLID == ""); } }
 
         // Contexte de l'action
-        private String v_ctxt = "";
+        private String v_ctxt = ReadDB.Instance.getDefault(DB.Instance.contexte);
         public bool ctxtHasChanged = false;
         public String Contexte {
             get { return v_ctxt; }
@@ -35,7 +35,7 @@ namespace TaskLeader.BO
         public String ContexteSQL { get { return sqlFactory(v_ctxt); } }        
 
         // Sujet de l'action
-        private String v_sujt = "";
+        private String v_sujt = ReadDB.Instance.getDefault(DB.Instance.sujet);
         public bool sujetHasChanged = false;
         public String Sujet
         {
@@ -86,7 +86,7 @@ namespace TaskLeader.BO
         public String DueDateSQL { get { return "'"+v_dueDate.ToString("yyyy-MM-dd")+"'"; } }
 
         // Destinataire de l'action
-        private String v_dest = "";
+        private String v_dest = ReadDB.Instance.getDefault(DB.Instance.destinataire);
         public bool destHasChanged = false;
         public String Destinataire
         {
@@ -103,7 +103,7 @@ namespace TaskLeader.BO
         public String DestinataireSQL { get { return sqlFactory(v_dest); } } 
 
         // Statut de l'action
-        private String v_stat = ReadDB.Instance.getDefaultStatus(); // Le statut est initialisé avec la valeur par défaut
+        private String v_stat = ReadDB.Instance.getDefault(DB.Instance.statut); // Le statut est initialisé avec la valeur par défaut
         public bool statusHasChanged = false;
         public String Statut
         {

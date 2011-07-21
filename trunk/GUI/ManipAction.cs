@@ -40,24 +40,24 @@ namespace TaskLeader.GUI
             Array links = action.Links;
 
             if (action.isScratchpad)
-            {
                 this.Text += "Ajouter une action";
-            }
             else
             {
                 this.Text += "Modifier une action";
 
-                destBox.Text = action.Destinataire;
-
-                if (action.hasDueDate)
+                if (action.hasDueDate) // Attribut géré à part car pas de valeur par défaut
                     actionDatePicker.Value = action.DueDate;
                 else
                     noDueDate.Checked = true;
-
-                contexteBox.Text = action.Contexte;
-                sujetBox.Text = action.Sujet;
-                updateSujet(); // Mise à jour de la liste des sujets
             }
+
+            destBox.Text = action.Destinataire;
+
+            contexteBox.Text = action.Contexte;
+
+            sujetBox.Text = action.Sujet;
+            if(contexteBox.Text != "")
+                updateSujet(); // Mise à jour de la liste des sujets
 
             // Affichage des liens le cas échéant
             if (links.Length > 0)
@@ -83,11 +83,11 @@ namespace TaskLeader.GUI
                 this.linksView.Visible = true;
             }
 
-            // On affiche le sujet du mail dans la case action
+            // Affichage du descriptif de l'action
             desField.Text = action.Texte;
-            desField.Select(0, 0);
+            desField.Select(desField.Text.Length, 0); // Curseur placé à la fin par défaut
 
-            // On sélectionne le statut
+            // Sélection du statut
             statutBox.SelectedItem = action.Statut;
         }
 
