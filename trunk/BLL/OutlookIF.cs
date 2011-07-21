@@ -87,7 +87,8 @@ namespace TaskLeader.BLL
                 Outlook.PropertyAccessor props = item.PropertyAccessor;
 
                 // Création de l'action
-                TLaction action = new TLaction(item.Subject);
+                TLaction action = new TLaction();
+                action.Texte = item.Subject;
                 action.addLink(new Mail(item.Subject,store.StoreID, item.EntryID, (String)props.GetProperty(this.messageIDParam)));
                 action.freezeInitState();
 

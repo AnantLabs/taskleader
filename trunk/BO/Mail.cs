@@ -35,7 +35,7 @@ namespace TaskLeader.BO
         {
             DataRow mailData = ReadDB.Instance.getMailData(ID);
 
-            base.v_titre = mailData["Titre"].ToString();
+            base.Titre = mailData["Titre"].ToString();
             this.v_storeID = mailData["StoreID"].ToString();
             this.v_entryID = mailData["EntryID"].ToString();
             this.v_messageID = mailData["MessageID"].ToString();

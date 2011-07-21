@@ -29,9 +29,7 @@ namespace TaskLeader.GUI
             this.Text += " v"+Application.ProductVersion;
 
             // Remplissage de la combo des filtres
-            filterCombo.Items.Add("Sélectionner...");
-            filterCombo.Items.AddRange(ReadDB.Instance.getFilters());
-            filterCombo.SelectedIndex = 0;
+            this.loadFilters();
 
             // Remplissage de la ListBox des statuts + menu contextuel du tableau
             foreach (object item in ReadDB.Instance.getStatut())
@@ -55,6 +53,14 @@ namespace TaskLeader.GUI
             this.miseAjour(sender, e);
         }
         
+        // Chargement des filtres
+        private void loadFilters()
+        {
+            filterCombo.Items.Add("Sélectionner...");
+            filterCombo.Items.AddRange(ReadDB.Instance.getFilters());
+            filterCombo.SelectedIndex = 0;
+        }
+
         // Rafraîchissement de la page
         public void miseAjour(object sender, EventArgs e)
         {
@@ -109,7 +115,6 @@ namespace TaskLeader.GUI
         private void changeStat(object sender, EventArgs e)
         {
             // Récupération de l'action
-            // TLaction action = getActionFromRow(grilleData.SelectedRows[0].Cells);
 			TLaction action = new TLaction(grilleData.SelectedRows[0].Cells["id"].Value.ToString());
             action.freezeInitState();
 
@@ -165,16 +170,16 @@ namespace TaskLeader.GUI
             if (grilleData.Columns[e.ColumnIndex].Name.Equals("Liens"))
             {
                 String valeur = e.Value as String;
-                if (valeur == null)
+                if (valeur == null) // Pas de lien associé
                     e.CellStyle.NullValue = null;
-                else if (valeur == "Mails")
-                    e.Value = TaskLeader.Properties.Resources.outlook;                  
+                else if (valeur == "*") // Plusieurs liens associés
+                    e.Value = TaskLeader.Properties.Resources.PJ;
                 else
-                    e.Value = TaskLeader.Properties.Resources.PJ; 
+                    e.Value = new genericEnc(valeur).Icone;
             }    
         }
 		
-		        // Affichage du menu contextuel sur le tableau d'action
+		// Gestion des clicks sur le tableau d'actions
         private void grilleData_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
@@ -186,18 +191,34 @@ namespace TaskLeader.GUI
                 listeContext.Show(Cursor.Position);
             }
 
-            if (e.Button == MouseButtons.Left &&
-                grilleData.Columns[e.ColumnIndex].Name.Equals("Liens") &&
-                grilleData[e.ColumnIndex, e.RowIndex].Value.ToString() != "")
+            if (e.Button == MouseButtons.Left && // Click gauche
+                grilleData.Columns[e.ColumnIndex].Name.Equals("Liens") && // Colonne "Liens"
+                grilleData[e.ColumnIndex, e.RowIndex].Value.ToString() != "") // Cellule non vide
             {
 				//Récupération des différents liens
-				Array links = ReadDB.Instance.getLinks(action.ID);
-				
-				if(links.Length == 1) // Un lien seulement
-					((Enclosure)links[0]).open(); // Ouverture
-				else // Plusieurs liens
-					linksContext.Show(Cursor.Position); //TODO: créer le linksContext
+                Array links = ReadDB.Instance.getLinks(grilleData.SelectedRows[0].Cells["id"].Value.ToString());
+
+                if (links.Length == 1) // Un lien seulement
+                    ((Enclosure)links.GetValue(0)).open(); // Ouverture directe
+                else // Plusieurs liens
+                {
+                    linksContext.Items.Clear(); // Remise à zéro de la liste
+
+                    foreach(Enclosure link in links){
+                        ToolStripButton item = new ToolStripButton(link.Titre,link.Icone,this.linksContext_ItemClicked); // Création du lien avec le titre et l'icône
+                        item.Tag = link; // Association du link
+                        linksContext.Items.Add(item); // Ajout au menu
+                    }                   
+
+                    linksContext.Show(Cursor.Position); // Affichage du menu contextuel de liste
+                }
             }
+        }
+
+        // Ouverture du lien
+        private void linksContext_ItemClicked(object sender, EventArgs e)
+        {
+            ((Enclosure)((ToolStripButton)sender).Tag).open();
         }
 
         // Affichage d'un curseur doigt si mail attaché.
@@ -265,9 +286,7 @@ namespace TaskLeader.GUI
                     filterCombo.Items.Clear();
 
                     // On la remplit à nouveau
-                    filterCombo.Items.Add("Sélectionner...");
-                    filterCombo.Items.AddRange(ReadDB.Instance.getFiltersName());
-                    filterCombo.SelectedIndex = 0;
+                    this.loadFilters();
                 }
             }
 

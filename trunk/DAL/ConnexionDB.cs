@@ -11,7 +11,7 @@ namespace TaskLeader.DAL
 		public String viewColName; // Nom de la colonne dans vueActions
 		public String allColName; // Nom de la colonne "All" dans la table Filtre
 		
-		public TLData(String table, String view, String all)
+		public TLData(String view, String table, String all)
 		{
 			mainTable = table;
 			viewColName = view;
@@ -40,7 +40,7 @@ namespace TaskLeader.DAL
 
         // "Schéma de base"
         // 0=contexte, 1=sujet, 2=destinataire, 3=statut
-		private TLData[] v_schema;
+		private TLData[] v_schema = new TLData[4];
         public TLData[] schema { get { return v_schema; } }
 
         // Chemin d'accès à la base

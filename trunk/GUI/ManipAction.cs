@@ -26,9 +26,6 @@ namespace TaskLeader.GUI
             // On remplit la liste des statuts
             foreach (String item in ReadDB.Instance.getStatut())
                 statutBox.Items.Add(item);
-
-            // Remplissage de la liste des images
-            this.images.Images.Add(TaskLeader.Properties.Resources.outlook);
         }
 
         public ManipAction(TLaction action)
@@ -69,8 +66,12 @@ namespace TaskLeader.GUI
 
                 foreach (Enclosure link in links)
                 {
-                    // Définition du label du lien
-                    linkItem = new ListViewItem(link.Titre, link.Type);
+                    // Ajout de l'image correspondant au lien dans la bibliothèque
+                    this.images.Images.Clear();
+                    this.images.Images.Add(link.Icone);
+
+                    // Ajout du lien à la ListView
+                    linkItem = new ListViewItem(link.Titre, 0);
                     linkItem.Tag = link;
 
                     // Ajout du lien à la listView
