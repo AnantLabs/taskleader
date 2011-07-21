@@ -35,7 +35,7 @@ namespace TaskLeader.DAL
 
             try
             {
-                using (SQLiteCommand SQLCmd = new SQLiteCommand(ConnexionDB.Instance.getConnection()))
+                using (SQLiteCommand SQLCmd = new SQLiteCommand(DB.Instance.getConnection()))
                 {
                     // Création d'une nouvelle commande à partir de la connexion
                     SQLCmd.CommandText = requete;
@@ -54,9 +54,9 @@ namespace TaskLeader.DAL
         // Insertion en base d'un nouveau filtre
         public void insertFiltre(Filtre filtre)
         {
-            using (SQLiteTransaction mytransaction = ConnexionDB.Instance.getConnection().BeginTransaction())
+            using (SQLiteTransaction mytransaction = DB.Instance.getConnection().BeginTransaction())
             {
-                using (SQLiteCommand SQLCmd = new SQLiteCommand(ConnexionDB.Instance.getConnection()))
+                using (SQLiteCommand SQLCmd = new SQLiteCommand(DB.Instance.getConnection()))
                 {
                     // On insère le nom du filtre
                     String nomFiltre = "'" + filtre.nom.Replace("'", "''") + "'"; // Le titre du filtre ne doit pas contenir de quote
@@ -67,7 +67,7 @@ namespace TaskLeader.DAL
                     foreach (Criterium critere in filtre.criteria)
                     {
                         String selection;
-                        String table = ConnexionDB.Instance.schema[critere.champ].mainTable;
+                        String table = critere.entity.mainTable;
 
                         // On crée la requête pour insertion des critères dans les tables annexes
                         String requete = "INSERT INTO Filtres_cont VALUES (";
@@ -86,7 +86,7 @@ namespace TaskLeader.DAL
                         }
 
                         // On précise que la case ALL n'a pas été sélectionnée pour ce critère
-                        SQLCmd.CommandText = "UPDATE Filtres SET " + ConnexionDB.Instance.schema[critere.champ].allColName + "=0 WHERE id = (SELECT max(id) FROM Filtres)";
+                        SQLCmd.CommandText = "UPDATE Filtres SET " + critere.entity.allColName + "=0 WHERE id = (SELECT max(id) FROM Filtres)";
                         SQLCmd.ExecuteNonQuery();
                     }
                 }
@@ -136,9 +136,9 @@ namespace TaskLeader.DAL
             String EncID = "";
             String titre = "'" + mail.Titre.Replace("'", "''") + "'";
 
-            using (SQLiteTransaction mytransaction = ConnexionDB.Instance.getConnection().BeginTransaction())
+            using (SQLiteTransaction mytransaction = DB.Instance.getConnection().BeginTransaction())
             {
-                using (SQLiteCommand SQLCmd = new SQLiteCommand(ConnexionDB.Instance.getConnection()))
+                using (SQLiteCommand SQLCmd = new SQLiteCommand(DB.Instance.getConnection()))
                 {
                     // Insertion du mail
                     SQLCmd.CommandText = "INSERT INTO Mails (Titre,StoreID,EntryID,MessageID) ";
@@ -158,9 +158,9 @@ namespace TaskLeader.DAL
         // Insertion d'une nouvelle action
         public void insertAction(TLaction action)
         {
-            using (SQLiteTransaction mytransaction = ConnexionDB.Instance.getConnection().BeginTransaction())
+            using (SQLiteTransaction mytransaction = DB.Instance.getConnection().BeginTransaction())
             {
-                using (SQLiteCommand SQLCmd = new SQLiteCommand(ConnexionDB.Instance.getConnection()))
+                using (SQLiteCommand SQLCmd = new SQLiteCommand(DB.Instance.getConnection()))
                 {
                     //Syntaxe: INSERT INTO Actions (nom des colonnes avec ,) VALUES(valeurs avec ' et ,)     
 

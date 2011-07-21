@@ -56,7 +56,7 @@ namespace TaskLeader.BLL
             int resultat;
 
             // On rajoute une ligne d'historique si le statut est différent de Ouverte et si le statut a changé
-            if (action.Statut != ReadDB.Instance.getDefaultStatus() && action.statusHasChanged)
+            if (action.Statut != ReadDB.Instance.getDefault(DB.Instance.statut) && action.statusHasChanged)
                 action.Texte += Environment.NewLine + "Action " + action.Statut + " le: " + DateTime.Now.ToString("dd-MM-yyyy");
 
             // Vérification des nouveautés

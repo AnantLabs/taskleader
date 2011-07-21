@@ -37,7 +37,7 @@ namespace TaskLeader.DAL
 
             try
             {
-                using (SQLiteCommand SQLCmd = new SQLiteCommand(ConnexionDB.Instance.getConnection()))
+                using (SQLiteCommand SQLCmd = new SQLiteCommand(DB.Instance.getConnection()))
                 {
                     // Création d'une nouvelle commande à partir de la connexion
                     SQLCmd.CommandText = requete;
@@ -71,7 +71,7 @@ namespace TaskLeader.DAL
 
             try
             {
-                using (SQLiteDataAdapter SQLAdap = new SQLiteDataAdapter(requete, ConnexionDB.Instance.getConnection()))
+                using (SQLiteDataAdapter SQLAdap = new SQLiteDataAdapter(requete, DB.Instance.getConnection()))
                 {
                     // Remplissage avec les données de l'adaptateur
                     SQLAdap.Fill(data);
@@ -94,7 +94,7 @@ namespace TaskLeader.DAL
 
             try
             {
-                using (SQLiteCommand SQLCmd = new SQLiteCommand(ConnexionDB.Instance.getConnection()))
+                using (SQLiteCommand SQLCmd = new SQLiteCommand(DB.Instance.getConnection()))
                 {
                     SQLCmd.CommandText = requete;
                     return Convert.ToInt32(SQLCmd.ExecuteScalar());
@@ -203,9 +203,14 @@ namespace TaskLeader.DAL
         }
 
         // Renvoie le nom du statut par défaut
-        public String getDefaultStatus()
+        public String getDefault(DBentity entity)
         {
-            return (String)getList("SELECT Titre FROM Statuts WHERE Defaut='1'")[0]; // Il n'y a qu'un seul statut par défaut
+            Object[] resultat = getList("SELECT Titre FROM " + entity.mainTable + " WHERE Defaut='1'");
+
+            if (resultat.Length == 1)
+                return (String)resultat[0];
+            else
+                return "";
         }
 
         // Renvoie un tableau de tous les filtres présents en base
@@ -220,10 +225,10 @@ namespace TaskLeader.DAL
             // On récupère d'abord les checkbox all
             String titre = "'" + name.Replace("'", "''") + "'";
             String requete = "SELECT AllCtxt, AllSuj, AllDest, AllStat FROM Filtres WHERE Titre=" + titre;
-            DataTable resultat = getTable(requete);
+            DataRow resultat = getTable(requete).Rows[0];
             
             // On crée le filtre correspondant
-            Filtre filtre = new Filtre(resultat.Rows[0]);
+            Filtre filtre = new Filtre((bool)resultat["AllCtxt"],(bool)resultat["AllSuj"],(bool)resultat["AllDest"],(bool)resultat["AllStat"]);
             filtre.nom = name;
             object[] liste;
 
@@ -231,7 +236,7 @@ namespace TaskLeader.DAL
             foreach (Criterium critere in filtre.criteria)
             {
                 // Récupération du nom de la table correspondante
-                String table = ConnexionDB.Instance.schema[critere.champ].mainTable;
+                String table = critere.entity.mainTable;
                 // Création de la requête
                 requete = "SELECT TP.Titre FROM "+table+" TP, Filtres_cont TF, Filtres F ";
                 requete += "WHERE F.Titre =" + titre + " AND TF.FiltreID=F.rowid AND TF.FiltreType='"+table+"' AND TF.SelectedID=TP.rowid";
@@ -261,7 +266,7 @@ namespace TaskLeader.DAL
                 foreach (Criterium critere in criteria) // On boucle sur tous les critères du filtre
                 {
                     // On récupère le nom de la colonne correspondant au critère
-                    nomColonne = ConnexionDB.Instance.schema[critere.champ].viewColName;
+                    nomColonne = critere.entity.viewColName;
 
                     if (critere.selected.Count > 0) // Requête SQL si au moins un élément a été sélectionné
                     {

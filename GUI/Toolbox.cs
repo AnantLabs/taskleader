@@ -267,7 +267,7 @@ namespace TaskLeader.GUI
         // Affichage des actions sur filtre manuel
         private void filtreAction(object sender, EventArgs e)
         {
-            Filtre filtre = new Filtre(allCtxt.Checked,ctxtListBox.CheckedItems,allSujt.Checked,sujetListBox.CheckedItems,allDest.Checked,destListBox.CheckedItems,allStat.Checked,statutListBox.CheckedItems);            
+            Filtre filtre = new Filtre(allCtxt.Checked, allSujt.Checked, allDest.Checked, allStat.Checked, ctxtListBox.CheckedItems, sujetListBox.CheckedItems, destListBox.CheckedItems, statutListBox.CheckedItems);            
 
             if (saveFilterCheck.Checked) //Sauvegarde du filtre si checkbox cochée
             {
@@ -406,25 +406,12 @@ namespace TaskLeader.GUI
                     // Tickage des bons critères
                     foreach (Criterium critere in filtre.criteria)
                     {
-                        switch (critere.champ)
-                        {
-                            case (0): //Contexte
-                                box = allCtxt;
-                                list = ctxtListBox;
-                                break;
-                            case (1): //Sujet
-                                box = allSujt;
-                                list = sujetListBox;
-                                break;
-                            case (2): //Destinataire
-                                box = allDest;
-                                list = destListBox;
-                                break;
-                            case (3): //Statut
-                                box = allStat;
-                                list = statutListBox;
-                                break;
-                        }
+                        String table = critere.entity.mainTable;
+
+                        if (table == DB.Instance.contexte.mainTable) { box = allCtxt; list = ctxtListBox; }
+                        if (table == DB.Instance.sujet.mainTable) { box = allSujt; list = sujetListBox; }
+                        if (table == DB.Instance.destinataire.mainTable) { box = allDest; list = destListBox; }
+                        if (table == DB.Instance.statut.mainTable) { box = allStat; list = statutListBox; }
 
                         box.Checked = false; // La checkbox "Tous" n'est pas sélectionnée
                         for (int i = 0; i < list.Items.Count; i++) // Parcours de la ListBox
