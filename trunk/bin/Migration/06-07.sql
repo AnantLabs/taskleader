@@ -127,9 +127,9 @@
 		Su.Titre as 'Sujet',
 		A.Titre,
 		CASE count(En.rowid)
-			WHEN 1 THEN En.EncType||'#'||En.EncID
+			WHEN 1 THEN En.EncType
 			WHEN 0 THEN NULL
-			ELSE count(En.rowid)
+			ELSE '*' -- Plusieurs liens
 		END
 		'Liens',
 		strftime("%d-%m-%Y",A.DueDate) as 'Deadline',

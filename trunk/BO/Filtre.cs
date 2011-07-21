@@ -79,7 +79,7 @@ namespace TaskLeader.BO
         }
     
         // Constructeur pour récupération base
-        public Filtre(DataTable allSelected)
+        public Filtre(DataRow allList)
         {
             this.v_type = 1;
 
@@ -87,9 +87,7 @@ namespace TaskLeader.BO
 
             // On récupère la ligne de la table
             //Col 0=AllCtxt 1=AllSuj 2=AllDest 3=AllStat
-            DataRow allList = allSelected.Rows[0];
 
-            // On boucle sur tous les champs et on remplit 
             for (int i = 0; i < 4; i++)
                 if (!(bool)allList[i])
                     criteres.Add(new Criterium(i));

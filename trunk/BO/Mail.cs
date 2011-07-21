@@ -29,16 +29,16 @@ namespace TaskLeader.BO
         public String MessageIDSQL { get { return sqlFactory(v_messageID); } } 
 
         /// <summary>
-        /// Création d'un objet Mail à partir de son ID dans la base
+        /// Création d'un objet Mail à partir de son ID de stockage
         /// </summary>
         public Mail(String ID):base("","Mails")
         {
-            DataTable mailData = ReadDB.Instance.getMailData(ID);
+            DataRow mailData = ReadDB.Instance.getMailData(ID);
 
-            base.Titre = mailData.Rows[0]["Titre"].ToString();
-            this.v_storeID = mailData.Rows[0]["StoreID"].ToString();
-            this.v_entryID = mailData.Rows[0]["EntryID"].ToString();
-            this.v_messageID = mailData.Rows[0]["MessageID"].ToString();
+            base.v_titre = mailData["Titre"].ToString();
+            this.v_storeID = mailData["StoreID"].ToString();
+            this.v_entryID = mailData["EntryID"].ToString();
+            this.v_messageID = mailData["MessageID"].ToString();
         }
 
         /// <summary>

@@ -124,21 +124,45 @@ namespace TaskLeader.BO
         public bool hasLinks { get { return (v_links.Count > 0); } }
         public Array Links { get { return v_links.ToArray(); } }
 
-        //Constructeur simple
+        /// <summary>
+        /// Constructeur à partir du descriptif de l'action
+        /// </summary>
         public TLaction(String sujet)
         {
             this.v_texte = sujet;
         }
 
-        // Constructeur permettant d'initialiser les valeurs par défaut
+        /// <summary>
+        /// Constructeur permettant d'initialiser les valeurs par défaut
+        /// </summary>
         public TLaction(){}
-
+		
+		/// <summary>
+        /// Constructeur à partir de l'ID de stockage de l'action
+        /// </summary>
         // Constructeur permettant de créer une action à partir de son ID
-        //TODO ?
+        public TLaction(String ID)
+		{
+			this.v_TLID = ID;
+		
+			//Récupération des données de l'action
+			DataTable data = ReadDB.Instance.getAction(ID);
+			
+			this.v_ctxt = data["Contexte"] as String;
+			this.v_sujt = data["Sujet"] as String;
+			this.v_texte = data["Titre"] as String;
+			this.parseDueDate(data["Deadline"] as String;
+			this.v_dest = data["Destinataire"] as String;
+			this.v_stat = data["Statut"] as String;
+			
+			//Récupération des liens
+			v_links.AddRange(ReadDB.Instance.getLinks(ID));
+		}
 
         // Méthode permettant d'updater les champs principaux
         public void updateDefault(String contexte, String subject, String desAction, String destinataire,  String stat)
         {
+			// Utilisation volontaire des attributs publics pour détecter les changements
             this.Contexte = contexte;
             this.Sujet = subject;
             this.Texte = desAction;

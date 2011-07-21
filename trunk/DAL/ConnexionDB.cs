@@ -4,9 +4,19 @@ using System.Configuration;
 
 namespace TaskLeader.DAL
 {
-    public class Schema
+	// Structure listant les différentes informations liées à une donnée (Contexte, Destinataire ...)
+    public struct TLData 
     {
-        //TODO:rendre plus propre la déclaration du schema
+		public String mainTable; // Nom de la table principale
+		public String viewColName; // Nom de la colonne dans vueActions
+		public String allColName; // Nom de la colonne "All" dans la table Filtre
+		
+		public TLData(String table, String view, String all)
+		{
+			mainTable = table;
+			viewColName = view;
+			allColName = all;
+		}
     }
 
     public class ConnexionDB
@@ -29,13 +39,9 @@ namespace TaskLeader.DAL
         }
 
         // "Schéma de base"
-        // Colonne dans vueActions, Nom table principale, Nom champ titre, Nom table de filtre, Colonne All dans Filtres
         // 0=contexte, 1=sujet, 2=destinataire, 3=statut
-        private string[,] v_schema = new string[4, 5]
-        { { "Contexte", "Contextes", "Titre", "Filtres_Ctxt","AllCtxt" }, { "Sujet", "Sujets", "Titre","Filtres_Suj","AllSuj" },
-        { "Destinataire", "Destinataires", "Nom","Filtres_Dest","AllDest" },{"Statut","Statuts","Titre", "Filtres_Stat","AllStat"} };
-        // 3ème colonne inutile => label harmonisé, 4ème colonne inutile => Tables supprimées
-        public string[,] schema { get { return v_schema; } }
+		private TLData[] v_schema;
+        public TLData[] schema { get { return v_schema; } }
 
         // Chemin d'accès à la base
         private String cheminDB = ConfigurationManager.AppSettings["cheminDB"];
@@ -52,10 +58,18 @@ namespace TaskLeader.DAL
                 // On retourne l'instance de MonSingleton
                 return instance;
             }
-        }
+        }       
 
-        
-
+		// Constructeur
+		public ConnexionDB ()
+		{
+			// 0=contexte, 1=sujet, 2=destinataire, 3=statut
+			v_schema[0] = new TLData("Contexte", "Contextes","AllCtxt");
+			v_schema[1] = new TLData("Sujet", "Sujets", "AllSuj");
+			v_schema[2] = new TLData("Destinataire", "Destinataires", "AllDest");
+			v_schema[2] = new TLData("Statut","Statuts","AllStat");
+		}
+		
         // Ferme la connection
         public void closeConnection()
         {

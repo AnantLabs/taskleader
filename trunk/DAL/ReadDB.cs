@@ -107,6 +107,8 @@ namespace TaskLeader.DAL
             }
         }
 
+		// =====================================================================================
+		
         // Vérification si un numéro de version est présent dans la table des compatibilités
         public bool isVersionComp(String version) //TODO=========================================
         {
@@ -120,115 +122,9 @@ namespace TaskLeader.DAL
             return (String)getList("SELECT Num FROM VerComp WHERE rowid=(SELECT max(rowid) FROM VerComp)")[0];
         }
 
-        // Renvoie un tableau de tous les contextes présents en base
-        public object[] getCtxt()
-        {
-            return getList("SELECT Titre FROM Contextes");
-        }
-
-        // Renvoie un tableau de tous les sujets correspondant au contexte
-        public object[] getSujet(String contexte)
-        {
-            return getList("SELECT Titre FROM VueSujets WHERE Contexte ='" + contexte + "' ORDER BY Titre ASC");
-        }
-        
-        // Renvoie un tableau de tous les destinataires présents dans la base
-        public object[] getDest()
-        {
-            return getList("SELECT Titre FROM Destinataires ORDER BY Titre ASC"); // On trie les noms dans l'ordre alphabétique
-        }
-
-        // Renvoie un tableau de tous les statuts présents dans la base
-        public object[] getStatut()
-        {
-            return getList("SELECT Titre FROM Statuts");
-        }
-
-        // Renvoie le nom du statut par défaut
-        public String getDefaultStatus()
-        {
-            return (String)getList("SELECT Titre FROM Statuts WHERE Defaut='1'")[0]; // Il n'y a qu'un seul statut par défaut
-        }
-
-        // Renvoie un tableau de tous les filtres présents en base
-        public object[] getFiltersName()
-        {
-            return getList("SELECT Titre FROM Filtres ORDER BY Titre ASC"); // On trie dans l'ordre alphabétique
-        }
-       
-        // Renvoie un DataTable de toutes les actions
-        public DataTable getActions(Object[] criteria)
-        {
-            // Création de la requête de filtrage
-            String requete = "SELECT * FROM VueActions";
-
-            String selection, nomColonne;
-
-            if (criteria.Length > 0) // Il n'y a de WHERE que si au moins un criterium a été entré
-            {
-                requete += " WHERE ";
-
-                foreach (Criterium critere in criteria) // On boucle sur tous les critères du filtre
-                {
-                    // On récupère le nom de la colonne correspondant au critère
-                    nomColonne = ConnexionDB.Instance.schema[critere.champ, 0];
-
-                    if (critere.selected.Count > 0) // Requête SQL si au moins un élément a été sélectionné
-                    {
-                        requete += nomColonne + " IN (";
-                        foreach (String item in critere.selected)
-                        {
-                            selection = item.Replace("'", "''"); // On gère les simple quote
-                            requete += "'" + selection + "', ";
-                        }
-                        requete = requete.Substring(0, requete.Length - 2); // On efface la dernière virgule et le dernier space en trop
-                        requete += ")";
-                    }
-                    else
-                        requete += nomColonne + " IS NULL";
-
-                    requete += " AND ";
-                }
-
-                requete = requete.Substring(0, requete.Length - 5); // On enlève le dernier AND en trop
-            }   
-                          
-            return getTable(requete);
-        }
-
-        // Récupère un filtre en fonction de son titre
-        public Filtre getFilter(String name){
-
-            // On récupère d'abord les checkbox all
-            String titre = "'" + name.Replace("'", "''") + "'";
-            String requete = "SELECT AllCtxt, AllSuj, AllDest, AllStat FROM Filtres WHERE Titre=" + titre;
-            DataTable resultat = getTable(requete);
-            
-            // On crée le filtre correspondant
-            Filtre filtre = new Filtre(resultat);
-            filtre.nom = name;
-            object[] liste;
-
-            // On récupère les sélections si nécessaire
-            foreach (Criterium critere in filtre.criteria)
-            {
-                // Récupération du nom de la table correspondante
-                String table = ConnexionDB.Instance.schema[critere.champ, 1];
-                // Création de la requête
-                requete = "SELECT TP.Titre FROM "+table+" TP, Filtres_cont TF, Filtres F ";
-                requete += "WHERE F.Titre =" + titre + " AND TF.FiltreID=F.rowid AND TF.FiltreType='"+table+"' AND TF.SelectedID=TP.rowid";
-                // Récupération de la liste
-                liste = getList(requete);
-
-                // On met à jour le critère du filtre correspondant
-                foreach(object item in liste)
-                    critere.selected.Add(item);            
-            }
-
-            return filtre;
-        }
-
-        // Vérification de l'existence du nom du filtre
+		// =====================================================================================
+		
+		// Vérification de l'existence du nom du filtre
         public bool isNvoFiltre(String nom)
         {
             String name = "'" + nom.Replace("'", "''") + "'";
@@ -280,6 +176,123 @@ namespace TaskLeader.DAL
                 return false;
         }
         
+		// =====================================================================================
+		
+        // Renvoie un tableau de tous les contextes présents en base
+        public object[] getCtxt()
+        {
+            return getList("SELECT Titre FROM Contextes");
+        }
+
+        // Renvoie un tableau de tous les sujets correspondant au contexte
+        public object[] getSujet(String contexte)
+        {
+            return getList("SELECT Titre FROM VueSujets WHERE Contexte ='" + contexte + "' ORDER BY Titre ASC");
+        }
+        
+        // Renvoie un tableau de tous les destinataires présents dans la base
+        public object[] getDest()
+        {
+            return getList("SELECT Titre FROM Destinataires ORDER BY Titre ASC"); // On trie les noms dans l'ordre alphabétique
+        }
+
+        // Renvoie un tableau de tous les statuts présents dans la base
+        public object[] getStatut()
+        {
+            return getList("SELECT Titre FROM Statuts");
+        }
+
+        // Renvoie le nom du statut par défaut
+        public String getDefaultStatus()
+        {
+            return (String)getList("SELECT Titre FROM Statuts WHERE Defaut='1'")[0]; // Il n'y a qu'un seul statut par défaut
+        }
+
+        // Renvoie un tableau de tous les filtres présents en base
+        public object[] getFilters()
+        {
+            return getList("SELECT Titre FROM Filtres ORDER BY Titre ASC"); // On trie dans l'ordre alphabétique
+        }
+   
+        // Récupère un filtre en fonction de son titre
+        public Filtre getFilter(String name){
+
+            // On récupère d'abord les checkbox all
+            String titre = "'" + name.Replace("'", "''") + "'";
+            String requete = "SELECT AllCtxt, AllSuj, AllDest, AllStat FROM Filtres WHERE Titre=" + titre;
+            DataTable resultat = getTable(requete);
+            
+            // On crée le filtre correspondant
+            Filtre filtre = new Filtre(resultat.Rows[0]);
+            filtre.nom = name;
+            object[] liste;
+
+            // On récupère les sélections si nécessaire
+            foreach (Criterium critere in filtre.criteria)
+            {
+                // Récupération du nom de la table correspondante
+                String table = ConnexionDB.Instance.schema[critere.champ].mainTable;
+                // Création de la requête
+                requete = "SELECT TP.Titre FROM "+table+" TP, Filtres_cont TF, Filtres F ";
+                requete += "WHERE F.Titre =" + titre + " AND TF.FiltreID=F.rowid AND TF.FiltreType='"+table+"' AND TF.SelectedID=TP.rowid";
+                // Récupération de la liste
+                liste = getList(requete);
+
+                // On met à jour le critère du filtre correspondant
+                foreach(object item in liste)
+                    critere.selected.Add(item);            
+            }
+
+            return filtre;
+        }
+            
+        // Renvoie un DataTable de toutes les actions
+        public DataTable getActions(Object[] criteria)
+        {
+            // Création de la requête de filtrage
+            String requete = "SELECT * FROM VueActions";
+
+            String selection, nomColonne;
+
+            if (criteria.Length > 0) // Il n'y a de WHERE que si au moins un criterium a été entré
+            {
+                requete += " WHERE ";
+
+                foreach (Criterium critere in criteria) // On boucle sur tous les critères du filtre
+                {
+                    // On récupère le nom de la colonne correspondant au critère
+                    nomColonne = ConnexionDB.Instance.schema[critere.champ].viewColName;
+
+                    if (critere.selected.Count > 0) // Requête SQL si au moins un élément a été sélectionné
+                    {
+                        requete += nomColonne + " IN (";
+                        foreach (String item in critere.selected)
+                        {
+                            selection = item.Replace("'", "''"); // On gère les simple quote
+                            requete += "'" + selection + "', ";
+                        }
+                        requete = requete.Substring(0, requete.Length - 2); // On efface la dernière virgule et le dernier space en trop
+                        requete += ")";
+                    }
+                    else
+                        requete += nomColonne + " IS NULL";
+
+                    requete += " AND ";
+                }
+
+                requete = requete.Substring(0, requete.Length - 5); // On enlève le dernier AND en trop
+            }   
+                          
+            return getTable(requete);
+        }
+
+		// Renvoie les données liées à une action
+		public DataRow getAction(String ID)
+		{
+			DataTable result = getTable("SELECT * FROM VueActions WHERE id='"+ID+"'");
+			return result.Rows[0];
+		}	
+		
         // Récupération des liens attachés à une action
         public Array getLinks(String actionID)
         {
@@ -298,9 +311,10 @@ namespace TaskLeader.DAL
         }
 
         // Récupération des informations d'un mail à partir de son ID
-        public DataTable getMailData(String id)
+        public DataRow getMailData(String id)
         {
-            return getTable("SELECT * FROM Mails WHERE id='" + id + "'");
+			DataTable result = getTable("SELECT * FROM Mails WHERE id='" + id + "'");
+            return result.Rows[0];
         }
 
         // Recherche de mots clés dans la colonne Action
