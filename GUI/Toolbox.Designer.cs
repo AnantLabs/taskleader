@@ -65,7 +65,7 @@
             this.exitSearchBut = new System.Windows.Forms.Button();
             this.resultLabel = new System.Windows.Forms.Label();
             this.grilleData = new System.Windows.Forms.DataGridView();
-            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.addMenu = new System.Windows.Forms.MenuStrip();
             this.ajouterToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.nouvelleActionToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.actionsEvernoteToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
@@ -79,6 +79,7 @@
             this.ajouterToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.nouvelleActionToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.actionsEvernoteToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.linksContext = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.tableLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -91,7 +92,7 @@
             this.flowLayoutPanel9.SuspendLayout();
             this.searchFlowLayoutPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grilleData)).BeginInit();
-            this.menuStrip1.SuspendLayout();
+            this.addMenu.SuspendLayout();
             this.listeContext.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -406,7 +407,7 @@
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 60F));
             this.tableLayoutPanel2.Controls.Add(this.flowLayoutPanel9, 0, 0);
             this.tableLayoutPanel2.Controls.Add(this.grilleData, 0, 1);
-            this.tableLayoutPanel2.Controls.Add(this.menuStrip1, 1, 0);
+            this.tableLayoutPanel2.Controls.Add(this.addMenu, 1, 0);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel2.Location = new System.Drawing.Point(200, 0);
             this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(0);
@@ -523,18 +524,18 @@
             this.grilleData.CellMouseEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.grilleData_CellMouseEnter);
             this.grilleData.CellMouseLeave += new System.Windows.Forms.DataGridViewCellEventHandler(this.grilleData_CellMouseLeave);
             // 
-            // menuStrip1
+            // addMenu
             // 
-            this.menuStrip1.Dock = System.Windows.Forms.DockStyle.Right;
-            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.addMenu.Dock = System.Windows.Forms.DockStyle.Right;
+            this.addMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ajouterToolStripMenuItem2});
-            this.menuStrip1.Location = new System.Drawing.Point(461, 3);
-            this.menuStrip1.Margin = new System.Windows.Forms.Padding(0, 3, 0, 0);
-            this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.menuStrip1.Size = new System.Drawing.Size(60, 27);
-            this.menuStrip1.TabIndex = 6;
-            this.menuStrip1.Text = "menuStrip1";
+            this.addMenu.Location = new System.Drawing.Point(461, 3);
+            this.addMenu.Margin = new System.Windows.Forms.Padding(0, 3, 0, 0);
+            this.addMenu.Name = "addMenu";
+            this.addMenu.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
+            this.addMenu.Size = new System.Drawing.Size(60, 27);
+            this.addMenu.TabIndex = 6;
+            this.addMenu.Text = "menuStrip1";
             // 
             // ajouterToolStripMenuItem2
             // 
@@ -543,7 +544,7 @@
             this.actionsEvernoteToolStripMenuItem2});
             this.ajouterToolStripMenuItem2.Name = "ajouterToolStripMenuItem2";
             this.ajouterToolStripMenuItem2.ShowShortcutKeys = false;
-            this.ajouterToolStripMenuItem2.Size = new System.Drawing.Size(85, 19);
+            this.ajouterToolStripMenuItem2.Size = new System.Drawing.Size(51, 19);
             this.ajouterToolStripMenuItem2.Text = "Ajouter";
             // 
             // nouvelleActionToolStripMenuItem2
@@ -644,6 +645,12 @@
             this.actionsEvernoteToolStripMenuItem1.Size = new System.Drawing.Size(156, 22);
             this.actionsEvernoteToolStripMenuItem1.Text = "Actions Evernote";
             // 
+            // linksContext
+            // 
+            this.linksContext.Name = "linksContext";
+            this.linksContext.ShowImageMargin = false;
+            this.linksContext.Size = new System.Drawing.Size(128, 26);
+            // 
             // Toolbox
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -654,7 +661,7 @@
             this.Controls.Add(this.tableLayoutPanel1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Location = new System.Drawing.Point(435, 10);
-            this.MainMenuStrip = this.menuStrip1;
+            this.MainMenuStrip = this.addMenu;
             this.Name = "Toolbox";
             this.Text = "TaskLeader";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
@@ -677,8 +684,8 @@
             this.searchFlowLayoutPanel.ResumeLayout(false);
             this.searchFlowLayoutPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grilleData)).EndInit();
-            this.menuStrip1.ResumeLayout(false);
-            this.menuStrip1.PerformLayout();
+            this.addMenu.ResumeLayout(false);
+            this.addMenu.PerformLayout();
             this.listeContext.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -729,10 +736,11 @@
         private System.Windows.Forms.ToolStripMenuItem ajouterToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem nouvelleActionToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem actionsEvernoteToolStripMenuItem1;
-        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.MenuStrip addMenu;
         private System.Windows.Forms.ToolStripMenuItem ajouterToolStripMenuItem2;
         private System.Windows.Forms.ToolStripMenuItem nouvelleActionToolStripMenuItem2;
         private System.Windows.Forms.ToolStripMenuItem actionsEvernoteToolStripMenuItem2;
+        private System.Windows.Forms.ContextMenuStrip linksContext;
 
     }
 }

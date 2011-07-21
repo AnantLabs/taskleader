@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Data;
 using TaskLeader.DAL;
 
 namespace TaskLeader.BO
@@ -125,14 +126,6 @@ namespace TaskLeader.BO
         public Array Links { get { return v_links.ToArray(); } }
 
         /// <summary>
-        /// Constructeur à partir du descriptif de l'action
-        /// </summary>
-        public TLaction(String sujet)
-        {
-            this.v_texte = sujet;
-        }
-
-        /// <summary>
         /// Constructeur permettant d'initialiser les valeurs par défaut
         /// </summary>
         public TLaction(){}
@@ -146,12 +139,12 @@ namespace TaskLeader.BO
 			this.v_TLID = ID;
 		
 			//Récupération des données de l'action
-			DataTable data = ReadDB.Instance.getAction(ID);
+			DataRow data = ReadDB.Instance.getAction(ID);
 			
 			this.v_ctxt = data["Contexte"] as String;
 			this.v_sujt = data["Sujet"] as String;
 			this.v_texte = data["Titre"] as String;
-			this.parseDueDate(data["Deadline"] as String;
+			this.parseDueDate(data["Deadline"] as String);
 			this.v_dest = data["Destinataire"] as String;
 			this.v_stat = data["Statut"] as String;
 			

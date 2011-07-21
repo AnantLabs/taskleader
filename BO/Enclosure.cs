@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Drawing;
 
 namespace TaskLeader.BO
 {
@@ -11,28 +9,26 @@ namespace TaskLeader.BO
         private String v_titre = "";
         public String Titre { get { return v_titre; } set { v_titre = value; } }
 
+        // Icône de la pièce jointe
+        private Bitmap v_icone;
+        public Image Icone { get { return v_icone; } }
+
         // Type de la pièce jointe
-        private String v_type;
-        public int Type
-        {
-            get
-            {
-                switch (v_type)
-                {
-                    case "Mails":
-                        return 0;
-                    default:
-                        return -1; // Impossile de déterminer le type du lien
-                }
-            }
-        }
-        public String TypeSQL { get { return "'" + v_type + "'"; } }
+        private String type_string = "";
+        public String TypeSQL { get { return "'" + type_string + "'"; } }
 
         // Constructeur
         public Enclosure(String titre, String type)
         {
+            type_string = type;
             v_titre = titre;
-            v_type = type;
+
+            switch (type)
+            {
+                case "Mails":
+                    v_icone = TaskLeader.Properties.Resources.outlook;
+                    break;
+            }          
         }
 
         // Méthode obligatoire permettant d'ouvrir le lien
@@ -41,5 +37,22 @@ namespace TaskLeader.BO
         // Méthode obligatoire permettant de stocker le lien
         // Retourne l'ID de stockage
         public abstract String store();
+    }
+
+    // Classe générique implémentant la classe abstraite Enclosure
+    public class genericEnc : Enclosure
+    {
+        public genericEnc(String type) : base("", type) { }
+
+        public override void open()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override string store()
+        {
+            throw new NotImplementedException();
+        }
+
     }
 }
