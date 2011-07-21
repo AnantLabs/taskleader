@@ -30,10 +30,10 @@ namespace TaskLeader.GUI
 
             // Remplissage de la combo des filtres
             filterCombo.Items.Add("Sélectionner...");
-            filterCombo.Items.AddRange(ReadDB.Instance.getFiltersName());
+            filterCombo.Items.AddRange(ReadDB.Instance.getFilters());
             filterCombo.SelectedIndex = 0;
 
-            // Remplissage de la ListBox des statuts + menu contextuel
+            // Remplissage de la ListBox des statuts + menu contextuel du tableau
             foreach (object item in ReadDB.Instance.getStatut())
             {
                 statutListBox.Items.Add(item, true); // Sélection de tous les statuts par défaut
@@ -75,6 +75,13 @@ namespace TaskLeader.GUI
                 this.showFilter(Filtre.CurrentFilter);  
         }
 
+		// Fermeture de la Form si minimisée
+        private void Toolbox_Resize(object sender, EventArgs e)
+        {
+            if (this.WindowState == FormWindowState.Minimized)
+                this.Close();
+        }
+		
         // Ouverture de la gui création d'action
         private void ajoutAction(object sender, EventArgs e)
         {
@@ -86,30 +93,12 @@ namespace TaskLeader.GUI
             fenetre.Show();
         }
 
-        // Méthode permettant de récupérer un objet TLaction à partir d'une collection de cellules
-        private TLaction getActionFromRow(DataGridViewCellCollection ligne)
-        {
-            TLaction action = new TLaction(ligne["Titre"].Value.ToString());
-            action.ID = ligne["id"].Value.ToString();
-            action.Contexte = ligne["Contexte"].Value.ToString();
-            action.Sujet = ligne["Sujet"].Value.ToString();
-            action.parseDueDate(ligne["Deadline"].Value.ToString());
-            action.Destinataire = ligne["Destinataire"].Value.ToString();
-            action.Statut = ligne["Statut"].Value.ToString();
-            
-            // Récupération des informations du mail lié le cas échéant
-            //if(ligne["Mail"].Value.ToString() != "")
-            //    action.mail = new Mail(ligne["Mail"].Value.ToString()); // Quand on formatte une cellule on ne modifie pas sa Value
-            
-            return action;
-        }
-
         // Ouverture de la gui édition d'action
         private void modifAction(object sender, EventArgs e)
         {
             // Récupération de l'action correspondant à la ligne
-            TLaction action = getActionFromRow(grilleData.SelectedRows[0].Cells);
-            action.freezeInitState();
+            TLaction action = new TLaction(grilleData.SelectedRows[0].Cells["id"].Value.ToString());
+			action.freezeInitState();
 
             ManipAction fenetre = new ManipAction(action);
             fenetre.Disposed += new EventHandler(this.miseAjour); // Sur fermeture de ManipAction on update la Toolbox
@@ -120,7 +109,8 @@ namespace TaskLeader.GUI
         private void changeStat(object sender, EventArgs e)
         {
             // Récupération de l'action
-            TLaction action = getActionFromRow(grilleData.SelectedRows[0].Cells);
+            // TLaction action = getActionFromRow(grilleData.SelectedRows[0].Cells);
+			TLaction action = new TLaction(grilleData.SelectedRows[0].Cells["id"].Value.ToString());
             action.freezeInitState();
 
             // On récupère le nouveau statut
@@ -177,11 +167,54 @@ namespace TaskLeader.GUI
                 String valeur = e.Value as String;
                 if (valeur == null)
                     e.CellStyle.NullValue = null;
-                else if (valeur.Contains("Mails"))
+                else if (valeur == "Mails")
                     e.Value = TaskLeader.Properties.Resources.outlook;                  
                 else
                     e.Value = TaskLeader.Properties.Resources.PJ; 
             }    
+        }
+		
+		        // Affichage du menu contextuel sur le tableau d'action
+        private void grilleData_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                //Sélection de la ligne
+                grilleData.Rows[e.RowIndex].Selected = true;
+
+                //Affichage du menu contextuel
+                listeContext.Show(Cursor.Position);
+            }
+
+            if (e.Button == MouseButtons.Left &&
+                grilleData.Columns[e.ColumnIndex].Name.Equals("Liens") &&
+                grilleData[e.ColumnIndex, e.RowIndex].Value.ToString() != "")
+            {
+				//Récupération des différents liens
+				Array links = ReadDB.Instance.getLinks(action.ID);
+				
+				if(links.Length == 1) // Un lien seulement
+					((Enclosure)links[0]).open(); // Ouverture
+				else // Plusieurs liens
+					linksContext.Show(Cursor.Position); //TODO: créer le linksContext
+            }
+        }
+
+        // Affichage d'un curseur doigt si mail attaché.
+        private void grilleData_CellMouseEnter(object sender, DataGridViewCellEventArgs e)
+        {
+            if (grilleData.Columns[e.ColumnIndex].Name.Equals("Liens") &&
+                e.RowIndex >=0 &&
+                grilleData[e.ColumnIndex, e.RowIndex].Value.ToString() != "")
+                this.Cursor = Cursors.Hand;
+        }
+
+        private void grilleData_CellMouseLeave(object sender, DataGridViewCellEventArgs e)
+        {
+            if (grilleData.Columns[e.ColumnIndex].Name.Equals("Liens") &&
+                e.RowIndex >= 0 &&
+                grilleData[e.ColumnIndex, e.RowIndex].Value.ToString() != "")
+                this.Cursor = Cursors.Default;
         }
                 
         // Méthode générique d'affichage de la liste d'actions à partir d'un filtre
@@ -240,53 +273,7 @@ namespace TaskLeader.GUI
 
             // Quoiqu'il arrive, affichage du filtre
             this.showFilter(filtre);
-        }
-
-        // Fermeture de la Form si minimisée
-        private void Toolbox_Resize(object sender, EventArgs e)
-        {
-            if (this.WindowState == FormWindowState.Minimized)
-                this.Close();
-        }
-
-        // Affichage du menu contextuel sur le tableau d'action
-        private void grilleData_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Right)
-            {
-                //Sélection de la ligne
-                grilleData.Rows[e.RowIndex].Selected = true;
-
-                //Affichage du menu contextuel
-                listeContext.Show(Cursor.Position);
-            }
-
-            if (e.Button == MouseButtons.Left &&
-                grilleData.Columns[e.ColumnIndex].Name.Equals("Liens") &&
-                grilleData[e.ColumnIndex, e.RowIndex].Value.ToString() != "")
-            {
-                String enclosure = grilleData.Rows[e.RowIndex].Cells["Liens"].Value.ToString();
-                OutlookIF.Instance.displayMail(new Mail(enclosure.Substring(enclosure.IndexOf("#")+1)));
-            }
-                
-        }
-
-        // Affichage d'un curseur doigt si mail attaché.
-        private void grilleData_CellMouseEnter(object sender, DataGridViewCellEventArgs e)
-        {
-            if (grilleData.Columns[e.ColumnIndex].Name.Equals("Liens") &&
-                e.RowIndex >=0 &&
-                grilleData[e.ColumnIndex, e.RowIndex].Value.ToString() != "")
-                this.Cursor = Cursors.Hand;
-        }
-
-        private void grilleData_CellMouseLeave(object sender, DataGridViewCellEventArgs e)
-        {
-            if (grilleData.Columns[e.ColumnIndex].Name.Equals("Liens") &&
-                e.RowIndex >= 0 &&
-                grilleData[e.ColumnIndex, e.RowIndex].Value.ToString() != "")
-                this.Cursor = Cursors.Default;
-        }
+        }       
 
         // Copie de l'action dans le presse-papier
         private void exportRow(object sender, EventArgs e)

@@ -67,7 +67,7 @@ namespace TaskLeader.DAL
                     foreach (Criterium critere in filtre.criteria)
                     {
                         String selection;
-                        String table = ConnexionDB.Instance.schema[critere.champ, 1];
+                        String table = ConnexionDB.Instance.schema[critere.champ].mainTable;
 
                         // On crée la requête pour insertion des critères dans les tables annexes
                         String requete = "INSERT INTO Filtres_cont VALUES (";
@@ -86,7 +86,7 @@ namespace TaskLeader.DAL
                         }
 
                         // On précise que la case ALL n'a pas été sélectionnée pour ce critère
-                        SQLCmd.CommandText = "UPDATE Filtres SET " + ConnexionDB.Instance.schema[critere.champ, 4] + "=0 WHERE id = (SELECT max(id) FROM Filtres)";
+                        SQLCmd.CommandText = "UPDATE Filtres SET " + ConnexionDB.Instance.schema[critere.champ].allColName + "=0 WHERE id = (SELECT max(id) FROM Filtres)";
                         SQLCmd.ExecuteNonQuery();
                     }
                 }

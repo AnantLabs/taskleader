@@ -40,12 +40,11 @@ namespace TaskLeader.GUI
             // Chargement des widgets
             this.loadWidgets();
 
-            Array links;
+            Array links = action.Links;
 
             if (action.isScratchpad)
             {
                 this.Text += "Ajouter une action";
-                links = action.Links; // Dans le cas où la création d'action vient d'une interface
             }
             else
             {
@@ -61,9 +60,6 @@ namespace TaskLeader.GUI
                 contexteBox.Text = action.Contexte;
                 sujetBox.Text = action.Sujet;
                 updateSujet(); // Mise à jour de la liste des sujets
-
-                // Récupération des différents liens
-                links = ReadDB.Instance.getLinks(action.ID);
             }
 
             // Affichage des liens le cas échéant
