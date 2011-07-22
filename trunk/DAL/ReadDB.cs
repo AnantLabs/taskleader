@@ -124,30 +124,14 @@ namespace TaskLeader.DAL
 
 		// =====================================================================================
 		
-		// Vérification de l'existence du nom du filtre
-        public bool isNvoFiltre(String nom)
-        {
-            String name = "'" + nom.Replace("'", "''") + "'";
-
-            // On compte le nombre d'occurences de ce filtre dans la table
-            String requete = "SELECT count(rowid) FROM Filtres WHERE Titre=" + name;
+		// Vérification de la présence d'une nouvelle valeur d'une entité
+		public bool isNvo(DBentity entity, String title)
+		{
+			String titre = "'" + title.Replace("'", "''") + "'";
+            String requete = "SELECT count(id) FROM "+entity.mainTable+" WHERE Titre=" + titre;
 
             return (getInteger(requete) == 0);
-        }
-
-        // Vérification de la présence d'un nouveau contexte
-        public bool isNvoContexte(String contexte)
-        {
-            String ctxt = "'" + contexte.Replace("'", "''") + "'"; // C'est spécifique SQL donc dans la DAL
-
-            // On compte le nombre d'occurences de ce contexte dans la table
-            String requete = "SELECT count(rowid) FROM Contextes WHERE Titre=" + ctxt;
-
-            if (this.getInteger(requete)==0)
-                return true;
-            else
-                return false;
-        }
+		}
     
         // Vérification de la présence d'un nouveau sujet
         public bool isNvoSujet(String contexte, String subject)
@@ -162,44 +146,19 @@ namespace TaskLeader.DAL
             else
                 return false;
         }
-
-        // Vérification de la présence d'un nouveau destinataire
-        public bool isNvoDest(String destinataire)
-        {
-            String dest = "'" + destinataire.Replace("'", "''") + "'";
-
-            String requete = "SELECT count(Titre) FROM Destinataires WHERE Titre=" + dest;
-
-            if (this.getInteger(requete) == 0)
-                return true;
-            else
-                return false;
-        }
         
 		// =====================================================================================
 		
-        // Renvoie un tableau de tous les contextes présents en base
-        public object[] getCtxt()
-        {
-            return getList("SELECT Titre FROM Contextes");
-        }
+		// Récupération de la liste des valeurs d'une entité. Obsolète: getCtxt, getDest, getStatut, getFilters(
+		public object[] getTitres(DBentity entity)
+		{
+			return getList("SELECT Titre FROM "+entity.mainTable+" ORDER BY Titre ASC");
+		}
 
         // Renvoie un tableau de tous les sujets correspondant au contexte
         public object[] getSujet(String contexte)
         {
             return getList("SELECT Titre FROM VueSujets WHERE Contexte ='" + contexte + "' ORDER BY Titre ASC");
-        }
-        
-        // Renvoie un tableau de tous les destinataires présents dans la base
-        public object[] getDest()
-        {
-            return getList("SELECT Titre FROM Destinataires ORDER BY Titre ASC"); // On trie les noms dans l'ordre alphabétique
-        }
-
-        // Renvoie un tableau de tous les statuts présents dans la base
-        public object[] getStatut()
-        {
-            return getList("SELECT Titre FROM Statuts");
         }
 
         // Renvoie le nom du statut par défaut
@@ -211,12 +170,6 @@ namespace TaskLeader.DAL
                 return (String)resultat[0];
             else
                 return "";
-        }
-
-        // Renvoie un tableau de tous les filtres présents en base
-        public object[] getFilters()
-        {
-            return getList("SELECT Titre FROM Filtres ORDER BY Titre ASC"); // On trie dans l'ordre alphabétique
         }
    
         // Récupère un filtre en fonction de son titre

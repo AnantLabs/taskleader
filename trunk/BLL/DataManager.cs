@@ -61,7 +61,7 @@ namespace TaskLeader.BLL
 
             // Vérification des nouveautés
             if (action.ctxtHasChanged) // Test uniquement si contexte entré
-                if (ReadDB.Instance.isNvoContexte(action.Contexte)) // Si on a un nouveau contexte
+                if (ReadDB.Instance.isNvo(DB.Instance.contexte,action.Contexte)) // Si on a un nouveau contexte
                 {
                     resultat = WriteDB.Instance.insertContexte(action.Contexte); // On récupère le nombre de lignes insérées
                     if (resultat == 1)
@@ -77,7 +77,7 @@ namespace TaskLeader.BLL
                 }
 
             if (action.destHasChanged)
-                if (ReadDB.Instance.isNvoDest(action.Destinataire))
+                if (ReadDB.Instance.isNvo(DB.Instance.destinataire,action.Destinataire))
                 {
                     resultat = WriteDB.Instance.insertDest(action.Destinataire);
                     if (resultat == 1)
