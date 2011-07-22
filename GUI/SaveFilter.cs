@@ -19,7 +19,7 @@ namespace TaskLeader.GUI
             }
             else
             {
-                if (!ReadDB.Instance.isNvoFiltre(nameBox.Text))
+                if (!ReadDB.Instance.isNvo(DB.Instance.filtre,nameBox.Text))
                 {
                     resultLabel.Text = "Ce nom de filtre existe déjà.";
                     resultLabel.Visible = true;

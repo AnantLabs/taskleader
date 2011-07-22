@@ -16,15 +16,15 @@ namespace TaskLeader.GUI
         private void loadWidgets()
         {
             //Ajout des contextes à la combobox
-            foreach (String item in ReadDB.Instance.getCtxt())
+            foreach (String item in ReadDB.Instance.getFiltres(DB.Instance.contexte))
                 contexteBox.Items.Add(item);
 
             // Ajout des destinataires à la combobox
-            foreach (String item in ReadDB.Instance.getDest())
+            foreach (String item in ReadDB.Instance.getTitres(DB.Instance.destinataire))
                 destBox.Items.Add(item);
 
             // On remplit la liste des statuts
-            foreach (String item in ReadDB.Instance.getStatut())
+            foreach (String item in ReadDB.Instance.getTitres(DB.Instance.statut))
                 statutBox.Items.Add(item);
         }
 

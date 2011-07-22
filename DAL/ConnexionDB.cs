@@ -63,6 +63,7 @@ namespace TaskLeader.DAL
         public DBentity contexte = new DBentity("Contexte", "Contextes", "AllCtxt");
         public DBentity sujet = new DBentity("Sujet", "Sujets", "AllSuj");
         public DBentity destinataire = new DBentity("Destinataire", "Destinataires", "AllDest");
-        public DBentity statut = new DBentity("Statut", "Statuts", "AllStat");       
+        public DBentity statut = new DBentity("Statut", "Statuts", "AllStat");
+		public DBentity filtre = new DBentity("","Filtres","");
     }
 }

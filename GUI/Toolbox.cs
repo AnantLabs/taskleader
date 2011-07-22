@@ -32,7 +32,7 @@ namespace TaskLeader.GUI
             this.loadFilters();
 
             // Remplissage de la ListBox des statuts + menu contextuel du tableau
-            foreach (object item in ReadDB.Instance.getStatut())
+            foreach (object item in ReadDB.Instance.getTitres(DB.Instance.statut))
             {
                 statutListBox.Items.Add(item, true); // Sélection de tous les statuts par défaut
                 statutTSMenuItem.DropDown.Items.Add(item.ToString(), null, this.changeStat);
@@ -57,7 +57,7 @@ namespace TaskLeader.GUI
         private void loadFilters()
         {
             filterCombo.Items.Add("Sélectionner...");
-            filterCombo.Items.AddRange(ReadDB.Instance.getFilters());
+            filterCombo.Items.AddRange(ReadDB.Instance.getTitres(DB.Instance.filtre));
             filterCombo.SelectedIndex = 0;
         }
 
@@ -69,11 +69,11 @@ namespace TaskLeader.GUI
             this.destListBox.Items.Clear();           
 
             // Remplissage de la ListBox des contextes
-            foreach (object item in ReadDB.Instance.getCtxt())
+            foreach (object item in ReadDB.Instance.getTitres(DB.Instance.contexte))
                 ctxtListBox.Items.Add(item, true); // Sélection des contextes par défaut
 
             // Remplissage de la ListBox des destinataires
-            foreach (object item in ReadDB.Instance.getDest())
+            foreach (object item in ReadDB.Instance.getTitres(DB.Instance.destinataire))
                 destListBox.Items.Add(item, true); // Sélection des destinataires par défaut
 
             // Si un filtre est actif on l'affiche
