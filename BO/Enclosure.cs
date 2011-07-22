@@ -28,6 +28,8 @@ namespace TaskLeader.BO
                 case "Mails":
                     v_icone = TaskLeader.Properties.Resources.outlook;
                     break;
+				case "Links":
+					v_icone = TaskLeader.Properties.Resources.shortcut;
             }          
         }
 
