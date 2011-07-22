@@ -154,6 +154,31 @@ namespace TaskLeader.DAL
 
             return EncID;
         }
+		
+		// Insertion d'un nouveau lien en base
+		public String insertLink(Link lien)
+		{
+			String EncID = "";
+            String titre = "'" + lien.Titre.Replace("'", "''") + "'";
+
+            using (SQLiteTransaction mytransaction = DB.Instance.getConnection().BeginTransaction())
+            {
+                using (SQLiteCommand SQLCmd = new SQLiteCommand(DB.Instance.getConnection()))
+                {
+                    // Insertion du mail
+                    SQLCmd.CommandText = "INSERT INTO Links (Titre,Path) ";
+                    SQLCmd.CommandText += "VALUES(" + titre + "," + lien.urlSQL + ");";
+                    SQLCmd.ExecuteNonQuery();
+
+                    // Récupération du EncID
+                    SQLCmd.CommandText = "SELECT max(id) FROM Links";
+                    EncID = SQLCmd.ExecuteScalar().ToString();
+                }
+                mytransaction.Commit();
+            }
+
+            return EncID;
+		}
 
         // Insertion d'une nouvelle action
         public void insertAction(TLaction action)
