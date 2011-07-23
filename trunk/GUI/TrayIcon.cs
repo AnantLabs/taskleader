@@ -148,10 +148,7 @@ namespace TaskLeader.GUI
         // Méthode permettant d'afficher le formulaire nouvelle action vide
         private void ajoutAction(object sender, EventArgs e)
         {
-            TLaction action = new TLaction();
-            action.freezeInitState();
-
-            ManipAction fenetre = new ManipAction(action);
+            ManipAction fenetre = new ManipAction(new TLaction());
             fenetre.Disposed += new EventHandler(updateToolbox); // Sur fermeture de ManipAction on update la Toolbox
             fenetre.Show();
         }
@@ -166,7 +163,6 @@ namespace TaskLeader.GUI
             else
             {
                 ManipAction guiAction = new ManipAction(action);
-                //guiAction.TopMost = true;// Plus nécessaire car de base dans la déf de ManipAction
                 guiAction.Disposed += new EventHandler(updateToolbox);
                 guiAction.Show();
             }           

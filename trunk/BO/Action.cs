@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Data;
 using TaskLeader.DAL;
+using TaskLeader.GUI;
 
 namespace TaskLeader.BO
 {
@@ -12,11 +13,10 @@ namespace TaskLeader.BO
 
         // Membre privé permettant de détecter des updates
         private bool initialStateFrozen = false;
-        public void freezeInitState() { this.initialStateFrozen = true; }
 
         // ID de l'action dans la base TaskLeader
         private String v_TLID = "";
-        public String ID { get { return v_TLID; } set { v_TLID = value; } }
+        public String ID { get { return v_TLID; } }
         public bool isScratchpad { get { return (v_TLID == ""); } }
 
         // Contexte de l'action
@@ -121,14 +121,15 @@ namespace TaskLeader.BO
 
         // PJ à l'action
         private ArrayList v_links = new ArrayList();
-        public void addLink(Enclosure link) { v_links.Add(link); }
-        public bool hasLinks { get { return (v_links.Count > 0); } }
-        public Array Links { get { return v_links.ToArray(); } }
+        private int lastIndex;
+        public void addPJ(Enclosure link){ v_links.Add(link); }
+        public bool hasPJ { get { return (v_links.Count > 0); } }
+        public Array PJ { get { return v_links.ToArray(); } }
 
         /// <summary>
         /// Constructeur permettant d'initialiser les valeurs par défaut
         /// </summary>
-        public TLaction(){}
+        public TLaction() { this.initialStateFrozen = true; }
 		
 		/// <summary>
         /// Constructeur à partir de l'ID de stockage de l'action
@@ -149,7 +150,10 @@ namespace TaskLeader.BO
 			this.v_stat = data["Statut"] as String;
 			
 			//Récupération des liens
-			v_links.AddRange(ReadDB.Instance.getLinks(ID));
+			v_links.AddRange(ReadDB.Instance.getPJ(ID));
+            this.lastIndex = v_links.Count-1;
+
+            this.initialStateFrozen = true;
 		}
 
         // Méthode permettant d'updater les champs principaux
@@ -161,6 +165,79 @@ namespace TaskLeader.BO
             this.Texte = desAction;
             this.Destinataire = destinataire;
             this.Statut = stat;       
+        }
+
+        // Sauvegarde d'une action en base
+        public void save()
+        {
+            String bilan = "";
+            int resultat;
+
+            // On rajoute une ligne d'historique si le statut est différent de Ouverte et si le statut a changé
+            if (this.Statut != ReadDB.Instance.getDefault(DB.Instance.statut) && this.statusHasChanged)
+                this.Texte += Environment.NewLine + "Action " + this.Statut + " le: " + DateTime.Now.ToString("dd-MM-yyyy");
+
+            // Vérification des nouveautés
+            if (this.ctxtHasChanged) // Test uniquement si contexte entré
+                if (ReadDB.Instance.isNvo(DB.Instance.contexte, this.Contexte)) // Si on a un nouveau contexte
+                {
+                    resultat = WriteDB.Instance.insertContexte(this.Contexte); // On récupère le nombre de lignes insérées
+                    if (resultat == 1)
+                        bilan += "Nouveau contexte enregistré\n";
+                }
+
+            if (this.sujetHasChanged)
+                if (ReadDB.Instance.isNvoSujet(this.Contexte, this.Sujet)) //TODO: il y a un cas foireux si le contexte est vide
+                {
+                    resultat = WriteDB.Instance.insertSujet(this.Contexte, this.Sujet);
+                    if (resultat == 1)
+                        bilan += "Nouveau sujet enregistré\n";
+                }
+
+            if (this.destHasChanged)
+                if (ReadDB.Instance.isNvo(DB.Instance.destinataire, this.Destinataire))
+                {
+                    resultat = WriteDB.Instance.insertDest(this.Destinataire);
+                    if (resultat == 1)
+                        bilan += "Nouveau destinataire enregistré\n";
+                }
+
+            if (this.Texte != "")
+            {
+                if (this.isScratchpad)
+                {
+                    String actionID = WriteDB.Instance.insertAction(this); // Sauvegarde de l'action
+                    bilan += "Nouvelle action enregistrée\n";
+                    if (this.hasPJ)
+                    {
+                        WriteDB.Instance.insertPJ(actionID, this.PJ); // Sauvegarde des PJ
+                        bilan += v_links.Count.ToString()+" PJ enregistrée";
+                        if (v_links.Count > 1) bilan += "s";
+                        bilan += "\n";
+                    }
+                }
+                else
+                {
+                    resultat = WriteDB.Instance.updateAction(this);
+                    if (resultat == 1)
+                        bilan += "Action mise à jour\n";
+                    if (this.v_links.Count > this.lastIndex+1)
+                    {
+                        //Récupération de la liste des PJ ajoutées
+                        Array updatedLinks = this.v_links.GetRange(this.lastIndex + 1, this.v_links.Count - this.lastIndex - 1).ToArray();
+                        //Sauvegarde des PJ
+                        WriteDB.Instance.insertPJ(this.v_TLID, updatedLinks);
+                        //Préparation du bilan
+                        bilan += updatedLinks.Length.ToString() + " PJ enregistrée";
+                        if (updatedLinks.Length > 1) bilan += "s";
+                        bilan += "\n";
+                    }
+                }
+            }
+
+            // On affiche un message de statut sur la TrayIcon
+            if (bilan.Length > 0) // On n'affiche un bilan que s'il s'est passé qqchose
+                TrayIcon.afficheMessage("Bilan sauvegarde", bilan.Substring(0, bilan.Length - 1)); // On supprime le dernier \n            
         }
     }
 }

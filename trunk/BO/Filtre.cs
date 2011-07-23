@@ -80,5 +80,26 @@ namespace TaskLeader.BO
             this.v_type = 2;
             this.v_nomFiltre = recherche;
         }
+
+        public DataTable getActions()
+        {
+            // Stockage du filtre
+            CurrentFilter = this;
+
+            DataTable data = new DataTable();
+
+            switch (this.type)
+            {
+                case (1):
+                    data = ReadDB.Instance.getActions(this.criteria);
+                    break;
+                case (2):
+                    data = ReadDB.Instance.searchActions(this.nom);
+                    break;
+            }
+
+            return data;
+        }
+    
     }
 }

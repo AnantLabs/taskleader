@@ -252,16 +252,19 @@ namespace TaskLeader.DAL
 		}	
 		
         // Récupération des liens attachés à une action
-        public Array getLinks(String actionID)
+        public Array getPJ(String actionID)
         {
             DataTable linksData = getTable("SELECT EncType,EncID FROM Enclosures WHERE ActionID=" + actionID);
             ArrayList liste = new ArrayList();
 
-            foreach (DataRow link in linksData.Rows)
-                switch (link["EncType"].ToString())
+            foreach (DataRow pj in linksData.Rows)
+                switch (pj["EncType"].ToString())
                 {
                     case("Mails"):
-                        liste.Add(new Mail(link["EncID"].ToString()));
+                        liste.Add(new Mail(pj["EncID"].ToString()));
+                        break;
+                    case("Links"):
+                        liste.Add(new Link(pj["EncID"].ToString()));
                         break;
                 }
 
@@ -271,14 +274,14 @@ namespace TaskLeader.DAL
         // Récupération des informations d'un mail à partir de son ID
         public DataRow getMailData(String id)
         {
-			DataTable result = getTable("SELECT * FROM Mails WHERE id='" + id + "'");
+			DataTable result = getTable("SELECT * FROM Mails WHERE id=" + id);
             return result.Rows[0];
         }
 		
 		// Récupération des informations d'un lien à partir de son ID
 		public DataRow getLinkData(String id)
 		{
-			DataTable result = getTable("SELECT * FROM Links WHERE id='" + id + "'");
+			DataTable result = getTable("SELECT * FROM Links WHERE id=" + id);
             return result.Rows[0];
 		}
 

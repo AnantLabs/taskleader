@@ -91,10 +91,7 @@ namespace TaskLeader.GUI
         // Ouverture de la gui création d'action
         private void ajoutAction(object sender, EventArgs e)
         {
-            TLaction action = new TLaction();
-            action.freezeInitState();
-
-            ManipAction fenetre = new ManipAction(action);
+            ManipAction fenetre = new ManipAction(new TLaction());
             fenetre.Disposed += new EventHandler(this.miseAjour); // Sur fermeture de ManipAction on update la Toolbox
             fenetre.Show();
         }
@@ -102,11 +99,7 @@ namespace TaskLeader.GUI
         // Ouverture de la gui édition d'action
         private void modifAction(object sender, EventArgs e)
         {
-            // Récupération de l'action correspondant à la ligne
-            TLaction action = new TLaction(grilleData.SelectedRows[0].Cells["id"].Value.ToString());
-			action.freezeInitState();
-
-            ManipAction fenetre = new ManipAction(action);
+            ManipAction fenetre = new ManipAction(new TLaction(grilleData.SelectedRows[0].Cells["id"].Value.ToString()));
             fenetre.Disposed += new EventHandler(this.miseAjour); // Sur fermeture de ManipAction on update la Toolbox
             fenetre.Show();
         }
@@ -116,14 +109,13 @@ namespace TaskLeader.GUI
         {
             // Récupération de l'action
 			TLaction action = new TLaction(grilleData.SelectedRows[0].Cells["id"].Value.ToString());
-            action.freezeInitState();
 
             // On récupère le nouveau statut
             action.Statut = ((ToolStripItem)sender).Text;
 
             // On met à jour le statut de l'action que s'il a changé
             if (action.statusHasChanged)
-                DataManager.Instance.saveAction(action);
+                action.save();
 
             this.miseAjour(null, null);
         }
@@ -196,7 +188,7 @@ namespace TaskLeader.GUI
                 grilleData[e.ColumnIndex, e.RowIndex].Value.ToString() != "") // Cellule non vide
             {
 				//Récupération des différents liens
-                Array links = ReadDB.Instance.getLinks(grilleData.SelectedRows[0].Cells["id"].Value.ToString());
+                Array links = ReadDB.Instance.getPJ(grilleData.SelectedRows[0].Cells["id"].Value.ToString());
 
                 if (links.Length == 1) // Un lien seulement
                     ((Enclosure)links.GetValue(0)).open(); // Ouverture directe
@@ -246,7 +238,7 @@ namespace TaskLeader.GUI
                 grilleData.Columns.Add(linkCol);  
 
             // Récupération des résultats et association au tableau
-            DataTable liste = DataManager.Instance.getActions(filtre);                     
+            DataTable liste = filtre.getActions();                     
             grilleData.DataSource = liste;
 
             grilleData.Columns["Liens"].DisplayIndex = 4;

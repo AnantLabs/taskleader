@@ -102,6 +102,13 @@ namespace TaskLeader.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap shortcut {
+            get {
+                object obj = ResourceManager.GetObject("shortcut", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Icon task_coach {
             get {
                 object obj = ResourceManager.GetObject("task_coach", resourceCulture);

@@ -8,17 +8,6 @@ using TaskLeader.BO;
 
 namespace TaskLeader.BLL
 {
-    // Classe de conversion d'image pour affichage dans Outlook
-    public class ConvertImage : System.Windows.Forms.AxHost
-    {
-        private ConvertImage() : base(null){}
-
-        public static stdole.IPictureDisp Convert(System.Drawing.Image image)
-        {
-            return (stdole.IPictureDisp)System.Windows.Forms.AxHost.GetIPictureDispFromPicture(image);
-        }
-    }
-
     public class OutlookIF
     {
         // Attributs métiers       
@@ -89,8 +78,7 @@ namespace TaskLeader.BLL
                 // Création de l'action
                 TLaction action = new TLaction();
                 action.Texte = item.Subject;
-                action.addLink(new Mail(item.Subject,store.StoreID, item.EntryID, (String)props.GetProperty(this.messageIDParam)));
-                action.freezeInitState();
+                action.addPJ(new Mail(item.Subject,store.StoreID, item.EntryID, (String)props.GetProperty(this.messageIDParam)));
 
                 // On affiche la fenêtre nouvelle action Outlook
                 TrayIcon.newActionOutlook(action);
