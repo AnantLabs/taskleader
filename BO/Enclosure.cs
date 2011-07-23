@@ -12,6 +12,7 @@ namespace TaskLeader.BO
         // Icône de la pièce jointe
         private Bitmap v_icone;
         public Image Icone { get { return v_icone; } }
+        public String IconeKey { get { return type_string; } }
 
         // Type de la pièce jointe
         private String type_string = "";
@@ -30,6 +31,7 @@ namespace TaskLeader.BO
                     break;
 				case "Links":
 					v_icone = TaskLeader.Properties.Resources.shortcut;
+                    break;
             }          
         }
 

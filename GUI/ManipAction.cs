@@ -16,7 +16,7 @@ namespace TaskLeader.GUI
         private void loadWidgets()
         {
             //Ajout des contextes à la combobox
-            foreach (String item in ReadDB.Instance.getFiltres(DB.Instance.contexte))
+            foreach (String item in ReadDB.Instance.getTitres(DB.Instance.contexte))
                 contexteBox.Items.Add(item);
 
             // Ajout des destinataires à la combobox
@@ -28,6 +28,21 @@ namespace TaskLeader.GUI
                 statutBox.Items.Add(item);
         }
 
+        // Ajout d'un lien à la ListView
+        private void addPJToView(Enclosure pj)
+        {
+            // Ajout de l'image correspondant au lien dans la bibliothèque
+            if (!biblio.Images.Keys.Contains(pj.IconeKey))
+                this.biblio.Images.Add(pj.IconeKey, pj.Icone);
+
+            // Ajout du lien à la ListView
+            ListViewItem item = new ListViewItem(pj.Titre, pj.IconeKey);
+            item.Tag = pj;
+
+            // Ajout du lien à la listView
+            linksView.Items.Add(item);
+        }
+
         public ManipAction(TLaction action)
         {
             InitializeComponent();
@@ -37,7 +52,7 @@ namespace TaskLeader.GUI
             // Chargement des widgets
             this.loadWidgets();
 
-            Array links = action.Links;
+            Array links = action.PJ;
 
             if (action.isScratchpad)
                 this.Text += "Ajouter une action";
@@ -56,32 +71,13 @@ namespace TaskLeader.GUI
             contexteBox.Text = action.Contexte;
 
             sujetBox.Text = action.Sujet;
-            if(contexteBox.Text != "")
+            if (contexteBox.Text != "")
                 updateSujet(); // Mise à jour de la liste des sujets
 
-            // Affichage des liens le cas échéant
-            if (links.Length > 0)
-            {
-                ListViewItem linkItem;
+            foreach (Enclosure link in links)
+                this.addPJToView(link);
 
-                foreach (Enclosure link in links)
-                {
-                    // Ajout de l'image correspondant au lien dans la bibliothèque
-                    this.images.Images.Clear();
-                    this.images.Images.Add(link.Icone);
-
-                    // Ajout du lien à la ListView
-                    linkItem = new ListViewItem(link.Titre, 0);
-                    linkItem.Tag = link;
-
-                    // Ajout du lien à la listView
-                    linksView.Items.Add(linkItem);
-                }
-
-                // Affichage de la ListView
-                this.linksLabel.Visible = true;
-                this.linksView.Visible = true;
-            }
+            this.linksView.Visible = (links.Length > 0);
 
             // Affichage du descriptif de l'action
             desField.Text = action.Texte;
@@ -116,7 +112,7 @@ namespace TaskLeader.GUI
                 v_action.DueDate = actionDatePicker.Value;
 
             // On sauvegarde l'action
-            DataManager.Instance.saveAction(v_action);
+            v_action.save();
 
             // Fermeture de la fenêtre
             this.Close();
@@ -139,5 +135,28 @@ namespace TaskLeader.GUI
             // On ouvre le lien
             ((Enclosure)linksView.SelectedItems[0].Tag).open();
         }
+
+        private void ajouterLink_Click(object sender, EventArgs e)
+        {
+            this.TopMost = false; // Passage de la fenêtre ManipAction en arrière plan temporairement
+
+            SaveLink saveForm = new SaveLink();
+            if (saveForm.ShowDialog() == DialogResult.OK) // Affichage de la fenêtre SaveLink
+            {
+                // Ajout du lien à l'action
+                v_action.addPJ(saveForm.lien);
+                // Ajout à la listeView
+                this.addPJToView(saveForm.lien);
+            }
+
+            this.linksView.Visible = true;
+            this.TopMost = true;
+        }
+
+        private void addLinkBut_Click(object sender, EventArgs e)
+        {
+            this.linksMenu.Show(Cursor.Position);// Affichage du menu d'ajout des liens
+        }
+
     }
 }

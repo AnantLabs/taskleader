@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Data;
 using TaskLeader.DAL;
-using TaskLeader.BLL;
 using System.Diagnostics;
 
 namespace TaskLeader.BO
@@ -27,7 +23,7 @@ namespace TaskLeader.BO
             DataRow linkData = ReadDB.Instance.getLinkData(ID);
 
             base.Titre = linkData["Titre"].ToString();
-            this.v_link = mailData["Path"].ToString();
+            this.v_link = linkData["Path"].ToString();
         }
 
         /// <summary>

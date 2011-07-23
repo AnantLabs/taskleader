@@ -48,13 +48,17 @@
             this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
             this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
             this.linksLabel = new System.Windows.Forms.Label();
+            this.addLinkBut = new System.Windows.Forms.Button();
             this.linksView = new System.Windows.Forms.ListView();
-            this.images = new System.Windows.Forms.ImageList(this.components);
+            this.linksMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.ajouterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.biblio = new System.Windows.Forms.ImageList(this.components);
             this.flowLayoutPanel4 = new System.Windows.Forms.FlowLayoutPanel();
             this.tableLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
             this.flowLayoutPanel3.SuspendLayout();
+            this.linksMenu.SuspendLayout();
             this.flowLayoutPanel4.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -113,7 +117,7 @@
             this.desField.Multiline = true;
             this.desField.Name = "desField";
             this.desField.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.desField.Size = new System.Drawing.Size(312, 130);
+            this.desField.Size = new System.Drawing.Size(312, 140);
             this.desField.TabIndex = 16;
             // 
             // sujetBox
@@ -205,9 +209,9 @@
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 2;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 72.56637F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 27.43363F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(630, 226);
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 73.04348F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 26.95652F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(630, 230);
             this.tableLayoutPanel1.TabIndex = 27;
             // 
             // flowLayoutPanel1
@@ -217,7 +221,7 @@
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 3);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(324, 157);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(324, 162);
             this.flowLayoutPanel1.TabIndex = 17;
             // 
             // label3
@@ -239,9 +243,9 @@
             this.flowLayoutPanel2.Controls.Add(this.actionDatePicker);
             this.flowLayoutPanel2.Controls.Add(this.noDueDate);
             this.flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel2.Location = new System.Drawing.Point(3, 166);
+            this.flowLayoutPanel2.Location = new System.Drawing.Point(3, 171);
             this.flowLayoutPanel2.Name = "flowLayoutPanel2";
-            this.flowLayoutPanel2.Size = new System.Drawing.Size(324, 57);
+            this.flowLayoutPanel2.Size = new System.Drawing.Size(324, 56);
             this.flowLayoutPanel2.TabIndex = 18;
             // 
             // flowLayoutPanel3
@@ -251,44 +255,70 @@
             this.flowLayoutPanel3.Controls.Add(this.label2);
             this.flowLayoutPanel3.Controls.Add(this.sujetBox);
             this.flowLayoutPanel3.Controls.Add(this.linksLabel);
+            this.flowLayoutPanel3.Controls.Add(this.addLinkBut);
             this.flowLayoutPanel3.Controls.Add(this.linksView);
             this.flowLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel3.Location = new System.Drawing.Point(333, 3);
             this.flowLayoutPanel3.Name = "flowLayoutPanel3";
-            this.flowLayoutPanel3.Size = new System.Drawing.Size(294, 157);
+            this.flowLayoutPanel3.Size = new System.Drawing.Size(294, 162);
             this.flowLayoutPanel3.TabIndex = 19;
             // 
             // linksLabel
             // 
             this.linksLabel.AutoSize = true;
-            this.linksLabel.Location = new System.Drawing.Point(20, 60);
-            this.linksLabel.Margin = new System.Windows.Forms.Padding(20, 6, 3, 0);
+            this.linksLabel.Location = new System.Drawing.Point(20, 62);
+            this.linksLabel.Margin = new System.Windows.Forms.Padding(20, 8, 3, 0);
             this.linksLabel.Name = "linksLabel";
             this.linksLabel.Size = new System.Drawing.Size(35, 13);
             this.linksLabel.TabIndex = 13;
             this.linksLabel.Text = "Liens:";
-            this.linksLabel.Visible = false;
+            // 
+            // addLinkBut
+            // 
+            this.addLinkBut.Location = new System.Drawing.Point(61, 57);
+            this.addLinkBut.Name = "addLinkBut";
+            this.addLinkBut.Size = new System.Drawing.Size(49, 23);
+            this.addLinkBut.TabIndex = 28;
+            this.addLinkBut.Text = "Ajouter";
+            this.addLinkBut.UseVisualStyleBackColor = true;
+            this.addLinkBut.Click += new System.EventHandler(this.addLinkBut_Click);
             // 
             // linksView
             // 
             this.linksView.Activation = System.Windows.Forms.ItemActivation.OneClick;
             this.linksView.LabelEdit = true;
-            this.linksView.Location = new System.Drawing.Point(61, 57);
+            this.linksView.Location = new System.Drawing.Point(60, 86);
+            this.linksView.Margin = new System.Windows.Forms.Padding(60, 3, 3, 3);
             this.linksView.MultiSelect = false;
             this.linksView.Name = "linksView";
-            this.linksView.Size = new System.Drawing.Size(222, 97);
-            this.linksView.SmallImageList = this.images;
+            this.linksView.Size = new System.Drawing.Size(222, 75);
+            this.linksView.SmallImageList = this.biblio;
             this.linksView.TabIndex = 27;
             this.linksView.UseCompatibleStateImageBehavior = false;
-            this.linksView.View = System.Windows.Forms.View.List;
+            this.linksView.View = System.Windows.Forms.View.SmallIcon;
             this.linksView.Visible = false;
             this.linksView.ItemActivate += new System.EventHandler(this.link_Click);
             // 
-            // images
+            // linksMenu
             // 
-            this.images.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
-            this.images.ImageSize = new System.Drawing.Size(30, 30);
-            this.images.TransparentColor = System.Drawing.Color.Transparent;
+            this.linksMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ajouterToolStripMenuItem});
+            this.linksMenu.Name = "linksMenu";
+            this.linksMenu.Size = new System.Drawing.Size(183, 26);
+            // 
+            // ajouterToolStripMenuItem
+            // 
+            this.ajouterToolStripMenuItem.Image = global::TaskLeader.Properties.Resources.shortcut;
+            this.ajouterToolStripMenuItem.Name = "ajouterToolStripMenuItem";
+            this.ajouterToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
+            this.ajouterToolStripMenuItem.Text = "Ajouter un raccourci";
+            this.ajouterToolStripMenuItem.Click += new System.EventHandler(this.ajouterLink_Click);
+            // 
+            // biblio
+            // 
+            this.biblio.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
+            this.biblio.ImageSize = new System.Drawing.Size(30, 30);
+            this.biblio.TransparentColor = System.Drawing.Color.Transparent;
             // 
             // flowLayoutPanel4
             // 
@@ -297,16 +327,16 @@
             this.flowLayoutPanel4.Controls.Add(this.saveButton);
             this.flowLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel4.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
-            this.flowLayoutPanel4.Location = new System.Drawing.Point(333, 166);
+            this.flowLayoutPanel4.Location = new System.Drawing.Point(333, 171);
             this.flowLayoutPanel4.Name = "flowLayoutPanel4";
-            this.flowLayoutPanel4.Size = new System.Drawing.Size(294, 57);
+            this.flowLayoutPanel4.Size = new System.Drawing.Size(294, 56);
             this.flowLayoutPanel4.TabIndex = 20;
             // 
             // ManipAction
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(630, 226);
+            this.ClientSize = new System.Drawing.Size(630, 230);
             this.Controls.Add(this.tableLayoutPanel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.MaximizeBox = false;
@@ -322,6 +352,7 @@
             this.flowLayoutPanel2.PerformLayout();
             this.flowLayoutPanel3.ResumeLayout(false);
             this.flowLayoutPanel3.PerformLayout();
+            this.linksMenu.ResumeLayout(false);
             this.flowLayoutPanel4.ResumeLayout(false);
             this.flowLayoutPanel4.PerformLayout();
             this.ResumeLayout(false);
@@ -351,7 +382,10 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label linksLabel;
         private System.Windows.Forms.ListView linksView;
-        private System.Windows.Forms.ImageList images;
+        private System.Windows.Forms.ImageList biblio;
+        private System.Windows.Forms.ContextMenuStrip linksMenu;
+        private System.Windows.Forms.ToolStripMenuItem ajouterToolStripMenuItem;
+        private System.Windows.Forms.Button addLinkBut;
 
 
     }

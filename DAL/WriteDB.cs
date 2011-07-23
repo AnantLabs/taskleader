@@ -171,7 +171,7 @@ namespace TaskLeader.DAL
                     SQLCmd.ExecuteNonQuery();
 
                     // Récupération du EncID
-                    SQLCmd.CommandText = "SELECT max(id) FROM Links";
+                    SQLCmd.CommandText = "SELECT max(id) FROM Links;";
                     EncID = SQLCmd.ExecuteScalar().ToString();
                 }
                 mytransaction.Commit();
@@ -180,9 +180,32 @@ namespace TaskLeader.DAL
             return EncID;
 		}
 
-        // Insertion d'une nouvelle action
-        public void insertAction(TLaction action)
+        // Insertion des PJ
+        public void insertPJ(String actionID, Array PJ)
         {
+            String requete;
+
+            foreach (Enclosure link in PJ)
+            {
+                //Enregistrement de la PJ dans la bonne table et récupération de l'ID
+                String EncID = link.store();
+
+                // Création de la requête
+                requete = "INSERT INTO Enclosures VALUES(";
+                requete += actionID+",";
+                requete += link.TypeSQL + ",";
+                requete += EncID + ");";
+
+                execSQL(requete);
+            }
+        }
+
+        // Insertion d'une nouvelle action
+        // Renvoie l'ID de stockage de l'action
+        public String insertAction(TLaction action)
+        {
+            String actionID;
+
             using (SQLiteTransaction mytransaction = DB.Instance.getConnection().BeginTransaction())
             {
                 using (SQLiteCommand SQLCmd = new SQLiteCommand(DB.Instance.getConnection()))
@@ -226,24 +249,13 @@ namespace TaskLeader.DAL
                     SQLCmd.CommandText = insertPart + valuePart;
                     SQLCmd.ExecuteNonQuery();
 
-                    // Insertion des infos des pièces jointes
-                    foreach (Enclosure link in action.Links)
-                    {
-                        //Enregistrement de la PJ dans la bonne table et récupération de l'ID
-                        String EncID = link.store();
-                        
-                        // Création de la requête
-                        String requete = "INSERT INTO Enclosures VALUES(";
-                        requete += "(SELECT max(id) FROM Actions),";
-                        requete += link.TypeSQL+",";
-                        requete += "'" + EncID + "');";
-
-                        SQLCmd.CommandText = requete;
-                        SQLCmd.ExecuteNonQuery();
-                    }
+                    SQLCmd.CommandText = "SELECT max(id) FROM Actions;";
+                    actionID = SQLCmd.ExecuteScalar().ToString();
                 }
                 mytransaction.Commit();
             }
+
+            return actionID;
         }
 
         // Mise à jour d'une action (flexible)
