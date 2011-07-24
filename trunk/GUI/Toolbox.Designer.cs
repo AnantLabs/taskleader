@@ -69,6 +69,8 @@
             this.ajouterToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.nouvelleActionToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.actionsEvernoteToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.adminToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.defaultValuesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ajouterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.nouvelleActionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.actionsEvernoteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -404,7 +406,7 @@
             // 
             this.tableLayoutPanel2.ColumnCount = 2;
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 60F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 120F));
             this.tableLayoutPanel2.Controls.Add(this.flowLayoutPanel9, 0, 0);
             this.tableLayoutPanel2.Controls.Add(this.grilleData, 0, 1);
             this.tableLayoutPanel2.Controls.Add(this.addMenu, 1, 0);
@@ -426,7 +428,7 @@
             this.flowLayoutPanel9.Location = new System.Drawing.Point(0, 0);
             this.flowLayoutPanel9.Margin = new System.Windows.Forms.Padding(0);
             this.flowLayoutPanel9.Name = "flowLayoutPanel9";
-            this.flowLayoutPanel9.Size = new System.Drawing.Size(461, 30);
+            this.flowLayoutPanel9.Size = new System.Drawing.Size(401, 30);
             this.flowLayoutPanel9.TabIndex = 5;
             // 
             // searchFlowLayoutPanel
@@ -526,14 +528,15 @@
             // 
             // addMenu
             // 
-            this.addMenu.Dock = System.Windows.Forms.DockStyle.Right;
+            this.addMenu.Dock = System.Windows.Forms.DockStyle.Fill;
             this.addMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.ajouterToolStripMenuItem2});
-            this.addMenu.Location = new System.Drawing.Point(461, 3);
+            this.ajouterToolStripMenuItem2,
+            this.adminToolStripMenuItem});
+            this.addMenu.Location = new System.Drawing.Point(401, 3);
             this.addMenu.Margin = new System.Windows.Forms.Padding(0, 3, 0, 0);
             this.addMenu.Name = "addMenu";
             this.addMenu.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.addMenu.Size = new System.Drawing.Size(60, 27);
+            this.addMenu.Size = new System.Drawing.Size(120, 27);
             this.addMenu.TabIndex = 6;
             this.addMenu.Text = "menuStrip1";
             // 
@@ -544,7 +547,7 @@
             this.actionsEvernoteToolStripMenuItem2});
             this.ajouterToolStripMenuItem2.Name = "ajouterToolStripMenuItem2";
             this.ajouterToolStripMenuItem2.ShowShortcutKeys = false;
-            this.ajouterToolStripMenuItem2.Size = new System.Drawing.Size(51, 19);
+            this.ajouterToolStripMenuItem2.Size = new System.Drawing.Size(58, 23);
             this.ajouterToolStripMenuItem2.Text = "Ajouter";
             // 
             // nouvelleActionToolStripMenuItem2
@@ -564,6 +567,21 @@
             this.actionsEvernoteToolStripMenuItem2.ShowShortcutKeys = false;
             this.actionsEvernoteToolStripMenuItem2.Size = new System.Drawing.Size(156, 22);
             this.actionsEvernoteToolStripMenuItem2.Text = "Actions Evernote";
+            // 
+            // adminToolStripMenuItem
+            // 
+            this.adminToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.defaultValuesToolStripMenuItem});
+            this.adminToolStripMenuItem.Name = "adminToolStripMenuItem";
+            this.adminToolStripMenuItem.Size = new System.Drawing.Size(55, 23);
+            this.adminToolStripMenuItem.Text = "Admin";
+            // 
+            // defaultValuesToolStripMenuItem
+            // 
+            this.defaultValuesToolStripMenuItem.Name = "defaultValuesToolStripMenuItem";
+            this.defaultValuesToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            this.defaultValuesToolStripMenuItem.Text = "Valeurs par défaut";
+            this.defaultValuesToolStripMenuItem.Click += new System.EventHandler(this.defaultValuesToolStripMenuItem_Click);
             // 
             // ajouterToolStripMenuItem
             // 
@@ -599,25 +617,25 @@
             this.statutTSMenuItem,
             this.exportMenuItem});
             this.listeContext.Name = "listeContext";
-            this.listeContext.Size = new System.Drawing.Size(159, 92);
+            this.listeContext.Size = new System.Drawing.Size(159, 70);
             // 
             // editActionItem
             // 
             this.editActionItem.Name = "editActionItem";
-            this.editActionItem.Size = new System.Drawing.Size(133, 22);
+            this.editActionItem.Size = new System.Drawing.Size(158, 22);
             this.editActionItem.Text = "Editer l\'action";
             this.editActionItem.Click += new System.EventHandler(this.modifAction);
             // 
             // statutTSMenuItem
             // 
             this.statutTSMenuItem.Name = "statutTSMenuItem";
-            this.statutTSMenuItem.Size = new System.Drawing.Size(133, 22);
+            this.statutTSMenuItem.Size = new System.Drawing.Size(158, 22);
             this.statutTSMenuItem.Text = "Passer l\'action à";
             // 
             // exportMenuItem
             // 
             this.exportMenuItem.Name = "exportMenuItem";
-            this.exportMenuItem.Size = new System.Drawing.Size(133, 22);
+            this.exportMenuItem.Size = new System.Drawing.Size(158, 22);
             this.exportMenuItem.Text = "Exporter vers";
             // 
             // ajouterToolStripMenuItem1
@@ -741,6 +759,8 @@
         private System.Windows.Forms.ToolStripMenuItem nouvelleActionToolStripMenuItem2;
         private System.Windows.Forms.ToolStripMenuItem actionsEvernoteToolStripMenuItem2;
         private System.Windows.Forms.ContextMenuStrip linksContext;
+        private System.Windows.Forms.ToolStripMenuItem adminToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem defaultValuesToolStripMenuItem;
 
     }
 }

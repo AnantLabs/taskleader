@@ -52,6 +52,12 @@
     <Compile Include="DAL\ConnexionDB.cs" />
     <Compile Include="DAL\ReadDB.cs" />
     <Compile Include="DAL\WriteDB.cs" />
+    <Compile Include="GUI\AdminDefaut.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\AdminDefaut.Designer.cs">
+      <DependentUpon>AdminDefaut.cs</DependentUpon>
+    </Compile>
     <Compile Include="GUI\SaveFilter.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -87,6 +93,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="GUI\AdminDefaut.resx">
+      <DependentUpon>AdminDefaut.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GUI\SaveFilter.resx">
       <DependentUpon>SaveFilter.cs</DependentUpon>
     </EmbeddedResource>

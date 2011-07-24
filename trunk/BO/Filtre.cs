@@ -37,7 +37,7 @@ namespace TaskLeader.BO
         public String nom { get { return v_nomFiltre; } set { v_nomFiltre = value; } }
 
         // Variable locale pour stocker une référence vers le filtre en cours et le précédent de type 1
-        private static Filtre v_currentFilter = null;
+        private static Filtre v_currentFilter = ReadDB.Instance.getFilter(ReadDB.Instance.getDefault(DB.Instance.filtre));
         private static Filtre v_oldFilter = null;
         public static Filtre CurrentFilter
         {

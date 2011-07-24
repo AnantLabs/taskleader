@@ -1,10 +1,7 @@
 using System;
 using System.Windows.Forms;
-using System.Configuration;
 using TaskLeader.DAL;
-using TaskLeader.BLL;
 using TaskLeader.BO;
-using System.Data;
 
 namespace TaskLeader.GUI
 {
@@ -93,7 +90,7 @@ namespace TaskLeader.GUI
             // On vide les sujets correspondants au contexte actuel
             sujetBox.Items.Clear();
 
-            foreach (String item in ReadDB.Instance.getSujet(contexteBox.Text))
+            foreach (String item in ReadDB.Instance.getSujets(contexteBox.Text))
                 sujetBox.Items.Add(item);
         }
 
