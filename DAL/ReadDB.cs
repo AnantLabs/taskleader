@@ -156,7 +156,7 @@ namespace TaskLeader.DAL
 		}
 
         // Renvoie un tableau de tous les sujets correspondant au contexte
-        public object[] getSujet(String contexte)
+        public object[] getSujets(String contexte)
         {
             return getList("SELECT Titre FROM VueSujets WHERE Contexte ='" + contexte + "' ORDER BY Titre ASC");
         }
@@ -178,7 +178,12 @@ namespace TaskLeader.DAL
             // On récupère d'abord les checkbox all
             String titre = "'" + name.Replace("'", "''") + "'";
             String requete = "SELECT AllCtxt, AllSuj, AllDest, AllStat FROM Filtres WHERE Titre=" + titre;
-            DataRow resultat = getTable(requete).Rows[0];
+            DataRowCollection results = getTable(requete).Rows;
+
+            if (results.Count == 0)
+                return null;
+
+            DataRow resultat = results[0];
             
             // On crée le filtre correspondant
             Filtre filtre = new Filtre((bool)resultat["AllCtxt"],(bool)resultat["AllSuj"],(bool)resultat["AllDest"],(bool)resultat["AllStat"]);

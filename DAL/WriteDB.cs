@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Data.SQLite;
 using System.Windows.Forms;
 using TaskLeader.BO;
@@ -7,6 +6,18 @@ using TaskLeader.GUI;
 
 namespace TaskLeader.DAL
 {
+    public struct DBvalue
+    {
+        public DBentity entity; // Nom de la table principale
+        public String value; // Valeur
+
+        public DBvalue(DBentity table, String valeur)
+        {
+            entity = table;
+            value = valeur;
+        }
+    }
+
     public class WriteDB
     {
         // Variable locale pour stocker une référence vers l'instance
@@ -48,6 +59,33 @@ namespace TaskLeader.DAL
                 // On affiche l'erreur.
                 MessageBox.Show(Ex.Message, "Exception sur execSQL", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return -1;
+            }
+        }
+
+        // Insertion d'une valeur par défaut
+        public void insertDefaut(object[] values)
+        {
+            using (SQLiteTransaction mytransaction = DB.Instance.getConnection().BeginTransaction())
+            {
+                using (SQLiteCommand SQLCmd = new SQLiteCommand(DB.Instance.getConnection()))
+                {
+                    // On efface toutes les valeurs par défaut
+                    SQLCmd.CommandText = "UPDATE Contextes SET Defaut=NULL WHERE Defaut=1;";
+                    SQLCmd.CommandText += "UPDATE Sujets SET Defaut=NULL WHERE Defaut=1;";
+                    SQLCmd.CommandText += "UPDATE Destinataires SET Defaut=NULL WHERE Defaut=1;";
+                    SQLCmd.CommandText += "UPDATE Statuts SET Defaut=NULL WHERE Defaut=1;";
+                    SQLCmd.CommandText += "UPDATE Filtres SET Defaut=NULL WHERE Defaut=1;";
+                    SQLCmd.ExecuteNonQuery();
+                    
+                    // On insère les valeurs par défaut sélectionnées
+                    foreach (DBvalue DBvalue in values)
+                    {
+                        SQLCmd.CommandText += "UPDATE "+DBvalue.entity.mainTable+" SET Defaut=1 WHERE Titre='"+DBvalue.value+"';";
+                        SQLCmd.ExecuteNonQuery();
+                    }
+                }
+
+                mytransaction.Commit();
             }
         }
 

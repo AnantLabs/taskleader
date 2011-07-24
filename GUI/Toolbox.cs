@@ -1,6 +1,5 @@
  using System;
 using System.Data;
-using System.Collections;
 using System.Collections.Specialized;
 using System.Configuration;
 using System.Windows.Forms;
@@ -81,6 +80,28 @@ namespace TaskLeader.GUI
                 this.showFilter(Filtre.CurrentFilter);  
         }
 
+        // Méthode appelée quand checks des contextes changent
+        private void updateSujet(object sender, EventArgs e)
+        {
+            // Dans tous les cas de changements de séléction on vide la liste
+            sujetListBox.Items.Clear();
+
+            // On n'affiche la liste des sujets que si un seul contexte est tické
+            if (ctxtListBox.CheckedItems.Count == 1)
+            {
+                //Activation de la checkBox all
+                allSujt.Enabled = true;
+                //Remplissage de la liste
+                foreach (object item in ReadDB.Instance.getSujets((String)ctxtListBox.CheckedItems[0].ToString()))
+                    sujetListBox.Items.Add(item, true);
+            }
+            else
+            {
+                //Dans tous les autres cas on grise la checkbox All
+                allSujt.Enabled = false;
+            }
+        }
+
 		// Fermeture de la Form si minimisée
         private void Toolbox_Resize(object sender, EventArgs e)
         {
@@ -118,28 +139,6 @@ namespace TaskLeader.GUI
                 action.save();
 
             this.miseAjour(null, null);
-        }
-
-        // Méthode appelée quand checks des contextes changent
-        private void updateSujet(object sender, EventArgs e)
-        {     
-            // Dans tous les cas de changements de séléction on vide la liste
-            sujetListBox.Items.Clear();
-
-            // On n'affiche la liste des sujets que si un seul contexte est tické
-            if (ctxtListBox.CheckedItems.Count == 1)
-            {
-                //Activation de la checkBox all
-                allSujt.Enabled = true;
-                //Remplissage de la liste
-                foreach (object item in ReadDB.Instance.getSujet((String)ctxtListBox.CheckedItems[0].ToString()))
-                    sujetListBox.Items.Add(item, true);
-            }
-            else
-            {
-                //Dans tous les autres cas on grise la checkbox All
-                allSujt.Enabled = false;
-            }
         }
         
         // Mise en forme des cellules sous certaines conditions
@@ -460,6 +459,11 @@ namespace TaskLeader.GUI
                 grilleData.DataSource = null; // Suppression des lignes du tableau
                 razFiltres();
             }
+        }
+
+        private void defaultValuesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new AdminDefaut().Show();
         }
     }
 }
