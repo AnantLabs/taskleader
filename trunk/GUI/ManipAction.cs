@@ -2,6 +2,7 @@ using System;
 using System.Windows.Forms;
 using TaskLeader.DAL;
 using TaskLeader.BO;
+using TaskLeader.BLL;
 
 namespace TaskLeader.GUI
 {
@@ -127,10 +128,18 @@ namespace TaskLeader.GUI
             actionDatePicker.Enabled = !noDueDate.Checked;
         }
 
-        private void link_Click(object sender, EventArgs e)
+        private void pj_Click(object sender, EventArgs e)
         {
             // On ouvre le lien
             ((Enclosure)linksView.SelectedItems[0].Tag).open();
+        }
+
+        public void addPJToForm(Enclosure pj)
+        {
+            // Ajout du lien à l'action
+            v_action.addPJ(pj);
+            // Ajout à la listeView
+            this.addPJToView(pj);
         }
 
         private void ajouterLink_Click(object sender, EventArgs e)
@@ -139,21 +148,15 @@ namespace TaskLeader.GUI
 
             SaveLink saveForm = new SaveLink();
             if (saveForm.ShowDialog() == DialogResult.OK) // Affichage de la fenêtre SaveLink
-            {
-                // Ajout du lien à l'action
-                v_action.addPJ(saveForm.lien);
-                // Ajout à la listeView
-                this.addPJToView(saveForm.lien);
-            }
+                this.addPJToForm(saveForm.lien);
 
             this.linksView.Visible = true;
             this.TopMost = true;
         }
 
-        private void addLinkBut_Click(object sender, EventArgs e)
+        private void addPJBut_Click(object sender, EventArgs e)
         {
             this.linksMenu.Show(Cursor.Position);// Affichage du menu d'ajout des liens
         }
-
     }
 }

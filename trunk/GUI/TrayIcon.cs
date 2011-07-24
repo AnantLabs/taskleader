@@ -1,4 +1,4 @@
-﻿ using System;
+﻿using System;
 using System.Configuration;
 using System.Windows.Forms;
 using TaskLeader.BLL;
@@ -7,7 +7,7 @@ using System.Collections.Specialized;
 
 namespace TaskLeader.GUI
 {
-    public class TrayIcon: ApplicationContext
+    public class TrayIcon : ApplicationContext
     {
         // Déclaration des composants IHM
         private static NotifyIcon trayIcon = new NotifyIcon();
@@ -16,7 +16,7 @@ namespace TaskLeader.GUI
         private ToolStripMenuItem outlookItem = new ToolStripMenuItem();
         private ToolStripMenuItem closeItem = new ToolStripMenuItem();
         private ToolStripMenuItem maximItem = new ToolStripMenuItem();
-        
+
         // Déclaration des composants métiers
         static Control invokeControl = new Control();
 
@@ -43,7 +43,7 @@ namespace TaskLeader.GUI
             this.newActionItem.Size = new System.Drawing.Size(125, 22);
             this.newActionItem.Text = "Nouvelle action";
             this.newActionItem.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.newActionItem.Click += new System.EventHandler(this.ajoutAction);
+            this.newActionItem.Click += new System.EventHandler(ajoutAction);
 
             // Item "afficher Toolbox" du menu contextuel
             this.maximItem.Name = "maximItem";
@@ -72,7 +72,7 @@ namespace TaskLeader.GUI
         delegate void HotkeyMethodDelegate(object sender, EventArgs e);
         // Récupération du raccourci de la hotkey
         private void registerHotkey(String raccourci, ref Hotkey hotkey, HotkeyMethodDelegate callback)
-        {        
+        {
             //Récupération et ajout des touches spéciales
             if (raccourci.Contains("CTRL"))
                 hotkey.Control = true;
@@ -88,7 +88,7 @@ namespace TaskLeader.GUI
 
             //Si lettre reconnue, ajout de celle-ci et enregistrement de la combinaison
             if (!Enum.IsDefined(typeof(Keys), lettre))
-                afficheMessage("Hotkey", "Erreur de formatage du fichier de config");                
+                afficheMessage("Hotkey", "Erreur de formatage du fichier de config");
             else
             {
                 hotkey.KeyCode = (Keys)Enum.Parse(typeof(Keys), lettre, false);
@@ -111,7 +111,7 @@ namespace TaskLeader.GUI
             //if (Init.Instance.canLaunch())
             if (true)
             {
-                this.displayToolbox(new Object(),new EventArgs()); // Affichage de la Toolbox
+                this.displayToolbox(new Object(), new EventArgs()); // Affichage de la Toolbox
                 invokeControl.CreateControl();
             }
             else
@@ -124,7 +124,7 @@ namespace TaskLeader.GUI
         }
 
         private static Toolbox v_toolbox = null;
-        
+
         // Méthode générique d'affichage de la Toolbox
         private void displayToolbox(object sender, EventArgs e)
         {
@@ -137,35 +137,59 @@ namespace TaskLeader.GUI
             else
                 v_toolbox.BringToFront(); // Sinon on l'affiche au premier plan     
         }
-        
+
         // Update de la Toolbox si elle est affichée
         private static void updateToolbox(object sender, EventArgs e)
         {
-            if(v_toolbox != null && !v_toolbox.IsDisposed)
-                v_toolbox.miseAjour(sender,e);
+            if (v_toolbox != null && !v_toolbox.IsDisposed)
+                v_toolbox.miseAjour(sender, e);
         }
 
         // Méthode permettant d'afficher le formulaire nouvelle action vide
-        private void ajoutAction(object sender, EventArgs e)
+        private static void ajoutAction(object sender, EventArgs e)
         {
-            ManipAction fenetre = new ManipAction(new TLaction());
-            fenetre.Disposed += new EventHandler(updateToolbox); // Sur fermeture de ManipAction on update la Toolbox
-            fenetre.Show();
+            displayNewAction(new TLaction());
         }
 
         //Délégué pour méthode newActionOutlook
-        delegate void newActionOutlookCallback(TLaction action);
-        // Méthode permettant d'afficher le formulaire nouvelle action avec les paramètres spécifiés
-        public static void newActionOutlook(TLaction action)
+        delegate void newActionOutlookCallback(Mail mail);
+        // Gestion de l'arrivée des mails
+        public static void newActionOutlook(Mail mail)
         {
             if (invokeControl.InvokeRequired)
-                invokeControl.Invoke(new newActionOutlookCallback(newActionOutlook), new object[] { action });
-            else
+                invokeControl.Invoke(new newActionOutlookCallback(newActionOutlook), new object[] { mail });
+            else if (!addMailRequired) // Demande de création d'action
             {
-                ManipAction guiAction = new ManipAction(action);
-                guiAction.Disposed += new EventHandler(updateToolbox);
-                guiAction.Show();
-            }           
+                TLaction action = new TLaction();
+                action.Texte = mail.Titre;
+                action.addPJ(mail);
+                displayNewAction(action);
+            }
+            else // Demande d'ajout de mail à une action
+            {
+                v_manipAction.addPJToForm(mail);
+                addMailRequired = false;
+            }
+        }
+
+        // Affichage d'une form ManipAction
+        private static ManipAction v_manipAction = null;
+        public static void displayNewAction(TLaction action)
+        {
+            v_manipAction = new ManipAction(action);
+            v_manipAction.Disposed += new EventHandler(updateToolbox);
+            //Récupération de l'évèment
+            if (!action.isScratchpad) // Dans le cas d'une édition d'action
+                v_manipAction.mailItem.Click += new System.EventHandler(requestAddMail); //On s'abonne au click
+            v_manipAction.Show();
+        }
+
+        // Synchronization de l'ajout de mail
+        private static bool addMailRequired = false;
+        private static void requestAddMail(object sender, EventArgs e)
+        {
+            addMailRequired = true;
+            afficheMessage("Ajouter mail", "Sélectionner le mail à ajouter");
         }
 
         // Activation si nécessaire de l'item outlook
@@ -189,7 +213,7 @@ namespace TaskLeader.GUI
             if (hkListe.Registered)
                 hkListe.Unregister();
 
-            trayIcon.Visible = false; 
+            trayIcon.Visible = false;
             Application.Exit();
         }
 
