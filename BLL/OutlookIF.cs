@@ -43,7 +43,7 @@ namespace TaskLeader.BLL
                 this.addActionButton = (CommandBarButton)controls.Add(MsoControlType.msoControlButton, 1, "", 1, true);
                 this.addActionButton.FaceId = 341;
                 this.addActionButton.Style = MsoButtonStyle.msoButtonIconAndCaption;
-                this.addActionButton.Caption = "TaskLeader: nouvelle action";
+                this.addActionButton.Caption = "TaskLeader: ajouter à une action";
                 this.addActionButton.Click += new Microsoft.Office.Core._CommandBarButtonEvents_ClickEventHandler(getSelectedItem);
                 
                 this.addActionButton.Visible = true;
@@ -75,13 +75,8 @@ namespace TaskLeader.BLL
                 // Création du PropertyAccessor
                 Outlook.PropertyAccessor props = item.PropertyAccessor;
 
-                // Création de l'action
-                TLaction action = new TLaction();
-                action.Texte = item.Subject;
-                action.addPJ(new Mail(item.Subject,store.StoreID, item.EntryID, (String)props.GetProperty(this.messageIDParam)));
-
                 // On affiche la fenêtre nouvelle action Outlook
-                TrayIcon.newActionOutlook(action);
+                TrayIcon.newActionOutlook(new Mail(item.Subject, store.StoreID, item.EntryID, (String)props.GetProperty(this.messageIDParam)));
 
                 Marshal.FinalReleaseComObject(props);
                 Marshal.FinalReleaseComObject(store);

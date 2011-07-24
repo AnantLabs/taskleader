@@ -48,18 +48,19 @@
             this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
             this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
             this.linksLabel = new System.Windows.Forms.Label();
-            this.addLinkBut = new System.Windows.Forms.Button();
+            this.addPJBut = new System.Windows.Forms.Button();
             this.linksView = new System.Windows.Forms.ListView();
-            this.linksMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.ajouterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.biblio = new System.Windows.Forms.ImageList(this.components);
             this.flowLayoutPanel4 = new System.Windows.Forms.FlowLayoutPanel();
+            this.linksMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.ajouterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.mailItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tableLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
             this.flowLayoutPanel3.SuspendLayout();
-            this.linksMenu.SuspendLayout();
             this.flowLayoutPanel4.SuspendLayout();
+            this.linksMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // saveButton
@@ -255,7 +256,7 @@
             this.flowLayoutPanel3.Controls.Add(this.label2);
             this.flowLayoutPanel3.Controls.Add(this.sujetBox);
             this.flowLayoutPanel3.Controls.Add(this.linksLabel);
-            this.flowLayoutPanel3.Controls.Add(this.addLinkBut);
+            this.flowLayoutPanel3.Controls.Add(this.addPJBut);
             this.flowLayoutPanel3.Controls.Add(this.linksView);
             this.flowLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel3.Location = new System.Drawing.Point(333, 3);
@@ -273,15 +274,15 @@
             this.linksLabel.TabIndex = 13;
             this.linksLabel.Text = "Liens:";
             // 
-            // addLinkBut
+            // addPJBut
             // 
-            this.addLinkBut.Location = new System.Drawing.Point(61, 57);
-            this.addLinkBut.Name = "addLinkBut";
-            this.addLinkBut.Size = new System.Drawing.Size(49, 23);
-            this.addLinkBut.TabIndex = 28;
-            this.addLinkBut.Text = "Ajouter";
-            this.addLinkBut.UseVisualStyleBackColor = true;
-            this.addLinkBut.Click += new System.EventHandler(this.addLinkBut_Click);
+            this.addPJBut.Location = new System.Drawing.Point(61, 57);
+            this.addPJBut.Name = "addPJBut";
+            this.addPJBut.Size = new System.Drawing.Size(49, 23);
+            this.addPJBut.TabIndex = 28;
+            this.addPJBut.Text = "Ajouter";
+            this.addPJBut.UseVisualStyleBackColor = true;
+            this.addPJBut.Click += new System.EventHandler(this.addPJBut_Click);
             // 
             // linksView
             // 
@@ -297,22 +298,7 @@
             this.linksView.UseCompatibleStateImageBehavior = false;
             this.linksView.View = System.Windows.Forms.View.SmallIcon;
             this.linksView.Visible = false;
-            this.linksView.ItemActivate += new System.EventHandler(this.link_Click);
-            // 
-            // linksMenu
-            // 
-            this.linksMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.ajouterToolStripMenuItem});
-            this.linksMenu.Name = "linksMenu";
-            this.linksMenu.Size = new System.Drawing.Size(183, 26);
-            // 
-            // ajouterToolStripMenuItem
-            // 
-            this.ajouterToolStripMenuItem.Image = global::TaskLeader.Properties.Resources.shortcut;
-            this.ajouterToolStripMenuItem.Name = "ajouterToolStripMenuItem";
-            this.ajouterToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
-            this.ajouterToolStripMenuItem.Text = "Ajouter un raccourci";
-            this.ajouterToolStripMenuItem.Click += new System.EventHandler(this.ajouterLink_Click);
+            this.linksView.ItemActivate += new System.EventHandler(this.pj_Click);
             // 
             // biblio
             // 
@@ -331,6 +317,29 @@
             this.flowLayoutPanel4.Name = "flowLayoutPanel4";
             this.flowLayoutPanel4.Size = new System.Drawing.Size(294, 56);
             this.flowLayoutPanel4.TabIndex = 20;
+            // 
+            // linksMenu
+            // 
+            this.linksMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ajouterToolStripMenuItem,
+            this.mailItem});
+            this.linksMenu.Name = "linksMenu";
+            this.linksMenu.Size = new System.Drawing.Size(144, 48);
+            // 
+            // ajouterToolStripMenuItem
+            // 
+            this.ajouterToolStripMenuItem.Image = global::TaskLeader.Properties.Resources.shortcut;
+            this.ajouterToolStripMenuItem.Name = "ajouterToolStripMenuItem";
+            this.ajouterToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.ajouterToolStripMenuItem.Text = "Fichier / URL";
+            this.ajouterToolStripMenuItem.Click += new System.EventHandler(this.ajouterLink_Click);
+            // 
+            // mailItem
+            // 
+            this.mailItem.Image = global::TaskLeader.Properties.Resources.outlook;
+            this.mailItem.Name = "mailItem";
+            this.mailItem.Size = new System.Drawing.Size(152, 22);
+            this.mailItem.Text = "Mail Outlook";
             // 
             // ManipAction
             // 
@@ -352,9 +361,9 @@
             this.flowLayoutPanel2.PerformLayout();
             this.flowLayoutPanel3.ResumeLayout(false);
             this.flowLayoutPanel3.PerformLayout();
-            this.linksMenu.ResumeLayout(false);
             this.flowLayoutPanel4.ResumeLayout(false);
             this.flowLayoutPanel4.PerformLayout();
+            this.linksMenu.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -381,11 +390,12 @@
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel4;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label linksLabel;
-        private System.Windows.Forms.ListView linksView;
         private System.Windows.Forms.ImageList biblio;
-        private System.Windows.Forms.ContextMenuStrip linksMenu;
         private System.Windows.Forms.ToolStripMenuItem ajouterToolStripMenuItem;
-        private System.Windows.Forms.Button addLinkBut;
+        private System.Windows.Forms.Button addPJBut;
+        private System.Windows.Forms.ContextMenuStrip linksMenu;
+        public System.Windows.Forms.ToolStripMenuItem mailItem;
+        private System.Windows.Forms.ListView linksView;
 
 
     }

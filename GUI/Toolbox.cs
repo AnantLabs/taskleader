@@ -112,17 +112,13 @@ namespace TaskLeader.GUI
         // Ouverture de la gui création d'action
         private void ajoutAction(object sender, EventArgs e)
         {
-            ManipAction fenetre = new ManipAction(new TLaction());
-            fenetre.Disposed += new EventHandler(this.miseAjour); // Sur fermeture de ManipAction on update la Toolbox
-            fenetre.Show();
+            TrayIcon.displayNewAction(new TLaction());
         }
 
         // Ouverture de la gui édition d'action
         private void modifAction(object sender, EventArgs e)
         {
-            ManipAction fenetre = new ManipAction(new TLaction(grilleData.SelectedRows[0].Cells["id"].Value.ToString()));
-            fenetre.Disposed += new EventHandler(this.miseAjour); // Sur fermeture de ManipAction on update la Toolbox
-            fenetre.Show();
+            TrayIcon.displayNewAction(new TLaction(grilleData.SelectedRows[0].Cells["id"].Value.ToString()));
         }
 
         // Mise à jour du statut d'une action via le menu contextuel
