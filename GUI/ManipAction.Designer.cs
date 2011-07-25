@@ -118,7 +118,7 @@
             this.desField.Multiline = true;
             this.desField.Name = "desField";
             this.desField.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.desField.Size = new System.Drawing.Size(312, 140);
+            this.desField.Size = new System.Drawing.Size(312, 155);
             this.desField.TabIndex = 16;
             // 
             // sujetBox
@@ -212,7 +212,7 @@
             this.tableLayoutPanel1.RowCount = 2;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 73.04348F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 26.95652F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(630, 230);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(630, 255);
             this.tableLayoutPanel1.TabIndex = 27;
             // 
             // flowLayoutPanel1
@@ -222,7 +222,7 @@
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 3);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(324, 162);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(324, 180);
             this.flowLayoutPanel1.TabIndex = 17;
             // 
             // label3
@@ -244,9 +244,9 @@
             this.flowLayoutPanel2.Controls.Add(this.actionDatePicker);
             this.flowLayoutPanel2.Controls.Add(this.noDueDate);
             this.flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel2.Location = new System.Drawing.Point(3, 171);
+            this.flowLayoutPanel2.Location = new System.Drawing.Point(3, 189);
             this.flowLayoutPanel2.Name = "flowLayoutPanel2";
-            this.flowLayoutPanel2.Size = new System.Drawing.Size(324, 56);
+            this.flowLayoutPanel2.Size = new System.Drawing.Size(324, 63);
             this.flowLayoutPanel2.TabIndex = 18;
             // 
             // flowLayoutPanel3
@@ -261,7 +261,7 @@
             this.flowLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel3.Location = new System.Drawing.Point(333, 3);
             this.flowLayoutPanel3.Name = "flowLayoutPanel3";
-            this.flowLayoutPanel3.Size = new System.Drawing.Size(294, 162);
+            this.flowLayoutPanel3.Size = new System.Drawing.Size(294, 180);
             this.flowLayoutPanel3.TabIndex = 19;
             // 
             // linksLabel
@@ -292,7 +292,7 @@
             this.linksView.Margin = new System.Windows.Forms.Padding(60, 3, 3, 3);
             this.linksView.MultiSelect = false;
             this.linksView.Name = "linksView";
-            this.linksView.Size = new System.Drawing.Size(222, 75);
+            this.linksView.Size = new System.Drawing.Size(222, 90);
             this.linksView.SmallImageList = this.biblio;
             this.linksView.TabIndex = 27;
             this.linksView.UseCompatibleStateImageBehavior = false;
@@ -313,9 +313,9 @@
             this.flowLayoutPanel4.Controls.Add(this.saveButton);
             this.flowLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel4.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
-            this.flowLayoutPanel4.Location = new System.Drawing.Point(333, 171);
+            this.flowLayoutPanel4.Location = new System.Drawing.Point(333, 189);
             this.flowLayoutPanel4.Name = "flowLayoutPanel4";
-            this.flowLayoutPanel4.Size = new System.Drawing.Size(294, 56);
+            this.flowLayoutPanel4.Size = new System.Drawing.Size(294, 63);
             this.flowLayoutPanel4.TabIndex = 20;
             // 
             // linksMenu
@@ -345,7 +345,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(630, 230);
+            this.ClientSize = new System.Drawing.Size(630, 255);
             this.Controls.Add(this.tableLayoutPanel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.MaximizeBox = false;

@@ -2,6 +2,7 @@
 using System.Data;
 using TaskLeader.DAL;
 using System.Diagnostics;
+using TaskLeader.GUI;
 
 namespace TaskLeader.BO
 {
@@ -37,7 +38,14 @@ namespace TaskLeader.BO
         // Ouverture du mail
         public override void open()
         {
-            Process.Start(@v_link); //@ génant pour les url web ?
+            try
+            {
+                Process.Start(@v_link); // Ouverture du lien avec le programme par défaut
+            }
+            catch (Exception e)
+            {
+                TrayIcon.afficheMessage("Erreur d'ouverture", e.Message);
+            }     
         }
 
         // Stockage du mail
