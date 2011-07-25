@@ -34,8 +34,9 @@ namespace TaskLeader.GUI
             foreach (object item in ReadDB.Instance.getTitres(DB.Instance.statut))
             {
                 statutListBox.Items.Add(item, true); // Sélection de tous les statuts par défaut
-                statutTSMenuItem.DropDown.Items.Add(item.ToString(), null, this.changeStat);
+                statutTSMenuItem.DropDown.Items.Add(item.ToString(), null, this.changeStat);             
             }
+            ((ToolStripDropDownMenu)statutTSMenuItem.DropDown).ShowImageMargin = false;
 
             // Création de la colonne des liens
             linkCol.Name = "Liens";
@@ -47,6 +48,7 @@ namespace TaskLeader.GUI
             this.exportMenuItem.Visible = (section.Count > 0);
             foreach (string key in section)
                 this.exportMenuItem.DropDown.Items.Add(key, null, this.exportRow);
+            ((ToolStripDropDownMenu)exportMenuItem.DropDown).ShowImageMargin = false;
 
             // Remplissage des dernières ListBox
             this.miseAjour(sender, e);
@@ -192,11 +194,11 @@ namespace TaskLeader.GUI
                     linksContext.Items.Clear(); // Remise à zéro de la liste
 
                     foreach(Enclosure link in links){
-                        ToolStripButton item = new ToolStripButton(link.Titre,link.Icone,this.linksContext_ItemClicked); // Création du lien avec le titre et l'icône
+                        ToolStripMenuItem item = new ToolStripMenuItem(link.Titre, link.Icone, this.linksContext_ItemClicked); // Création du lien avec le titre et l'icône
                         item.Tag = link; // Association du link
                         linksContext.Items.Add(item); // Ajout au menu
-                    }                   
-
+                    }
+                   
                     linksContext.Show(Cursor.Position); // Affichage du menu contextuel de liste
                 }
             }
@@ -205,7 +207,7 @@ namespace TaskLeader.GUI
         // Ouverture du lien
         private void linksContext_ItemClicked(object sender, EventArgs e)
         {
-            ((Enclosure)((ToolStripButton)sender).Tag).open();
+            ((Enclosure)((ToolStripMenuItem)sender).Tag).open();
         }
 
         // Affichage d'un curseur doigt si mail attaché.

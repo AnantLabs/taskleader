@@ -4,11 +4,17 @@ using System.Windows.Forms;
 using TaskLeader.BLL;
 using TaskLeader.BO;
 using System.Collections.Specialized;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace TaskLeader.GUI
 {
     public class TrayIcon : ApplicationContext
     {
+        //Import de l'API Win32 'SetForegroundWindow'
+        [DllImportAttribute("User32.dll")]
+        private static extern IntPtr SetForegroundWindow(IntPtr hWnd);
+
         // Déclaration des composants IHM
         private static NotifyIcon trayIcon = new NotifyIcon();
         private ContextMenuStrip trayContext = new ContextMenuStrip();
@@ -178,9 +184,7 @@ namespace TaskLeader.GUI
         {
             v_manipAction = new ManipAction(action);
             v_manipAction.Disposed += new EventHandler(updateToolbox);
-            //Récupération de l'évèment
-            if (!action.isScratchpad) // Dans le cas d'une édition d'action
-                v_manipAction.mailItem.Click += new System.EventHandler(requestAddMail); //On s'abonne au click
+            v_manipAction.mailItem.Click += new System.EventHandler(requestAddMail); //On s'abonne au click
             v_manipAction.Show();
         }
 
@@ -190,6 +194,9 @@ namespace TaskLeader.GUI
         {
             addMailRequired = true;
             afficheMessage("Ajouter mail", "Sélectionner le mail à ajouter");
+            Process[] p = Process.GetProcessesByName("OUTLOOK");
+            if (p.Length > 0)
+                SetForegroundWindow(p[0].MainWindowHandle);
         }
 
         // Activation si nécessaire de l'item outlook

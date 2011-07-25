@@ -138,8 +138,10 @@ namespace TaskLeader.GUI
         {
             // Ajout du lien à l'action
             v_action.addPJ(pj);
-            // Ajout à la listeView
+            // Ajout à la linksView
             this.addPJToView(pj);
+            // Affichage de la linksView
+            this.linksView.Visible = true;
         }
 
         private void ajouterLink_Click(object sender, EventArgs e)
