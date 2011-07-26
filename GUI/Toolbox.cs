@@ -141,13 +141,14 @@ namespace TaskLeader.GUI
         
         // Mise en forme des cellules sous certaines conditions
         private void grilleData_CellFormatting(object sender,DataGridViewCellFormattingEventArgs e)
-        {               
+        {
+            DateTime date;
+   
             // Gestion de la colonne Deadline
-            if (grilleData.Columns[e.ColumnIndex].Name.Equals("Deadline"))
+            if (grilleData.Columns[e.ColumnIndex].Name.Equals("Deadline") && DateTime.TryParse(e.Value.ToString(), out date))
             {
-					// Récupération de la date
-					String originDate = e.Value.ToString();
-					int diff = (DateTime.Parse(originDate) - DateTime.Now).Days;
+					// Récupération du delta en jours
+                    int diff = (date.Date - DateTime.Now.Date).Days;
 					
 					if (diff < 0) // En retard
 					{						
@@ -157,29 +158,30 @@ namespace TaskLeader.GUI
 					}
 					else if (diff == 0) // Aujourd'hui
 					{
-						e.Value = originDate + Environment.NewLine + "Today"; // Valeur modifiée
+                        e.Value = e.Value.ToString() + Environment.NewLine + "Today"; // Valeur modifiée
 						e.CellStyle.ForeColor = Color.Orange; // Affichage de la date en orange
 						e.CellStyle.Font = new Font(e.CellStyle.Font, FontStyle.Bold); // en gras
-						e.CellStyle.SelectionForeColor = Color.DarkOrange; // en darkRed sur séléction 
+						e.CellStyle.SelectionForeColor = Color.SaddleBrown; // en darkRed sur séléction 
 					}        
 					else // Dans le futur
-						e.Value = originDate + Environment.NewLine + "+ " + (String)diff + " jours"; // Valeur modifiée      
+                        e.Value = e.Value.ToString() + Environment.NewLine + "+ " + diff.ToString() + " jours"; // Valeur modifiée      
             }
+            
             
             // Gestion de la colonne PJ
             if (grilleData.Columns[e.ColumnIndex].Name.Equals("Liens"))
             {
-				switch(e.Value as int)
+				switch(e.Value.ToString())
 				{
-					case(0):
+					case("0"):
 						e.Value = null; // Vidage la cellule
 						e.CellStyle.NullValue = null; // Aucun affichage si cellule vide
 						break;
-					case(1):
+					case("1"):
 						// Récupération de la PJ
-						Enclosure pj = ReadDB.Instance.getPJ(grilleData.Rows[e.RowIndex].Cells["id"].Value.ToString());			
+						Enclosure pj = (Enclosure)ReadDB.Instance.getPJ(grilleData.Rows[e.RowIndex].Cells["id"].Value.ToString()).GetValue(0);			
 						e.Value = pj.Icone; // Affichage de la bonne icône
-						grilleData[e.ColumnIndex, e.RowIndex].TooltipText = pj.Titre; // Modification du tooltip de la cellule
+						grilleData[e.ColumnIndex, e.RowIndex].ToolTipText = pj.Titre; // Modification du tooltip de la cellule
 						grilleData.Rows[e.RowIndex].Tag = pj; // Tag de la DataGridRow
 						break;
 					default:
@@ -201,9 +203,9 @@ namespace TaskLeader.GUI
 
             if (e.Button == MouseButtons.Left && // Click gauche
                 grilleData.Columns[e.ColumnIndex].Name.Equals("Liens") && // Colonne "Liens"
-                grilleData[e.ColumnIndex, e.RowIndex].Value as int != 0) // Cellule non vide
+                grilleData[e.ColumnIndex, e.RowIndex].Value.ToString() != "0") // Cellule non vide
             {	
-                if (grilleData[e.ColumnIndex, e.RowIndex].Value as int == 1) // Un lien seulement
+                if (grilleData[e.ColumnIndex, e.RowIndex].Value.ToString() == "1") // Un lien seulement
                     ((Enclosure)grilleData.Rows[e.RowIndex].Tag).open(); // Ouverture directe
                 else // Plusieurs liens
                 {
