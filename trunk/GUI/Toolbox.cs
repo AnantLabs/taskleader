@@ -12,7 +12,8 @@ namespace TaskLeader.GUI
 {
     public partial class Toolbox : Form
     {
-        DataGridViewImageColumn linkCol = new DataGridViewImageColumn();
+        private DataGridViewImageColumn linkCol = new DataGridViewImageColumn();
+        private int P1length = Int32.Parse(ConfigurationManager.AppSettings["P1length"]);  
 
         public Toolbox()
         {
@@ -157,16 +158,17 @@ namespace TaskLeader.GUI
 						e.CellStyle.SelectionForeColor = Color.DarkRed; // en darkRed sur séléction                    
 					}
 					else if (diff == 0) // Aujourd'hui
-					{
-                        e.Value = e.Value.ToString() + Environment.NewLine + "Today"; // Valeur modifiée
-						e.CellStyle.ForeColor = Color.Orange; // Affichage de la date en orange
-						e.CellStyle.Font = new Font(e.CellStyle.Font, FontStyle.Bold); // en gras
-						e.CellStyle.SelectionForeColor = Color.SaddleBrown; // en darkRed sur séléction 
-					}        
+                        e.Value = e.Value.ToString() + Environment.NewLine + "Today"; // Valeur modifiée      
 					else // Dans le futur
-                        e.Value = e.Value.ToString() + Environment.NewLine + "+ " + diff.ToString() + " jours"; // Valeur modifiée      
-            }
-            
+                        e.Value = e.Value.ToString() + Environment.NewLine + "+ " + diff.ToString() + " jours"; // Valeur modifiée
+
+                    if (diff >= 0 && diff <= P1length)
+                    {
+                        e.CellStyle.ForeColor = Color.DarkOrange; // Affichage de la date en orange
+                        e.CellStyle.Font = new Font(e.CellStyle.Font, FontStyle.Bold); // en gras
+                        e.CellStyle.SelectionForeColor = Color.SaddleBrown; // en darkRed sur séléction 
+                    }
+            }           
             
             // Gestion de la colonne PJ
             if (grilleData.Columns[e.ColumnIndex].Name.Equals("Liens"))

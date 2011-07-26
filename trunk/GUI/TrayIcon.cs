@@ -233,11 +233,8 @@ namespace TaskLeader.GUI
         // Méthode pour affichage de message
         public static void afficheMessage(String titre, String info)
         {
-            // Récupération de la durée d'affichage de la tooltip
-            int duree = int.Parse(ConfigurationManager.AppSettings["dureeTooltip"]);
-
             // Affichage du bilan en tooltip de la tray icon
-            trayIcon.ShowBalloonTip(duree, titre, info, ToolTipIcon.Info);
+            trayIcon.ShowBalloonTip(10,titre, info, ToolTipIcon.Info);
         }
     }
 }
