@@ -141,21 +141,32 @@ namespace TaskLeader.GUI
         
         // Mise en forme des cellules sous certaines conditions
         private void grilleData_CellFormatting(object sender,DataGridViewCellFormattingEventArgs e)
-        {
-            DateTime dateValue;
-            
-            // Si la deadline est dépassée, la case est affichée sur fond rouge
-            if (grilleData.Columns[e.ColumnIndex].Name.Equals("Deadline") && DateTime.TryParse(e.Value.ToString(), out dateValue) && dateValue.CompareTo(DateTime.Now) < 0)
+        {               
+            // Gestion de la colonne Deadline
+            if (grilleData.Columns[e.ColumnIndex].Name.Equals("Deadline"))
             {
-                    // On affiche la date en rouge et en gras
-                    e.CellStyle.ForeColor = Color.Red;
-                    e.CellStyle.Font = new Font(e.CellStyle.Font, FontStyle.Bold);
-
-                    // Et en darkRed sur sélection
-                    e.CellStyle.SelectionForeColor = Color.DarkRed;
+					// Récupération de la date
+					String originDate = e.Value.ToString();
+					int diff = (DateTime.Parse(originDate) - DateTime.Now).Days;
+					
+					if (diff < 0) // En retard
+					{						
+						e.CellStyle.ForeColor = Color.Red; // Affichage de la date en rouge
+						e.CellStyle.Font = new Font(e.CellStyle.Font, FontStyle.Bold); // en gras
+						e.CellStyle.SelectionForeColor = Color.DarkRed; // en darkRed sur séléction                    
+					}
+					else if (diff == 0) // Aujourd'hui
+					{
+						e.Value = originDate + Environment.NewLine + "Today"; // Valeur modifiée
+						e.CellStyle.ForeColor = Color.Orange; // Affichage de la date en orange
+						e.CellStyle.Font = new Font(e.CellStyle.Font, FontStyle.Bold); // en gras
+						e.CellStyle.SelectionForeColor = Color.DarkOrange; // en darkRed sur séléction 
+					}        
+					else // Dans le futur
+						e.Value = originDate + Environment.NewLine + "+ " + (String)diff + " jours"; // Valeur modifiée      
             }
             
-            // Si un mail est attaché, on affiche l'image de mail
+            // Gestion de la colonne PJ
             if (grilleData.Columns[e.ColumnIndex].Name.Equals("Liens"))
             {
 				switch(e.Value as int)
