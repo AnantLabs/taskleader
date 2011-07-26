@@ -114,14 +114,16 @@ namespace TaskLeader.GUI
             this.loadComponents();
 
             // Vérification de démarrage
-            //if (Init.Instance.canLaunch())
-            if (true)
+            if (Init.Instance.canLaunch())
             {
                 this.displayToolbox(new Object(), new EventArgs()); // Affichage de la Toolbox
                 invokeControl.CreateControl();
             }
             else
-                this.closeApp(); // On ferme l'appli
+            {
+                trayIcon.Visible = false;
+                Environment.Exit(0);
+            }
 
             //Enregistrement des raccourcis clavier
             NameValueCollection section = (NameValueCollection)ConfigurationManager.GetSection("Hotkey");
