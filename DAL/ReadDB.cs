@@ -109,17 +109,22 @@ namespace TaskLeader.DAL
 
 		// =====================================================================================
 		
-        // Vérification si un numéro de version est présent dans la table des compatibilités
-        public bool isVersionComp(String version) //TODO=========================================
+        // Vérification si la table est bien compatible
+        public bool isVersionComp(String version)
         {
-            // Si une ligne matche la base est compatible
-            return (getInteger("SELECT count(rowid) FROM Properties WHERE ActionsDBVer='" + version + "'") == 1);
+            if (DB.Instance.getConnection().GetSchema("Tables").Select("Table_Name = 'Properties'").Length > 0) // Version >= 0.7
+                return (getList("SELECT rowid FROM Properties WHERE Cle='ActionsDBVer' AND Valeur='"+version+"';").Length > 0);
+            else
+                return false;
         }
 
         // On vérifie la version la plus haute compatible avec cette base
-        public String getLastVerComp() //TODO=========================================
+        public String getLastVerComp()
         {
-            return (String)getList("SELECT Num FROM VerComp WHERE rowid=(SELECT max(rowid) FROM VerComp)")[0];
+            if (DB.Instance.getConnection().GetSchema("Tables").Select("Table_Name = 'Properties'").Length > 0) // Version >= 0.7
+                return getList("SELECT Valeur FROM Properties WHERE Cle='ActionsDBVer';")[0].ToString();
+            else // Version < 0.7
+                return (String)getList("SELECT Num FROM VerComp WHERE rowid=(SELECT max(rowid) FROM VerComp)")[0];
         }
 
 		// =====================================================================================

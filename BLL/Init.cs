@@ -50,16 +50,10 @@ namespace TaskLeader.BLL
 
             if (!baseCompatible)
             {
-                if (ReadDB.Instance.getLastVerComp() == "0.4.0.0")
+                if (ReadDB.Instance.getLastVerComp() == "0.6")
                 {
                     TrayIcon.afficheMessage("Migration", "La base est obsolète, migration en cours");
-                    migration("04-06");
-                    return true;
-                }
-                else if (ReadDB.Instance.getLastVerComp() == "0.5")
-                {
-                    TrayIcon.afficheMessage("Migration", "La base est obsolète, migration en cours");
-                    migration("05-06");
+                    migration("06-07");
                     return true;
                 }
                 else
