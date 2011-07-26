@@ -158,13 +158,24 @@ namespace TaskLeader.GUI
             // Si un mail est attaché, on affiche l'image de mail
             if (grilleData.Columns[e.ColumnIndex].Name.Equals("Liens"))
             {
-                String valeur = e.Value as String;
-                if (valeur == null) // Pas de lien associé
-                    e.CellStyle.NullValue = null;
-                else if (valeur == "*") // Plusieurs liens associés
-                    e.Value = TaskLeader.Properties.Resources.PJ;
-                else
-                    e.Value = new genericEnc(valeur).Icone;
+				switch(e.Value as int)
+				{
+					case(0):
+						e.Value = null; // Vidage la cellule
+						e.CellStyle.NullValue = null; // Aucun affichage si cellule vide
+						break;
+					case(1):
+						// Récupération de la PJ
+						Enclosure pj = ReadDB.Instance.getPJ(grilleData.Rows[e.RowIndex].Cells["id"].Value.ToString());			
+						e.Value = pj.Icone; // Affichage de la bonne icône
+						grilleData[e.ColumnIndex, e.RowIndex].TooltipText = pj.Titre; // Modification du tooltip de la cellule
+						grilleData.Rows[e.RowIndex].Tag = pj; // Tag de la DataGridRow
+						break;
+					default:
+						// On diffère la récupération de liste
+						e.Value = TaskLeader.Properties.Resources.PJ;
+						break;
+				}
             }    
         }
 		
@@ -172,25 +183,20 @@ namespace TaskLeader.GUI
         private void grilleData_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
-            {
-                //Sélection de la ligne
-                grilleData.Rows[e.RowIndex].Selected = true;
-
-                //Affichage du menu contextuel
-                listeContext.Show(Cursor.Position);
+            {                
+                grilleData.Rows[e.RowIndex].Selected = true; // Sélection de la ligne           
+                listeContext.Show(Cursor.Position); // Affichage du menu contextuel
             }
 
             if (e.Button == MouseButtons.Left && // Click gauche
                 grilleData.Columns[e.ColumnIndex].Name.Equals("Liens") && // Colonne "Liens"
-                grilleData[e.ColumnIndex, e.RowIndex].Value.ToString() != "") // Cellule non vide
-            {
-				//Récupération des différents liens
-                Array links = ReadDB.Instance.getPJ(grilleData.SelectedRows[0].Cells["id"].Value.ToString());
-
-                if (links.Length == 1) // Un lien seulement
-                    ((Enclosure)links.GetValue(0)).open(); // Ouverture directe
+                grilleData[e.ColumnIndex, e.RowIndex].Value as int != 0) // Cellule non vide
+            {	
+                if (grilleData[e.ColumnIndex, e.RowIndex].Value as int == 1) // Un lien seulement
+                    ((Enclosure)grilleData.Rows[e.RowIndex].Tag).open(); // Ouverture directe
                 else // Plusieurs liens
                 {
+					Array links = ReadDB.Instance.getPJ(grilleData.SelectedRows[0].Cells["id"].Value.ToString()); //Récupération des différents liens
                     linksContext.Items.Clear(); // Remise à zéro de la liste
 
                     foreach(Enclosure link in links){
