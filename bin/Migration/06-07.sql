@@ -126,12 +126,7 @@
 		C.Titre as 'Contexte',
 		Su.Titre as 'Sujet',
 		A.Titre,
-		CASE count(En.rowid)
-			WHEN 1 THEN En.EncType
-			WHEN 0 THEN NULL
-			ELSE '*' -- Plusieurs liens
-		END
-		'Liens',
+		count(En.rowid) as 'Liens',
 		strftime("%d-%m-%Y",A.DueDate) as 'Deadline',
 		D.Titre as 'Destinataire',
 		St.Titre as 'Statut'

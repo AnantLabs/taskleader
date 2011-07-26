@@ -42,21 +42,4 @@ namespace TaskLeader.BO
         // Retourne l'ID de stockage
         public abstract String store();
     }
-
-    // Classe générique implémentant la classe abstraite Enclosure
-    public class genericEnc : Enclosure
-    {
-        public genericEnc(String type) : base("", type) { }
-
-        public override void open()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override string store()
-        {
-            throw new NotImplementedException();
-        }
-
-    }
 }
