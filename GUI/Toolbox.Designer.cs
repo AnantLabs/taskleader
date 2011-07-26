@@ -30,8 +30,8 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Toolbox));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
@@ -65,11 +65,11 @@
             this.exitSearchBut = new System.Windows.Forms.Button();
             this.resultLabel = new System.Windows.Forms.Label();
             this.grilleData = new System.Windows.Forms.DataGridView();
-            this.addMenu = new System.Windows.Forms.MenuStrip();
-            this.ajouterToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.topMenu = new System.Windows.Forms.MenuStrip();
+            this.ajouterItem = new System.Windows.Forms.ToolStripMenuItem();
             this.nouvelleActionToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.actionsEvernoteToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.adminToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.adminItem = new System.Windows.Forms.ToolStripMenuItem();
             this.defaultValuesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ajouterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.nouvelleActionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -94,7 +94,7 @@
             this.flowLayoutPanel9.SuspendLayout();
             this.searchFlowLayoutPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grilleData)).BeginInit();
-            this.addMenu.SuspendLayout();
+            this.topMenu.SuspendLayout();
             this.listeContext.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -409,7 +409,7 @@
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 120F));
             this.tableLayoutPanel2.Controls.Add(this.flowLayoutPanel9, 0, 0);
             this.tableLayoutPanel2.Controls.Add(this.grilleData, 0, 1);
-            this.tableLayoutPanel2.Controls.Add(this.addMenu, 1, 0);
+            this.tableLayoutPanel2.Controls.Add(this.topMenu, 1, 0);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel2.Location = new System.Drawing.Point(200, 0);
             this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(0);
@@ -497,14 +497,14 @@
             this.grilleData.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.DisplayedCells;
             this.grilleData.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.DisplayedCells;
             this.grilleData.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableAlwaysIncludeHeaderText;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.ControlDark;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.grilleData.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.ControlDark;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.grilleData.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
             this.grilleData.ColumnHeadersHeight = 30;
             this.grilleData.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.tableLayoutPanel2.SetColumnSpan(this.grilleData, 2);
@@ -515,8 +515,8 @@
             this.grilleData.Name = "grilleData";
             this.grilleData.ReadOnly = true;
             this.grilleData.RowHeadersVisible = false;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.grilleData.RowsDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.grilleData.RowsDefaultCellStyle = dataGridViewCellStyle4;
             this.grilleData.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.grilleData.Size = new System.Drawing.Size(521, 632);
             this.grilleData.TabIndex = 4;
@@ -526,29 +526,29 @@
             this.grilleData.CellMouseEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.grilleData_CellMouseEnter);
             this.grilleData.CellMouseLeave += new System.Windows.Forms.DataGridViewCellEventHandler(this.grilleData_CellMouseLeave);
             // 
-            // addMenu
+            // topMenu
             // 
-            this.addMenu.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.addMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.ajouterToolStripMenuItem2,
-            this.adminToolStripMenuItem});
-            this.addMenu.Location = new System.Drawing.Point(401, 3);
-            this.addMenu.Margin = new System.Windows.Forms.Padding(0, 3, 0, 0);
-            this.addMenu.Name = "addMenu";
-            this.addMenu.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.addMenu.Size = new System.Drawing.Size(120, 27);
-            this.addMenu.TabIndex = 6;
-            this.addMenu.Text = "menuStrip1";
+            this.topMenu.BackColor = System.Drawing.SystemColors.MenuBar;
+            this.topMenu.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.topMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ajouterItem,
+            this.adminItem});
+            this.topMenu.Location = new System.Drawing.Point(401, 3);
+            this.topMenu.Margin = new System.Windows.Forms.Padding(0, 3, 0, 0);
+            this.topMenu.Name = "topMenu";
+            this.topMenu.Size = new System.Drawing.Size(120, 27);
+            this.topMenu.TabIndex = 6;
+            this.topMenu.Text = "menuStrip1";
             // 
-            // ajouterToolStripMenuItem2
+            // ajouterItem
             // 
-            this.ajouterToolStripMenuItem2.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ajouterItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.nouvelleActionToolStripMenuItem2,
             this.actionsEvernoteToolStripMenuItem2});
-            this.ajouterToolStripMenuItem2.Name = "ajouterToolStripMenuItem2";
-            this.ajouterToolStripMenuItem2.ShowShortcutKeys = false;
-            this.ajouterToolStripMenuItem2.Size = new System.Drawing.Size(58, 23);
-            this.ajouterToolStripMenuItem2.Text = "Ajouter";
+            this.ajouterItem.Name = "ajouterItem";
+            this.ajouterItem.ShowShortcutKeys = false;
+            this.ajouterItem.Size = new System.Drawing.Size(58, 23);
+            this.ajouterItem.Text = "Ajouter";
             // 
             // nouvelleActionToolStripMenuItem2
             // 
@@ -568,13 +568,13 @@
             this.actionsEvernoteToolStripMenuItem2.Size = new System.Drawing.Size(156, 22);
             this.actionsEvernoteToolStripMenuItem2.Text = "Actions Evernote";
             // 
-            // adminToolStripMenuItem
+            // adminItem
             // 
-            this.adminToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.adminItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.defaultValuesToolStripMenuItem});
-            this.adminToolStripMenuItem.Name = "adminToolStripMenuItem";
-            this.adminToolStripMenuItem.Size = new System.Drawing.Size(55, 23);
-            this.adminToolStripMenuItem.Text = "Admin";
+            this.adminItem.Name = "adminItem";
+            this.adminItem.Size = new System.Drawing.Size(55, 23);
+            this.adminItem.Text = "Admin";
             // 
             // defaultValuesToolStripMenuItem
             // 
@@ -679,7 +679,7 @@
             this.Controls.Add(this.tableLayoutPanel1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Location = new System.Drawing.Point(435, 10);
-            this.MainMenuStrip = this.addMenu;
+            this.MainMenuStrip = this.topMenu;
             this.Name = "Toolbox";
             this.Text = "TaskLeader";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
@@ -702,8 +702,8 @@
             this.searchFlowLayoutPanel.ResumeLayout(false);
             this.searchFlowLayoutPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grilleData)).EndInit();
-            this.addMenu.ResumeLayout(false);
-            this.addMenu.PerformLayout();
+            this.topMenu.ResumeLayout(false);
+            this.topMenu.PerformLayout();
             this.listeContext.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -754,12 +754,12 @@
         private System.Windows.Forms.ToolStripMenuItem ajouterToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem nouvelleActionToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem actionsEvernoteToolStripMenuItem1;
-        private System.Windows.Forms.MenuStrip addMenu;
-        private System.Windows.Forms.ToolStripMenuItem ajouterToolStripMenuItem2;
+        private System.Windows.Forms.MenuStrip topMenu;
+        private System.Windows.Forms.ToolStripMenuItem ajouterItem;
         private System.Windows.Forms.ToolStripMenuItem nouvelleActionToolStripMenuItem2;
         private System.Windows.Forms.ToolStripMenuItem actionsEvernoteToolStripMenuItem2;
         private System.Windows.Forms.ContextMenuStrip linksContext;
-        private System.Windows.Forms.ToolStripMenuItem adminToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem adminItem;
         private System.Windows.Forms.ToolStripMenuItem defaultValuesToolStripMenuItem;
 
     }
