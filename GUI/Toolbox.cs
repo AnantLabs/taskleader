@@ -197,7 +197,8 @@ namespace TaskLeader.GUI
 		// Gestion des clicks sur le tableau d'actions
         private void grilleData_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Right)
+            if (e.Button == MouseButtons.Right && // Click droit
+                e.RowIndex > 0) // Ce n'est pas la ligne des headers
             {                
                 grilleData.Rows[e.RowIndex].Selected = true; // Sélection de la ligne           
                 listeContext.Show(Cursor.Position); // Affichage du menu contextuel
@@ -205,6 +206,7 @@ namespace TaskLeader.GUI
 
             if (e.Button == MouseButtons.Left && // Click gauche
                 grilleData.Columns[e.ColumnIndex].Name.Equals("Liens") && // Colonne "Liens"
+                e.RowIndex > 0 && // Ce n'est pas la ligne des headers
                 grilleData[e.ColumnIndex, e.RowIndex].Value.ToString() != "0") // Cellule non vide
             {	
                 if (grilleData[e.ColumnIndex, e.RowIndex].Value.ToString() == "1") // Un lien seulement
