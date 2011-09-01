@@ -206,11 +206,12 @@ namespace TaskLeader.BO
             {
                 if (this.isScratchpad)
                 {
-                    String actionID = WriteDB.Instance.insertAction(this); // Sauvegarde de l'action
+                    this.v_TLID = WriteDB.Instance.insertAction(this); // Sauvegarde de l'action
+                    
                     bilan += "Nouvelle action enregistrée\n";
                     if (this.hasPJ)
                     {
-                        WriteDB.Instance.insertPJ(actionID, this.PJ); // Sauvegarde des PJ
+                        WriteDB.Instance.insertPJ(this.v_TLID, this.PJ); // Sauvegarde des PJ
                         bilan += v_links.Count.ToString()+" PJ enregistrée";
                         if (v_links.Count > 1) bilan += "s";
                         bilan += "\n";

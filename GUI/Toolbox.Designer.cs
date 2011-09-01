@@ -712,7 +712,6 @@
         #endregion
 
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.DataGridView grilleData;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.CheckedListBox ctxtListBox;
@@ -761,6 +760,7 @@
         private System.Windows.Forms.ContextMenuStrip linksContext;
         private System.Windows.Forms.ToolStripMenuItem adminItem;
         private System.Windows.Forms.ToolStripMenuItem defaultValuesToolStripMenuItem;
+        private System.Windows.Forms.DataGridView grilleData;
 
     }
 }

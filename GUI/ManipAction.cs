@@ -9,6 +9,7 @@ namespace TaskLeader.GUI
     public partial class ManipAction : Form
     {
         private TLaction v_action;
+        public String ID { get { return v_action.ID; } }
 
         // Préparation des widgets
         private void loadWidgets()

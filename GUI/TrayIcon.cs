@@ -150,7 +150,10 @@ namespace TaskLeader.GUI
         private static void updateToolbox(object sender, EventArgs e)
         {
             if (v_toolbox != null && !v_toolbox.IsDisposed)
-                v_toolbox.miseAjour(sender, e);
+            {
+                v_toolbox.selectedActionID = ((ManipAction)sender).ID;
+                v_toolbox.miseAjour();
+            }
         }
 
         // Méthode permettant d'afficher le formulaire nouvelle action vide
@@ -186,7 +189,7 @@ namespace TaskLeader.GUI
         {
             v_manipAction = new ManipAction(action);
             v_manipAction.Disposed += new EventHandler(updateToolbox);
-            v_manipAction.mailItem.Click += new System.EventHandler(requestAddMail); //On s'abonne au click
+            v_manipAction.mailItem.Click += new System.EventHandler(requestAddMail); //On s'abonne au click du Add PJ mail
             v_manipAction.Show();
         }
 
@@ -236,7 +239,7 @@ namespace TaskLeader.GUI
         public static void afficheMessage(String titre, String info)
         {
             // Affichage du bilan en tooltip de la tray icon
-            trayIcon.ShowBalloonTip(10,titre, info, ToolTipIcon.Info);
+            trayIcon.ShowBalloonTip(10, titre, info, ToolTipIcon.Info);
         }
     }
 }

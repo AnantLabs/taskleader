@@ -15,6 +15,8 @@ namespace TaskLeader.GUI
         private DataGridViewImageColumn linkCol = new DataGridViewImageColumn();
         private int P1length = Int32.Parse(ConfigurationManager.AppSettings["P1length"]);
 
+        public String selectedActionID { set { grilleData.Tag = value; } }
+
         public Toolbox()
         {
             InitializeComponent();
@@ -52,7 +54,7 @@ namespace TaskLeader.GUI
             ((ToolStripDropDownMenu)exportMenuItem.DropDown).ShowImageMargin = false;
 
             // Remplissage des dernières ListBox
-            this.miseAjour(sender, e);
+            this.miseAjour();
         }
 
         // Chargement des filtres
@@ -64,7 +66,7 @@ namespace TaskLeader.GUI
         }
 
         // Rafraîchissement de la page
-        public void miseAjour(object sender, EventArgs e)
+        public void miseAjour()
         {
             // Vidage de toutes les ListBox
             this.ctxtListBox.Items.Clear();
@@ -137,7 +139,7 @@ namespace TaskLeader.GUI
             if (action.statusHasChanged)
                 action.save();
 
-            this.miseAjour(null, null);
+            this.miseAjour();
         }
 
         // Mise en forme des cellules sous certaines conditions
@@ -281,7 +283,16 @@ namespace TaskLeader.GUI
             // Affichage du label
             resultLabel.Visible = true;
 
-            grilleData.Focus();
+            grilleData.Focus(); // Focus au tableau pour permettre le scroll direct
+
+            // Sélection de l'action si refresh suite à modification d'action
+            if (grilleData.Tag != null && grilleData.Tag.ToString() != "") // ID de l'action stocké dans le tag
+            {
+                DataRow[] rows = liste.Select("id=" + grilleData.Tag.ToString());
+                if (rows.Length == 1)
+                    grilleData.Rows[liste.Rows.IndexOf(rows[0])].Selected = true;
+                grilleData.Tag = null; // Remise à zéro du tag
+            }
         }
 
         // Affichage des actions sur filtre manuel
