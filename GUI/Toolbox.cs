@@ -1,4 +1,4 @@
- using System;
+using System;
 using System.Data;
 using System.Collections.Specialized;
 using System.Configuration;
@@ -13,7 +13,7 @@ namespace TaskLeader.GUI
     public partial class Toolbox : Form
     {
         private DataGridViewImageColumn linkCol = new DataGridViewImageColumn();
-        private int P1length = Int32.Parse(ConfigurationManager.AppSettings["P1length"]);  
+        private int P1length = Int32.Parse(ConfigurationManager.AppSettings["P1length"]);
 
         public Toolbox()
         {
@@ -26,7 +26,7 @@ namespace TaskLeader.GUI
         private void Toolbox_Load(object sender, EventArgs e)
         {
             // Mention du nom de la version dans le titre de la fenêtre
-            this.Text += " v"+Application.ProductVersion;
+            this.Text += " v" + Application.ProductVersion;
 
             // Remplissage de la combo des filtres
             this.loadFilters();
@@ -35,7 +35,7 @@ namespace TaskLeader.GUI
             foreach (object item in ReadDB.Instance.getTitres(DB.Instance.statut))
             {
                 statutListBox.Items.Add(item, true); // Sélection de tous les statuts par défaut
-                statutTSMenuItem.DropDown.Items.Add(item.ToString(), null, this.changeStat);             
+                statutTSMenuItem.DropDown.Items.Add(item.ToString(), null, this.changeStat);
             }
             ((ToolStripDropDownMenu)statutTSMenuItem.DropDown).ShowImageMargin = false;
 
@@ -54,7 +54,7 @@ namespace TaskLeader.GUI
             // Remplissage des dernières ListBox
             this.miseAjour(sender, e);
         }
-        
+
         // Chargement des filtres
         private void loadFilters()
         {
@@ -68,7 +68,7 @@ namespace TaskLeader.GUI
         {
             // Vidage de toutes les ListBox
             this.ctxtListBox.Items.Clear();
-            this.destListBox.Items.Clear();           
+            this.destListBox.Items.Clear();
 
             // Remplissage de la ListBox des contextes
             foreach (object item in ReadDB.Instance.getTitres(DB.Instance.contexte))
@@ -80,7 +80,7 @@ namespace TaskLeader.GUI
 
             // Si un filtre est actif on l'affiche
             if (Filtre.CurrentFilter != null)
-                this.showFilter(Filtre.CurrentFilter);  
+                this.showFilter(Filtre.CurrentFilter);
         }
 
         // Méthode appelée quand checks des contextes changent
@@ -105,13 +105,13 @@ namespace TaskLeader.GUI
             }
         }
 
-		// Fermeture de la Form si minimisée
+        // Fermeture de la Form si minimisée
         private void Toolbox_Resize(object sender, EventArgs e)
         {
             if (this.WindowState == FormWindowState.Minimized)
                 this.Close();
         }
-		
+
         // Ouverture de la gui création d'action
         private void ajoutAction(object sender, EventArgs e)
         {
@@ -128,7 +128,7 @@ namespace TaskLeader.GUI
         private void changeStat(object sender, EventArgs e)
         {
             // Récupération de l'action
-			TLaction action = new TLaction(grilleData.SelectedRows[0].Cells["id"].Value.ToString());
+            TLaction action = new TLaction(grilleData.SelectedRows[0].Cells["id"].Value.ToString());
 
             // On récupère le nouveau statut
             action.Statut = ((ToolStripItem)sender).Text;
@@ -139,67 +139,74 @@ namespace TaskLeader.GUI
 
             this.miseAjour(null, null);
         }
-        
+
         // Mise en forme des cellules sous certaines conditions
-        private void grilleData_CellFormatting(object sender,DataGridViewCellFormattingEventArgs e)
+        private void grilleData_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
             DateTime date;
-   
+
             // Gestion de la colonne Deadline
             if (grilleData.Columns[e.ColumnIndex].Name.Equals("Deadline") && DateTime.TryParse(e.Value.ToString(), out date))
             {
-					// Récupération du delta en jours
-                    int diff = (date.Date - DateTime.Now.Date).Days;
-					
-					if (diff < 0) // En retard
-					{						
-						e.CellStyle.ForeColor = Color.Red; // Affichage de la date en rouge
-						e.CellStyle.Font = new Font(e.CellStyle.Font, FontStyle.Bold); // en gras
-						e.CellStyle.SelectionForeColor = Color.DarkRed; // en darkRed sur séléction                    
-					}
-					else if (diff == 0) // Aujourd'hui
-                        e.Value = e.Value.ToString() + Environment.NewLine + "Today"; // Valeur modifiée      
-					else // Dans le futur
-                        e.Value = e.Value.ToString() + Environment.NewLine + "+ " + diff.ToString() + " jours"; // Valeur modifiée
+                // Récupération du delta en jours
+                int diff = (date.Date - DateTime.Now.Date).Days;
 
-                    if (diff >= 0 && diff <= P1length)
-                    {
-                        e.CellStyle.ForeColor = Color.DarkOrange; // Affichage de la date en orange
-                        e.CellStyle.Font = new Font(e.CellStyle.Font, FontStyle.Bold); // en gras
-                        e.CellStyle.SelectionForeColor = Color.SaddleBrown; // en darkRed sur séléction 
-                    }
-            }           
-            
+                // Modification du contenu des cellules
+                if (diff == 0) // Aujourd'hui
+                    e.Value = e.Value.ToString() + Environment.NewLine + "Today"; // Valeur modifiée      
+                else if (diff > 0)// Dans le futur
+                    e.Value = e.Value.ToString() + Environment.NewLine + "+ " + diff.ToString() + " jours"; // Valeur modifiée
+
+                // Modification de la mise en forme des cellules
+                if (diff < 0) // En retard
+                {
+                    e.CellStyle.ForeColor = Color.Red; // Affichage de la date en rouge
+                    e.CellStyle.Font = new Font(e.CellStyle.Font, FontStyle.Bold); // en gras
+                    e.CellStyle.SelectionForeColor = Color.DarkRed; // en darkRed sur séléction                    
+                }
+                else if (diff == 0) // Jour même
+                {
+                    e.CellStyle.ForeColor = Color.DarkOrange; // Affichage de la date en orange
+                    e.CellStyle.Font = new Font(e.CellStyle.Font, FontStyle.Bold);
+                    e.CellStyle.SelectionForeColor = Color.SaddleBrown; // en darkRed sur séléction 
+                }
+                else if (diff > 0 && diff <= P1length) // Dans le futur "proche"
+                {
+                    e.CellStyle.ForeColor = Color.DarkGreen;
+                    e.CellStyle.Font = new Font(e.CellStyle.Font, FontStyle.Bold); // en gras
+                }
+            }
+
             // Gestion de la colonne PJ
             if (grilleData.Columns[e.ColumnIndex].Name.Equals("Liens"))
             {
-				switch(e.Value.ToString())
-				{
-					case("0"):
-						e.Value = null; // Vidage la cellule
-						e.CellStyle.NullValue = null; // Aucun affichage si cellule vide
-						break;
-					case("1"):
-						// Récupération de la PJ
-						Enclosure pj = (Enclosure)ReadDB.Instance.getPJ(grilleData.Rows[e.RowIndex].Cells["id"].Value.ToString()).GetValue(0);			
-						e.Value = pj.Icone; // Affichage de la bonne icône
-						grilleData[e.ColumnIndex, e.RowIndex].ToolTipText = pj.Titre; // Modification du tooltip de la cellule
-						grilleData.Rows[e.RowIndex].Tag = pj; // Tag de la DataGridRow
-						break;
-					default:
-						// On diffère la récupération de liste
-						e.Value = TaskLeader.Properties.Resources.PJ;
-						break;
-				}
-            }    
+                switch (e.Value.ToString())
+                {
+                    case ("0"):
+                        e.Value = null; // Vidage la cellule
+                        e.CellStyle.NullValue = null; // Aucun affichage si cellule vide
+                        break;
+                    case ("1"):
+                        // Récupération de la PJ
+                        Enclosure pj = (Enclosure)ReadDB.Instance.getPJ(grilleData.Rows[e.RowIndex].Cells["id"].Value.ToString()).GetValue(0);
+                        e.Value = pj.Icone; // Affichage de la bonne icône
+                        grilleData[e.ColumnIndex, e.RowIndex].ToolTipText = pj.Titre; // Modification du tooltip de la cellule
+                        grilleData.Rows[e.RowIndex].Tag = pj; // Tag de la DataGridRow
+                        break;
+                    default:
+                        // On diffère la récupération de liste
+                        e.Value = TaskLeader.Properties.Resources.PJ;
+                        break;
+                }
+            }
         }
-		
-		// Gestion des clicks sur le tableau d'actions
+
+        // Gestion des clicks sur le tableau d'actions
         private void grilleData_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right && // Click droit
                 e.RowIndex > 0) // Ce n'est pas la ligne des headers
-            {                
+            {
                 grilleData.Rows[e.RowIndex].Selected = true; // Sélection de la ligne           
                 listeContext.Show(Cursor.Position); // Affichage du menu contextuel
             }
@@ -208,20 +215,21 @@ namespace TaskLeader.GUI
                 grilleData.Columns[e.ColumnIndex].Name.Equals("Liens") && // Colonne "Liens"
                 e.RowIndex > 0 && // Ce n'est pas la ligne des headers
                 grilleData[e.ColumnIndex, e.RowIndex].Value.ToString() != "0") // Cellule non vide
-            {	
+            {
                 if (grilleData[e.ColumnIndex, e.RowIndex].Value.ToString() == "1") // Un lien seulement
                     ((Enclosure)grilleData.Rows[e.RowIndex].Tag).open(); // Ouverture directe
                 else // Plusieurs liens
                 {
-					Array links = ReadDB.Instance.getPJ(grilleData.SelectedRows[0].Cells["id"].Value.ToString()); //Récupération des différents liens
+                    Array links = ReadDB.Instance.getPJ(grilleData.SelectedRows[0].Cells["id"].Value.ToString()); //Récupération des différents liens
                     linksContext.Items.Clear(); // Remise à zéro de la liste
 
-                    foreach(Enclosure link in links){
+                    foreach (Enclosure link in links)
+                    {
                         ToolStripMenuItem item = new ToolStripMenuItem(link.Titre, link.Icone, this.linksContext_ItemClicked); // Création du lien avec le titre et l'icône
                         item.Tag = link; // Association du link
                         linksContext.Items.Add(item); // Ajout au menu
                     }
-                   
+
                     linksContext.Show(Cursor.Position); // Affichage du menu contextuel de liste
                 }
             }
@@ -237,7 +245,7 @@ namespace TaskLeader.GUI
         private void grilleData_CellMouseEnter(object sender, DataGridViewCellEventArgs e)
         {
             if (grilleData.Columns[e.ColumnIndex].Name.Equals("Liens") &&
-                e.RowIndex >=0 &&
+                e.RowIndex >= 0 &&
                 grilleData[e.ColumnIndex, e.RowIndex].Value.ToString() != "")
                 this.Cursor = Cursors.Hand;
         }
@@ -249,16 +257,16 @@ namespace TaskLeader.GUI
                 grilleData[e.ColumnIndex, e.RowIndex].Value.ToString() != "")
                 this.Cursor = Cursors.Default;
         }
-                
+
         // Méthode générique d'affichage de la liste d'actions à partir d'un filtre
         private void afficheActions(Filtre filtre)
         {
             // Ajout si nécessaire de la colonne Mail
-            if (!grilleData.Columns.Contains("Liens"))        
-                grilleData.Columns.Add(linkCol);  
+            if (!grilleData.Columns.Contains("Liens"))
+                grilleData.Columns.Add(linkCol);
 
             // Récupération des résultats et association au tableau
-            DataTable liste = filtre.getActions();                     
+            DataTable liste = filtre.getActions();
             grilleData.DataSource = liste;
 
             grilleData.Columns["Liens"].DisplayIndex = 4;
@@ -279,7 +287,7 @@ namespace TaskLeader.GUI
         // Affichage des actions sur filtre manuel
         private void filtreAction(object sender, EventArgs e)
         {
-            Filtre filtre = new Filtre(allCtxt.Checked, allSujt.Checked, allDest.Checked, allStat.Checked, ctxtListBox.CheckedItems, sujetListBox.CheckedItems, destListBox.CheckedItems, statutListBox.CheckedItems);            
+            Filtre filtre = new Filtre(allCtxt.Checked, allSujt.Checked, allDest.Checked, allStat.Checked, ctxtListBox.CheckedItems, sujetListBox.CheckedItems, destListBox.CheckedItems, statutListBox.CheckedItems);
 
             if (saveFilterCheck.Checked) //Sauvegarde du filtre si checkbox cochée
             {
@@ -292,7 +300,7 @@ namespace TaskLeader.GUI
                 {
                     //Sauvegarde du filtre
                     filtre.nom = nomFiltre;
-                    WriteDB.Instance.insertFiltre(filtre);                   
+                    WriteDB.Instance.insertFiltre(filtre);
 
                     // On vide la liste des filtres                
                     filterCombo.Items.Clear();
@@ -304,7 +312,7 @@ namespace TaskLeader.GUI
 
             // Quoiqu'il arrive, affichage du filtre
             this.showFilter(filtre);
-        }       
+        }
 
         // Copie de l'action dans le presse-papier
         private void exportRow(object sender, EventArgs e)
@@ -336,7 +344,7 @@ namespace TaskLeader.GUI
             for (int i = 0; i < list.Items.Count; i++)
                 list.SetItemChecked(i, ((CheckBox)sender).Checked);
         }
-        
+
         //Routine générique pour activation checkbox all
         private void listBox_Click(object sender, EventArgs e)
         {
@@ -351,7 +359,7 @@ namespace TaskLeader.GUI
                 case ("sujetListBox"):
                     box = allSujt;
                     break;
-                case ("destListBox"): 
+                case ("destListBox"):
                     box = allDest;
                     break;
                 case ("statutListBox"):
@@ -368,7 +376,7 @@ namespace TaskLeader.GUI
         {
             // Reset des champs recherches et filtres enregistrés
             filterCombo.SelectedIndex = 0;
-            searchBox.Text = ""; 
+            searchBox.Text = "";
 
             // Contextes
             allCtxt.Checked = true;
@@ -392,15 +400,15 @@ namespace TaskLeader.GUI
         private void showFilter(Filtre filtre)
         {
             // Reset des checkedlistbox de filtre
-            razFiltres();      
+            razFiltres();
 
-            switch(filtre.type)
+            switch (filtre.type)
             {
                 case (2): // C'est une recherche
 
                     // Affichage de l'étiquette correspondant à la recherche
                     typeLabel.Text = "Recherche:";
-                    searchedText.Text = filtre.nom;                                    
+                    searchedText.Text = filtre.nom;
                     break;
 
                 case (1):
@@ -433,7 +441,7 @@ namespace TaskLeader.GUI
                         }
                     }
 
-                break;
+                    break;
             }
 
             // Affichage de l'étiquette
@@ -463,12 +471,12 @@ namespace TaskLeader.GUI
         private void searchBox_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == (char)Keys.Enter)
-                this.searchButton_Click(sender,e);
+                this.searchButton_Click(sender, e);
         }
 
         // Suppression de la recherche après click sur l'étiquette
         private void exitSearchBut_Click(object sender, EventArgs e)
-        {    
+        {
             // Si un filtre était actif avant la (ou les) recherche(s), on l'affiche
             if (Filtre.CurrentFilter.type == 2 && Filtre.OldFilter != null)
                 this.showFilter(Filtre.OldFilter);
