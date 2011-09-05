@@ -27,9 +27,6 @@ namespace TaskLeader.GUI
         /// </summary>
         private void Toolbox_Load(object sender, EventArgs e)
         {
-            // Mention du nom de la version dans le titre de la fenêtre
-            this.Text += " v" + Application.ProductVersion;
-
             // Remplissage de la combo des filtres
             this.loadFilters();
 

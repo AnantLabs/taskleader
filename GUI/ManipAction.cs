@@ -21,6 +21,8 @@ namespace TaskLeader.GUI
         // Préparation des widgets
         private void loadWidgets()
         {
+            this.Icon = TaskLeader.Properties.Resources.task_coach;
+
             //Ajout des contextes à la combobox
             foreach (String item in ReadDB.Instance.getTitres(DB.Instance.contexte))
                 contexteBox.Items.Add(item);
