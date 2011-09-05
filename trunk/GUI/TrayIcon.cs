@@ -26,7 +26,7 @@ namespace TaskLeader.GUI
             // trayIcon
             trayIcon.ContextMenuStrip = this.trayContext;
             trayIcon.Icon = Properties.Resources.task_coach;
-            trayIcon.Text = "TaskLeader";
+            trayIcon.Text = "TaskLeader v" + Application.ProductVersion;;
             trayIcon.Visible = true;
             trayIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(displayToolbox);
 
