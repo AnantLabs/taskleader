@@ -4,17 +4,11 @@ using System.Windows.Forms;
 using TaskLeader.BLL;
 using TaskLeader.BO;
 using System.Collections.Specialized;
-using System.Diagnostics;
-using System.Runtime.InteropServices;
 
 namespace TaskLeader.GUI
 {
     public class TrayIcon : ApplicationContext
     {
-        //Import de l'API Win32 'SetForegroundWindow'
-        [DllImportAttribute("User32.dll")]
-        private static extern IntPtr SetForegroundWindow(IntPtr hWnd);
-
         // Déclaration des composants IHM
         private static NotifyIcon trayIcon = new NotifyIcon();
         private ContextMenuStrip trayContext = new ContextMenuStrip();
@@ -125,6 +119,9 @@ namespace TaskLeader.GUI
                 Environment.Exit(0);
             }
 
+            // Gestion de l'évènement "Nouveau mail"
+            OutlookIF.Instance.NewMail += new NewMailEventHandler(newActionOutlook);
+
             //Enregistrement des raccourcis clavier
             NameValueCollection section = (NameValueCollection)ConfigurationManager.GetSection("Hotkey");
             registerHotkey(section["NewAction"], ref hkNewAction, new HotkeyMethodDelegate(ajoutAction));
@@ -162,46 +159,25 @@ namespace TaskLeader.GUI
             displayNewAction(new TLaction());
         }
 
-        //Délégué pour méthode newActionOutlook
-        delegate void newActionOutlookCallback(Mail mail);
-        // Gestion de l'arrivée des mails
-        public static void newActionOutlook(Mail mail)
+        private void newActionOutlook(object sender, NewMailEventArgs e)
         {
             if (invokeControl.InvokeRequired)
-                invokeControl.Invoke(new newActionOutlookCallback(newActionOutlook), new object[] { mail });
-            else if (!addMailRequired) // Demande de création d'action
-            {
-                TLaction action = new TLaction();
-                action.Texte = mail.Titre;
-                action.addPJ(mail);
-                displayNewAction(action);
-            }
+                invokeControl.Invoke(new NewMailEventHandler(newActionOutlook), new object[] { sender, e });
             else // Demande d'ajout de mail à une action
             {
-                v_manipAction.addPJToForm(mail);
-                addMailRequired = false;
+                TLaction action = new TLaction();
+                action.Texte = e.Mail.Titre;
+                action.addPJ(e.Mail);
+                displayNewAction(action);
             }
         }
 
         // Affichage d'une form ManipAction
-        private static ManipAction v_manipAction = null;
         public static void displayNewAction(TLaction action)
         {
-            v_manipAction = new ManipAction(action);
+            ManipAction v_manipAction = new ManipAction(action);
             v_manipAction.Disposed += new EventHandler(updateToolbox);
-            v_manipAction.mailItem.Click += new System.EventHandler(requestAddMail); //On s'abonne au click du Add PJ mail
             v_manipAction.Show();
-        }
-
-        // Synchronization de l'ajout de mail
-        private static bool addMailRequired = false;
-        private static void requestAddMail(object sender, EventArgs e)
-        {
-            addMailRequired = true;
-            afficheMessage("Ajouter mail", "Sélectionner le mail à ajouter");
-            Process[] p = Process.GetProcessesByName("OUTLOOK");
-            if (p.Length > 0)
-                SetForegroundWindow(p[0].MainWindowHandle);
         }
 
         // Activation si nécessaire de l'item outlook

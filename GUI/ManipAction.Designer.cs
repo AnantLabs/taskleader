@@ -55,6 +55,7 @@
             this.linksMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.ajouterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mailItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.AddMailLabel = new System.Windows.Forms.Label();
             this.tableLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
@@ -257,6 +258,7 @@
             this.flowLayoutPanel3.Controls.Add(this.sujetBox);
             this.flowLayoutPanel3.Controls.Add(this.linksLabel);
             this.flowLayoutPanel3.Controls.Add(this.addPJBut);
+            this.flowLayoutPanel3.Controls.Add(this.AddMailLabel);
             this.flowLayoutPanel3.Controls.Add(this.linksView);
             this.flowLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel3.Location = new System.Drawing.Point(333, 3);
@@ -330,7 +332,7 @@
             // 
             this.ajouterToolStripMenuItem.Image = global::TaskLeader.Properties.Resources.shortcut;
             this.ajouterToolStripMenuItem.Name = "ajouterToolStripMenuItem";
-            this.ajouterToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.ajouterToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
             this.ajouterToolStripMenuItem.Text = "Fichier / URL";
             this.ajouterToolStripMenuItem.Click += new System.EventHandler(this.ajouterLink_Click);
             // 
@@ -338,8 +340,20 @@
             // 
             this.mailItem.Image = global::TaskLeader.Properties.Resources.outlook;
             this.mailItem.Name = "mailItem";
-            this.mailItem.Size = new System.Drawing.Size(152, 22);
+            this.mailItem.Size = new System.Drawing.Size(143, 22);
             this.mailItem.Text = "Mail Outlook";
+            this.mailItem.Click += new System.EventHandler(this.mailItem_Click);
+            // 
+            // AddMailLabel
+            // 
+            this.AddMailLabel.AutoSize = true;
+            this.AddMailLabel.Location = new System.Drawing.Point(116, 62);
+            this.AddMailLabel.Margin = new System.Windows.Forms.Padding(3, 8, 3, 0);
+            this.AddMailLabel.Name = "AddMailLabel";
+            this.AddMailLabel.Size = new System.Drawing.Size(75, 13);
+            this.AddMailLabel.TabIndex = 29;
+            this.AddMailLabel.Text = "Statut addMail";
+            this.AddMailLabel.Visible = false;
             // 
             // ManipAction
             // 
@@ -354,6 +368,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "TaskLeader - ";
             this.TopMost = true;
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.ManipAction_FormClosed);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.flowLayoutPanel1.ResumeLayout(false);
             this.flowLayoutPanel1.PerformLayout();
@@ -396,6 +411,7 @@
         private System.Windows.Forms.ContextMenuStrip linksMenu;
         public System.Windows.Forms.ToolStripMenuItem mailItem;
         private System.Windows.Forms.ListView linksView;
+        private System.Windows.Forms.Label AddMailLabel;
 
 
     }

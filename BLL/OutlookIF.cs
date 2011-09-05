@@ -8,6 +8,20 @@ using TaskLeader.BO;
 
 namespace TaskLeader.BLL
 {
+    // Classe décrivant l'évènement nouveau mail
+    public class NewMailEventArgs : EventArgs
+    {
+        private Mail v_mail;
+        public Mail Mail { get { return v_mail; } }
+
+        public NewMailEventArgs(String titre, String storeID, String entryID, String messageID)
+        {
+            this.v_mail = new Mail(titre, storeID, entryID, messageID);
+        }
+    }
+
+    public delegate void NewMailEventHandler(object sender, NewMailEventArgs e);
+
     public class OutlookIF
     {
         // Attributs métiers       
@@ -15,13 +29,44 @@ namespace TaskLeader.BLL
         private CommandBarButton addActionButton;
         private String messageIDParam = "http://schemas.microsoft.com/mapi/proptag/0x1035001E";
 
-        // Static Initialization Singleton Pattern
-        private static readonly OutlookIF v_instance = new OutlookIF();
-        public static OutlookIF Instance{get{return v_instance;}}
-        
-        private OutlookIF(){}
+        // Gestion de l'évènement NewMail
+        private NewMailEventHandler v_NewMail; // Variable privée correspondant à l'event NewMail
+        private NewMailEventHandler defaultNewMailHandler; // Sauvegarde du handler par défaut (premier à s'enregistrer)
+        public bool addMailInProgress { get { return ((NewMailEventHandler)v_NewMail.GetInvocationList()[0] != defaultNewMailHandler); } }
+        public event NewMailEventHandler NewMail
+        {
+            add
+            {
+                if (defaultNewMailHandler == null) // Premier enregistrement
+                {
+                    defaultNewMailHandler = value;
+                    v_NewMail += defaultNewMailHandler;
+                }
+                else if (!addMailInProgress) // Enregistrement (vérif en théorie redondante)
+                {
+                    v_NewMail += value;
+                    v_NewMail -= defaultNewMailHandler;
+                }
+            }
+            remove
+            {
+                v_NewMail -= value;
+                v_NewMail += defaultNewMailHandler;
+            }
+        }
+        protected virtual void OnNewMail(NewMailEventArgs e)
+        {
+            if (v_NewMail != null)
+                v_NewMail(this, e); //Invoque le délégué
+        }
 
-        public bool connectionNeeded{get{return Process.GetProcessesByName("outlook").Length != 0 && this.outlook == null;}}
+        //Singleton
+        private static readonly OutlookIF v_instance = new OutlookIF();
+        public static OutlookIF Instance { get { return v_instance; } }
+
+        private OutlookIF() { }
+
+        public bool connectionNeeded { get { return Process.GetProcessesByName("outlook").Length != 0 && this.outlook == null; } }
 
         //Tentative de connexion à Outlook
         public void tryHook(bool forceCreation)
@@ -33,7 +78,7 @@ namespace TaskLeader.BLL
                 ((Outlook.ApplicationEvents_11_Event)outlook).Quit += new Outlook.ApplicationEvents_11_QuitEventHandler(clean);
             }
         }
-        
+
         // Méthode jouée si contextmenu affiché sur une entrée
         private void addEntrytoContextMenu(CommandBar menu, Outlook.Selection Selection)
         {
@@ -45,7 +90,7 @@ namespace TaskLeader.BLL
                 this.addActionButton.Style = MsoButtonStyle.msoButtonIconAndCaption;
                 this.addActionButton.Caption = "TaskLeader: ajouter à une action";
                 this.addActionButton.Click += new Microsoft.Office.Core._CommandBarButtonEvents_ClickEventHandler(getSelectedItem);
-                
+
                 this.addActionButton.Visible = true;
 
                 Marshal.FinalReleaseComObject(controls);
@@ -75,8 +120,8 @@ namespace TaskLeader.BLL
                 // Création du PropertyAccessor
                 Outlook.PropertyAccessor props = item.PropertyAccessor;
 
-                // On affiche la fenêtre nouvelle action Outlook
-                TrayIcon.newActionOutlook(new Mail(item.Subject, store.StoreID, item.EntryID, (String)props.GetProperty(this.messageIDParam)));
+                // Déclenchement de l'event NewMail
+                OnNewMail(new NewMailEventArgs(item.Subject, store.StoreID, item.EntryID, (String)props.GetProperty(this.messageIDParam)));
 
                 Marshal.FinalReleaseComObject(props);
                 Marshal.FinalReleaseComObject(store);
@@ -85,17 +130,17 @@ namespace TaskLeader.BLL
             catch (System.Runtime.InteropServices.COMException e)
             {
                 // On affiche l'erreur
-                TrayIcon.afficheMessage("Exception sur récupération Outlook", e.Message+"\n"+e.ErrorCode.ToString());
+                TrayIcon.afficheMessage("Exception sur récupération Outlook", e.Message + "\n" + e.ErrorCode.ToString());
             }
         }
-        
+
         // Affichage d'un mail à partir de son ID
         public void displayMail(Mail mailData)
         {
             // Récupération de l'objet Application
             if (this.outlook == null)
-                this.tryHook(true);   
-            
+                this.tryHook(true);
+
             Outlook.MailItem mail;
 
             if (tryGetMailFromId(mailData.EntryID, mailData.StoreID, out mail))
@@ -120,10 +165,10 @@ namespace TaskLeader.BLL
                */
             }
 
-            if(mail !=null)
+            if (mail != null)
                 Marshal.FinalReleaseComObject(mail);
         }
-        
+
         // Récupération d'un mail en fonction de son entryID dans le store storeID
         private bool tryGetMailFromId(String entryId, String storeID, out Outlook.MailItem mail)
         {
