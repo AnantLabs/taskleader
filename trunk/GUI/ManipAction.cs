@@ -1,4 +1,7 @@
 using System;
+using System.Drawing;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using TaskLeader.DAL;
 using TaskLeader.BO;
@@ -8,6 +11,10 @@ namespace TaskLeader.GUI
 {
     public partial class ManipAction : Form
     {
+        //Import de l'API Win32 'SetForegroundWindow'
+        [DllImportAttribute("User32.dll")]
+        private static extern IntPtr SetForegroundWindow(IntPtr hWnd);
+
         private TLaction v_action;
         public String ID { get { return v_action.ID; } }
 
@@ -160,6 +167,49 @@ namespace TaskLeader.GUI
         private void addPJBut_Click(object sender, EventArgs e)
         {
             this.linksMenu.Show(Cursor.Position);// Affichage du menu d'ajout des liens
+        }
+
+        private void mailItem_Click(object sender, EventArgs e)
+        {
+            // Mise en valeur de la fenêtre Outlook
+            if (!OutlookIF.Instance.addMailInProgress)
+            {
+                this.AddMailLabel.Text = "Sélectionner le mail à ajouter";
+                this.AddMailLabel.ForeColor = SystemColors.HotTrack;
+                this.AddMailLabel.Visible = true;
+                Process[] p = Process.GetProcessesByName("OUTLOOK");
+                if (p.Length > 0)
+                    SetForegroundWindow(p[0].MainWindowHandle);
+
+                // Récupération de l'évènement "Nouveau mail"
+                OutlookIF.Instance.NewMail += new NewMailEventHandler(addMail);
+            }
+            else
+            {
+                this.AddMailLabel.Text = "Ajout de mail déjà en cours";
+                this.AddMailLabel.ForeColor = Color.Red;
+                this.AddMailLabel.Visible = true;
+            }
+        }
+
+        // Gestion de l'arrivée des mails
+        private void addMail(object sender, NewMailEventArgs e)
+        {
+            if (linksView.InvokeRequired)
+                linksView.Invoke(new NewMailEventHandler(addMail), new object[] { sender, e }); // Gestion des appels depuis un autre thread
+            else
+            {
+                this.addPJToForm(e.Mail); // Ajout de mail à l'action
+                this.AddMailLabel.Visible = false; // Disparition du label de statut
+                OutlookIF.Instance.NewMail -= new NewMailEventHandler(addMail); // Inscription à l'event NewMail
+            }
+        }
+
+        // Nettoyage sur fermeture de la fenêtre
+        private void ManipAction_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            // Désinscription de l'event NewMail
+            OutlookIF.Instance.NewMail -= new NewMailEventHandler(addMail);
         }
     }
 }
