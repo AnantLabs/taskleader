@@ -168,7 +168,7 @@ namespace TaskLeader.GUI
 
         private void addPJBut_Click(object sender, EventArgs e)
         {
-            this.linksMenu.Show(Cursor.Position);// Affichage du menu d'ajout des liens
+            this.addLinksMenu.Show(Cursor.Position);// Affichage du menu d'ajout des liens
         }
 
         private void mailItem_Click(object sender, EventArgs e)
@@ -213,5 +213,27 @@ namespace TaskLeader.GUI
             // Désinscription de l'event NewMail
             OutlookIF.Instance.NewMail -= new NewMailEventHandler(addMail);
         }
+
+        // Gestion de l"ouverture de menu contextuel sur la linksView
+        private void linksViewMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            // On annule l'affichage si aucun lien n'est sélectionné
+            if (linksView.SelectedItems.Count == 0)
+                e.Cancel = true;
+        }
+
+        // Suppression d'une PJ
+        private void deleteEncItem_Click(object sender, EventArgs e)
+        {
+            // Suppression de la PJ sélectionnée de l'action associée
+            v_action.removePJ((Enclosure)linksView.SelectedItems[0].Tag);
+
+            // Suppression de la pj de la vue
+            linksView.Items.Remove(linksView.SelectedItems[0]);
+            if (linksView.Items.Count == 0)
+                linksView.Visible = false;
+
+        }
+
     }
 }

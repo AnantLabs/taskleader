@@ -162,7 +162,6 @@ namespace TaskLeader.DAL
         public int insertDest(String destinataire)
         {
             String dest = "'" + destinataire.Replace("'", "''") + "'";
-
             String requete = "INSERT INTO Destinataires (Titre) VALUES (" + dest + ")";
 
             return execSQL(requete);
@@ -184,7 +183,7 @@ namespace TaskLeader.DAL
                     SQLCmd.ExecuteNonQuery();
 
                     // Récupération du EncID
-                    SQLCmd.CommandText = "SELECT max(id) FROM Mails";
+                    SQLCmd.CommandText = "SELECT max(id) FROM Mails;";
                     EncID = SQLCmd.ExecuteScalar().ToString();
                 }
                 mytransaction.Commit();
@@ -192,7 +191,7 @@ namespace TaskLeader.DAL
 
             return EncID;
         }
-		
+
 		// Insertion d'un nouveau lien en base
 		public String insertLink(Link lien)
 		{
@@ -231,10 +230,32 @@ namespace TaskLeader.DAL
                 // Création de la requête
                 requete = "INSERT INTO Enclosures VALUES(";
                 requete += actionID+",";
-                requete += link.TypeSQL + ",";
+                requete += "'"+link.Type + "',";
                 requete += EncID + ");";
 
                 execSQL(requete);
+            }
+        }
+
+        // Suppression d'une PJ de la base
+        public void removePJ(Array PJ)
+        {
+            foreach (Enclosure pj in PJ)
+            {
+                using (SQLiteTransaction mytransaction = DB.Instance.getConnection().BeginTransaction())
+                {
+                    using (SQLiteCommand SQLCmd = new SQLiteCommand(DB.Instance.getConnection()))
+                    {
+                        // Suppression de la pj dans la table correspondante
+                        SQLCmd.CommandText = "DELETE FROM " + pj.Type + " WHERE id=" + pj.ID + ";";
+                        SQLCmd.ExecuteNonQuery();
+
+                        // Suppression de l'entrée dans la table de correspondance PJ/Action
+                        SQLCmd.CommandText = "DELETE FROM Enclosures WHERE EncID=" + pj.ID + ";";
+                        SQLCmd.ExecuteNonQuery();
+                    }
+                    mytransaction.Commit();
+                }
             }
         }
 

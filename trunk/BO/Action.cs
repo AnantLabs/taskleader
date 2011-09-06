@@ -121,8 +121,10 @@ namespace TaskLeader.BO
 
         // PJ à l'action
         private ArrayList v_links = new ArrayList();
-        private int lastIndex;
-        public void addPJ(Enclosure link){ v_links.Add(link); }
+        private ArrayList added_links = new ArrayList();
+        private ArrayList removed_links = new ArrayList();
+        public void addPJ(Enclosure link) { v_links.Add(link); added_links.Add(link); }
+        public void removePJ(Enclosure link) { v_links.Remove(link); removed_links.Add(link); }
         public bool hasPJ { get { return (v_links.Count > 0); } }
         public Array PJ { get { return v_links.ToArray(); } }
 
@@ -151,7 +153,6 @@ namespace TaskLeader.BO
 			
 			//Récupération des liens
 			v_links.AddRange(ReadDB.Instance.getPJ(ID));
-            this.lastIndex = v_links.Count-1;
 
             this.initialStateFrozen = true;
 		}
@@ -222,15 +223,24 @@ namespace TaskLeader.BO
                     resultat = WriteDB.Instance.updateAction(this);
                     if (resultat == 1)
                         bilan += "Action mise à jour\n";
-                    if (this.v_links.Count > this.lastIndex+1)
+
+                    // Insertion des pj
+                    int nbAdded = this.added_links.Count;
+                    if (nbAdded > 0)
                     {
-                        //Récupération de la liste des PJ ajoutées
-                        Array updatedLinks = this.v_links.GetRange(this.lastIndex + 1, this.v_links.Count - this.lastIndex - 1).ToArray();
-                        //Sauvegarde des PJ
-                        WriteDB.Instance.insertPJ(this.v_TLID, updatedLinks);
-                        //Préparation du bilan
-                        bilan += updatedLinks.Length.ToString() + " PJ enregistrée";
-                        if (updatedLinks.Length > 1) bilan += "s";
+                        WriteDB.Instance.insertPJ(this.v_TLID, this.added_links.ToArray()); // Sauvegarde des PJ
+                        bilan += nbAdded.ToString() + " PJ enregistrée"; // Préparation du bilan
+                        if (nbAdded > 1) bilan += "s";
+                        bilan += "\n";
+                    }
+
+                    // Suppression des pj
+                    int nbSupp = this.removed_links.Count;
+                    if (nbSupp > 0)
+                    {
+                        WriteDB.Instance.removePJ(this.removed_links.ToArray());
+                        bilan += nbSupp.ToString() + " PJ supprimée"; // Préparation du bilan
+                        if (nbSupp > 1) bilan += "s";
                         bilan += "\n";
                     }
                 }

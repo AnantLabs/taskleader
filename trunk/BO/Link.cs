@@ -19,7 +19,7 @@ namespace TaskLeader.BO
         /// <summary>
         /// Création d'un objet Raccourci à partir de son ID de stockage
         /// </summary>
-        public Link(String ID):base("","Links")
+        public Link(String ID):base(ID,"","Links")
         {
             DataRow linkData = ReadDB.Instance.getLinkData(ID);
 
@@ -30,7 +30,7 @@ namespace TaskLeader.BO
         /// <summary>
         /// Création d'un objet Raccourci à partir de son chemin
         /// </summary>
-        public Link(String titre,String path):base(titre,"Links")
+        public Link(String titre,String path):base("",titre,"Links")
         {
             this.v_link = path;
         }
