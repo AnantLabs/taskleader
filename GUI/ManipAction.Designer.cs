@@ -49,19 +49,22 @@
             this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
             this.linksLabel = new System.Windows.Forms.Label();
             this.addPJBut = new System.Windows.Forms.Button();
+            this.AddMailLabel = new System.Windows.Forms.Label();
             this.linksView = new System.Windows.Forms.ListView();
+            this.linksViewMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.deleteEncItem = new System.Windows.Forms.ToolStripMenuItem();
             this.biblio = new System.Windows.Forms.ImageList(this.components);
             this.flowLayoutPanel4 = new System.Windows.Forms.FlowLayoutPanel();
-            this.linksMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.addLinksMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.ajouterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mailItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.AddMailLabel = new System.Windows.Forms.Label();
             this.tableLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
             this.flowLayoutPanel3.SuspendLayout();
+            this.linksViewMenu.SuspendLayout();
             this.flowLayoutPanel4.SuspendLayout();
-            this.linksMenu.SuspendLayout();
+            this.addLinksMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // saveButton
@@ -286,9 +289,21 @@
             this.addPJBut.UseVisualStyleBackColor = true;
             this.addPJBut.Click += new System.EventHandler(this.addPJBut_Click);
             // 
+            // AddMailLabel
+            // 
+            this.AddMailLabel.AutoSize = true;
+            this.AddMailLabel.Location = new System.Drawing.Point(116, 62);
+            this.AddMailLabel.Margin = new System.Windows.Forms.Padding(3, 8, 3, 0);
+            this.AddMailLabel.Name = "AddMailLabel";
+            this.AddMailLabel.Size = new System.Drawing.Size(75, 13);
+            this.AddMailLabel.TabIndex = 29;
+            this.AddMailLabel.Text = "Statut addMail";
+            this.AddMailLabel.Visible = false;
+            // 
             // linksView
             // 
             this.linksView.Activation = System.Windows.Forms.ItemActivation.OneClick;
+            this.linksView.ContextMenuStrip = this.linksViewMenu;
             this.linksView.LabelEdit = true;
             this.linksView.Location = new System.Drawing.Point(60, 86);
             this.linksView.Margin = new System.Windows.Forms.Padding(60, 3, 3, 3);
@@ -301,6 +316,21 @@
             this.linksView.View = System.Windows.Forms.View.SmallIcon;
             this.linksView.Visible = false;
             this.linksView.ItemActivate += new System.EventHandler(this.pj_Click);
+            // 
+            // linksViewMenu
+            // 
+            this.linksViewMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.deleteEncItem});
+            this.linksViewMenu.Name = "linksViewMenu";
+            this.linksViewMenu.Size = new System.Drawing.Size(164, 48);
+            this.linksViewMenu.Opening += new System.ComponentModel.CancelEventHandler(this.linksViewMenu_Opening);
+            // 
+            // deleteEncItem
+            // 
+            this.deleteEncItem.Name = "deleteEncItem";
+            this.deleteEncItem.Size = new System.Drawing.Size(163, 22);
+            this.deleteEncItem.Text = "Supprimer le lien";
+            this.deleteEncItem.Click += new System.EventHandler(this.deleteEncItem_Click);
             // 
             // biblio
             // 
@@ -320,13 +350,13 @@
             this.flowLayoutPanel4.Size = new System.Drawing.Size(294, 63);
             this.flowLayoutPanel4.TabIndex = 20;
             // 
-            // linksMenu
+            // addLinksMenu
             // 
-            this.linksMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.addLinksMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ajouterToolStripMenuItem,
             this.mailItem});
-            this.linksMenu.Name = "linksMenu";
-            this.linksMenu.Size = new System.Drawing.Size(144, 48);
+            this.addLinksMenu.Name = "linksMenu";
+            this.addLinksMenu.Size = new System.Drawing.Size(144, 48);
             // 
             // ajouterToolStripMenuItem
             // 
@@ -343,17 +373,6 @@
             this.mailItem.Size = new System.Drawing.Size(143, 22);
             this.mailItem.Text = "Mail Outlook";
             this.mailItem.Click += new System.EventHandler(this.mailItem_Click);
-            // 
-            // AddMailLabel
-            // 
-            this.AddMailLabel.AutoSize = true;
-            this.AddMailLabel.Location = new System.Drawing.Point(116, 62);
-            this.AddMailLabel.Margin = new System.Windows.Forms.Padding(3, 8, 3, 0);
-            this.AddMailLabel.Name = "AddMailLabel";
-            this.AddMailLabel.Size = new System.Drawing.Size(75, 13);
-            this.AddMailLabel.TabIndex = 29;
-            this.AddMailLabel.Text = "Statut addMail";
-            this.AddMailLabel.Visible = false;
             // 
             // ManipAction
             // 
@@ -376,9 +395,10 @@
             this.flowLayoutPanel2.PerformLayout();
             this.flowLayoutPanel3.ResumeLayout(false);
             this.flowLayoutPanel3.PerformLayout();
+            this.linksViewMenu.ResumeLayout(false);
             this.flowLayoutPanel4.ResumeLayout(false);
             this.flowLayoutPanel4.PerformLayout();
-            this.linksMenu.ResumeLayout(false);
+            this.addLinksMenu.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -408,10 +428,12 @@
         private System.Windows.Forms.ImageList biblio;
         private System.Windows.Forms.ToolStripMenuItem ajouterToolStripMenuItem;
         private System.Windows.Forms.Button addPJBut;
-        private System.Windows.Forms.ContextMenuStrip linksMenu;
+        private System.Windows.Forms.ContextMenuStrip addLinksMenu;
         public System.Windows.Forms.ToolStripMenuItem mailItem;
         private System.Windows.Forms.ListView linksView;
         private System.Windows.Forms.Label AddMailLabel;
+        private System.Windows.Forms.ContextMenuStrip linksViewMenu;
+        private System.Windows.Forms.ToolStripMenuItem deleteEncItem;
 
 
     }

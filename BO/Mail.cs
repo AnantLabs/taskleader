@@ -31,7 +31,7 @@ namespace TaskLeader.BO
         /// <summary>
         /// Création d'un objet Mail à partir de son ID de stockage
         /// </summary>
-        public Mail(String ID):base("","Mails")
+        public Mail(String ID):base(ID,"","Mails")
         {
             DataRow mailData = ReadDB.Instance.getMailData(ID);
 
@@ -44,7 +44,7 @@ namespace TaskLeader.BO
         /// <summary>
         /// Création d'un objet Mail à partir des différents ID
         /// </summary>
-        public Mail(String titre,String storeID, String entryID, String messageID):base(titre,"Mails")
+        public Mail(String titre,String storeID, String entryID, String messageID):base("",titre,"Mails")
         {
             this.v_storeID = storeID;
             this.v_entryID = entryID;
