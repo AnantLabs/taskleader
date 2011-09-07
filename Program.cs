@@ -14,14 +14,23 @@ namespace TaskLeader
         [STAThread]
         static void Main()
         {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);          
+            using (Mutex mutex = new Mutex(false, @"Global\6fd1e7cc-9bb5-4154-9798-a36e6239d34d"))
+            {
+                if (!mutex.WaitOne(0, false))
+                {
+                    MessageBox.Show("Application déjà lancée", "TaskLeader");
+                    return;
+                }
 
-            //Hook d'outlook si possible
-            OutlookIF.Instance.tryHook(false);
+                Application.EnableVisualStyles();
+                Application.SetCompatibleTextRenderingDefault(false);
 
-            //Affichage de la TrayIcon
-            Application.Run(new TrayIcon());          
+                //Hook d'outlook si possible
+                OutlookIF.Instance.tryHook(false);
+
+                //Affichage de la TrayIcon
+                Application.Run(new TrayIcon()); 
+            }         
         }
     }
 }
