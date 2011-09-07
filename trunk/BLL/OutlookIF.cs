@@ -32,7 +32,7 @@ namespace TaskLeader.BLL
         // Gestion de l'évènement NewMail
         private NewMailEventHandler v_NewMail; // Variable privée correspondant à l'event NewMail
         private NewMailEventHandler defaultNewMailHandler; // Sauvegarde du handler par défaut (premier à s'enregistrer)
-        public bool addMailInProgress { get { return ((NewMailEventHandler)v_NewMail.GetInvocationList()[0] != defaultNewMailHandler); } }
+        public bool addMailInProgress = false;
         public event NewMailEventHandler NewMail
         {
             add
@@ -42,8 +42,9 @@ namespace TaskLeader.BLL
                     defaultNewMailHandler = value;
                     v_NewMail += defaultNewMailHandler;
                 }
-                else if (!addMailInProgress) // Enregistrement (vérif en théorie redondante)
+                else // Enregistrements suivants
                 {
+                    addMailInProgress = true;
                     v_NewMail += value;
                     v_NewMail -= defaultNewMailHandler;
                 }
@@ -52,6 +53,7 @@ namespace TaskLeader.BLL
             {
                 v_NewMail -= value;
                 v_NewMail += defaultNewMailHandler;
+                addMailInProgress = false;
             }
         }
         protected virtual void OnNewMail(NewMailEventArgs e)
