@@ -171,14 +171,20 @@ namespace TaskLeader.GUI
             this.addLinksMenu.Show(Cursor.Position);// Affichage du menu d'ajout des liens
         }
 
+        // Gestion de la demande d'ajout de mail
+        private bool addMailRequested = false;
         private void mailItem_Click(object sender, EventArgs e)
         {
             // Mise en valeur de la fenêtre Outlook
             if (!OutlookIF.Instance.addMailInProgress)
             {
+                // Mise en place de l'IHM
+                this.addMailRequested = true;
                 this.AddMailLabel.Text = "Sélectionner le mail à ajouter";
                 this.AddMailLabel.ForeColor = SystemColors.HotTrack;
                 this.AddMailLabel.Visible = true;
+
+                // Affichage en premier plan de la fenêtre Outlook
                 Process[] p = Process.GetProcessesByName("OUTLOOK");
                 if (p.Length > 0)
                     SetForegroundWindow(p[0].MainWindowHandle);
@@ -197,10 +203,11 @@ namespace TaskLeader.GUI
         // Gestion de l'arrivée des mails
         private void addMail(object sender, NewMailEventArgs e)
         {
-            if (linksView.InvokeRequired)
-                linksView.Invoke(new NewMailEventHandler(addMail), new object[] { sender, e }); // Gestion des appels depuis un autre thread
+            if (linksView.InvokeRequired) // Gestion des appels depuis un autre thread
+                linksView.Invoke(new NewMailEventHandler(addMail), new object[] { sender, e });
             else
             {
+                this.addMailRequested = false;
                 this.addPJToForm(e.Mail); // Ajout de mail à l'action
                 this.AddMailLabel.Visible = false; // Disparition du label de statut
                 OutlookIF.Instance.NewMail -= new NewMailEventHandler(addMail); // Inscription à l'event NewMail
@@ -210,8 +217,8 @@ namespace TaskLeader.GUI
         // Nettoyage sur fermeture de la fenêtre
         private void ManipAction_FormClosed(object sender, FormClosedEventArgs e)
         {
-            // Désinscription de l'event NewMail
-            OutlookIF.Instance.NewMail -= new NewMailEventHandler(addMail);
+            if(this.addMailRequested)
+                OutlookIF.Instance.NewMail -= new NewMailEventHandler(addMail); // Désinscription de l'event NewMail
         }
 
         // Gestion de l"ouverture de menu contextuel sur la linksView
