@@ -106,6 +106,7 @@ namespace TaskLeader.GUI
         }
 
         // Sauvegarde de l'action
+        public bool dataSaved = false;
         private void sauveAction(object sender, EventArgs e)
         {
             //TODO: griser le bouton Sauvegarder si rien n'a été édité
@@ -123,6 +124,7 @@ namespace TaskLeader.GUI
             v_action.save();
 
             // Fermeture de la fenêtre
+            this.dataSaved = true;
             this.Close();
         }
 

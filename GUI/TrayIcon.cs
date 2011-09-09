@@ -146,7 +146,7 @@ namespace TaskLeader.GUI
         // Update de la Toolbox si elle est affichée
         private static void updateToolbox(object sender, EventArgs e)
         {
-            if (v_toolbox != null && !v_toolbox.IsDisposed)
+            if (v_toolbox != null && !v_toolbox.IsDisposed && ((ManipAction)sender).dataSaved)
             {
                 v_toolbox.selectedActionID = ((ManipAction)sender).ID;
                 v_toolbox.miseAjour();
