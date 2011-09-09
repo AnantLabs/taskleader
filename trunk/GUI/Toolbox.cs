@@ -232,6 +232,13 @@ namespace TaskLeader.GUI
                     linksContext.Show(Cursor.Position); // Affichage du menu contextuel de liste
                 }
             }
+
+            if (e.Button == MouseButtons.Left && // Click gauche
+                grilleData.Columns[e.ColumnIndex].Name.Equals("Deadline") && // Colonne "Liens"
+                e.RowIndex > 0) // Ce n'est pas la ligne des headers // Cellule non vide
+            {
+                new DatePickerPopup().Show();
+            }
         }
 
         // Ouverture du lien

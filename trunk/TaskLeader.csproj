@@ -60,6 +60,12 @@
     <Compile Include="GUI\AdminDefaut.Designer.cs">
       <DependentUpon>AdminDefaut.cs</DependentUpon>
     </Compile>
+    <Compile Include="GUI\DatePickerPopup.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\DatePickerPopup.Designer.cs">
+      <DependentUpon>DatePickerPopup.cs</DependentUpon>
+    </Compile>
     <Compile Include="GUI\SaveFilter.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -97,6 +103,9 @@
   <ItemGroup>
     <EmbeddedResource Include="GUI\AdminDefaut.resx">
       <DependentUpon>AdminDefaut.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\DatePickerPopup.resx">
+      <DependentUpon>DatePickerPopup.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\SaveFilter.resx">
       <DependentUpon>SaveFilter.cs</DependentUpon>
