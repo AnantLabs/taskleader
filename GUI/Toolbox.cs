@@ -51,7 +51,7 @@ namespace TaskLeader.GUI
             ((ToolStripDropDownMenu)exportMenuItem.DropDown).ShowImageMargin = false;
 
             // Remplissage des dernières ListBox
-            this.miseAjour();
+            this.miseAjour(true);
         }
 
         // Chargement des filtres
@@ -63,19 +63,22 @@ namespace TaskLeader.GUI
         }
 
         // Rafraîchissement de la page
-        public void miseAjour()
+        public void miseAjour(bool fullUpdate)
         {
-            // Vidage de toutes les ListBox
-            this.ctxtListBox.Items.Clear();
-            this.destListBox.Items.Clear();
+            if (fullUpdate)
+            {
+                // Vidage de toutes les ListBox
+                this.ctxtListBox.Items.Clear();
+                this.destListBox.Items.Clear();
 
-            // Remplissage de la ListBox des contextes
-            foreach (object item in ReadDB.Instance.getTitres(DB.Instance.contexte))
-                ctxtListBox.Items.Add(item, true); // Sélection des contextes par défaut
+                // Remplissage de la ListBox des contextes
+                foreach (object item in ReadDB.Instance.getTitres(DB.Instance.contexte))
+                    ctxtListBox.Items.Add(item, true); // Sélection des contextes par défaut
 
-            // Remplissage de la ListBox des destinataires
-            foreach (object item in ReadDB.Instance.getTitres(DB.Instance.destinataire))
-                destListBox.Items.Add(item, true); // Sélection des destinataires par défaut
+                // Remplissage de la ListBox des destinataires
+                foreach (object item in ReadDB.Instance.getTitres(DB.Instance.destinataire))
+                    destListBox.Items.Add(item, true); // Sélection des destinataires par défaut
+            }
 
             // Si un filtre est actif on l'affiche
             if (Filtre.CurrentFilter != null)
@@ -136,7 +139,8 @@ namespace TaskLeader.GUI
             if (action.statusHasChanged)
                 action.save();
 
-            this.miseAjour();
+            this.selectedActionID = grilleData.SelectedRows[0].Cells["id"].Value.ToString();
+            this.miseAjour(false);
         }
 
         // Mise en forme des cellules sous certaines conditions
@@ -144,9 +148,15 @@ namespace TaskLeader.GUI
         {
             DateTime date;
 
+            // Association du tooltip
+            if (grilleData.Columns[e.ColumnIndex].Name.Equals("Deadline"))
+                grilleData[e.ColumnIndex,e.RowIndex].ToolTipText = "Modifier la date";
+
             // Gestion de la colonne Deadline
             if (grilleData.Columns[e.ColumnIndex].Name.Equals("Deadline") && DateTime.TryParse(e.Value.ToString(), out date))
             {
+
+
                 // Récupération du delta en jours
                 int diff = (date.Date - DateTime.Now.Date).Days;
 
@@ -237,7 +247,20 @@ namespace TaskLeader.GUI
                 grilleData.Columns[e.ColumnIndex].Name.Equals("Deadline") && // Colonne "Liens"
                 e.RowIndex > 0) // Ce n'est pas la ligne des headers // Cellule non vide
             {
-                new DatePickerPopup().Show();
+                DatePickerPopup popup = new DatePickerPopup(new TLaction(grilleData.SelectedRows[0].Cells["id"].Value.ToString()));
+                popup.Closed += new ToolStripDropDownClosedEventHandler(popup_Closed);
+                popup.Show();
+            }
+        }
+
+        // Gestion de la fermeture de la pop-up changement de date
+        private void popup_Closed(Object sender, ToolStripDropDownClosedEventArgs e)
+        {
+            if (e.CloseReason == ToolStripDropDownCloseReason.ItemClicked)
+            {
+                // Mémorisation de ligne sélectionnée
+                this.selectedActionID = grilleData.SelectedRows[0].Cells["id"].Value.ToString();
+                this.miseAjour(false);
             }
         }
 
@@ -250,17 +273,31 @@ namespace TaskLeader.GUI
         // Affichage d'un curseur doigt si mail attaché.
         private void grilleData_CellMouseEnter(object sender, DataGridViewCellEventArgs e)
         {
-            if (grilleData.Columns[e.ColumnIndex].Name.Equals("Liens") &&
+            bool pjActivated =
+                grilleData.Columns[e.ColumnIndex].Name.Equals("Liens") &&
                 e.RowIndex >= 0 &&
-                grilleData[e.ColumnIndex, e.RowIndex].Value.ToString() != "")
+                grilleData[e.ColumnIndex, e.RowIndex].Value.ToString() != "0";
+
+            bool dateActivated =
+                grilleData.Columns[e.ColumnIndex].Name.Equals("Deadline") &&
+                e.RowIndex >= 0;
+
+            if (pjActivated || dateActivated)
                 this.Cursor = Cursors.Hand;
         }
 
         private void grilleData_CellMouseLeave(object sender, DataGridViewCellEventArgs e)
         {
-            if (grilleData.Columns[e.ColumnIndex].Name.Equals("Liens") &&
+            bool pjActivated =
+                grilleData.Columns[e.ColumnIndex].Name.Equals("Liens") &&
                 e.RowIndex >= 0 &&
-                grilleData[e.ColumnIndex, e.RowIndex].Value.ToString() != "")
+                grilleData[e.ColumnIndex, e.RowIndex].Value.ToString() != "0";
+
+            bool dateActivated =
+                grilleData.Columns[e.ColumnIndex].Name.Equals("Deadline") &&
+                e.RowIndex >= 0;
+
+            if (pjActivated || dateActivated)
                 this.Cursor = Cursors.Default;
         }
 
