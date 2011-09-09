@@ -149,7 +149,7 @@ namespace TaskLeader.GUI
             if (v_toolbox != null && !v_toolbox.IsDisposed && ((ManipAction)sender).dataSaved)
             {
                 v_toolbox.selectedActionID = ((ManipAction)sender).ID;
-                v_toolbox.miseAjour();
+                v_toolbox.miseAjour(true);
             }
         }
 
