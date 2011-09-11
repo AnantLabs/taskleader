@@ -155,8 +155,6 @@ namespace TaskLeader.GUI
             // Gestion de la colonne Deadline
             if (grilleData.Columns[e.ColumnIndex].Name.Equals("Deadline") && DateTime.TryParse(e.Value.ToString(), out date))
             {
-
-
                 // Récupération du delta en jours
                 int diff = (date.Date - DateTime.Now.Date).Days;
 
@@ -247,6 +245,7 @@ namespace TaskLeader.GUI
                 grilleData.Columns[e.ColumnIndex].Name.Equals("Deadline") && // Colonne "Liens"
                 e.RowIndex > 0) // Ce n'est pas la ligne des headers // Cellule non vide
             {
+                grilleData.Cursor = Cursors.Default;
                 DatePickerPopup popup = new DatePickerPopup(new TLaction(grilleData.SelectedRows[0].Cells["id"].Value.ToString()));
                 popup.Closed += new ToolStripDropDownClosedEventHandler(popup_Closed);
                 popup.Show();
@@ -283,7 +282,7 @@ namespace TaskLeader.GUI
                 e.RowIndex >= 0;
 
             if (pjActivated || dateActivated)
-                this.Cursor = Cursors.Hand;
+                grilleData.Cursor = Cursors.Hand;
         }
 
         private void grilleData_CellMouseLeave(object sender, DataGridViewCellEventArgs e)
@@ -298,7 +297,7 @@ namespace TaskLeader.GUI
                 e.RowIndex >= 0;
 
             if (pjActivated || dateActivated)
-                this.Cursor = Cursors.Default;
+                grilleData.Cursor = Cursors.Default;
         }
 
         // Méthode générique d'affichage de la liste d'actions à partir d'un filtre
