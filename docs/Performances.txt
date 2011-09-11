@@ -1,0 +1,17 @@
+v0.4.1.0
+Réduit = 1 672 ko
+Nouvelle action ouverte = 7 420 ko
+Toolbox vide = 17 440 ko
+Toolbox action TdM = 19 436 ko
+Toolbox + Nouvelle action ouverte = 20 492 ko
+
+Private Bytes: Moyenne 17,3Mo
+
+v0.5.0.0
+Réduit = 20 352 ko, 620 ko si Toolbox réduite !
+Nouvelle action ouverte = 21 864 ko
+Toolbox vide = 22 280 ko
+Toolbox action TdM = 22 812 ko
+Toolbox + Nouvelle action ouverte = 23 440 ko
+
+Private Bytes: Moyenne 17,3Mo

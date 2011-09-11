@@ -1,0 +1,39 @@
+v0.5.0
+Réorganisation de la base à partir d'index, plus de recopie des labels
+Réorganisation du code par l'introduction de couches
+Réorganisation de l'appli autour du TrayIcon: empreinte mémoire largement réduite si minimisée+gestion de l'init
+Robustesse sur insertion d'action (gestion des champs vides)
+Bug si 2 sujets identiques mais dans contextes différents => Corrigé
+Possibilité de sélectionner toutes les valeurs d'un critère (Radiobutton All)
+Réorganisation IHM: à gauche les filtres, à droite de la liste les boutons d'ajout d'actions
+Gestion des filtres: sauvegarde, ouverture
+Si statut différent de Ouverte, une ligne est rajoutée "Action [Statut] le [NOW]"
+En mode Debug (fichier de conf, les requêtes sont affichées dans des pop-up)
+
+v.0.4.1
+Scrollbar dans la description de l'action
+Traymessage affiché selon durée fichier de conf et mise à ligne supprimée
+Bug: copier / coller des actions SBA et SENS si le texte contient déjà des "
+
+v0.4.0
+La colonne ID mail n'est plus affichée.
+Modification de la colonne DueDate en classant dans l'ordre chronologique + nouveau label de colonne
+Le bilan du édition d'action s'affiche en tooltip sur la tray icon.
+Quand un nouveau contexte, sujet ou destinataire et créé, les listes de la Toolbox se rafraichissent.
+Quand une action est close, une ligne est rajoutée "Fermée le: ..."
+Ajout d'un menu contextuel sur la liste:
+Copier vers suivi SEnS
+Copier vers PRM SBA
+
+v0.3.1
+La compatibilité avec la base n'est vérifiée que sur les têtes de version (x.y.0.0)
+L'appli n'est visible dans la barre de tâche que si elle est affichée.
+Elle est minimisée dans la tray.
+
+v0.3.0
+Gestion des dueDate
+Ajout d'une icône
+Gestion de la compatibilité base / appli
+
+v0.2.0
+Gestion des filtres
