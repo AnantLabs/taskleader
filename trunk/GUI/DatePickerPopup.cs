@@ -47,7 +47,7 @@ namespace TaskLeader.GUI
         // Désactivation du calendrier si nécessaire
         private void noDueDate_CheckStateChanged(object sender, System.EventArgs e)
         {
-            calendar.Enabled = !noDueDate.Checked;
+            calendar.Visible = !noDueDate.Checked;
         }
 
         // Sauvegarde de la nouvelle deadline
