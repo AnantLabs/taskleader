@@ -385,7 +385,6 @@
             this.Name = "ManipAction";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "TaskLeader - ";
             this.TopMost = true;
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.ManipAction_FormClosed);
             this.tableLayoutPanel1.ResumeLayout(false);
