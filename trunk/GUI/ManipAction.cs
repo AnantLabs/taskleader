@@ -63,10 +63,10 @@ namespace TaskLeader.GUI
             Array links = action.PJ;
 
             if (action.isScratchpad)
-                this.Text += "Ajouter une action";
+                this.Text += "Ajouter une action - TaskLeader";
             else
             {
-                this.Text += "Modifier une action";
+                this.Text += "Modifier une action - TaskLeader";
 
                 if (action.hasDueDate) // Attribut géré à part car pas de valeur par défaut
                     actionDatePicker.Value = action.DueDate;

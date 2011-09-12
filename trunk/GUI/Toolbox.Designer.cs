@@ -681,7 +681,7 @@
             this.Location = new System.Drawing.Point(435, 10);
             this.MainMenuStrip = this.topMenu;
             this.Name = "Toolbox";
-            this.Text = "TaskLeader - Liste des actions";
+            this.Text = "Liste des actions - TaskLeader";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.Toolbox_Load);
             this.Resize += new System.EventHandler(this.Toolbox_Resize);
