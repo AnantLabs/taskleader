@@ -30,16 +30,17 @@
         {
             this.calendar = new System.Windows.Forms.MonthCalendar();
             this.noDueDate = new System.Windows.Forms.CheckBox();
-            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.closeBut = new System.Windows.Forms.Button();
-            this.validBut = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
-            this.flowLayoutPanel1.SuspendLayout();
+            this.validBut = new System.Windows.Forms.Button();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // calendar
             // 
-            this.calendar.Location = new System.Drawing.Point(6, 23);
+            this.tableLayoutPanel1.SetColumnSpan(this.calendar, 2);
+            this.calendar.Location = new System.Drawing.Point(5, 27);
             this.calendar.Margin = new System.Windows.Forms.Padding(5, 3, 5, 5);
             this.calendar.MaxSelectionCount = 1;
             this.calendar.Name = "calendar";
@@ -49,7 +50,7 @@
             // noDueDate
             // 
             this.noDueDate.AutoSize = true;
-            this.noDueDate.Location = new System.Drawing.Point(13, 196);
+            this.noDueDate.Location = new System.Drawing.Point(3, 200);
             this.noDueDate.Margin = new System.Windows.Forms.Padding(3, 6, 3, 3);
             this.noDueDate.Name = "noDueDate";
             this.noDueDate.Size = new System.Drawing.Size(63, 17);
@@ -58,24 +59,12 @@
             this.noDueDate.UseVisualStyleBackColor = true;
             this.noDueDate.CheckStateChanged += new System.EventHandler(this.noDueDate_CheckStateChanged);
             // 
-            // flowLayoutPanel1
-            // 
-            this.flowLayoutPanel1.Controls.Add(this.closeBut);
-            this.flowLayoutPanel1.Controls.Add(this.label1);
-            this.flowLayoutPanel1.Controls.Add(this.calendar);
-            this.flowLayoutPanel1.Controls.Add(this.validBut);
-            this.flowLayoutPanel1.Controls.Add(this.noDueDate);
-            this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 3);
-            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(260, 223);
-            this.flowLayoutPanel1.TabIndex = 2;
-            // 
             // closeBut
             // 
+            this.closeBut.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.closeBut.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.closeBut.Location = new System.Drawing.Point(243, 0);
-            this.closeBut.Margin = new System.Windows.Forms.Padding(0);
+            this.closeBut.Location = new System.Drawing.Point(240, 2);
+            this.closeBut.Margin = new System.Windows.Forms.Padding(2);
             this.closeBut.Name = "closeBut";
             this.closeBut.Size = new System.Drawing.Size(17, 20);
             this.closeBut.TabIndex = 3;
@@ -83,10 +72,20 @@
             this.closeBut.UseVisualStyleBackColor = false;
             this.closeBut.Click += new System.EventHandler(this.closeBut_Click);
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(3, 5);
+            this.label1.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(117, 13);
+            this.label1.TabIndex = 4;
+            this.label1.Text = "Sélectionner une date :";
+            // 
             // validBut
             // 
-            this.validBut.Location = new System.Drawing.Point(179, 193);
-            this.validBut.Margin = new System.Windows.Forms.Padding(100, 3, 6, 3);
+            this.validBut.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.validBut.Location = new System.Drawing.Point(181, 197);
             this.validBut.Name = "validBut";
             this.validBut.Size = new System.Drawing.Size(75, 23);
             this.validBut.TabIndex = 2;
@@ -94,27 +93,41 @@
             this.validBut.UseVisualStyleBackColor = true;
             this.validBut.Click += new System.EventHandler(this.validBut_Click);
             // 
-            // label1
+            // tableLayoutPanel1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(16, 7);
-            this.label1.Margin = new System.Windows.Forms.Padding(3, 7, 110, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(117, 13);
-            this.label1.TabIndex = 4;
-            this.label1.Text = "Sélectionner une date :";
+            this.tableLayoutPanel1.AutoSize = true;
+            this.tableLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.tableLayoutPanel1.ColumnCount = 2;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel1.Controls.Add(this.closeBut, 1, 0);
+            this.tableLayoutPanel1.Controls.Add(this.validBut, 1, 2);
+            this.tableLayoutPanel1.Controls.Add(this.calendar, 0, 1);
+            this.tableLayoutPanel1.Controls.Add(this.label1, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.noDueDate, 0, 2);
+            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 3;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(259, 223);
+            this.tableLayoutPanel1.TabIndex = 3;
             // 
             // DatePickerPopup
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
-            this.Controls.Add(this.flowLayoutPanel1);
+            this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.Controls.Add(this.tableLayoutPanel1);
             this.Name = "DatePickerPopup";
-            this.Size = new System.Drawing.Size(266, 229);
-            this.flowLayoutPanel1.ResumeLayout(false);
-            this.flowLayoutPanel1.PerformLayout();
+            this.Size = new System.Drawing.Size(259, 223);
+            this.tableLayoutPanel1.ResumeLayout(false);
+            this.tableLayoutPanel1.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -122,9 +135,9 @@
 
         private System.Windows.Forms.MonthCalendar calendar;
         private System.Windows.Forms.CheckBox noDueDate;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private System.Windows.Forms.Button validBut;
         private System.Windows.Forms.Button closeBut;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
     }
 }
