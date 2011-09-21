@@ -212,7 +212,7 @@ namespace TaskLeader.GUI
         private void grilleData_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right && // Click droit
-                e.RowIndex > 0) // Ce n'est pas la ligne des headers
+                e.RowIndex >= 0) // Ce n'est pas la ligne des headers
             {
                 grilleData.Rows[e.RowIndex].Selected = true; // Sélection de la ligne           
                 listeContext.Show(Cursor.Position); // Affichage du menu contextuel
@@ -220,7 +220,7 @@ namespace TaskLeader.GUI
 
             if (e.Button == MouseButtons.Left && // Click gauche
                 grilleData.Columns[e.ColumnIndex].Name.Equals("Liens") && // Colonne "Liens"
-                e.RowIndex > 0 && // Ce n'est pas la ligne des headers
+                e.RowIndex >= 0 && // Ce n'est pas la ligne des headers
                 grilleData[e.ColumnIndex, e.RowIndex].Value.ToString() != "0") // Cellule non vide
             {
                 if (grilleData[e.ColumnIndex, e.RowIndex].Value.ToString() == "1") // Un lien seulement
@@ -243,7 +243,7 @@ namespace TaskLeader.GUI
 
             if (e.Button == MouseButtons.Left && // Click gauche
                 grilleData.Columns[e.ColumnIndex].Name.Equals("Deadline") && // Colonne "Liens"
-                e.RowIndex > 0) // Ce n'est pas la ligne des headers // Cellule non vide
+                e.RowIndex >= 0) // Ce n'est pas la ligne des headers // Cellule non vide
             {
                 grilleData.Cursor = Cursors.Default;
                 DatePickerPopup popup = new DatePickerPopup(new TLaction(grilleData.SelectedRows[0].Cells["id"].Value.ToString()));
