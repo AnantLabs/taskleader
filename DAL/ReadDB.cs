@@ -298,7 +298,22 @@ namespace TaskLeader.DAL
         // Recherche de mots clés dans la colonne Action
         public DataTable searchActions(String keywords)
         {
-            String requete = "SELECT * FROM VueActions WHERE Titre LIKE '%"+keywords.Replace("'", "''")+"%';";
+            String words = keywords.Replace("'", "''");
+
+            String requete = "SELECT * FROM VueActions WHERE Titre LIKE '%"+words+"%' OR ";
+            requete += "id IN("; // Recherche dans les titres de mail
+            requete += "   SELECT E.ActionID FROM Mails M, Enclosures E";
+            requete += "      WHERE M.Titre LIKE '%" + words + "%'";
+            requete += "      AND M.id=E.EncID";
+            requete += "      AND E.EncType='Mails'";
+            requete += ") OR ";
+            requete += "id IN("; // Recherche dans les titres ou chemins des liens
+            requete += "   SELECT E.ActionID FROM Links L, Enclosures E";
+            requete += "      WHERE L.Titre LIKE '%" + words + "%'";
+            requete += "      AND L.id=E.EncID";
+            requete += "      AND E.EncType='Links'";
+            requete += ");";
+
             return getTable(requete);
         }
     }
