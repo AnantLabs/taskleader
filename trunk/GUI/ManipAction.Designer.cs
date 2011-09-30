@@ -322,13 +322,14 @@
             this.linksViewMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.deleteEncItem});
             this.linksViewMenu.Name = "linksViewMenu";
-            this.linksViewMenu.Size = new System.Drawing.Size(164, 48);
+            this.linksViewMenu.ShowImageMargin = false;
+            this.linksViewMenu.Size = new System.Drawing.Size(139, 48);
             this.linksViewMenu.Opening += new System.ComponentModel.CancelEventHandler(this.linksViewMenu_Opening);
             // 
             // deleteEncItem
             // 
             this.deleteEncItem.Name = "deleteEncItem";
-            this.deleteEncItem.Size = new System.Drawing.Size(163, 22);
+            this.deleteEncItem.Size = new System.Drawing.Size(138, 22);
             this.deleteEncItem.Text = "Supprimer le lien";
             this.deleteEncItem.Click += new System.EventHandler(this.deleteEncItem_Click);
             // 
