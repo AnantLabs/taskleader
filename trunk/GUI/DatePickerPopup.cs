@@ -14,7 +14,7 @@ namespace TaskLeader.GUI
             remove { popup.Closed -= value; }
         }
 
-        // Déclaratio de l'action associée
+        // Déclaration de l'action associée
         private TLaction v_action;
         public String ID { get { return v_action.ID; } }
 

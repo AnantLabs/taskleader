@@ -5,6 +5,8 @@ namespace TaskLeader.GUI
 {
     public partial class SaveFilter : Form
     {
+        private DB db;
+
         public SaveFilter()
         {
             InitializeComponent();
@@ -19,7 +21,7 @@ namespace TaskLeader.GUI
             }
             else
             {
-                if (!ReadDB.Instance.isNvo(DB.Instance.filtre,nameBox.Text))
+                if (!db.isNvo(db.filtre,nameBox.Text))
                 {
                     resultLabel.Text = "Ce nom de filtre existe déjà.";
                     resultLabel.Visible = true;
@@ -32,7 +34,9 @@ namespace TaskLeader.GUI
             }           
         }
 
-        public DialogResult getFilterName(ref string name){
+        public DialogResult getFilterName(ref string name, DB database){
+
+            this.db = database;
 
             DialogResult result = this.ShowDialog();
             if (result == DialogResult.OK)

@@ -19,9 +19,9 @@ namespace TaskLeader.BO
         /// <summary>
         /// Création d'un objet Raccourci à partir de son ID de stockage
         /// </summary>
-        public Link(String ID):base(ID,"","Links")
+        public Link(String ID, DB database): base(ID, "", "Links")
         {
-            DataRow linkData = ReadDB.Instance.getLinkData(ID);
+            DataRow linkData = database.getLinkData(ID);
 
             base.Titre = linkData["Titre"].ToString();
             this.v_link = linkData["Path"].ToString();
@@ -44,14 +44,8 @@ namespace TaskLeader.BO
             }
             catch (Exception e)
             {
-                TrayIcon.afficheMessage("Erreur d'ouverture", e.Message);
+                TrayIcon.afficheMessage("Impossible d'ouvrir le lien: ", e.Message);
             }     
-        }
-
-        // Stockage du mail
-        public override String store()
-        {
-            return WriteDB.Instance.insertLink(this);
         }
     }
 }

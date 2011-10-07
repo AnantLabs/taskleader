@@ -1,9 +1,11 @@
 ﻿using System;
-using TaskLeader.DAL;
 using System.Configuration;
+using System.Collections;
+using System.Collections.Specialized;
 using System.IO;
 using System.Windows.Forms;
 using TaskLeader.GUI;
+using TaskLeader.DAL;
 
 namespace TaskLeader.BLL
 {
@@ -28,45 +30,51 @@ namespace TaskLeader.BLL
 
         public bool canLaunch()
         {
-            // Vérification de la présence du fichier de base
-            if (File.Exists(ConfigurationManager.AppSettings["cheminDB"]))
+            int index;
+
+            // Récupération de la liste des databases
+            NameValueCollection dbData = (NameValueCollection)ConfigurationManager.GetSection("Databases");
+            String defaultDBname = ConfigurationManager.AppSettings["defaultDB"];
+            ArrayList databases = new ArrayList();
+
+            foreach (String dbName in dbData)
             {
-                // On vérifie la nécessité d'une migration de la base
-                return checkMigration();
+                if(!File.Exists(dbData[dbName]))
+                     MessageBox.Show("Base " + dbName + " introuvable\nVérifier fichier de conf", "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                else
+                {
+                    index = databases.Add(new DB(dbName,dbData[dbName]));
+                    if (!checkMigration((DB)databases[index]))
+                        databases.RemoveAt(index);
+                    else if (dbName == defaultDBname)
+                        databases.Reverse(); // On passe la dernière DB ajoutée en tête de liste
+                }
             }
-            else
-            {
-                // La base n'est pas accessible à l'adresse indiquée
-                MessageBox.Show("Fichier base introuvable\nVérifier fichier de conf", "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                return false;  
-            }
+
+            TrayIcon.dbs = databases.ToArray();
+            return (databases.Count > 0); // Lancement si au moins une DB est valide   
         }
 
+
         // Migration
-        private bool checkMigration()
+        private bool checkMigration(DB db)
         {
             // On vérifie que la version de la GUI est bien dans la base
-            bool baseCompatible = ReadDB.Instance.isVersionComp(Application.ProductVersion.Substring(0, 3));
+            bool baseCompatible = db.isVersionComp(Application.ProductVersion.Substring(0, 3));
 
             if (!baseCompatible)
-            {
-                if (ReadDB.Instance.getLastVerComp() == "0.6")
-                {
-                    TrayIcon.afficheMessage("Migration", "La base est obsolète, migration en cours");
-                    migration("06-07");
-                    return true;
-                }
+                if (TrayIcon.defaultDB.getLastVerComp() == "0.6")
+                    return migrationOK("06-07");
                 else
                 {
                     MessageBox.Show("La base est trop ancienne pour une migration", "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     return false;
                 }         
-            }
             else
                 return true; // La base est compatible, rien à faire.
         }
 
-        private void migration(String change)
+        private bool migrationOK(String change)
         {
             // Copie de sauvegarde du fichier db avant toute manip
             TrayIcon.afficheMessage("Migration","Copie de sauvegarde de la base");
@@ -81,16 +89,20 @@ namespace TaskLeader.BLL
 
                 // Exécution du script
                 TrayIcon.afficheMessage("Migration", "Exécution du script de migration");
-                WriteDB.Instance.execSQL(script);
+                TrayIcon.defaultDB.execSQL(script);
 
                 // Nettoyage de la base
-                WriteDB.Instance.execSQL("VACUUM;");
+                TrayIcon.defaultDB.execSQL("VACUUM;");
                 TrayIcon.afficheMessage("Migration", "Migration de la base effectuée");
+
+                return true;
             }
             catch
             {
                 //TODO:affiner le pourquoi
                 TrayIcon.afficheMessage("Migration", "Fichier de migration introuvable");
+
+                return false;
             }           
         }
     }

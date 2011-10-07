@@ -7,25 +7,8 @@ using TaskLeader.BO;
 
 namespace TaskLeader.DAL
 {
-    public class ReadDB
-    {
-        // Variable locale pour stocker une référence vers l'instance
-        private static ReadDB instance = null;
-
-        // Renvoie l'instance ou la crée
-        public static ReadDB Instance
-        {
-            get
-            {
-                // Si pas d'instance existante on en crée une...
-                if (instance == null)
-                    instance = new ReadDB();
-
-                // On retourne l'instance de MonSingleton
-                return instance;
-            }
-        }      
-
+    public partial class DB
+    {    
         // Méthode générique pour récupérer une seule colonne
         private object[] getList(String requete)
         {
@@ -37,7 +20,7 @@ namespace TaskLeader.DAL
 
             try
             {
-                using (SQLiteCommand SQLCmd = new SQLiteCommand(DB.Instance.getConnection()))
+                using (SQLiteCommand SQLCmd = new SQLiteCommand(this.SQLC))
                 {
                     // Création d'une nouvelle commande à partir de la connexion
                     SQLCmd.CommandText = requete;
@@ -71,7 +54,7 @@ namespace TaskLeader.DAL
 
             try
             {
-                using (SQLiteDataAdapter SQLAdap = new SQLiteDataAdapter(requete, DB.Instance.getConnection()))
+                using (SQLiteDataAdapter SQLAdap = new SQLiteDataAdapter(requete,this.SQLC))
                 {
                     // Remplissage avec les données de l'adaptateur
                     SQLAdap.Fill(data);
@@ -94,7 +77,7 @@ namespace TaskLeader.DAL
 
             try
             {
-                using (SQLiteCommand SQLCmd = new SQLiteCommand(DB.Instance.getConnection()))
+                using (SQLiteCommand SQLCmd = new SQLiteCommand(this.SQLC))
                 {
                     SQLCmd.CommandText = requete;
                     return Convert.ToInt32(SQLCmd.ExecuteScalar());
@@ -112,7 +95,7 @@ namespace TaskLeader.DAL
         // Vérification si la table est bien compatible
         public bool isVersionComp(String version)
         {
-            if (DB.Instance.getConnection().GetSchema("Tables").Select("Table_Name = 'Properties'").Length > 0) // Version >= 0.7
+            if (this.SQLC.GetSchema("Tables").Select("Table_Name = 'Properties'").Length > 0) // Version >= 0.7
                 return (getList("SELECT rowid FROM Properties WHERE Cle='ActionsDBVer' AND Valeur='"+version+"';").Length > 0);
             else
                 return false;
@@ -121,7 +104,7 @@ namespace TaskLeader.DAL
         // On vérifie la version la plus haute compatible avec cette base
         public String getLastVerComp()
         {
-            if (DB.Instance.getConnection().GetSchema("Tables").Select("Table_Name = 'Properties'").Length > 0) // Version >= 0.7
+            if (this.SQLC.GetSchema("Tables").Select("Table_Name = 'Properties'").Length > 0) // Version >= 0.7
                 return getList("SELECT Valeur FROM Properties WHERE Cle='ActionsDBVer';")[0].ToString();
             else // Version < 0.7
                 return (String)getList("SELECT Num FROM VerComp WHERE rowid=(SELECT max(rowid) FROM VerComp)")[0];
@@ -191,7 +174,7 @@ namespace TaskLeader.DAL
             DataRow resultat = results[0];
             
             // On crée le filtre correspondant
-            Filtre filtre = new Filtre((bool)resultat["AllCtxt"],(bool)resultat["AllSuj"],(bool)resultat["AllDest"],(bool)resultat["AllStat"]);
+            Filtre filtre = new Filtre(this,(bool)resultat["AllCtxt"],(bool)resultat["AllSuj"],(bool)resultat["AllDest"],(bool)resultat["AllStat"]);
             filtre.nom = name;
             object[] liste;
 
@@ -271,10 +254,10 @@ namespace TaskLeader.DAL
                 switch (pj["EncType"].ToString())
                 {
                     case("Mails"):
-                        liste.Add(new Mail(pj["EncID"].ToString()));
+                        liste.Add(new Mail(pj["EncID"].ToString(),this));
                         break;
                     case("Links"):
-                        liste.Add(new Link(pj["EncID"].ToString()));
+                        liste.Add(new Link(pj["EncID"].ToString(),this));
                         break;
                 }
 

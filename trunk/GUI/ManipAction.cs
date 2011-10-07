@@ -2,6 +2,8 @@ using System;
 using System.Drawing;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using System.Configuration;
+using System.Collections.Specialized;
 using System.Windows.Forms;
 using TaskLeader.DAL;
 using TaskLeader.BO;
@@ -15,6 +17,7 @@ namespace TaskLeader.GUI
         [DllImportAttribute("User32.dll")]
         private static extern IntPtr SetForegroundWindow(IntPtr hWnd);
 
+        private DB db = TrayIcon.defaultDB;
         private TLaction v_action;
         public String ID { get { return v_action.ID; } }
 
@@ -24,15 +27,15 @@ namespace TaskLeader.GUI
             this.Icon = TaskLeader.Properties.Resources.task_coach;
 
             //Ajout des contextes à la combobox
-            foreach (String item in ReadDB.Instance.getTitres(DB.Instance.contexte))
+            foreach (String item in db.getTitres(db.contexte))
                 contexteBox.Items.Add(item);
 
             // Ajout des destinataires à la combobox
-            foreach (String item in ReadDB.Instance.getTitres(DB.Instance.destinataire))
+            foreach (String item in db.getTitres(db.destinataire))
                 destBox.Items.Add(item);
 
             // On remplit la liste des statuts
-            foreach (String item in ReadDB.Instance.getTitres(DB.Instance.statut))
+            foreach (String item in db.getTitres(db.statut))
                 statutBox.Items.Add(item);
         }
 
@@ -101,7 +104,7 @@ namespace TaskLeader.GUI
             // On vide les sujets correspondants au contexte actuel
             sujetBox.Items.Clear();
 
-            foreach (String item in ReadDB.Instance.getSujets(contexteBox.Text))
+            foreach (String item in db.getSujets(contexteBox.Text))
                 sujetBox.Items.Add(item);
         }
 
@@ -121,6 +124,7 @@ namespace TaskLeader.GUI
                 v_action.DueDate = actionDatePicker.Value;
 
             // On sauvegarde l'action
+            v_action.db = db;
             v_action.save();
 
             // Fermeture de la fenêtre
