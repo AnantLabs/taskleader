@@ -55,6 +55,9 @@
             this.deleteEncItem = new System.Windows.Forms.ToolStripMenuItem();
             this.biblio = new System.Windows.Forms.ImageList(this.components);
             this.flowLayoutPanel4 = new System.Windows.Forms.FlowLayoutPanel();
+            this.flowLayoutPanel5 = new System.Windows.Forms.FlowLayoutPanel();
+            this.label7 = new System.Windows.Forms.Label();
+            this.dbsBox = new System.Windows.Forms.ComboBox();
             this.addLinksMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.ajouterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mailItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -64,6 +67,7 @@
             this.flowLayoutPanel3.SuspendLayout();
             this.linksViewMenu.SuspendLayout();
             this.flowLayoutPanel4.SuspendLayout();
+            this.flowLayoutPanel5.SuspendLayout();
             this.addLinksMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -206,17 +210,19 @@
             this.tableLayoutPanel1.ColumnCount = 2;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 330F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 270F));
-            this.tableLayoutPanel1.Controls.Add(this.flowLayoutPanel1, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.flowLayoutPanel2, 0, 1);
-            this.tableLayoutPanel1.Controls.Add(this.flowLayoutPanel3, 1, 0);
-            this.tableLayoutPanel1.Controls.Add(this.flowLayoutPanel4, 1, 1);
+            this.tableLayoutPanel1.Controls.Add(this.flowLayoutPanel1, 0, 1);
+            this.tableLayoutPanel1.Controls.Add(this.flowLayoutPanel2, 0, 2);
+            this.tableLayoutPanel1.Controls.Add(this.flowLayoutPanel3, 1, 1);
+            this.tableLayoutPanel1.Controls.Add(this.flowLayoutPanel4, 1, 2);
+            this.tableLayoutPanel1.Controls.Add(this.flowLayoutPanel5, 0, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 2;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 73.04348F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 26.95652F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(630, 255);
+            this.tableLayoutPanel1.RowCount = 3;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 42F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 189F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 8F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(630, 299);
             this.tableLayoutPanel1.TabIndex = 27;
             // 
             // flowLayoutPanel1
@@ -224,9 +230,9 @@
             this.flowLayoutPanel1.Controls.Add(this.label3);
             this.flowLayoutPanel1.Controls.Add(this.desField);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 3);
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 45);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(324, 180);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(324, 183);
             this.flowLayoutPanel1.TabIndex = 17;
             // 
             // label3
@@ -248,9 +254,9 @@
             this.flowLayoutPanel2.Controls.Add(this.actionDatePicker);
             this.flowLayoutPanel2.Controls.Add(this.noDueDate);
             this.flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel2.Location = new System.Drawing.Point(3, 189);
+            this.flowLayoutPanel2.Location = new System.Drawing.Point(3, 234);
             this.flowLayoutPanel2.Name = "flowLayoutPanel2";
-            this.flowLayoutPanel2.Size = new System.Drawing.Size(324, 63);
+            this.flowLayoutPanel2.Size = new System.Drawing.Size(324, 62);
             this.flowLayoutPanel2.TabIndex = 18;
             // 
             // flowLayoutPanel3
@@ -264,9 +270,9 @@
             this.flowLayoutPanel3.Controls.Add(this.AddMailLabel);
             this.flowLayoutPanel3.Controls.Add(this.linksView);
             this.flowLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel3.Location = new System.Drawing.Point(333, 3);
+            this.flowLayoutPanel3.Location = new System.Drawing.Point(333, 45);
             this.flowLayoutPanel3.Name = "flowLayoutPanel3";
-            this.flowLayoutPanel3.Size = new System.Drawing.Size(294, 180);
+            this.flowLayoutPanel3.Size = new System.Drawing.Size(294, 183);
             this.flowLayoutPanel3.TabIndex = 19;
             // 
             // linksLabel
@@ -323,7 +329,7 @@
             this.deleteEncItem});
             this.linksViewMenu.Name = "linksViewMenu";
             this.linksViewMenu.ShowImageMargin = false;
-            this.linksViewMenu.Size = new System.Drawing.Size(139, 48);
+            this.linksViewMenu.Size = new System.Drawing.Size(139, 26);
             this.linksViewMenu.Opening += new System.ComponentModel.CancelEventHandler(this.linksViewMenu_Opening);
             // 
             // deleteEncItem
@@ -346,10 +352,42 @@
             this.flowLayoutPanel4.Controls.Add(this.saveButton);
             this.flowLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel4.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
-            this.flowLayoutPanel4.Location = new System.Drawing.Point(333, 189);
+            this.flowLayoutPanel4.Location = new System.Drawing.Point(333, 234);
             this.flowLayoutPanel4.Name = "flowLayoutPanel4";
-            this.flowLayoutPanel4.Size = new System.Drawing.Size(294, 63);
+            this.flowLayoutPanel4.Size = new System.Drawing.Size(294, 62);
             this.flowLayoutPanel4.TabIndex = 20;
+            // 
+            // flowLayoutPanel5
+            // 
+            this.tableLayoutPanel1.SetColumnSpan(this.flowLayoutPanel5, 2);
+            this.flowLayoutPanel5.Controls.Add(this.label7);
+            this.flowLayoutPanel5.Controls.Add(this.dbsBox);
+            this.flowLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanel5.Location = new System.Drawing.Point(3, 3);
+            this.flowLayoutPanel5.Name = "flowLayoutPanel5";
+            this.flowLayoutPanel5.Size = new System.Drawing.Size(624, 36);
+            this.flowLayoutPanel5.TabIndex = 21;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(3, 10);
+            this.label7.Margin = new System.Windows.Forms.Padding(3, 10, 3, 0);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(79, 13);
+            this.label7.TabIndex = 0;
+            this.label7.Text = "Base d\'actions:";
+            // 
+            // dbsBox
+            // 
+            this.dbsBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.dbsBox.FormattingEnabled = true;
+            this.dbsBox.Location = new System.Drawing.Point(88, 7);
+            this.dbsBox.Margin = new System.Windows.Forms.Padding(3, 7, 3, 3);
+            this.dbsBox.Name = "dbsBox";
+            this.dbsBox.Size = new System.Drawing.Size(164, 21);
+            this.dbsBox.TabIndex = 1;
+            this.dbsBox.SelectedValueChanged += new System.EventHandler(this.changeDB);
             // 
             // addLinksMenu
             // 
@@ -379,7 +417,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(630, 255);
+            this.ClientSize = new System.Drawing.Size(630, 299);
             this.Controls.Add(this.tableLayoutPanel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.MaximizeBox = false;
@@ -398,6 +436,8 @@
             this.linksViewMenu.ResumeLayout(false);
             this.flowLayoutPanel4.ResumeLayout(false);
             this.flowLayoutPanel4.PerformLayout();
+            this.flowLayoutPanel5.ResumeLayout(false);
+            this.flowLayoutPanel5.PerformLayout();
             this.addLinksMenu.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -434,6 +474,9 @@
         private System.Windows.Forms.Label AddMailLabel;
         private System.Windows.Forms.ContextMenuStrip linksViewMenu;
         private System.Windows.Forms.ToolStripMenuItem deleteEncItem;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel5;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.ComboBox dbsBox;
 
 
     }

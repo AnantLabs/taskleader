@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Windows.Forms;
 using System.Collections;
 using TaskLeader.DAL;
@@ -8,12 +9,14 @@ namespace TaskLeader.GUI
     public partial class AdminDefaut : Form
     {
         String empty = "-- Aucun --";
-        private DB db = TrayIcon.defaultDB;
 
-        public AdminDefaut(DB database)
+        private String dbName = ConfigurationManager.AppSettings["defaultDB"];
+        public DB db { get { return TrayIcon.dbs[dbName]; } }
+
+        public AdminDefaut(String database)
         {
             InitializeComponent();
-            this.db = database;
+            this.dbName = database;
         }
 
         private void AdminDefaut_Load(object sender, EventArgs e)

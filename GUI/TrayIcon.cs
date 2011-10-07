@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Configuration;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Windows.Forms;
 using TaskLeader.BLL;
@@ -22,8 +23,8 @@ namespace TaskLeader.GUI
         static Control invokeControl = new Control();
 
         // Gestion des DBs
-        public static Array dbs;
-        public static DB defaultDB { get { return (DB)dbs.GetValue(0); } }
+        public static Dictionary<string, DB> dbs = new Dictionary<string, DB>();
+        public static DB defaultDB { get { return dbs[ConfigurationManager.AppSettings["defaultDB"]]; } }
 
         // Déclaration de tous les composants
         private void loadComponents()

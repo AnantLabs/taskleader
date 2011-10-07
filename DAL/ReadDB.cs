@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.SQLite;
 using System.Windows.Forms;
 using TaskLeader.BO;
+using TaskLeader.GUI;
 
 namespace TaskLeader.DAL
 {

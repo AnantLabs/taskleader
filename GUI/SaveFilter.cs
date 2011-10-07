@@ -1,11 +1,13 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Windows.Forms;
 using TaskLeader.DAL;
 
 namespace TaskLeader.GUI
 {
     public partial class SaveFilter : Form
     {
-        private DB db;
+        private String dbName;
+        private DB db { get { return TrayIcon.dbs[dbName]; } }
 
         public SaveFilter()
         {
@@ -34,9 +36,9 @@ namespace TaskLeader.GUI
             }           
         }
 
-        public DialogResult getFilterName(ref string name, DB database){
+        public DialogResult getFilterName(ref string name, String database){
 
-            this.db = database;
+            this.dbName = database;
 
             DialogResult result = this.ShowDialog();
             if (result == DialogResult.OK)

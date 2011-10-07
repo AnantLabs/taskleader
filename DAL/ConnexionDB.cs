@@ -23,12 +23,10 @@ namespace TaskLeader.DAL
     public partial class DB
     {
         // Caractéristiques de la DB
-        public String name = "";
         public String path = "";
 
-        public DB(String nom, String chemin)
+        public DB(String chemin)
         {
-            this.name = nom;
             this.path = chemin;
             v_currentFilter = this.getFilter(this.getDefault(this.filtre));
         }

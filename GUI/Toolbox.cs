@@ -12,7 +12,8 @@ namespace TaskLeader.GUI
 {
     public partial class Toolbox : Form
     {
-        private DB db = TrayIcon.defaultDB;
+        public String dbName = ConfigurationManager.AppSettings["defaultDB"];
+        private DB db { get { return TrayIcon.dbs[dbName]; } }
 
         private DataGridViewImageColumn linkCol = new DataGridViewImageColumn();
         private int P1length = Int32.Parse(ConfigurationManager.AppSettings["P1length"]);
@@ -125,14 +126,14 @@ namespace TaskLeader.GUI
         // Ouverture de la gui édition d'action
         private void modifAction(object sender, EventArgs e)
         {
-            TrayIcon.displayNewAction(new TLaction(grilleData.SelectedRows[0].Cells["id"].Value.ToString(), this.db));
+            TrayIcon.displayNewAction(new TLaction(grilleData.SelectedRows[0].Cells["id"].Value.ToString(), this.dbName));
         }
 
         // Mise à jour du statut d'une action via le menu contextuel
         private void changeStat(object sender, EventArgs e)
         {
             // Récupération de l'action
-            TLaction action = new TLaction(grilleData.SelectedRows[0].Cells["id"].Value.ToString(), this.db);
+            TLaction action = new TLaction(grilleData.SelectedRows[0].Cells["id"].Value.ToString(), this.dbName);
 
             // On récupère le nouveau statut
             action.Statut = ((ToolStripItem)sender).Text;
@@ -248,7 +249,7 @@ namespace TaskLeader.GUI
                 e.RowIndex >= 0) // Ce n'est pas la ligne des headers // Cellule non vide
             {
                 grilleData.Cursor = Cursors.Default;
-                DatePickerPopup popup = new DatePickerPopup(new TLaction(grilleData.SelectedRows[0].Cells["id"].Value.ToString(), this.db));
+                DatePickerPopup popup = new DatePickerPopup(new TLaction(grilleData.SelectedRows[0].Cells["id"].Value.ToString(), this.dbName));
                 popup.Closed += new ToolStripDropDownClosedEventHandler(popup_Closed);
                 popup.Show();
             }
@@ -349,7 +350,7 @@ namespace TaskLeader.GUI
 
                 String nomFiltre = "";
 
-                if ((new SaveFilter()).getFilterName(ref nomFiltre, db) == DialogResult.OK)// Affichage de la Fom SaveFilter
+                if ((new SaveFilter()).getFilterName(ref nomFiltre, this.dbName) == DialogResult.OK)// Affichage de la Fom SaveFilter
                 {
                     //Sauvegarde du filtre
                     filtre.nom = nomFiltre;
@@ -545,7 +546,7 @@ namespace TaskLeader.GUI
 
         private void defaultValuesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new AdminDefaut(db).Show();
+            new AdminDefaut(this.dbName).Show();
         }
     }
 }

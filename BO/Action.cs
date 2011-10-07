@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Collections;
 using System.Data;
 using TaskLeader.DAL;
@@ -15,7 +16,8 @@ namespace TaskLeader.BO
         private bool initialStateFrozen = false;
 
         // DB d'où provient l'action
-        public DB db = TrayIcon.defaultDB;
+        public String dbName = ConfigurationManager.AppSettings["defaultDB"];
+        private DB db { get { return TrayIcon.dbs[dbName]; } }
 
         // ID de l'action dans la base TaskLeader
         private String v_TLID = "";
@@ -140,9 +142,9 @@ namespace TaskLeader.BO
         /// Constructeur à partir de l'ID de stockage de l'action
         /// </summary>
         // Constructeur permettant de créer une action à partir de son ID
-        public TLaction(String ID, DB database)
+        public TLaction(String ID, String database)
 		{
-            this.db = database;
+            this.dbName = database;
 			this.v_TLID = ID;
 		
 			//Récupération des données de l'action
