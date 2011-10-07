@@ -30,12 +30,13 @@ namespace TaskLeader.BLL
 
         public bool canLaunch()
         {
-            int index;
+            //TODO: il faudrait vérifier s'il n'y a pas de doublons dans la liste des DBs
+
+            bool defaultDBok = false;
 
             // Récupération de la liste des databases
             NameValueCollection dbData = (NameValueCollection)ConfigurationManager.GetSection("Databases");
             String defaultDBname = ConfigurationManager.AppSettings["defaultDB"];
-            ArrayList databases = new ArrayList();
 
             foreach (String dbName in dbData)
             {
@@ -43,28 +44,26 @@ namespace TaskLeader.BLL
                      MessageBox.Show("Base " + dbName + " introuvable\nVérifier fichier de conf", "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 else
                 {
-                    index = databases.Add(new DB(dbName,dbData[dbName]));
-                    if (!checkMigration((DB)databases[index]))
-                        databases.RemoveAt(index);
+                    TrayIcon.dbs.Add(dbName,new DB(dbData[dbName]));
+                    if (!DBiscompatible(dbName))
+                        TrayIcon.dbs.Remove(dbName);
                     else if (dbName == defaultDBname)
-                        databases.Reverse(); // On passe la dernière DB ajoutée en tête de liste
+                        defaultDBok = true;
                 }
             }
 
-            TrayIcon.dbs = databases.ToArray();
-            return (databases.Count > 0); // Lancement si au moins une DB est valide   
+            return defaultDBok; // Lancement si la DB par défaut est au moins ok
         }
 
-
         // Migration
-        private bool checkMigration(DB db)
+        private bool DBiscompatible(String dbName)
         {
             // On vérifie que la version de la GUI est bien dans la base
-            bool baseCompatible = db.isVersionComp(Application.ProductVersion.Substring(0, 3));
+            bool baseCompatible = TrayIcon.dbs[dbName].isVersionComp(Application.ProductVersion.Substring(0, 3));
 
             if (!baseCompatible)
-                if (TrayIcon.defaultDB.getLastVerComp() == "0.6")
-                    return migrationOK("06-07");
+                if (TrayIcon.dbs[dbName].getLastVerComp() == "0.6")
+                    return tryMigration("06-07",dbName);
                 else
                 {
                     MessageBox.Show("La base est trop ancienne pour une migration", "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
@@ -74,11 +73,11 @@ namespace TaskLeader.BLL
                 return true; // La base est compatible, rien à faire.
         }
 
-        private bool migrationOK(String change)
+        private bool tryMigration(String change, String dbName)
         {
             // Copie de sauvegarde du fichier db avant toute manip
             TrayIcon.afficheMessage("Migration","Copie de sauvegarde de la base");
-            String sourceFile = ConfigurationManager.AppSettings["cheminDB"];
+            String sourceFile = TrayIcon.dbs[dbName].path;
             String backupFile = sourceFile.Substring(0, sourceFile.Length - 4) + DateTime.Now.ToString("_Back-ddMMyyyy") + ".db3";
             System.IO.File.Copy(sourceFile, backupFile,true);
 
@@ -89,10 +88,10 @@ namespace TaskLeader.BLL
 
                 // Exécution du script
                 TrayIcon.afficheMessage("Migration", "Exécution du script de migration");
-                TrayIcon.defaultDB.execSQL(script);
+                TrayIcon.dbs[dbName].execSQL(script);
 
                 // Nettoyage de la base
-                TrayIcon.defaultDB.execSQL("VACUUM;");
+                TrayIcon.dbs[dbName].execSQL("VACUUM;");
                 TrayIcon.afficheMessage("Migration", "Migration de la base effectuée");
 
                 return true;

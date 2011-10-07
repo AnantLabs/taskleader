@@ -17,26 +17,25 @@ namespace TaskLeader.GUI
         [DllImportAttribute("User32.dll")]
         private static extern IntPtr SetForegroundWindow(IntPtr hWnd);
 
-        private DB db = TrayIcon.defaultDB;
         private TLaction v_action;
+        private DB db { get { return TrayIcon.dbs[v_action.dbName]; } }
+
         public String ID { get { return v_action.ID; } }
 
         // Préparation des widgets
         private void loadWidgets()
         {
-            this.Icon = TaskLeader.Properties.Resources.task_coach;
+            // Contextes
+            this.contexteBox.Items.Clear();
+            contexteBox.Items.AddRange(db.getTitres(db.contexte));
 
-            //Ajout des contextes à la combobox
-            foreach (String item in db.getTitres(db.contexte))
-                contexteBox.Items.Add(item);
+            // Destinataires
+            this.destBox.Items.Clear();
+            destBox.Items.AddRange(db.getTitres(db.destinataire));
 
-            // Ajout des destinataires à la combobox
-            foreach (String item in db.getTitres(db.destinataire))
-                destBox.Items.Add(item);
-
-            // On remplit la liste des statuts
-            foreach (String item in db.getTitres(db.statut))
-                statutBox.Items.Add(item);
+            // Statuts
+            this.statutBox.Items.Clear();
+            statutBox.Items.AddRange(db.getTitres(db.statut)); // On remplit la liste des statuts
         }
 
         // Ajout d'un lien à la ListView
@@ -58,6 +57,12 @@ namespace TaskLeader.GUI
         {
             InitializeComponent();
 
+            this.Icon = TaskLeader.Properties.Resources.task_coach;
+
+            // Remplissage de la liste des bases disponibles
+            foreach (String dbName in TrayIcon.dbs.Keys)
+                dbsBox.Items.Add(dbName);
+
             // On mémorise l'action
             this.v_action = action;
             // Chargement des widgets
@@ -71,11 +76,15 @@ namespace TaskLeader.GUI
             {
                 this.Text += "Modifier une action - TaskLeader";
 
+                this.dbsBox.Enabled = false;
+
                 if (action.hasDueDate) // Attribut géré à part car pas de valeur par défaut
                     actionDatePicker.Value = action.DueDate;
                 else
                     noDueDate.Checked = true;
             }
+
+            dbsBox.Text = v_action.dbName;
 
             destBox.Text = action.Destinataire;
 
@@ -124,7 +133,7 @@ namespace TaskLeader.GUI
                 v_action.DueDate = actionDatePicker.Value;
 
             // On sauvegarde l'action
-            v_action.db = db;
+            //TODO: ici il faut donner le nom de la base pour une action non scratchpad
             v_action.save();
 
             // Fermeture de la fenêtre
@@ -245,7 +254,15 @@ namespace TaskLeader.GUI
             linksView.Items.Remove(linksView.SelectedItems[0]);
             if (linksView.Items.Count == 0)
                 linksView.Visible = false;
+        }
 
+        // Sélection d'une autre DB
+        private void changeDB(object sender, EventArgs e)
+        {
+            //TODO: effacer toutes les combobox
+            this.v_action.dbName = dbsBox.Text;
+            this.loadWidgets();
+            //TODO: sélectionner les champs par défaut
         }
 
     }

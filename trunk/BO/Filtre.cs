@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
+using System.Configuration;
 using System.Data;
+using TaskLeader.GUI;
 using TaskLeader.DAL;
 
 namespace TaskLeader.BO
