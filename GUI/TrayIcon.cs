@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Configuration;
+using System.Collections.Specialized;
 using System.Windows.Forms;
 using TaskLeader.BLL;
 using TaskLeader.BO;
-using System.Collections.Specialized;
+using TaskLeader.DAL;
 
 namespace TaskLeader.GUI
 {
@@ -19,6 +20,10 @@ namespace TaskLeader.GUI
 
         // Déclaration des composants métiers
         static Control invokeControl = new Control();
+
+        // Gestion des DBs
+        public static Array dbs;
+        public static DB defaultDB { get { return (DB)dbs.GetValue(0); } }
 
         // Déclaration de tous les composants
         private void loadComponents()
@@ -109,7 +114,7 @@ namespace TaskLeader.GUI
 
             // Vérification de démarrage
             if (Init.Instance.canLaunch())
-            {
+            {                
                 this.displayToolbox(new Object(), new EventArgs()); // Affichage de la Toolbox
                 invokeControl.CreateControl();
             }
@@ -159,6 +164,7 @@ namespace TaskLeader.GUI
             displayNewAction(new TLaction());
         }
 
+        // Méthode appelée sur nouveau mail
         private void newActionOutlook(object sender, NewMailEventArgs e)
         {
             if (invokeControl.InvokeRequired)

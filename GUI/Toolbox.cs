@@ -12,6 +12,8 @@ namespace TaskLeader.GUI
 {
     public partial class Toolbox : Form
     {
+        private DB db = TrayIcon.defaultDB;
+
         private DataGridViewImageColumn linkCol = new DataGridViewImageColumn();
         private int P1length = Int32.Parse(ConfigurationManager.AppSettings["P1length"]);
 
@@ -31,7 +33,7 @@ namespace TaskLeader.GUI
             this.loadFilters();
 
             // Remplissage de la ListBox des statuts + menu contextuel du tableau
-            foreach (object item in ReadDB.Instance.getTitres(DB.Instance.statut))
+            foreach (object item in db.getTitres(db.statut))
             {
                 statutListBox.Items.Add(item, true); // Sélection de tous les statuts par défaut
                 statutTSMenuItem.DropDown.Items.Add(item.ToString(), null, this.changeStat);
@@ -58,7 +60,7 @@ namespace TaskLeader.GUI
         private void loadFilters()
         {
             filterCombo.Items.Add("Sélectionner...");
-            filterCombo.Items.AddRange(ReadDB.Instance.getTitres(DB.Instance.filtre));
+            filterCombo.Items.AddRange(db.getTitres(db.filtre));
             filterCombo.SelectedIndex = 0;
         }
 
@@ -72,17 +74,17 @@ namespace TaskLeader.GUI
                 this.destListBox.Items.Clear();
 
                 // Remplissage de la ListBox des contextes
-                foreach (object item in ReadDB.Instance.getTitres(DB.Instance.contexte))
+                foreach (object item in db.getTitres(db.contexte))
                     ctxtListBox.Items.Add(item, true); // Sélection des contextes par défaut
 
                 // Remplissage de la ListBox des destinataires
-                foreach (object item in ReadDB.Instance.getTitres(DB.Instance.destinataire))
+                foreach (object item in db.getTitres(db.destinataire))
                     destListBox.Items.Add(item, true); // Sélection des destinataires par défaut
             }
 
             // Si un filtre est actif on l'affiche
-            if (Filtre.CurrentFilter != null)
-                this.showFilter(Filtre.CurrentFilter);
+            if (this.db.CurrentFilter != null)
+                this.showFilter(this.db.CurrentFilter);
         }
 
         // Méthode appelée quand checks des contextes changent
@@ -97,7 +99,7 @@ namespace TaskLeader.GUI
                 //Activation de la checkBox all
                 allSujt.Enabled = true;
                 //Remplissage de la liste
-                foreach (object item in ReadDB.Instance.getSujets((String)ctxtListBox.CheckedItems[0].ToString()))
+                foreach (object item in db.getSujets((String)ctxtListBox.CheckedItems[0].ToString()))
                     sujetListBox.Items.Add(item, true);
             }
             else
@@ -123,14 +125,14 @@ namespace TaskLeader.GUI
         // Ouverture de la gui édition d'action
         private void modifAction(object sender, EventArgs e)
         {
-            TrayIcon.displayNewAction(new TLaction(grilleData.SelectedRows[0].Cells["id"].Value.ToString()));
+            TrayIcon.displayNewAction(new TLaction(grilleData.SelectedRows[0].Cells["id"].Value.ToString(), this.db));
         }
 
         // Mise à jour du statut d'une action via le menu contextuel
         private void changeStat(object sender, EventArgs e)
         {
             // Récupération de l'action
-            TLaction action = new TLaction(grilleData.SelectedRows[0].Cells["id"].Value.ToString());
+            TLaction action = new TLaction(grilleData.SelectedRows[0].Cells["id"].Value.ToString(), this.db);
 
             // On récupère le nouveau statut
             action.Statut = ((ToolStripItem)sender).Text;
@@ -195,7 +197,7 @@ namespace TaskLeader.GUI
                         break;
                     case ("1"):
                         // Récupération de la PJ
-                        Enclosure pj = (Enclosure)ReadDB.Instance.getPJ(grilleData.Rows[e.RowIndex].Cells["id"].Value.ToString()).GetValue(0);
+                        Enclosure pj = (Enclosure)db.getPJ(grilleData.Rows[e.RowIndex].Cells["id"].Value.ToString()).GetValue(0);
                         e.Value = pj.Icone; // Affichage de la bonne icône
                         grilleData[e.ColumnIndex, e.RowIndex].ToolTipText = pj.Titre; // Modification du tooltip de la cellule
                         grilleData.Rows[e.RowIndex].Tag = pj; // Tag de la DataGridRow
@@ -227,7 +229,7 @@ namespace TaskLeader.GUI
                     ((Enclosure)grilleData.Rows[e.RowIndex].Tag).open(); // Ouverture directe
                 else // Plusieurs liens
                 {
-                    Array links = ReadDB.Instance.getPJ(grilleData.SelectedRows[0].Cells["id"].Value.ToString()); //Récupération des différents liens
+                    Array links = db.getPJ(grilleData.SelectedRows[0].Cells["id"].Value.ToString()); //Récupération des différents liens
                     linksContext.Items.Clear(); // Remise à zéro de la liste
 
                     foreach (Enclosure link in links)
@@ -246,7 +248,7 @@ namespace TaskLeader.GUI
                 e.RowIndex >= 0) // Ce n'est pas la ligne des headers // Cellule non vide
             {
                 grilleData.Cursor = Cursors.Default;
-                DatePickerPopup popup = new DatePickerPopup(new TLaction(grilleData.SelectedRows[0].Cells["id"].Value.ToString()));
+                DatePickerPopup popup = new DatePickerPopup(new TLaction(grilleData.SelectedRows[0].Cells["id"].Value.ToString(), this.db));
                 popup.Closed += new ToolStripDropDownClosedEventHandler(popup_Closed);
                 popup.Show();
             }
@@ -338,7 +340,7 @@ namespace TaskLeader.GUI
         // Affichage des actions sur filtre manuel
         private void filtreAction(object sender, EventArgs e)
         {
-            Filtre filtre = new Filtre(allCtxt.Checked, allSujt.Checked, allDest.Checked, allStat.Checked, ctxtListBox.CheckedItems, sujetListBox.CheckedItems, destListBox.CheckedItems, statutListBox.CheckedItems);
+            Filtre filtre = new Filtre(this.db,allCtxt.Checked, allSujt.Checked, allDest.Checked, allStat.Checked, ctxtListBox.CheckedItems, sujetListBox.CheckedItems, destListBox.CheckedItems, statutListBox.CheckedItems);
 
             if (saveFilterCheck.Checked) //Sauvegarde du filtre si checkbox cochée
             {
@@ -347,11 +349,11 @@ namespace TaskLeader.GUI
 
                 String nomFiltre = "";
 
-                if ((new SaveFilter()).getFilterName(ref nomFiltre) == DialogResult.OK)// Affichage de la Fom SaveFilter
+                if ((new SaveFilter()).getFilterName(ref nomFiltre, db) == DialogResult.OK)// Affichage de la Fom SaveFilter
                 {
                     //Sauvegarde du filtre
                     filtre.nom = nomFiltre;
-                    WriteDB.Instance.insertFiltre(filtre);
+                    db.insertFiltre(filtre);
 
                     // On vide la liste des filtres                
                     filterCombo.Items.Clear();
@@ -479,10 +481,10 @@ namespace TaskLeader.GUI
                     {
                         String table = critere.entity.mainTable;
 
-                        if (table == DB.Instance.contexte.mainTable) { box = allCtxt; list = ctxtListBox; }
-                        if (table == DB.Instance.sujet.mainTable) { box = allSujt; list = sujetListBox; }
-                        if (table == DB.Instance.destinataire.mainTable) { box = allDest; list = destListBox; }
-                        if (table == DB.Instance.statut.mainTable) { box = allStat; list = statutListBox; }
+                        if (table == db.contexte.mainTable) { box = allCtxt; list = ctxtListBox; }
+                        if (table == db.sujet.mainTable) { box = allSujt; list = sujetListBox; }
+                        if (table == db.destinataire.mainTable) { box = allDest; list = destListBox; }
+                        if (table == db.statut.mainTable) { box = allStat; list = statutListBox; }
 
                         box.Checked = false; // La checkbox "Tous" n'est pas sélectionnée
                         for (int i = 0; i < list.Items.Count; i++) // Parcours de la ListBox
@@ -506,14 +508,14 @@ namespace TaskLeader.GUI
         private void openFilter(object sender, EventArgs e)
         {
             if (((ComboBox)sender).SelectedIndex > 0)
-                this.showFilter(ReadDB.Instance.getFilter(filterCombo.Text));
+                this.showFilter(db.getFilter(filterCombo.Text));
         }
 
         // Validation de la recherche après click sur OK
         private void searchButton_Click(object sender, EventArgs e)
         {
             if (searchBox.Text != "")
-                this.showFilter(new Filtre(searchBox.Text));
+                this.showFilter(new Filtre(searchBox.Text,this.db));
             else
                 MessageBox.Show("Veuillez entrer un mot clé pour la recherche", "Recherche", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
         }
@@ -529,8 +531,8 @@ namespace TaskLeader.GUI
         private void exitSearchBut_Click(object sender, EventArgs e)
         {
             // Si un filtre était actif avant la (ou les) recherche(s), on l'affiche
-            if (Filtre.CurrentFilter.type == 2 && Filtre.OldFilter != null)
-                this.showFilter(Filtre.OldFilter);
+            if (this.db.CurrentFilter.type == 2 && this.db.OldFilter != null)
+                this.showFilter(this.db.OldFilter);
             else
             {
                 // On cache l'étiquette de recherche et le label de résultat
@@ -543,7 +545,7 @@ namespace TaskLeader.GUI
 
         private void defaultValuesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new AdminDefaut().Show();
+            new AdminDefaut(db).Show();
         }
     }
 }

@@ -18,25 +18,8 @@ namespace TaskLeader.DAL
         }
     }
 
-    public class WriteDB
+    public partial class DB
     {
-        // Variable locale pour stocker une référence vers l'instance
-        private static WriteDB instance = null;
-
-        // Renvoie l'instance ou la crée
-        public static WriteDB Instance
-        {
-            get
-            {
-                // Si pas d'instance existante on en crée une...
-                if (instance == null)
-                    instance = new WriteDB();
-
-                // On retourne l'instance de MonSingleton
-                return instance;
-            }
-        }
-
         // Méthode générique pour exécuter une requête sql fournie en paramètre, retourne le nombre de lignes modifiées
         public int execSQL(String requete)
         {
@@ -46,7 +29,7 @@ namespace TaskLeader.DAL
 
             try
             {
-                using (SQLiteCommand SQLCmd = new SQLiteCommand(DB.Instance.getConnection()))
+                using (SQLiteCommand SQLCmd = new SQLiteCommand(this.SQLC))
                 {
                     // Création d'une nouvelle commande à partir de la connexion
                     SQLCmd.CommandText = requete;
@@ -65,9 +48,9 @@ namespace TaskLeader.DAL
         // Insertion d'une valeur par défaut
         public void insertDefaut(object[] values)
         {
-            using (SQLiteTransaction mytransaction = DB.Instance.getConnection().BeginTransaction())
+            using (SQLiteTransaction mytransaction = this.SQLC.BeginTransaction())
             {
-                using (SQLiteCommand SQLCmd = new SQLiteCommand(DB.Instance.getConnection()))
+                using (SQLiteCommand SQLCmd = new SQLiteCommand(this.SQLC))
                 {
                     // On efface toutes les valeurs par défaut
                     SQLCmd.CommandText = "UPDATE Contextes SET Defaut=NULL WHERE Defaut=1;";
@@ -76,11 +59,11 @@ namespace TaskLeader.DAL
                     SQLCmd.CommandText += "UPDATE Statuts SET Defaut=NULL WHERE Defaut=1;";
                     SQLCmd.CommandText += "UPDATE Filtres SET Defaut=NULL WHERE Defaut=1;";
                     SQLCmd.ExecuteNonQuery();
-                    
+
                     // On insère les valeurs par défaut sélectionnées
                     foreach (DBvalue DBvalue in values)
                     {
-                        SQLCmd.CommandText += "UPDATE "+DBvalue.entity.mainTable+" SET Defaut=1 WHERE Titre='"+DBvalue.value+"';";
+                        SQLCmd.CommandText += "UPDATE " + DBvalue.entity.mainTable + " SET Defaut=1 WHERE Titre='" + DBvalue.value + "';";
                         SQLCmd.ExecuteNonQuery();
                     }
                 }
@@ -92,13 +75,13 @@ namespace TaskLeader.DAL
         // Insertion en base d'un nouveau filtre
         public void insertFiltre(Filtre filtre)
         {
-            using (SQLiteTransaction mytransaction = DB.Instance.getConnection().BeginTransaction())
+            using (SQLiteTransaction mytransaction = this.SQLC.BeginTransaction())
             {
-                using (SQLiteCommand SQLCmd = new SQLiteCommand(DB.Instance.getConnection()))
+                using (SQLiteCommand SQLCmd = new SQLiteCommand(this.SQLC))
                 {
                     // On insère le nom du filtre
                     String nomFiltre = "'" + filtre.nom.Replace("'", "''") + "'"; // Le titre du filtre ne doit pas contenir de quote
-                    SQLCmd.CommandText = "INSERT INTO Filtres (Titre) VALUES ("+nomFiltre+");";
+                    SQLCmd.CommandText = "INSERT INTO Filtres (Titre) VALUES (" + nomFiltre + ");";
                     SQLCmd.ExecuteNonQuery();
 
                     // On insère ensuite dans les tables annexes les données sélectionnées
@@ -109,7 +92,7 @@ namespace TaskLeader.DAL
 
                         // On crée la requête pour insertion des critères dans les tables annexes
                         String requete = "INSERT INTO Filtres_cont VALUES (";
-                        requete += "(SELECT max(id) FROM Filtres),'"+table+"',(SELECT id FROM "+table+" WHERE Titre=@Titre));";
+                        requete += "(SELECT max(id) FROM Filtres),'" + table + "',(SELECT id FROM " + table + " WHERE Titre=@Titre));";
                         // On récupère le rowid du filtre frâichement créé
 
                         SQLCmd.CommandText = requete;
@@ -132,7 +115,7 @@ namespace TaskLeader.DAL
             }
 
             // On affiche un message de statut sur la TrayIcon
-            TrayIcon.afficheMessage("Bilan création/modification","Nouveau filtre ajouté: "+filtre.nom);
+            TrayIcon.afficheMessage("Bilan création/modification", "Nouveau filtre ajouté: " + filtre.nom);
 
         }
 
@@ -166,16 +149,16 @@ namespace TaskLeader.DAL
 
             return execSQL(requete);
         }
-    
+
         // Insertion d'un nouveau mail en base
         public String insertMail(Mail mail)
         {
             String EncID = "";
             String titre = "'" + mail.Titre.Replace("'", "''") + "'";
 
-            using (SQLiteTransaction mytransaction = DB.Instance.getConnection().BeginTransaction())
+            using (SQLiteTransaction mytransaction = this.SQLC.BeginTransaction())
             {
-                using (SQLiteCommand SQLCmd = new SQLiteCommand(DB.Instance.getConnection()))
+                using (SQLiteCommand SQLCmd = new SQLiteCommand(this.SQLC))
                 {
                     // Insertion du mail
                     SQLCmd.CommandText = "INSERT INTO Mails (Titre,StoreID,EntryID,MessageID) ";
@@ -192,15 +175,15 @@ namespace TaskLeader.DAL
             return EncID;
         }
 
-		// Insertion d'un nouveau lien en base
-		public String insertLink(Link lien)
-		{
-			String EncID = "";
+        // Insertion d'un nouveau lien en base
+        public String insertLink(Link lien)
+        {
+            String EncID = "";
             String titre = "'" + lien.Titre.Replace("'", "''") + "'";
 
-            using (SQLiteTransaction mytransaction = DB.Instance.getConnection().BeginTransaction())
+            using (SQLiteTransaction mytransaction = this.SQLC.BeginTransaction())
             {
-                using (SQLiteCommand SQLCmd = new SQLiteCommand(DB.Instance.getConnection()))
+                using (SQLiteCommand SQLCmd = new SQLiteCommand(this.SQLC))
                 {
                     // Insertion du mail
                     SQLCmd.CommandText = "INSERT INTO Links (Titre,Path) ";
@@ -215,22 +198,32 @@ namespace TaskLeader.DAL
             }
 
             return EncID;
-		}
+        }
 
         // Insertion des PJ
         public void insertPJ(String actionID, Array PJ)
         {
             String requete;
 
-            foreach (Enclosure link in PJ)
+            foreach (Enclosure enc in PJ)
             {
                 //Enregistrement de la PJ dans la bonne table et récupération de l'ID
-                String EncID = link.store();
+                String EncID ="";
+
+                switch (enc.Type)
+                {
+                    case ("Mails"):
+                        EncID = this.insertMail((Mail)enc);
+                        break;
+                    case ("Links"):
+                        EncID = this.insertLink((Link)enc);
+                        break;
+                }
 
                 // Création de la requête
                 requete = "INSERT INTO Enclosures VALUES(";
-                requete += actionID+",";
-                requete += "'"+link.Type + "',";
+                requete += actionID + ",";
+                requete += "'" + enc.Type + "',";
                 requete += EncID + ");";
 
                 execSQL(requete);
@@ -242,9 +235,9 @@ namespace TaskLeader.DAL
         {
             foreach (Enclosure pj in PJ)
             {
-                using (SQLiteTransaction mytransaction = DB.Instance.getConnection().BeginTransaction())
+                using (SQLiteTransaction mytransaction = this.SQLC.BeginTransaction())
                 {
-                    using (SQLiteCommand SQLCmd = new SQLiteCommand(DB.Instance.getConnection()))
+                    using (SQLiteCommand SQLCmd = new SQLiteCommand(this.SQLC))
                     {
                         // Suppression de la pj dans la table correspondante
                         SQLCmd.CommandText = "DELETE FROM " + pj.Type + " WHERE id=" + pj.ID + ";";
@@ -265,9 +258,9 @@ namespace TaskLeader.DAL
         {
             String actionID;
 
-            using (SQLiteTransaction mytransaction = DB.Instance.getConnection().BeginTransaction())
+            using (SQLiteTransaction mytransaction = this.SQLC.BeginTransaction())
             {
-                using (SQLiteCommand SQLCmd = new SQLiteCommand(DB.Instance.getConnection()))
+                using (SQLiteCommand SQLCmd = new SQLiteCommand(this.SQLC))
                 {
                     //Syntaxe: INSERT INTO Actions (nom des colonnes avec ,) VALUES(valeurs avec ' et ,)     
 
@@ -323,7 +316,7 @@ namespace TaskLeader.DAL
             // Préparation des sous requêtes
             String ctxtPart = "";
             if (action.ctxtHasChanged)
-                ctxtPart = "CtxtID=(SELECT id FROM Contextes WHERE Titre=" + action.ContexteSQL+"),";
+                ctxtPart = "CtxtID=(SELECT id FROM Contextes WHERE Titre=" + action.ContexteSQL + "),";
 
             String sujetPart = "";
             if (action.sujetHasChanged)
@@ -340,7 +333,7 @@ namespace TaskLeader.DAL
                     datePart = "DueDate=" + action.DueDateSQL + ",";
                 else
                     datePart = "DueDate=NULL,";
-            }             
+            }
 
             String destPart = "";
             if (action.destHasChanged)
@@ -349,7 +342,7 @@ namespace TaskLeader.DAL
             String statPart = "";
             if (action.statusHasChanged)
                 statPart = "StatID=(SELECT id FROM Statuts WHERE Titre=" + action.StatutSQL + "),";
-                // Il y a volontairement une virgule à la fin dans le cas où le statut n'a pas été mis à jour
+            // Il y a volontairement une virgule à la fin dans le cas où le statut n'a pas été mis à jour
 
             String updatePart = ctxtPart + sujetPart + actionPart + datePart + destPart + statPart;
 
@@ -360,7 +353,7 @@ namespace TaskLeader.DAL
                 return execSQL(requete);
             }
             else
-                return 0;           
+                return 0;
         }
     }
 }

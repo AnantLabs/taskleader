@@ -43,9 +43,5 @@ namespace TaskLeader.BO
 
         // Méthode obligatoire permettant d'ouvrir le lien
         public abstract void open();
-
-        // Méthode obligatoire permettant de stocker une pj dans la base
-        // Retourne l'ID de stockage
-        public abstract String store();
     }
 }

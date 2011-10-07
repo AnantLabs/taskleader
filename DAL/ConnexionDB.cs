@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data.SQLite;
 using System.Configuration;
+using TaskLeader.BO;
 
 namespace TaskLeader.DAL
 {
@@ -19,44 +20,40 @@ namespace TaskLeader.DAL
 		}
     }
 
-    public class DB
+    public partial class DB
     {
-        // Variable locale pour stocker une référence vers l'instance
-        private static DB instance = null;
-        public static DB Instance
+        // Caractéristiques de la DB
+        public String name = "";
+        public String path = "";
+
+        public DB(String nom, String chemin)
+        {
+            this.name = nom;
+            this.path = chemin;
+            v_currentFilter = this.getFilter(this.getDefault(this.filtre));
+        }
+
+        // Connexion à la base SQLite
+        private SQLiteConnection v_connex = null;
+        // Renvoie la connection
+        private SQLiteConnection SQLC
         {
             get
             {
-                // Si pas d'instance existante on en crée une...
-                if (instance == null)
-                    instance = new DB();
+                if (v_connex == null)
+                    v_connex = new SQLiteConnection("Data Source=" + path);
 
-                // On retourne l'instance de MonSingleton
-                return instance;
+                if (v_connex.State == System.Data.ConnectionState.Closed)
+                    v_connex.Open();
+
+                return v_connex;
             }
-        }
-
-        // Chemin d'accès à la base
-        private String cheminDB = ConfigurationManager.AppSettings["cheminDB"];  
-
-        // Connexion à la base SQLite
-        private SQLiteConnection SQLC = null;
-        // Renvoie la connection
-        public SQLiteConnection getConnection()
-        {
-            if (SQLC == null)
-                SQLC = new SQLiteConnection("Data Source=" + cheminDB);
-
-            if (SQLC.State == System.Data.ConnectionState.Closed)
-                SQLC.Open();
-
-            return SQLC;
         }
 
         // Ferme la connection
         public void closeConnection()
         {
-            SQLC.Close();
+            v_connex.Close();
         }
 
         // "Schéma de base"
@@ -65,5 +62,20 @@ namespace TaskLeader.DAL
         public DBentity destinataire = new DBentity("Destinataire", "Destinataires", "AllDest");
         public DBentity statut = new DBentity("Statut", "Statuts", "AllStat");
 		public DBentity filtre = new DBentity("","Filtres","");
+
+        // Filtres associés à la DB
+        private Filtre v_currentFilter; // Variable locale pour stocker une référence vers le filtre en cours
+        private Filtre v_oldFilter = null; // Et le filtre de type 1 précédent
+        public Filtre CurrentFilter
+        {
+            get { return v_currentFilter; }
+            set
+            {
+                if (v_currentFilter != null && v_currentFilter.type == 1)
+                    v_oldFilter = v_currentFilter; // Mémorisation du dernier filtre de type 1
+                v_currentFilter = value;
+            }
+        }
+        public Filtre OldFilter { get { return v_oldFilter; } }
     }
 }

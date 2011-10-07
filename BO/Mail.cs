@@ -31,9 +31,9 @@ namespace TaskLeader.BO
         /// <summary>
         /// Création d'un objet Mail à partir de son ID de stockage
         /// </summary>
-        public Mail(String ID):base(ID,"","Mails")
+        public Mail(String ID, DB db):base(ID,"","Mails")
         {
-            DataRow mailData = ReadDB.Instance.getMailData(ID);
+            DataRow mailData = db.getMailData(ID);
 
             base.Titre = mailData["Titre"].ToString();
             this.v_storeID = mailData["StoreID"].ToString();
@@ -55,12 +55,6 @@ namespace TaskLeader.BO
         public override void open()
         {
             OutlookIF.Instance.displayMail(this);
-        }
-
-        // Stockage du mail
-        public override String store()
-        {
-            return WriteDB.Instance.insertMail(this);
         }
     }
 }

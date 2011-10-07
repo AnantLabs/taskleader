@@ -92,7 +92,7 @@
 /* Gestion des pièces jointes */
 
 	-- Création de la table Enclosures
-	CREATE TABLE [Enclosures]([ActionID] REFERENCES [Contextes]([id]), [EncType] VARCHAR(50), [EncID] VARCHAR(5));
+	CREATE TABLE [Enclosures]([ActionID] REFERENCES [Actions]([id]), [EncType] VARCHAR(50), [EncID] VARCHAR(5));
 
 	-- Ajout des mails déjà enregistrés
 	INSERT INTO Enclosures SELECT ActionID,'Mails',MailID FROM IDMailTemp;

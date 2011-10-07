@@ -8,41 +8,43 @@ namespace TaskLeader.GUI
     public partial class AdminDefaut : Form
     {
         String empty = "-- Aucun --";
+        private DB db = TrayIcon.defaultDB;
 
-        public AdminDefaut()
+        public AdminDefaut(DB database)
         {
             InitializeComponent();
+            this.db = database;
         }
 
         private void AdminDefaut_Load(object sender, EventArgs e)
         {        
             //Remplissage des combos
             ctxtListBox.Items.Add(empty);
-            ctxtListBox.Items.AddRange(ReadDB.Instance.getTitres(DB.Instance.contexte));
+            ctxtListBox.Items.AddRange(db.getTitres(db.contexte));
             destListBox.Items.Add(empty);
-            destListBox.Items.AddRange(ReadDB.Instance.getTitres(DB.Instance.destinataire));
+            destListBox.Items.AddRange(db.getTitres(db.destinataire));
             statutListBox.Items.Add(empty);
-            statutListBox.Items.AddRange(ReadDB.Instance.getTitres(DB.Instance.statut));
+            statutListBox.Items.AddRange(db.getTitres(db.statut));
             filterCombo.Items.Add(empty);
-            filterCombo.Items.AddRange(ReadDB.Instance.getTitres(DB.Instance.filtre));
+            filterCombo.Items.AddRange(db.getTitres(db.filtre));
 
             //Sélection des valeurs par défaut
 
-            ctxtListBox.Text = ReadDB.Instance.getDefault(DB.Instance.contexte);
+            ctxtListBox.Text = db.getDefault(db.contexte);
             if (ctxtListBox.Text == "")
                 ctxtListBox.SelectedIndex = 0; // Sélection de la ligne "Aucun"
 
             this.updateSujet(sender, e);
 
-            destListBox.Text = ReadDB.Instance.getDefault(DB.Instance.destinataire);
+            destListBox.Text = db.getDefault(db.destinataire);
             if (destListBox.Text == "")
                 destListBox.SelectedIndex = 0;
 
-            statutListBox.Text = ReadDB.Instance.getDefault(DB.Instance.statut);
+            statutListBox.Text = db.getDefault(db.statut);
             if (statutListBox.Text == "")
                 statutListBox.SelectedIndex = 0;
 
-            filterCombo.Text = ReadDB.Instance.getDefault(DB.Instance.filtre);
+            filterCombo.Text = db.getDefault(db.filtre);
             if (filterCombo.Text == "")
                 filterCombo.SelectedIndex = 0;
         }
@@ -57,10 +59,10 @@ namespace TaskLeader.GUI
             if (ctxtListBox.SelectedIndex > 0) // Uniquement si contexte différent de "Aucun"
             {
                 // Remplissage de la liste
-                sujetListBox.Items.AddRange(ReadDB.Instance.getSujets(ctxtListBox.Text));
+                sujetListBox.Items.AddRange(db.getSujets(ctxtListBox.Text));
 
                 // Sélection du sujet par défaut
-                sujetListBox.Text = ReadDB.Instance.getDefault(DB.Instance.sujet);
+                sujetListBox.Text = db.getDefault(db.sujet);
                 if (sujetListBox.Text == "")
                     sujetListBox.SelectedIndex = 0;
             }
@@ -74,22 +76,22 @@ namespace TaskLeader.GUI
             ArrayList updatedValues = new ArrayList();
 
             if (ctxtListBox.SelectedIndex > 0)
-                updatedValues.Add(new DBvalue(DB.Instance.contexte, ctxtListBox.Text));
+                updatedValues.Add(new DBvalue(db.contexte, ctxtListBox.Text));
 
             if (sujetListBox.SelectedIndex > 0)
-                updatedValues.Add(new DBvalue(DB.Instance.sujet, sujetListBox.Text));
+                updatedValues.Add(new DBvalue(db.sujet, sujetListBox.Text));
 
             if (destListBox.SelectedIndex > 0)
-                updatedValues.Add(new DBvalue(DB.Instance.destinataire, destListBox.Text));
+                updatedValues.Add(new DBvalue(db.destinataire, destListBox.Text));
 
             if (statutListBox.SelectedIndex > 0)
-                updatedValues.Add(new DBvalue(DB.Instance.statut, statutListBox.Text));
+                updatedValues.Add(new DBvalue(db.statut, statutListBox.Text));
 
             if (filterCombo.SelectedIndex > 0)
-                updatedValues.Add(new DBvalue(DB.Instance.filtre, filterCombo.Text));
+                updatedValues.Add(new DBvalue(db.filtre, filterCombo.Text));
 
             // Sauvegarde
-            WriteDB.Instance.insertDefaut(updatedValues.ToArray());
+            db.insertDefaut(updatedValues.ToArray());
             // On affiche un message de statut sur la TrayIcon
             TrayIcon.afficheMessage("Bilan création/modification", "Valeurs par défaut mises à jour");
 

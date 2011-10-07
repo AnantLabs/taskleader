@@ -14,13 +14,16 @@ namespace TaskLeader.BO
         // Membre privé permettant de détecter des updates
         private bool initialStateFrozen = false;
 
+        // DB d'où provient l'action
+        public DB db = TrayIcon.defaultDB;
+
         // ID de l'action dans la base TaskLeader
         private String v_TLID = "";
         public String ID { get { return v_TLID; } }
         public bool isScratchpad { get { return (v_TLID == ""); } }
 
         // Contexte de l'action
-        private String v_ctxt = ReadDB.Instance.getDefault(DB.Instance.contexte);
+        private String v_ctxt = TrayIcon.defaultDB.getDefault(TrayIcon.defaultDB.contexte);
         public bool ctxtHasChanged = false;
         public String Contexte {
             get { return v_ctxt; }
@@ -35,7 +38,7 @@ namespace TaskLeader.BO
         public String ContexteSQL { get { return sqlFactory(v_ctxt); } }        
 
         // Sujet de l'action
-        private String v_sujt = ReadDB.Instance.getDefault(DB.Instance.sujet);
+        private String v_sujt = TrayIcon.defaultDB.getDefault(TrayIcon.defaultDB.sujet);
         public bool sujetHasChanged = false;
         public String Sujet
         {
@@ -86,7 +89,7 @@ namespace TaskLeader.BO
         public String DueDateSQL { get { return "'"+v_dueDate.ToString("yyyy-MM-dd")+"'"; } }
 
         // Destinataire de l'action
-        private String v_dest = ReadDB.Instance.getDefault(DB.Instance.destinataire);
+        private String v_dest = TrayIcon.defaultDB.getDefault(TrayIcon.defaultDB.destinataire);
         public bool destHasChanged = false;
         public String Destinataire
         {
@@ -103,7 +106,7 @@ namespace TaskLeader.BO
         public String DestinataireSQL { get { return sqlFactory(v_dest); } } 
 
         // Statut de l'action
-        private String v_stat = ReadDB.Instance.getDefault(DB.Instance.statut); // Le statut est initialisé avec la valeur par défaut
+        private String v_stat = TrayIcon.defaultDB.getDefault(TrayIcon.defaultDB.statut); // Le statut est initialisé avec la valeur par défaut
         public bool statusHasChanged = false;
         public String Statut
         {
@@ -137,12 +140,13 @@ namespace TaskLeader.BO
         /// Constructeur à partir de l'ID de stockage de l'action
         /// </summary>
         // Constructeur permettant de créer une action à partir de son ID
-        public TLaction(String ID)
+        public TLaction(String ID, DB database)
 		{
+            this.db = database;
 			this.v_TLID = ID;
 		
 			//Récupération des données de l'action
-			DataRow data = ReadDB.Instance.getAction(ID);
+			DataRow data = db.getAction(ID);
 			
 			this.v_ctxt = data["Contexte"] as String;
 			this.v_sujt = data["Sujet"] as String;
@@ -152,7 +156,7 @@ namespace TaskLeader.BO
 			this.v_stat = data["Statut"] as String;
 			
 			//Récupération des liens
-			v_links.AddRange(ReadDB.Instance.getPJ(ID));
+			v_links.AddRange(db.getPJ(ID));
 
             this.initialStateFrozen = true;
 		}
@@ -175,30 +179,30 @@ namespace TaskLeader.BO
             int resultat;
 
             // On rajoute une ligne d'historique si le statut est différent de Ouverte et si le statut a changé
-            if (this.Statut != ReadDB.Instance.getDefault(DB.Instance.statut) && this.statusHasChanged)
+            if (this.Statut != db.getDefault(db.statut) && this.statusHasChanged)
                 this.Texte += Environment.NewLine + "Action " + this.Statut + " le: " + DateTime.Now.ToString("dd-MM-yyyy");
 
             // Vérification des nouveautés
             if (this.ctxtHasChanged) // Test uniquement si contexte entré
-                if (ReadDB.Instance.isNvo(DB.Instance.contexte, this.Contexte)) // Si on a un nouveau contexte
+                if (db.isNvo(db.contexte, this.Contexte)) // Si on a un nouveau contexte
                 {
-                    resultat = WriteDB.Instance.insertContexte(this.Contexte); // On récupère le nombre de lignes insérées
+                    resultat = db.insertContexte(this.Contexte); // On récupère le nombre de lignes insérées
                     if (resultat == 1)
                         bilan += "Nouveau contexte enregistré\n";
                 }
 
             if (this.sujetHasChanged)
-                if (ReadDB.Instance.isNvoSujet(this.Contexte, this.Sujet)) //TODO: il y a un cas foireux si le contexte est vide
+                if (db.isNvoSujet(this.Contexte, this.Sujet)) //TODO: il y a un cas foireux si le contexte est vide
                 {
-                    resultat = WriteDB.Instance.insertSujet(this.Contexte, this.Sujet);
+                    resultat = db.insertSujet(this.Contexte, this.Sujet);
                     if (resultat == 1)
                         bilan += "Nouveau sujet enregistré\n";
                 }
 
             if (this.destHasChanged)
-                if (ReadDB.Instance.isNvo(DB.Instance.destinataire, this.Destinataire))
+                if (db.isNvo(db.destinataire, this.Destinataire))
                 {
-                    resultat = WriteDB.Instance.insertDest(this.Destinataire);
+                    resultat = db.insertDest(this.Destinataire);
                     if (resultat == 1)
                         bilan += "Nouveau destinataire enregistré\n";
                 }
@@ -207,12 +211,12 @@ namespace TaskLeader.BO
             {
                 if (this.isScratchpad)
                 {
-                    this.v_TLID = WriteDB.Instance.insertAction(this); // Sauvegarde de l'action
+                    this.v_TLID = db.insertAction(this); // Sauvegarde de l'action
                     
                     bilan += "Nouvelle action enregistrée\n";
                     if (this.hasPJ)
                     {
-                        WriteDB.Instance.insertPJ(this.v_TLID, this.PJ); // Sauvegarde des PJ
+                        db.insertPJ(this.v_TLID, this.PJ); // Sauvegarde des PJ
                         bilan += v_links.Count.ToString()+" PJ enregistrée";
                         if (v_links.Count > 1) bilan += "s";
                         bilan += "\n";
@@ -220,7 +224,7 @@ namespace TaskLeader.BO
                 }
                 else
                 {
-                    resultat = WriteDB.Instance.updateAction(this);
+                    resultat = db.updateAction(this);
                     if (resultat == 1)
                         bilan += "Action mise à jour\n";
 
@@ -228,7 +232,7 @@ namespace TaskLeader.BO
                     int nbAdded = this.added_links.Count;
                     if (nbAdded > 0)
                     {
-                        WriteDB.Instance.insertPJ(this.v_TLID, this.added_links.ToArray()); // Sauvegarde des PJ
+                        db.insertPJ(this.v_TLID, this.added_links.ToArray()); // Sauvegarde des PJ
                         bilan += nbAdded.ToString() + " PJ enregistrée"; // Préparation du bilan
                         if (nbAdded > 1) bilan += "s";
                         bilan += "\n";
@@ -238,7 +242,7 @@ namespace TaskLeader.BO
                     int nbSupp = this.removed_links.Count;
                     if (nbSupp > 0)
                     {
-                        WriteDB.Instance.removePJ(this.removed_links.ToArray());
+                        db.removePJ(this.removed_links.ToArray());
                         bilan += nbSupp.ToString() + " PJ supprimée"; // Préparation du bilan
                         if (nbSupp > 1) bilan += "s";
                         bilan += "\n";
