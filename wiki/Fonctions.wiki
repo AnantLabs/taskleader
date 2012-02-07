@@ -18,7 +18,7 @@
 http://taskleader.googlecode.com/svn/wiki/images/modifDate.png
 </td>
 <td>
-http://taskleader.googlecode.com/svn/wiki/images/deadline.png
+http://taskleader.googlecode.com/svn/wiki/images/deadlines.png
 </td>
 </tr>
 </table>
