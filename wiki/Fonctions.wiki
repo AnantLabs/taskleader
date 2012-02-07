@@ -14,10 +14,11 @@
     * Rouge = deadline dépassée
     * Orange = deadline aujourd'hui
     * Vert = deadline dans un futur proche (configurable)
- * Modification à la volée
+ * Modification à la volée:
+http://taskleader.googlecode.com/svn/wiki/images/modifDate.png
 </td>
 <td>
-http://taskleader.googlecode.com/svn/wiki/images/deadlines.png
+http://taskleader.googlecode.com/svn/wiki/images/deadline.png
 </td>
 </tr>
 </table>
