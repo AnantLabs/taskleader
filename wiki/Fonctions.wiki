@@ -1,0 +1,15 @@
+#summary Liste des fonctions de l'application
+#labels Phase-Requirements,Featured
+
+  * Organisation des actions s'inspirant de la méthode GTD:
+    * Contexte
+    * Sujet
+    * Titre
+    * Deadline
+    * Destinataire
+    * Statut (Annulée, Fermée, Ouverte, Suspendue, Transférée)
+  * Possibilité d'ajouter des pièces jointes
+    * Outlook
+    * Fichier ou Dossier
+    * URL
+  * Recherche dans toute la base des actions
