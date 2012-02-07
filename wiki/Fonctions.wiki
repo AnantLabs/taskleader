@@ -6,13 +6,21 @@
   * Sujet
   * Titre
 
+<table>
+<tr>
+<td>
 ===Gestion des deadlines===
-  * Rendu visuel de l'urgence
+ * Rendu visuel de l'urgence
     * Rouge = deadline dépassée
     * Orange = deadline aujourd'hui
     * Vert = deadline dans un futur proche (configurable)
-  * Modification à la volée
+ * Modification à la volée
+</td>
+<td>
 http://taskleader.googlecode.com/svn/wiki/images/deadlines.png
+</td>
+</tr>
+</table>
 
 ===Gestion des destinataires===
  * Auto-apprentissage sur création d'action
