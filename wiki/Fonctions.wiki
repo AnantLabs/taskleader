@@ -1,12 +1,24 @@
 #summary Liste des fonctions de l'application
 #labels Phase-Requirements,Featured
 
-  * Organisation des actions s'inspirant de la méthode GTD:
-    * Contexte
-    * Sujet
-    * Titre
-    * Deadline
-    * Destinataire
+===Organisation des actions s'inspirant de la méthode GTD===
+  * Contexte
+  * Sujet
+  * Titre
+
+===Gestion des deadlines===
+  * Rendu visuel de l'urgence
+    * Rouge = deadline dépassée
+    * Orange = deadline aujourd'hui
+    * Vert = deadline dans un futur proche (configurable)
+  * Modification à la volée
+
+===Gestion des destinataires===
+ * Auto-apprentissage sur création d'action
+ * Possibilité de filtrer
+
+===Gestion des statuts===
+
     * Statut (Annulée, Fermée, Ouverte, Suspendue, Transférée)
   * Possibilité d'ajouter des pièces jointes
     * Outlook
