@@ -12,6 +12,7 @@
     * Orange = deadline aujourd'hui
     * Vert = deadline dans un futur proche (configurable)
   * Modification à la volée
+http://taskleader.googlecode.com/svn/wiki/images/deadlines.png
 
 ===Gestion des destinataires===
  * Auto-apprentissage sur création d'action
