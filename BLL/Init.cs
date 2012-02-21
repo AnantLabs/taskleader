@@ -41,7 +41,7 @@ namespace TaskLeader.BLL
             foreach (String dbName in dbData)
             {
                 if(!File.Exists(dbData[dbName]))
-                     MessageBox.Show("Base " + dbName + " introuvable\nVérifier fichier de conf", "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    MessageBox.Show("Base " + dbName + " introuvable\nVérifier fichier de conf", "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 else
                 {
                     TrayIcon.dbs.Add(dbName,new DB(dbData[dbName]));
@@ -63,12 +63,12 @@ namespace TaskLeader.BLL
 
             if (!baseCompatible)
                 if (TrayIcon.dbs[dbName].getLastVerComp() == "0.6")
-                    return tryMigration("06-07",dbName);
+                    return tryMigration("06-07", dbName);
                 else
                 {
                     MessageBox.Show("La base est trop ancienne pour une migration", "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     return false;
-                }         
+                }
             else
                 return true; // La base est compatible, rien à faire.
         }
@@ -76,10 +76,10 @@ namespace TaskLeader.BLL
         private bool tryMigration(String change, String dbName)
         {
             // Copie de sauvegarde du fichier db avant toute manip
-            TrayIcon.afficheMessage("Migration","Copie de sauvegarde de la base");
+            TrayIcon.afficheMessage("Migration", "Copie de sauvegarde de la base");
             String sourceFile = TrayIcon.dbs[dbName].path;
             String backupFile = sourceFile.Substring(0, sourceFile.Length - 4) + DateTime.Now.ToString("_Back-ddMMyyyy") + ".db3";
-            System.IO.File.Copy(sourceFile, backupFile,true);
+            System.IO.File.Copy(sourceFile, backupFile, true);
 
             // Récupération du script de migration
             try
@@ -102,7 +102,7 @@ namespace TaskLeader.BLL
                 TrayIcon.afficheMessage("Migration", "Fichier de migration introuvable");
 
                 return false;
-            }           
+            }
         }
     }
 }

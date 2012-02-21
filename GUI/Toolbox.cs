@@ -12,8 +12,9 @@ namespace TaskLeader.GUI
 {
     public partial class Toolbox : Form
     {
-        public String dbName = ConfigurationManager.AppSettings["defaultDB"];
-        private DB db { get { return TrayIcon.dbs[dbName]; } }
+        // Variables locales identifiant la base courante
+        private String dbName { get { return TrayIcon.currentDB; } }
+        private DB db { get { return TrayIcon.dbs[TrayIcon.currentDB]; } }
 
         private DataGridViewImageColumn linkCol = new DataGridViewImageColumn();
         private int P1length = Int32.Parse(ConfigurationManager.AppSettings["P1length"]);
@@ -25,11 +26,18 @@ namespace TaskLeader.GUI
             InitializeComponent();
         }
 
-        /// <summary>
-        /// Chargement des différents composants au lancement de la toolbox
-        /// </summary>
+        /// <summary>Chargement des différents composants au lancement de la toolbox</summary>
         private void Toolbox_Load(object sender, EventArgs e)
         {
+            // Remplissage de la liste des bases d'action disponibles
+            foreach (String nomBase in TrayIcon.dbs.Keys)
+            {
+                ToolStripMenuItem dbItem = new ToolStripMenuItem(nomBase);
+                dbItem.Checked = (nomBase == TrayIcon.currentDB); // Sélection de la base courante
+                dbItem.Click += new EventHandler(changeDB);
+                this.baseToolStripMenuItem.DropDown.Items.Add(dbItem);
+            }
+
             // Remplissage de la combo des filtres
             this.loadFilters();
 
@@ -57,15 +65,55 @@ namespace TaskLeader.GUI
             this.miseAjour(true);
         }
 
-        // Chargement des filtres
-        private void loadFilters()
+        /// <summary>
+        /// Change la base d'actions courante
+        /// </summary>
+        private void changeDB(object sender, EventArgs e)
         {
-            filterCombo.Items.Add("Sélectionner...");
-            filterCombo.Items.AddRange(db.getTitres(db.filtre));
-            filterCombo.SelectedIndex = 0;
+            // Sélection de la nouvelle base dans le menu admin
+            foreach (ToolStripMenuItem item in this.baseToolStripMenuItem.DropDown.Items)
+                item.Checked = false; // Dé-sélection de toutes les bases
+            ((ToolStripMenuItem)sender).Checked = true; // Sélection de la base courante
+
+            // Mémorisation de la base
+            TrayIcon.currentDB = sender.ToString();
+
+            // Mise à jour de la toolbox
+            this.razTableau();
+            this.loadFilters();
+            this.miseAjour(true);
         }
 
-        // Rafraîchissement de la page
+        /// <summary>
+        /// Met à jour la liste des filtres pour la DB courante
+        /// </summary>
+        private void loadFilters()
+        {
+            // Suppression des valeurs courantes
+            this.filterCombo.Items.Clear();
+
+            // Récupération de la liste des filtres de la base courante
+            object[] nomsFiltres = db.getTitres(db.filtre);
+            if (nomsFiltres.Length > 0)
+            {
+                this.filterCombo.Items.Add("Sélectionner...");
+                this.filterCombo.Items.AddRange(nomsFiltres);
+                this.filterCombo.SelectedIndex = 0;
+                this.filterCombo.Enabled = true;
+            }
+            else
+            {
+                this.filterCombo.Items.Add("Aucun filtre dans cette base");
+                this.filterCombo.SelectedIndex = 0;
+                this.filterCombo.Enabled = false;
+            }
+
+        }
+
+        /// <summary>
+        /// Rafraîchissment de la toolbox
+        /// </summary>
+        /// <param name="fullUpdate">true si mise à jour des contextes et destinataires</param>
         public void miseAjour(bool fullUpdate)
         {
             if (fullUpdate)
@@ -126,7 +174,7 @@ namespace TaskLeader.GUI
         // Ouverture de la gui édition d'action
         private void modifAction(object sender, EventArgs e)
         {
-            TrayIcon.displayNewAction(new TLaction(grilleData.SelectedRows[0].Cells["id"].Value.ToString(), this.dbName));
+            TrayIcon.displayNewAction(new TLaction(grilleData.SelectedRows[0].Cells["id"].Value.ToString(), grilleData.SelectedRows[0].Cells["DB"].Value.ToString()));
         }
 
         // Mise à jour du statut d'une action via le menu contextuel
@@ -153,7 +201,7 @@ namespace TaskLeader.GUI
 
             // Association du tooltip
             if (grilleData.Columns[e.ColumnIndex].Name.Equals("Deadline"))
-                grilleData[e.ColumnIndex,e.RowIndex].ToolTipText = "Modifier la date";
+                grilleData[e.ColumnIndex, e.RowIndex].ToolTipText = "Modifier la date";
 
             // Gestion de la colonne Deadline
             if (grilleData.Columns[e.ColumnIndex].Name.Equals("Deadline") && DateTime.TryParse(e.Value.ToString(), out date))
@@ -312,9 +360,13 @@ namespace TaskLeader.GUI
 
             // Récupération des résultats et association au tableau
             DataTable liste = filtre.getActions();
+            DataColumn dbCol = new DataColumn("DB");
+            dbCol.DefaultValue = this.dbName;
+            liste.Columns.Add(dbCol);
             grilleData.DataSource = liste;
 
             grilleData.Columns["Liens"].DisplayIndex = 4;
+            grilleData.Columns["DB"].Visible = false;
 
             // Définition du label de résultat
             if (liste.Rows.Count == 0)
@@ -341,7 +393,7 @@ namespace TaskLeader.GUI
         // Affichage des actions sur filtre manuel
         private void filtreAction(object sender, EventArgs e)
         {
-            Filtre filtre = new Filtre(this.db,allCtxt.Checked, allSujt.Checked, allDest.Checked, allStat.Checked, ctxtListBox.CheckedItems, sujetListBox.CheckedItems, destListBox.CheckedItems, statutListBox.CheckedItems);
+            Filtre filtre = new Filtre(this.db, allCtxt.Checked, allSujt.Checked, allDest.Checked, allStat.Checked, ctxtListBox.CheckedItems, sujetListBox.CheckedItems, destListBox.CheckedItems, statutListBox.CheckedItems);
 
             if (saveFilterCheck.Checked) //Sauvegarde du filtre si checkbox cochée
             {
@@ -356,10 +408,7 @@ namespace TaskLeader.GUI
                     filtre.nom = nomFiltre;
                     db.insertFiltre(filtre);
 
-                    // On vide la liste des filtres                
-                    filterCombo.Items.Clear();
-
-                    // On la remplit à nouveau
+                    // Mise à jour de la liste des filtres
                     this.loadFilters();
                 }
             }
@@ -448,6 +497,23 @@ namespace TaskLeader.GUI
             allBox_Click(allStat, new EventArgs());
         }
 
+        // Remise à zéro du tableau d'actions
+        private void razTableau()
+        {
+            // On cache l'étiquette de recherche et le label de résultat
+            searchFlowLayoutPanel.Visible = false;
+            resultLabel.Visible = false;
+            grilleData.DataSource = null; // Suppression des lignes du tableau
+            razFiltres();
+        }
+
+        // Ouverture d'un filtre enregistré
+        private void openFilter(object sender, EventArgs e)
+        {
+            if (((ComboBox)sender).SelectedIndex > 0)
+                this.showFilter(db.getFilter(filterCombo.Text));
+        }
+
         /// <summary>
         /// Application d'un filtre sur les différents widgets + affichage des actions correspondantes
         /// </summary>
@@ -505,18 +571,11 @@ namespace TaskLeader.GUI
             afficheActions(filtre);
         }
 
-        // Ouverture d'un filtre enregistré
-        private void openFilter(object sender, EventArgs e)
-        {
-            if (((ComboBox)sender).SelectedIndex > 0)
-                this.showFilter(db.getFilter(filterCombo.Text));
-        }
-
         // Validation de la recherche après click sur OK
         private void searchButton_Click(object sender, EventArgs e)
         {
             if (searchBox.Text != "")
-                this.showFilter(new Filtre(searchBox.Text,this.db));
+                this.showFilter(new Filtre(searchBox.Text, this.db));
             else
                 MessageBox.Show("Veuillez entrer un mot clé pour la recherche", "Recherche", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
         }
@@ -536,11 +595,8 @@ namespace TaskLeader.GUI
                 this.showFilter(this.db.OldFilter);
             else
             {
-                // On cache l'étiquette de recherche et le label de résultat
-                searchFlowLayoutPanel.Visible = false;
-                resultLabel.Visible = false;
-                grilleData.DataSource = null; // Suppression des lignes du tableau
-                razFiltres();
+                this.db.CurrentFilter = null;
+                razTableau();
             }
         }
 

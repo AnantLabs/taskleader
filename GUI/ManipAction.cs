@@ -53,6 +53,8 @@ namespace TaskLeader.GUI
             linksView.Items.Add(item);
         }
 
+        /// <summary>Constructeur de la fenêtre</summary>
+        /// <param name="action">Action à afficher</param>
         public ManipAction(TLaction action)
         {
             InitializeComponent();
