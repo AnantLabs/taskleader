@@ -24,31 +24,31 @@ namespace TaskLeader.GUI
         {        
             //Remplissage des combos
             ctxtListBox.Items.Add(empty);
-            ctxtListBox.Items.AddRange(db.getTitres(db.contexte));
+            ctxtListBox.Items.AddRange(db.getTitres(DB.contexte));
             destListBox.Items.Add(empty);
-            destListBox.Items.AddRange(db.getTitres(db.destinataire));
+            destListBox.Items.AddRange(db.getTitres(DB.destinataire));
             statutListBox.Items.Add(empty);
-            statutListBox.Items.AddRange(db.getTitres(db.statut));
+            statutListBox.Items.AddRange(db.getTitres(DB.statut));
             filterCombo.Items.Add(empty);
-            filterCombo.Items.AddRange(db.getTitres(db.filtre));
+            filterCombo.Items.AddRange(db.getTitres(DB.filtre));
 
             //Sélection des valeurs par défaut
 
-            ctxtListBox.Text = db.getDefault(db.contexte);
+            ctxtListBox.Text = db.getDefault(DB.contexte);
             if (ctxtListBox.Text == "")
                 ctxtListBox.SelectedIndex = 0; // Sélection de la ligne "Aucun"
 
             this.updateSujet(sender, e);
 
-            destListBox.Text = db.getDefault(db.destinataire);
+            destListBox.Text = db.getDefault(DB.destinataire);
             if (destListBox.Text == "")
                 destListBox.SelectedIndex = 0;
 
-            statutListBox.Text = db.getDefault(db.statut);
+            statutListBox.Text = db.getDefault(DB.statut);
             if (statutListBox.Text == "")
                 statutListBox.SelectedIndex = 0;
 
-            filterCombo.Text = db.getDefault(db.filtre);
+            filterCombo.Text = db.getDefault(DB.filtre);
             if (filterCombo.Text == "")
                 filterCombo.SelectedIndex = 0;
         }
@@ -66,7 +66,7 @@ namespace TaskLeader.GUI
                 sujetListBox.Items.AddRange(db.getSujets(ctxtListBox.Text));
 
                 // Sélection du sujet par défaut
-                sujetListBox.Text = db.getDefault(db.sujet);
+                sujetListBox.Text = db.getDefault(DB.sujet);
                 if (sujetListBox.Text == "")
                     sujetListBox.SelectedIndex = 0;
             }
@@ -80,19 +80,19 @@ namespace TaskLeader.GUI
             ArrayList updatedValues = new ArrayList();
 
             if (ctxtListBox.SelectedIndex > 0)
-                updatedValues.Add(new DBvalue(db.contexte, ctxtListBox.Text));
+                updatedValues.Add(new DBvalue(DB.contexte, ctxtListBox.Text));
 
             if (sujetListBox.SelectedIndex > 0)
-                updatedValues.Add(new DBvalue(db.sujet, sujetListBox.Text));
+                updatedValues.Add(new DBvalue(DB.sujet, sujetListBox.Text));
 
             if (destListBox.SelectedIndex > 0)
-                updatedValues.Add(new DBvalue(db.destinataire, destListBox.Text));
+                updatedValues.Add(new DBvalue(DB.destinataire, destListBox.Text));
 
             if (statutListBox.SelectedIndex > 0)
-                updatedValues.Add(new DBvalue(db.statut, statutListBox.Text));
+                updatedValues.Add(new DBvalue(DB.statut, statutListBox.Text));
 
             if (filterCombo.SelectedIndex > 0)
-                updatedValues.Add(new DBvalue(db.filtre, filterCombo.Text));
+                updatedValues.Add(new DBvalue(DB.filtre, filterCombo.Text));
 
             // Sauvegarde
             db.insertDefaut(updatedValues.ToArray());

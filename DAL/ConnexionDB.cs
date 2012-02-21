@@ -24,11 +24,13 @@ namespace TaskLeader.DAL
     {
         // Caractéristiques de la DB
         public String path = "";
+        public String name = "";
 
-        public DB(String chemin)
+        public DB(String chemin, String nom)
         {
             this.path = chemin;
-            v_currentFilter = this.getFilter(this.getDefault(this.filtre));
+            this.name = nom;
+            v_currentFilter = this.getFilter(this.getDefault(filtre));
         }
 
         // Connexion à la base SQLite
@@ -55,11 +57,11 @@ namespace TaskLeader.DAL
         }
 
         // "Schéma de base"
-        public DBentity contexte = new DBentity("Contexte", "Contextes", "AllCtxt");
-        public DBentity sujet = new DBentity("Sujet", "Sujets", "AllSuj");
-        public DBentity destinataire = new DBentity("Destinataire", "Destinataires", "AllDest");
-        public DBentity statut = new DBentity("Statut", "Statuts", "AllStat");
-		public DBentity filtre = new DBentity("","Filtres","");
+        public static DBentity contexte = new DBentity("Contexte", "Contextes", "AllCtxt");
+        public static DBentity sujet = new DBentity("Sujet", "Sujets", "AllSuj");
+        public static DBentity destinataire = new DBentity("Destinataire", "Destinataires", "AllDest");
+        public static DBentity statut = new DBentity("Statut", "Statuts", "AllStat");
+		public static DBentity filtre = new DBentity("","Filtres","");
 
         // Filtres associés à la DB
         private Filtre v_currentFilter; // Variable locale pour stocker une référence vers le filtre en cours
