@@ -16,7 +16,7 @@ namespace TaskLeader.BO
         private bool initialStateFrozen = false;
 
         // DB d'où provient l'action
-        public String dbName = ConfigurationManager.AppSettings["defaultDB"];
+        public String dbName = TrayIcon.currentDB;
         private DB db { get { return TrayIcon.dbs[dbName]; } }
 
         // ID de l'action dans la base TaskLeader
@@ -158,7 +158,7 @@ namespace TaskLeader.BO
 			this.v_stat = data["Statut"] as String;
 			
 			//Récupération des liens
-			v_links.AddRange(db.getPJ(ID));
+			this.v_links.AddRange(db.getPJ(ID));
 
             this.initialStateFrozen = true;
 		}

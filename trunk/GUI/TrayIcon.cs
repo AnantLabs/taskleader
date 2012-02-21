@@ -25,6 +25,10 @@ namespace TaskLeader.GUI
         // Gestion des DBs
         public static Dictionary<string, DB> dbs = new Dictionary<string, DB>();
         public static DB defaultDB { get { return dbs[ConfigurationManager.AppSettings["defaultDB"]]; } }
+        /// <summary>
+        /// Nom de la base courante
+        /// </summary>
+        public static String currentDB = ConfigurationManager.AppSettings["defaultDB"];
 
         // Déclaration de tous les composants
         private void loadComponents()
@@ -115,7 +119,7 @@ namespace TaskLeader.GUI
 
             // Vérification de démarrage
             if (Init.Instance.canLaunch())
-            {                
+            {
                 this.displayToolbox(new Object(), new EventArgs()); // Affichage de la Toolbox
                 invokeControl.CreateControl();
             }

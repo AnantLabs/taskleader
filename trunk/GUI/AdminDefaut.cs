@@ -10,8 +10,9 @@ namespace TaskLeader.GUI
     {
         String empty = "-- Aucun --";
 
-        private String dbName = ConfigurationManager.AppSettings["defaultDB"];
-        public DB db { get { return TrayIcon.dbs[dbName]; } }
+        // Variables locales identifiant la base courante
+        private String dbName;
+        private DB db { get { return TrayIcon.dbs[dbName]; } }
 
         public AdminDefaut(String database)
         {

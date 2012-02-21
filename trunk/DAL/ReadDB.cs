@@ -233,19 +233,20 @@ namespace TaskLeader.DAL
                 }
 
                 requete = requete.Substring(0, requete.Length - 5); // On enlève le dernier AND en trop
-            }   
-                          
+            }
+
             return getTable(requete);
         }
-
-		// Renvoie les données liées à une action
+        
+        /// <summary>Renvoie les données liées à une action</summary>
+        /// <param name="ID">ID de l'action dans la base</param>
 		public DataRow getAction(String ID)
 		{
 			DataTable result = getTable("SELECT * FROM VueActions WHERE id='"+ID+"'");
 			return result.Rows[0];
-		}	
-		
-        // Récupération des liens attachés à une action
+		}
+
+        /// <summary>Récupération des liens attachés à une action</summary>
         public Array getPJ(String actionID)
         {
             DataTable linksData = getTable("SELECT EncType,EncID FROM Enclosures WHERE ActionID=" + actionID);
