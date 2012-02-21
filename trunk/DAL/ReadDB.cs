@@ -175,7 +175,7 @@ namespace TaskLeader.DAL
             DataRow resultat = results[0];
             
             // On crée le filtre correspondant
-            Filtre filtre = new Filtre(this,(bool)resultat["AllCtxt"],(bool)resultat["AllSuj"],(bool)resultat["AllDest"],(bool)resultat["AllStat"]);
+            Filtre filtre = new Filtre(this.name,(bool)resultat["AllCtxt"],(bool)resultat["AllSuj"],(bool)resultat["AllDest"],(bool)resultat["AllStat"]);
             filtre.nom = name;
             object[] liste;
 

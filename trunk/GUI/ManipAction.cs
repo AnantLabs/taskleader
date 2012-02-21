@@ -27,15 +27,15 @@ namespace TaskLeader.GUI
         {
             // Contextes
             this.contexteBox.Items.Clear();
-            contexteBox.Items.AddRange(db.getTitres(db.contexte));
+            contexteBox.Items.AddRange(db.getTitres(DB.contexte));
 
             // Destinataires
             this.destBox.Items.Clear();
-            destBox.Items.AddRange(db.getTitres(db.destinataire));
+            destBox.Items.AddRange(db.getTitres(DB.destinataire));
 
             // Statuts
             this.statutBox.Items.Clear();
-            statutBox.Items.AddRange(db.getTitres(db.statut)); // On remplit la liste des statuts
+            statutBox.Items.AddRange(db.getTitres(DB.statut)); // On remplit la liste des statuts
         }
 
         // Ajout d'un lien à la ListView

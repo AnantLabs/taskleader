@@ -26,12 +26,15 @@ namespace TaskLeader.BO
 
     public class Filtre
     {
-        // Type du filtre: 1=Critères, 2=Recherche
-        private int v_type;
+        /// <summary>
+        /// Type du filtre: 1=Critères, 2=Recherche
+        /// </summary>
         public int type { get { return v_type; } }
+        private int v_type;
 
         // DB d'application de ce filtre
-        private DB db;
+        public String dbName;
+        private DB db { get { return TrayIcon.dbs[dbName]; } }
 
         // Tableau qui donne la liste des critères sélectionnés autre que ALL        
         private Object[] v_criteria;
@@ -42,24 +45,24 @@ namespace TaskLeader.BO
         public String nom { get { return v_nomFiltre; } set { v_nomFiltre = value; } }        
 
         // Constructeur complet
-        public Filtre(DB database, bool allCtxt, bool allSuj, bool allDest, bool allStat, IList ctxt = null, IList suj = null, IList dest = null, IList stat = null)
+        public Filtre(String nomDB, bool allCtxt, bool allSuj, bool allDest, bool allStat, IList ctxt = null, IList suj = null, IList dest = null, IList stat = null)
         {
             this.v_type = 1;
-            this.db = database;
+            this.dbName = nomDB;
             
             ArrayList criteres = new ArrayList();
 
             if (!allCtxt)
-                criteres.Add(new Criterium(db.contexte, ctxt));
+                criteres.Add(new Criterium(DB.contexte, ctxt));
 
             if (ctxt != null && ctxt.Count == 1 && !allSuj)
-                criteres.Add(new Criterium(db.sujet, suj));
+                criteres.Add(new Criterium(DB.sujet, suj));
 
             if (!allDest)
-                criteres.Add(new Criterium(db.destinataire, dest));
+                criteres.Add(new Criterium(DB.destinataire, dest));
 
             if (!allStat)
-                criteres.Add(new Criterium(db.statut, stat));
+                criteres.Add(new Criterium(DB.statut, stat));
 
             this.v_criteria = criteres.ToArray();
         }
@@ -67,10 +70,10 @@ namespace TaskLeader.BO
         /// <summary>
         /// Constructeur pour une recherche
         /// </summary>
-        public Filtre(String recherche, DB database)
+        public Filtre(String recherche, String nomDB)
         {
             this.v_type = 2;
-            this.db = database;
+            this.dbName = nomDB;
             this.v_nomFiltre = recherche;
         }
 

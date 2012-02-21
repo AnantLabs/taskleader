@@ -42,7 +42,7 @@ namespace TaskLeader.GUI
             this.loadFilters();
 
             // Remplissage de la ListBox des statuts + menu contextuel du tableau
-            foreach (object item in db.getTitres(db.statut))
+            foreach (object item in db.getTitres(DB.statut))
             {
                 statutListBox.Items.Add(item, true); // Sélection de tous les statuts par défaut
                 statutTSMenuItem.DropDown.Items.Add(item.ToString(), null, this.changeStat);
@@ -93,7 +93,7 @@ namespace TaskLeader.GUI
             this.filterCombo.Items.Clear();
 
             // Récupération de la liste des filtres de la base courante
-            object[] nomsFiltres = db.getTitres(db.filtre);
+            object[] nomsFiltres = db.getTitres(DB.filtre);
             if (nomsFiltres.Length > 0)
             {
                 this.filterCombo.Items.Add("Sélectionner...");
@@ -123,11 +123,11 @@ namespace TaskLeader.GUI
                 this.destListBox.Items.Clear();
 
                 // Remplissage de la ListBox des contextes
-                foreach (object item in db.getTitres(db.contexte))
+                foreach (object item in db.getTitres(DB.contexte))
                     ctxtListBox.Items.Add(item, true); // Sélection des contextes par défaut
 
                 // Remplissage de la ListBox des destinataires
-                foreach (object item in db.getTitres(db.destinataire))
+                foreach (object item in db.getTitres(DB.destinataire))
                     destListBox.Items.Add(item, true); // Sélection des destinataires par défaut
             }
 
@@ -358,10 +358,10 @@ namespace TaskLeader.GUI
             if (!grilleData.Columns.Contains("Liens"))
                 grilleData.Columns.Add(linkCol);
 
-            // Récupération des résultats et association au tableau
+            // Récupération des résultats du filtre et association au tableau
             DataTable liste = filtre.getActions();
             DataColumn dbCol = new DataColumn("DB");
-            dbCol.DefaultValue = this.dbName;
+            dbCol.DefaultValue = filtre.dbName;
             liste.Columns.Add(dbCol);
             grilleData.DataSource = liste;
 
@@ -393,7 +393,7 @@ namespace TaskLeader.GUI
         // Affichage des actions sur filtre manuel
         private void filtreAction(object sender, EventArgs e)
         {
-            Filtre filtre = new Filtre(this.db, allCtxt.Checked, allSujt.Checked, allDest.Checked, allStat.Checked, ctxtListBox.CheckedItems, sujetListBox.CheckedItems, destListBox.CheckedItems, statutListBox.CheckedItems);
+            Filtre filtre = new Filtre(this.dbName, allCtxt.Checked, allSujt.Checked, allDest.Checked, allStat.Checked, ctxtListBox.CheckedItems, sujetListBox.CheckedItems, destListBox.CheckedItems, statutListBox.CheckedItems);
 
             if (saveFilterCheck.Checked) //Sauvegarde du filtre si checkbox cochée
             {
@@ -548,10 +548,10 @@ namespace TaskLeader.GUI
                     {
                         String table = critere.entity.mainTable;
 
-                        if (table == db.contexte.mainTable) { box = allCtxt; list = ctxtListBox; }
-                        if (table == db.sujet.mainTable) { box = allSujt; list = sujetListBox; }
-                        if (table == db.destinataire.mainTable) { box = allDest; list = destListBox; }
-                        if (table == db.statut.mainTable) { box = allStat; list = statutListBox; }
+                        if (table == DB.contexte.mainTable) { box = allCtxt; list = ctxtListBox; }
+                        if (table == DB.sujet.mainTable) { box = allSujt; list = sujetListBox; }
+                        if (table == DB.destinataire.mainTable) { box = allDest; list = destListBox; }
+                        if (table == DB.statut.mainTable) { box = allStat; list = statutListBox; }
 
                         box.Checked = false; // La checkbox "Tous" n'est pas sélectionnée
                         for (int i = 0; i < list.Items.Count; i++) // Parcours de la ListBox
@@ -575,7 +575,7 @@ namespace TaskLeader.GUI
         private void searchButton_Click(object sender, EventArgs e)
         {
             if (searchBox.Text != "")
-                this.showFilter(new Filtre(searchBox.Text, this.db));
+                this.showFilter(new Filtre(searchBox.Text, this.dbName));
             else
                 MessageBox.Show("Veuillez entrer un mot clé pour la recherche", "Recherche", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
         }

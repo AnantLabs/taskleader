@@ -44,7 +44,7 @@ namespace TaskLeader.BLL
                     MessageBox.Show("Base " + dbName + " introuvable\nVérifier fichier de conf", "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 else
                 {
-                    TrayIcon.dbs.Add(dbName,new DB(dbData[dbName]));
+                    TrayIcon.dbs.Add(dbName,new DB(dbData[dbName],dbName));
                     if (!DBiscompatible(dbName))
                         TrayIcon.dbs.Remove(dbName);
                     else if (dbName == defaultDBname)
