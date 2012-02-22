@@ -96,6 +96,9 @@ namespace TaskLeader.BO
                     break;
             }
 
+            DataColumn dbCol = new DataColumn("DB", typeof(String), "'" + this.dbName + Environment.NewLine + "#'+ID");
+            data.Columns.Add(dbCol);
+
             return data;
         }
  
@@ -105,7 +108,7 @@ namespace TaskLeader.BO
         /// <returns>Nom du filtre</returns>
         public override String ToString()
         {
-            return v_nomFiltre;
+            return this.v_nomFiltre + " ["+this.dbName+"]";
         }
     }
 }
