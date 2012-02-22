@@ -93,7 +93,7 @@ namespace TaskLeader.GUI
             this.filterCombo.Items.Clear();
 
             // Récupération de la liste des filtres de la base courante
-            object[] nomsFiltres = db.getTitres(DB.filtre);
+            object[] nomsFiltres = db.getFilters();
             if (nomsFiltres.Length > 0)
             {
                 this.filterCombo.Items.Add("Sélectionner...");
@@ -510,8 +510,8 @@ namespace TaskLeader.GUI
         // Ouverture d'un filtre enregistré
         private void openFilter(object sender, EventArgs e)
         {
-            if (((ComboBox)sender).SelectedIndex > 0)
-                this.showFilter(db.getFilter(filterCombo.Text));
+            if (((ComboBox)sender).SelectedIndex > 0) // Pour éviter le "Sélectionner..."
+                this.showFilter(((Filtre)((ComboBox)sender).SelectedItem)); // La combobox contient des objets Filtre
         }
 
         /// <summary>
@@ -521,6 +521,9 @@ namespace TaskLeader.GUI
         {
             // Reset des checkedlistbox de filtre
             razFiltres();
+
+            // Récupération de l'objet Filtre correspondant à la liste
+            typeLabel.Tag = filtre;
 
             switch (filtre.type)
             {
@@ -591,7 +594,7 @@ namespace TaskLeader.GUI
         private void exitSearchBut_Click(object sender, EventArgs e)
         {
             // Si un filtre était actif avant la (ou les) recherche(s), on l'affiche
-            if (this.db.CurrentFilter.type == 2 && this.db.OldFilter != null)
+            if (((Filtre)this.typeLabel.Tag).type == 2 && this.db.OldFilter != null)
                 this.showFilter(this.db.OldFilter);
             else
             {

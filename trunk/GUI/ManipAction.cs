@@ -28,14 +28,22 @@ namespace TaskLeader.GUI
             // Contextes
             this.contexteBox.Items.Clear();
             contexteBox.Items.AddRange(db.getTitres(DB.contexte));
+            contexteBox.Text = v_action.Contexte;
+
+            // Sujets
+            if (contexteBox.Text != "")
+                updateSujet(); // Mise à jour de la liste des sujets
+            sujetBox.Text = v_action.Sujet;
 
             // Destinataires
             this.destBox.Items.Clear();
             destBox.Items.AddRange(db.getTitres(DB.destinataire));
+            destBox.Text = v_action.Destinataire;
 
             // Statuts
             this.statutBox.Items.Clear();
             statutBox.Items.AddRange(db.getTitres(DB.statut)); // On remplit la liste des statuts
+            statutBox.SelectedItem = v_action.Statut;
         }
 
         // Ajout d'un lien à la ListView
@@ -58,19 +66,15 @@ namespace TaskLeader.GUI
         public ManipAction(TLaction action)
         {
             InitializeComponent();
-
             this.Icon = TaskLeader.Properties.Resources.task_coach;
+
+            // On mémorise l'action
+            this.v_action = action;
 
             // Remplissage de la liste des bases disponibles
             foreach (String dbName in TrayIcon.dbs.Keys)
                 dbsBox.Items.Add(dbName);
-
-            // On mémorise l'action
-            this.v_action = action;
-            // Chargement des widgets
-            this.loadWidgets();
-
-            Array links = action.PJ;
+            dbsBox.Text = v_action.dbName;
 
             if (action.isScratchpad)
                 this.Text += "Ajouter une action - TaskLeader";
@@ -86,16 +90,11 @@ namespace TaskLeader.GUI
                     noDueDate.Checked = true;
             }
 
-            dbsBox.Text = v_action.dbName;
+            // Chargement des widgets
+            this.loadWidgets();
 
-            destBox.Text = action.Destinataire;
-
-            contexteBox.Text = action.Contexte;
-
-            sujetBox.Text = action.Sujet;
-            if (contexteBox.Text != "")
-                updateSujet(); // Mise à jour de la liste des sujets
-
+            // Affichage des pièces jointes
+            Array links = action.PJ;
             foreach (Enclosure link in links)
                 this.addPJToView(link);
 
@@ -104,9 +103,7 @@ namespace TaskLeader.GUI
             // Affichage du descriptif de l'action
             desField.Text = action.Texte;
             desField.Select(desField.Text.Length, 0); // Curseur placé à la fin par défaut
-
-            // Sélection du statut
-            statutBox.SelectedItem = action.Statut;
+            
         }
 
         // Mise à jour de la combobox présentant les sujets
@@ -161,6 +158,10 @@ namespace TaskLeader.GUI
             ((Enclosure)linksView.SelectedItems[0].Tag).open();
         }
 
+        /// <summary>
+        /// Ajoute une PJ au formulaire et à l'action correspondante
+        /// </summary>
+        /// <param name="pj">PJ à inclure</param>
         public void addPJToForm(Enclosure pj)
         {
             // Ajout du lien à l'action
@@ -234,7 +235,7 @@ namespace TaskLeader.GUI
         // Nettoyage sur fermeture de la fenêtre
         private void ManipAction_FormClosed(object sender, FormClosedEventArgs e)
         {
-            if(this.addMailRequested)
+            if (this.addMailRequested)
                 OutlookIF.Instance.NewMail -= new NewMailEventHandler(addMail); // Désinscription de l'event NewMail
         }
 
@@ -261,10 +262,14 @@ namespace TaskLeader.GUI
         // Sélection d'une autre DB
         private void changeDB(object sender, EventArgs e)
         {
-            //TODO: effacer toutes les combobox
-            this.v_action.dbName = dbsBox.Text;
-            this.loadWidgets();
-            //TODO: sélectionner les champs par défaut
+            if (dbsBox.Text != v_action.dbName)
+            {
+                // Mise à jour de l'action
+                v_action.changeDB(dbsBox.Text);
+
+                // Mise à jour des widgets
+                this.loadWidgets();
+            }
         }
 
     }

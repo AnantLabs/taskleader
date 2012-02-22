@@ -150,7 +150,11 @@ namespace TaskLeader.DAL
             return getList("SELECT Titre FROM VueSujets WHERE Contexte ='" + contexte + "' ORDER BY Titre ASC");
         }
 
-        // Renvoie le nom du statut par défaut
+        /// <summary>
+        /// Récupération des valeurs par défaut
+        /// </summary>
+        /// <param name="entity">DB.contexte, DB.destinataire ...</param>
+        /// <returns>Valeur par défaut de l'entité</returns>
         public String getDefault(DBentity entity)
         {
             Object[] resultat = getList("SELECT Titre FROM " + entity.mainTable + " WHERE Defaut='1'");
@@ -197,7 +201,21 @@ namespace TaskLeader.DAL
 
             return filtre;
         }
-            
+        
+        /// <summary>
+        /// Obtient un tableau de tous les filtres de la base
+        /// </summary>
+        /// <returns>Tableau de 'Filtre'</returns>
+        public object[] getFilters()
+        {
+            ArrayList liste = new ArrayList();
+
+            foreach (String filtreName in this.getTitres(DB.filtre))
+                liste.Add(this.getFilter(filtreName));
+
+            return liste.ToArray();
+        }
+
         // Renvoie un DataTable de toutes les actions
         public DataTable getActions(Object[] criteria)
         {
