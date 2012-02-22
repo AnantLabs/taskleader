@@ -96,8 +96,9 @@ namespace TaskLeader.BO
                     break;
             }
 
-            DataColumn dbCol = new DataColumn("DB", typeof(String), "'" + this.dbName + Environment.NewLine + "#'+ID");
-            data.Columns.Add(dbCol);
+            data.Columns.Add(new DataColumn("DB", typeof(String), "'" + this.dbName + "'"));
+            data.Columns.Add(new DataColumn("Ref", typeof(String), "DB+'" + Environment.NewLine + "#'+ID"));
+            data.Columns["Ref"].SetOrdinal(0);
 
             return data;
         }

@@ -362,9 +362,12 @@ namespace TaskLeader.GUI
             DataTable liste = filtre.getActions();
             grilleData.DataSource = liste;
 
-            grilleData.Columns["Liens"].DisplayIndex = 4;
-            //grilleData.Columns["DB"].Visible = false;
-
+            // Mise en forme du tableau
+            grilleData.Columns["id"].Visible = false;
+            grilleData.Columns["DB"].Visible = false;
+            grilleData.Columns["Liens"].DisplayIndex = 5;
+            grilleData.Columns["Titre"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            
             // Définition du label de résultat
             if (liste.Rows.Count == 0)
                 resultLabel.Text = "Aucune action trouvée";
