@@ -25,7 +25,7 @@ namespace TaskLeader.BO
         public bool isScratchpad { get { return (v_TLID == ""); } }
 
         // Contexte de l'action
-        private String v_ctxt = TrayIcon.defaultDB.getDefault(DB.contexte);
+        private String v_ctxt = TrayIcon.dbs[TrayIcon.currentDB].getDefault(DB.contexte);
         public bool ctxtHasChanged = false;
         public String Contexte {
             get { return v_ctxt; }
@@ -40,7 +40,7 @@ namespace TaskLeader.BO
         public String ContexteSQL { get { return sqlFactory(v_ctxt); } }        
 
         // Sujet de l'action
-        private String v_sujt = TrayIcon.defaultDB.getDefault(DB.sujet);
+        private String v_sujt = TrayIcon.dbs[TrayIcon.currentDB].getDefault(DB.sujet);
         public bool sujetHasChanged = false;
         public String Sujet
         {
@@ -91,7 +91,7 @@ namespace TaskLeader.BO
         public String DueDateSQL { get { return "'"+v_dueDate.ToString("yyyy-MM-dd")+"'"; } }
 
         // Destinataire de l'action
-        private String v_dest = TrayIcon.defaultDB.getDefault(DB.destinataire);
+        private String v_dest = TrayIcon.dbs[TrayIcon.currentDB].getDefault(DB.destinataire);
         public bool destHasChanged = false;
         public String Destinataire
         {
@@ -108,7 +108,7 @@ namespace TaskLeader.BO
         public String DestinataireSQL { get { return sqlFactory(v_dest); } } 
 
         // Statut de l'action
-        private String v_stat = TrayIcon.defaultDB.getDefault(DB.statut); // Le statut est initialisé avec la valeur par défaut
+        private String v_stat = TrayIcon.dbs[TrayIcon.currentDB].getDefault(DB.statut); // Le statut est initialisé avec la valeur par défaut
         public bool statusHasChanged = false;
         public String Statut
         {
@@ -138,10 +138,11 @@ namespace TaskLeader.BO
         /// </summary>
         public TLaction() { this.initialStateFrozen = true; }
 		
-		/// <summary>
+        /// <summary>
         /// Constructeur à partir de l'ID de stockage de l'action
         /// </summary>
-        // Constructeur permettant de créer une action à partir de son ID
+        /// <param name="ID">ID dans la base d'actions</param>
+        /// <param name="database">Nom de la base d'actions</param>
         public TLaction(String ID, String database)
 		{
             this.dbName = database;
@@ -163,7 +164,14 @@ namespace TaskLeader.BO
             this.initialStateFrozen = true;
 		}
 
-        // Méthode permettant d'updater les champs principaux
+        /// <summary>
+        /// Mise à jour des champs principaux
+        /// </summary>
+        /// <param name="contexte">Nouveau contexte</param>
+        /// <param name="subject">Nouveau sujet</param>
+        /// <param name="desAction">Nouvelle description</param>
+        /// <param name="destinataire">Nouveau destinataire</param>
+        /// <param name="stat">Nouveau statut</param>
         public void updateDefault(String contexte, String subject, String desAction, String destinataire,  String stat)
         {
 			// Utilisation volontaire des attributs publics pour détecter les changements
@@ -174,7 +182,9 @@ namespace TaskLeader.BO
             this.Statut = stat;       
         }
 
-        // Sauvegarde d'une action en base
+        /// <summary>
+        /// Sauvegarde de l'action dans la base correspondante
+        /// </summary>
         public void save()
         {
             String bilan = "";
@@ -255,6 +265,22 @@ namespace TaskLeader.BO
             // On affiche un message de statut sur la TrayIcon
             if (bilan.Length > 0) // On n'affiche un bilan que s'il s'est passé qqchose
                 TrayIcon.afficheMessage("Bilan sauvegarde", bilan.Substring(0, bilan.Length - 1)); // On supprime le dernier \n            
+        }
+
+        /// <summary>
+        /// Change la base correspondant à l'action scratchpad
+        /// </summary>
+        /// <param name="nomDB">Nom de la nouvelle base</param>
+        public void changeDB(String nomDB)
+        {
+            // Changement du nom de la base
+            this.dbName = nomDB;
+
+            // Changement des valeurs par défaut
+            this.v_ctxt = TrayIcon.dbs[dbName].getDefault(DB.contexte);
+            this.v_sujt = TrayIcon.dbs[dbName].getDefault(DB.sujet);
+            this.v_dest = TrayIcon.dbs[dbName].getDefault(DB.destinataire);
+            this.v_stat = TrayIcon.dbs[dbName].getDefault(DB.statut);
         }
     }
 }

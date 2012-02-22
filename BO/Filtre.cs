@@ -70,6 +70,8 @@ namespace TaskLeader.BO
         /// <summary>
         /// Constructeur pour une recherche
         /// </summary>
+        /// <param name="recherche">Chaîne à rechercher</param>
+        /// <param name="nomDB">Nom de la base</param>
         public Filtre(String recherche, String nomDB)
         {
             this.v_type = 2;
@@ -96,6 +98,14 @@ namespace TaskLeader.BO
 
             return data;
         }
-    
+ 
+        /// <summary>
+        /// Retourne le nom du filtre
+        /// </summary>
+        /// <returns>Nom du filtre</returns>
+        public override String ToString()
+        {
+            return v_nomFiltre;
+        }
     }
 }
