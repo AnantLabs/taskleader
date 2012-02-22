@@ -360,13 +360,10 @@ namespace TaskLeader.GUI
 
             // Récupération des résultats du filtre et association au tableau
             DataTable liste = filtre.getActions();
-            DataColumn dbCol = new DataColumn("DB");
-            dbCol.DefaultValue = filtre.dbName;
-            liste.Columns.Add(dbCol);
             grilleData.DataSource = liste;
 
             grilleData.Columns["Liens"].DisplayIndex = 4;
-            grilleData.Columns["DB"].Visible = false;
+            //grilleData.Columns["DB"].Visible = false;
 
             // Définition du label de résultat
             if (liste.Rows.Count == 0)
@@ -539,7 +536,7 @@ namespace TaskLeader.GUI
                     // Affichage de l'étiquette correspondant au filtre
                     typeLabel.Text = "Filtre:";
                     if (filtre.nom != "")
-                        searchedText.Text = filtre.nom;
+                        searchedText.Text = filtre.ToString();
                     else
                         searchedText.Text = "manuel";
 
