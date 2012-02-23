@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Configuration;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Windows.Forms;
@@ -24,11 +25,17 @@ namespace TaskLeader.GUI
 
         // Gestion des DBs
         public static Dictionary<string, DB> dbs = new Dictionary<string, DB>();
-        public static DB defaultDB { get { return dbs[ConfigurationManager.AppSettings["defaultDB"]]; } }
-        /// <summary>
-        /// Nom de la base courante
-        /// </summary>
-        public static String currentDB = ConfigurationManager.AppSettings["defaultDB"];
+        public static ArrayList activeDBs = new ArrayList();
+        public static DB defaultDB
+        {
+            get
+            {
+                if(dbs.ContainsKey(ConfigurationManager.AppSettings["defaultDB"])) // La DB par défaut n'est pas forcément valide
+                    return dbs[ConfigurationManager.AppSettings["defaultDB"]]; // Si c'est le cas, elle est la DB par défaut
+                else
+                    return dbs[activeDBs[0].ToString()]; // Sinon, on prend la première de la liste
+            }
+        }
 
         // Déclaration de tous les composants
         private void loadComponents()
@@ -36,7 +43,7 @@ namespace TaskLeader.GUI
             // trayIcon
             trayIcon.ContextMenuStrip = this.trayContext;
             trayIcon.Icon = Properties.Resources.task_coach;
-            trayIcon.Text = "TaskLeader v" + Application.ProductVersion;;
+            trayIcon.Text = "TaskLeader v" + Application.ProductVersion; ;
             trayIcon.Visible = true;
             trayIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(displayToolbox);
 
@@ -120,6 +127,7 @@ namespace TaskLeader.GUI
             // Vérification de démarrage
             if (Init.Instance.canLaunch())
             {
+                activeDBs.AddRange(dbs.Keys); // Au lancement toutes les DBs sont actives
                 this.displayToolbox(new Object(), new EventArgs()); // Affichage de la Toolbox
                 invokeControl.CreateControl();
             }

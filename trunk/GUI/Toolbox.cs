@@ -1,5 +1,6 @@
 using System;
 using System.Data;
+using System.Collections;
 using System.Collections.Specialized;
 using System.Configuration;
 using System.Windows.Forms;
@@ -13,8 +14,8 @@ namespace TaskLeader.GUI
     public partial class Toolbox : Form
     {
         // Variables locales identifiant la base courante
-        private String dbName { get { return TrayIcon.currentDB; } }
-        private DB db { get { return TrayIcon.dbs[TrayIcon.currentDB]; } }
+        //private String dbName { get { return TrayIcon.currentDB; } }
+        private DB db { get { return TrayIcon.defaultDB; } }
 
         private DataGridViewImageColumn linkCol = new DataGridViewImageColumn();
         private int P1length = Int32.Parse(ConfigurationManager.AppSettings["P1length"]);
@@ -33,8 +34,9 @@ namespace TaskLeader.GUI
             foreach (String nomBase in TrayIcon.dbs.Keys)
             {
                 ToolStripMenuItem dbItem = new ToolStripMenuItem(nomBase);
-                dbItem.Checked = (nomBase == TrayIcon.currentDB); // Sélection de la base courante
-                dbItem.Click += new EventHandler(changeDB);
+                dbItem.Checked = TrayIcon.activeDBs.Contains(nomBase);
+                dbItem.CheckOnClick = true;
+                dbItem.CheckedChanged += new EventHandler(changeDB);
                 this.baseToolStripMenuItem.DropDown.Items.Add(dbItem);
             }
 
@@ -70,18 +72,16 @@ namespace TaskLeader.GUI
         /// </summary>
         private void changeDB(object sender, EventArgs e)
         {
-            // Sélection de la nouvelle base dans le menu admin
-            foreach (ToolStripMenuItem item in this.baseToolStripMenuItem.DropDown.Items)
-                item.Checked = false; // Dé-sélection de toutes les bases
-            ((ToolStripMenuItem)sender).Checked = true; // Sélection de la base courante
-
-            // Mémorisation de la base
-            TrayIcon.currentDB = sender.ToString();
+            // Mise à jour de la liste des bases actives
+            if (((ToolStripMenuItem)sender).Checked) // La base vient d'être activée
+                TrayIcon.activeDBs.Add(sender.ToString());
+            else
+                TrayIcon.activeDBs.Remove(sender.ToString());
 
             // Mise à jour de la toolbox
-            this.razTableau();
+            this.razTableau(); //TODO: Pourquoi? 
             this.loadFilters();
-            this.miseAjour(true);
+            this.miseAjour(true); //TODO: Pourquoi?
         }
 
         /// <summary>
@@ -92,18 +92,21 @@ namespace TaskLeader.GUI
             // Suppression des valeurs courantes
             this.filterCombo.Items.Clear();
 
-            // Récupération de la liste des filtres de la base courante
-            object[] nomsFiltres = db.getFilters();
-            if (nomsFiltres.Length > 0)
+            // Récupération des filtres des bases actives
+            ArrayList nomsFiltres = new ArrayList();
+            foreach (String nomDB in TrayIcon.activeDBs)
+                nomsFiltres.AddRange(TrayIcon.dbs[nomDB].getFilters());
+
+            if (nomsFiltres.Count > 0)
             {
                 this.filterCombo.Items.Add("Sélectionner...");
-                this.filterCombo.Items.AddRange(nomsFiltres);
+                this.filterCombo.Items.AddRange(nomsFiltres.ToArray());
                 this.filterCombo.SelectedIndex = 0;
                 this.filterCombo.Enabled = true;
             }
             else
             {
-                this.filterCombo.Items.Add("Aucun filtre dans cette base");
+                this.filterCombo.Items.Add("Aucun filtre dans les bases actives");
                 this.filterCombo.SelectedIndex = 0;
                 this.filterCombo.Enabled = false;
             }
@@ -181,7 +184,7 @@ namespace TaskLeader.GUI
         private void changeStat(object sender, EventArgs e)
         {
             // Récupération de l'action
-            TLaction action = new TLaction(grilleData.SelectedRows[0].Cells["id"].Value.ToString(), this.dbName);
+            TLaction action = new TLaction(grilleData.SelectedRows[0].Cells["id"].Value.ToString(), grilleData.SelectedRows[0].Cells["DB"].Value.ToString());
 
             // On récupère le nouveau statut
             action.Statut = ((ToolStripItem)sender).Text;
@@ -297,7 +300,7 @@ namespace TaskLeader.GUI
                 e.RowIndex >= 0) // Ce n'est pas la ligne des headers // Cellule non vide
             {
                 grilleData.Cursor = Cursors.Default;
-                DatePickerPopup popup = new DatePickerPopup(new TLaction(grilleData.SelectedRows[0].Cells["id"].Value.ToString(), this.dbName));
+                DatePickerPopup popup = new DatePickerPopup(new TLaction(grilleData.SelectedRows[0].Cells["id"].Value.ToString(), grilleData.SelectedRows[0].Cells["DB"].Value.ToString()));
                 popup.Closed += new ToolStripDropDownClosedEventHandler(popup_Closed);
                 popup.Show();
             }
@@ -367,7 +370,7 @@ namespace TaskLeader.GUI
             grilleData.Columns["DB"].Visible = false;
             grilleData.Columns["Liens"].DisplayIndex = 5;
             grilleData.Columns["Titre"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            
+
             // Définition du label de résultat
             if (liste.Rows.Count == 0)
                 resultLabel.Text = "Aucune action trouvée";
@@ -393,7 +396,7 @@ namespace TaskLeader.GUI
         // Affichage des actions sur filtre manuel
         private void filtreAction(object sender, EventArgs e)
         {
-            Filtre filtre = new Filtre(this.dbName, allCtxt.Checked, allSujt.Checked, allDest.Checked, allStat.Checked, ctxtListBox.CheckedItems, sujetListBox.CheckedItems, destListBox.CheckedItems, statutListBox.CheckedItems);
+            Filtre filtre = new Filtre(this.db.name, allCtxt.Checked, allSujt.Checked, allDest.Checked, allStat.Checked, ctxtListBox.CheckedItems, sujetListBox.CheckedItems, destListBox.CheckedItems, statutListBox.CheckedItems);
 
             if (saveFilterCheck.Checked) //Sauvegarde du filtre si checkbox cochée
             {
@@ -402,7 +405,7 @@ namespace TaskLeader.GUI
 
                 String nomFiltre = "";
 
-                if ((new SaveFilter()).getFilterName(ref nomFiltre, this.dbName) == DialogResult.OK)// Affichage de la Fom SaveFilter
+                if ((new SaveFilter()).getFilterName(ref nomFiltre, this.db.name) == DialogResult.OK)// Affichage de la Fom SaveFilter
                 {
                     //Sauvegarde du filtre
                     filtre.nom = nomFiltre;
@@ -578,7 +581,7 @@ namespace TaskLeader.GUI
         private void searchButton_Click(object sender, EventArgs e)
         {
             if (searchBox.Text != "")
-                this.showFilter(new Filtre(searchBox.Text, this.dbName));
+                this.showFilter(new Filtre(searchBox.Text, this.db.name));
             else
                 MessageBox.Show("Veuillez entrer un mot clé pour la recherche", "Recherche", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
         }
@@ -605,7 +608,7 @@ namespace TaskLeader.GUI
 
         private void defaultValuesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new AdminDefaut(this.dbName).Show();
+            new AdminDefaut(this.db.name).Show();
         }
     }
 }
