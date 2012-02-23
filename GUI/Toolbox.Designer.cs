@@ -118,7 +118,7 @@
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 1;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(721, 662);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(721, 750);
             this.tableLayoutPanel1.TabIndex = 4;
             // 
             // flowLayoutPanel1
@@ -126,11 +126,10 @@
             this.flowLayoutPanel1.Controls.Add(this.groupBox3);
             this.flowLayoutPanel1.Controls.Add(this.groupBox2);
             this.flowLayoutPanel1.Controls.Add(this.groupBox7);
-            this.flowLayoutPanel1.Controls.Add(this.treeView1);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 3);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(194, 656);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(194, 744);
             this.flowLayoutPanel1.TabIndex = 5;
             // 
             // groupBox3
@@ -185,7 +184,7 @@
             this.groupBox2.Location = new System.Drawing.Point(3, 63);
             this.groupBox2.Margin = new System.Windows.Forms.Padding(3, 3, 3, 15);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(188, 45);
+            this.groupBox2.Size = new System.Drawing.Size(188, 130);
             this.groupBox2.TabIndex = 1;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Filtre enregistré";
@@ -193,13 +192,14 @@
             // flowLayoutPanel4
             // 
             this.flowLayoutPanel4.Controls.Add(this.filterCombo);
+            this.flowLayoutPanel4.Controls.Add(this.treeView1);
             this.flowLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel4.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
             this.flowLayoutPanel4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.flowLayoutPanel4.Location = new System.Drawing.Point(3, 16);
             this.flowLayoutPanel4.Margin = new System.Windows.Forms.Padding(0);
             this.flowLayoutPanel4.Name = "flowLayoutPanel4";
-            this.flowLayoutPanel4.Size = new System.Drawing.Size(182, 26);
+            this.flowLayoutPanel4.Size = new System.Drawing.Size(182, 111);
             this.flowLayoutPanel4.TabIndex = 0;
             // 
             // filterCombo
@@ -217,7 +217,7 @@
             // 
             this.groupBox7.Controls.Add(this.flowLayoutPanel10);
             this.groupBox7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox7.Location = new System.Drawing.Point(3, 126);
+            this.groupBox7.Location = new System.Drawing.Point(3, 211);
             this.groupBox7.Name = "groupBox7";
             this.groupBox7.Size = new System.Drawing.Size(191, 532);
             this.groupBox7.TabIndex = 11;
@@ -413,7 +413,7 @@
             // treeView1
             // 
             this.treeView1.CheckBoxes = true;
-            this.treeView1.Location = new System.Drawing.Point(3, 664);
+            this.treeView1.Location = new System.Drawing.Point(3, 30);
             this.treeView1.Name = "treeView1";
             treeNode1.Checked = true;
             treeNode1.Name = "Node2";
@@ -426,7 +426,7 @@
             this.treeView1.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
             treeNode2,
             treeNode3});
-            this.treeView1.Size = new System.Drawing.Size(179, 97);
+            this.treeView1.Size = new System.Drawing.Size(176, 78);
             this.treeView1.TabIndex = 12;
             // 
             // tableLayoutPanel2
@@ -444,7 +444,7 @@
             this.tableLayoutPanel2.RowCount = 2;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(521, 662);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(521, 750);
             this.tableLayoutPanel2.TabIndex = 7;
             // 
             // flowLayoutPanel9
@@ -553,7 +553,7 @@
             dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.grilleData.RowsDefaultCellStyle = dataGridViewCellStyle3;
             this.grilleData.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.grilleData.Size = new System.Drawing.Size(521, 632);
+            this.grilleData.Size = new System.Drawing.Size(521, 720);
             this.grilleData.TabIndex = 4;
             this.grilleData.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.modifAction);
             this.grilleData.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.grilleData_CellFormatting);
@@ -717,7 +717,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(721, 662);
+            this.ClientSize = new System.Drawing.Size(721, 750);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Location = new System.Drawing.Point(435, 10);

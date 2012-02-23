@@ -96,8 +96,8 @@ namespace TaskLeader.BO
                     break;
             }
 
-            data.Columns.Add(new DataColumn("DB", typeof(String), "'" + this.dbName + "'"));
-            data.Columns.Add(new DataColumn("Ref", typeof(String), "DB+'" + Environment.NewLine + "#'+ID"));
+            data.Columns.Add("DB", typeof(String), "'" + this.dbName + "'");
+            data.Columns.Add("Ref", typeof(String), "DB+'" + Environment.NewLine + "#'+ID");
             data.Columns["Ref"].SetOrdinal(0);
 
             return data;
@@ -109,7 +109,7 @@ namespace TaskLeader.BO
         /// <returns>Nom du filtre</returns>
         public override String ToString()
         {
-            return this.v_nomFiltre + " ["+this.dbName+"]";
+            return "["+this.dbName+"] " + this.v_nomFiltre;
         }
     }
 }

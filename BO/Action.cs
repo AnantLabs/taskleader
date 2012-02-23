@@ -16,8 +16,8 @@ namespace TaskLeader.BO
         private bool initialStateFrozen = false;
 
         // DB d'où provient l'action
-        public String dbName = TrayIcon.currentDB;
-        private DB db { get { return TrayIcon.dbs[dbName]; } }
+        public String dbName = TrayIcon.defaultDB.name;
+        private DB db { get { return TrayIcon.dbs[this.db.name]; } }
 
         // ID de l'action dans la base TaskLeader
         private String v_TLID = "";
@@ -25,7 +25,7 @@ namespace TaskLeader.BO
         public bool isScratchpad { get { return (v_TLID == ""); } }
 
         // Contexte de l'action
-        private String v_ctxt = TrayIcon.dbs[TrayIcon.currentDB].getDefault(DB.contexte);
+        private String v_ctxt = TrayIcon.defaultDB.getDefault(DB.contexte);
         public bool ctxtHasChanged = false;
         public String Contexte {
             get { return v_ctxt; }
@@ -40,7 +40,7 @@ namespace TaskLeader.BO
         public String ContexteSQL { get { return sqlFactory(v_ctxt); } }        
 
         // Sujet de l'action
-        private String v_sujt = TrayIcon.dbs[TrayIcon.currentDB].getDefault(DB.sujet);
+        private String v_sujt = TrayIcon.defaultDB.getDefault(DB.sujet);
         public bool sujetHasChanged = false;
         public String Sujet
         {
@@ -91,7 +91,7 @@ namespace TaskLeader.BO
         public String DueDateSQL { get { return "'"+v_dueDate.ToString("yyyy-MM-dd")+"'"; } }
 
         // Destinataire de l'action
-        private String v_dest = TrayIcon.dbs[TrayIcon.currentDB].getDefault(DB.destinataire);
+        private String v_dest = TrayIcon.defaultDB.getDefault(DB.destinataire);
         public bool destHasChanged = false;
         public String Destinataire
         {
@@ -108,7 +108,7 @@ namespace TaskLeader.BO
         public String DestinataireSQL { get { return sqlFactory(v_dest); } } 
 
         // Statut de l'action
-        private String v_stat = TrayIcon.dbs[TrayIcon.currentDB].getDefault(DB.statut); // Le statut est initialisé avec la valeur par défaut
+        private String v_stat = TrayIcon.defaultDB.getDefault(DB.statut); // Le statut est initialisé avec la valeur par défaut
         public bool statusHasChanged = false;
         public String Statut
         {
