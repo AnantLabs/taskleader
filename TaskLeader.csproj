@@ -66,6 +66,12 @@
     <Compile Include="GUI\DatePickerPopup.Designer.cs">
       <DependentUpon>DatePickerPopup.cs</DependentUpon>
     </Compile>
+    <Compile Include="GUI\Etiquette.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\Etiquette.Designer.cs">
+      <DependentUpon>Etiquette.cs</DependentUpon>
+    </Compile>
     <Compile Include="GUI\SaveFilter.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -106,6 +112,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\DatePickerPopup.resx">
       <DependentUpon>DatePickerPopup.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\Etiquette.resx">
+      <DependentUpon>Etiquette.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\SaveFilter.resx">
       <DependentUpon>SaveFilter.cs</DependentUpon>
