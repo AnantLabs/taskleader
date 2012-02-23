@@ -90,27 +90,23 @@ namespace TaskLeader.GUI
         private void loadFilters()
         {
             // Suppression des valeurs courantes
-            this.filterCombo.Items.Clear();
-
-            // Récupération des filtres des bases actives
-            ArrayList nomsFiltres = new ArrayList();
+            this.dbsTree.BeginUpdate();
+            this.dbsTree.Nodes.Clear();
+            
+            // Récupération des filtres des bases actives         
             foreach (String nomDB in TrayIcon.activeDBs)
-                nomsFiltres.AddRange(TrayIcon.dbs[nomDB].getFilters());
-
-            if (nomsFiltres.Count > 0)
             {
-                this.filterCombo.Items.Add("Sélectionner...");
-                this.filterCombo.Items.AddRange(nomsFiltres.ToArray());
-                this.filterCombo.SelectedIndex = 0;
-                this.filterCombo.Enabled = true;
-            }
-            else
-            {
-                this.filterCombo.Items.Add("Aucun filtre dans les bases actives");
-                this.filterCombo.SelectedIndex = 0;
-                this.filterCombo.Enabled = false;
+                ArrayList filtres = new ArrayList();
+                foreach (Filtre filtre in TrayIcon.dbs[nomDB].getFilters())
+                {
+                    TreeNode node = new TreeNode(filtre.nom);
+                    node.Tag = filtre;
+                    filtres.Add(node);
+                }
+                dbsTree.Nodes.Add(new TreeNode(nomDB, (TreeNode[])filtres.ToArray(typeof(TreeNode))));
             }
 
+            this.dbsTree.EndUpdate();
         }
 
         /// <summary>
@@ -481,7 +477,7 @@ namespace TaskLeader.GUI
         private void razFiltres()
         {
             // Reset des champs recherches et filtres enregistrés
-            filterCombo.SelectedIndex = 0;
+            //filterCombo.SelectedIndex = 0;
             searchBox.Text = "";
 
             // Contextes
