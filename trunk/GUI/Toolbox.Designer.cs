@@ -30,10 +30,6 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Toolbox));
-            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Ctxt1");
-            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Base 1", new System.Windows.Forms.TreeNode[] {
-            treeNode1});
-            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Base 2");
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -45,7 +41,7 @@
             this.searchBox = new System.Windows.Forms.TextBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.flowLayoutPanel4 = new System.Windows.Forms.FlowLayoutPanel();
-            this.filterCombo = new System.Windows.Forms.ComboBox();
+            this.dbsTree = new System.Windows.Forms.TreeView();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
             this.flowLayoutPanel10 = new System.Windows.Forms.FlowLayoutPanel();
             this.allCtxt = new System.Windows.Forms.CheckBox();
@@ -62,7 +58,6 @@
             this.statutListBox = new System.Windows.Forms.CheckedListBox();
             this.filtreBout = new System.Windows.Forms.Button();
             this.saveFilterCheck = new System.Windows.Forms.CheckBox();
-            this.treeView1 = new System.Windows.Forms.TreeView();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.flowLayoutPanel9 = new System.Windows.Forms.FlowLayoutPanel();
             this.searchFlowLayoutPanel = new System.Windows.Forms.FlowLayoutPanel();
@@ -191,8 +186,7 @@
             // 
             // flowLayoutPanel4
             // 
-            this.flowLayoutPanel4.Controls.Add(this.filterCombo);
-            this.flowLayoutPanel4.Controls.Add(this.treeView1);
+            this.flowLayoutPanel4.Controls.Add(this.dbsTree);
             this.flowLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel4.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
             this.flowLayoutPanel4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -202,16 +196,13 @@
             this.flowLayoutPanel4.Size = new System.Drawing.Size(182, 111);
             this.flowLayoutPanel4.TabIndex = 0;
             // 
-            // filterCombo
+            // dbsTree
             // 
-            this.filterCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.filterCombo.FormattingEnabled = true;
-            this.filterCombo.Location = new System.Drawing.Point(3, 3);
-            this.filterCombo.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
-            this.filterCombo.Name = "filterCombo";
-            this.filterCombo.Size = new System.Drawing.Size(179, 21);
-            this.filterCombo.TabIndex = 8;
-            this.filterCombo.SelectedValueChanged += new System.EventHandler(this.openFilter);
+            this.dbsTree.CheckBoxes = true;
+            this.dbsTree.Location = new System.Drawing.Point(3, 3);
+            this.dbsTree.Name = "dbsTree";
+            this.dbsTree.Size = new System.Drawing.Size(176, 105);
+            this.dbsTree.TabIndex = 12;
             // 
             // groupBox7
             // 
@@ -410,25 +401,6 @@
             this.saveFilterCheck.Text = "Enregistrer filtre";
             this.saveFilterCheck.UseVisualStyleBackColor = true;
             // 
-            // treeView1
-            // 
-            this.treeView1.CheckBoxes = true;
-            this.treeView1.Location = new System.Drawing.Point(3, 30);
-            this.treeView1.Name = "treeView1";
-            treeNode1.Checked = true;
-            treeNode1.Name = "Node2";
-            treeNode1.Text = "Ctxt1";
-            treeNode2.Checked = true;
-            treeNode2.Name = "Node0";
-            treeNode2.Text = "Base 1";
-            treeNode3.Name = "Node1";
-            treeNode3.Text = "Base 2";
-            this.treeView1.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode2,
-            treeNode3});
-            this.treeView1.Size = new System.Drawing.Size(176, 78);
-            this.treeView1.TabIndex = 12;
-            // 
             // tableLayoutPanel2
             // 
             this.tableLayoutPanel2.ColumnCount = 2;
@@ -615,13 +587,13 @@
             // baseToolStripMenuItem
             // 
             this.baseToolStripMenuItem.Name = "baseToolStripMenuItem";
-            this.baseToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
-            this.baseToolStripMenuItem.Text = "Base d\'actions";
+            this.baseToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
+            this.baseToolStripMenuItem.Text = "Base d\'actions actives";
             // 
             // defaultValuesToolStripMenuItem
             // 
             this.defaultValuesToolStripMenuItem.Name = "defaultValuesToolStripMenuItem";
-            this.defaultValuesToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            this.defaultValuesToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
             this.defaultValuesToolStripMenuItem.Text = "Valeurs par défaut";
             this.defaultValuesToolStripMenuItem.Click += new System.EventHandler(this.defaultValuesToolStripMenuItem_Click);
             // 
@@ -763,7 +735,6 @@
         private System.Windows.Forms.Button filtreBout;
         private System.Windows.Forms.ContextMenuStrip listeContext;
         private System.Windows.Forms.ToolStripMenuItem statutTSMenuItem;
-        private System.Windows.Forms.ComboBox filterCombo;
         private System.Windows.Forms.ToolStripMenuItem editActionItem;
         private System.Windows.Forms.ToolStripMenuItem exportMenuItem;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
@@ -804,7 +775,7 @@
         private System.Windows.Forms.ToolStripMenuItem defaultValuesToolStripMenuItem;
         private System.Windows.Forms.DataGridView grilleData;
         private System.Windows.Forms.ToolStripMenuItem baseToolStripMenuItem;
-        private System.Windows.Forms.TreeView treeView1;
+        private System.Windows.Forms.TreeView dbsTree;
 
     }
 }
