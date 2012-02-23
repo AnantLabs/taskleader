@@ -59,7 +59,7 @@
             this.filtreBout = new System.Windows.Forms.Button();
             this.saveFilterCheck = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            this.flowLayoutPanel9 = new System.Windows.Forms.FlowLayoutPanel();
+            this.statusPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.searchFlowLayoutPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.typeLabel = new System.Windows.Forms.Label();
             this.searchedText = new System.Windows.Forms.Label();
@@ -93,7 +93,7 @@
             this.groupBox7.SuspendLayout();
             this.flowLayoutPanel10.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
-            this.flowLayoutPanel9.SuspendLayout();
+            this.statusPanel.SuspendLayout();
             this.searchFlowLayoutPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grilleData)).BeginInit();
             this.topMenu.SuspendLayout();
@@ -406,7 +406,7 @@
             this.tableLayoutPanel2.ColumnCount = 2;
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 120F));
-            this.tableLayoutPanel2.Controls.Add(this.flowLayoutPanel9, 0, 0);
+            this.tableLayoutPanel2.Controls.Add(this.statusPanel, 0, 0);
             this.tableLayoutPanel2.Controls.Add(this.grilleData, 0, 1);
             this.tableLayoutPanel2.Controls.Add(this.topMenu, 1, 0);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -419,16 +419,16 @@
             this.tableLayoutPanel2.Size = new System.Drawing.Size(521, 750);
             this.tableLayoutPanel2.TabIndex = 7;
             // 
-            // flowLayoutPanel9
+            // statusPanel
             // 
-            this.flowLayoutPanel9.Controls.Add(this.searchFlowLayoutPanel);
-            this.flowLayoutPanel9.Controls.Add(this.resultLabel);
-            this.flowLayoutPanel9.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel9.Location = new System.Drawing.Point(0, 0);
-            this.flowLayoutPanel9.Margin = new System.Windows.Forms.Padding(0);
-            this.flowLayoutPanel9.Name = "flowLayoutPanel9";
-            this.flowLayoutPanel9.Size = new System.Drawing.Size(401, 30);
-            this.flowLayoutPanel9.TabIndex = 5;
+            this.statusPanel.Controls.Add(this.searchFlowLayoutPanel);
+            this.statusPanel.Controls.Add(this.resultLabel);
+            this.statusPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.statusPanel.Location = new System.Drawing.Point(0, 0);
+            this.statusPanel.Margin = new System.Windows.Forms.Padding(0);
+            this.statusPanel.Name = "statusPanel";
+            this.statusPanel.Size = new System.Drawing.Size(401, 30);
+            this.statusPanel.TabIndex = 5;
             // 
             // searchFlowLayoutPanel
             // 
@@ -711,8 +711,8 @@
             this.flowLayoutPanel10.PerformLayout();
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel2.PerformLayout();
-            this.flowLayoutPanel9.ResumeLayout(false);
-            this.flowLayoutPanel9.PerformLayout();
+            this.statusPanel.ResumeLayout(false);
+            this.statusPanel.PerformLayout();
             this.searchFlowLayoutPanel.ResumeLayout(false);
             this.searchFlowLayoutPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grilleData)).EndInit();
@@ -738,7 +738,7 @@
         private System.Windows.Forms.ToolStripMenuItem editActionItem;
         private System.Windows.Forms.ToolStripMenuItem exportMenuItem;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel9;
+        private System.Windows.Forms.FlowLayoutPanel statusPanel;
         private System.Windows.Forms.TextBox searchBox;
         private System.Windows.Forms.Button searchButton;
         private System.Windows.Forms.Label label2;

@@ -569,6 +569,8 @@ namespace TaskLeader.GUI
             // Affichage de l'étiquette
             searchFlowLayoutPanel.Visible = true;
 
+            statusPanel.Controls.Add(new Etiquette(filtre));
+
             // Application du filtre
             afficheActions(filtre);
         }
