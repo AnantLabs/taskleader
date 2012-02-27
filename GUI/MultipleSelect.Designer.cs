@@ -70,7 +70,6 @@
             this.liste.Size = new System.Drawing.Size(169, 94);
             this.liste.TabIndex = 1;
             this.liste.Click += new System.EventHandler(this.liste_Click);
-            this.liste.SelectedIndexChanged += new System.EventHandler(this.liste_SelectedIndexChanged);
             // 
             // tableLayoutPanel1
             // 

@@ -26,6 +26,11 @@ namespace TaskLeader.DAL
         public String path = "";
         public String name = "";
 
+        public override string ToString()
+        {
+            return this.name;
+        }
+
         public DB(String chemin, String nom)
         {
             this.path = chemin;

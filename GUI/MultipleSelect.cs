@@ -8,33 +8,45 @@ namespace TaskLeader.GUI
     public partial class MultipleSelect : UserControl
     {
         private DBentity type;
-        private MultipleSelect child;
-        private bool hasChildren { get { return (child != null); } }
+        private bool hasParent = false;
 
-        public void addChild(MultipleSelect widget)
+        /// <summary>
+        /// Evènement déclenché lors du changement de sélection dans la liste du MultipleSelect
+        /// </summary>
+        public event EventHandler SelectedIndexChanged
         {
-            // Objectif = possibilité d'avoir plusieurs children
-            this.child = widget;
+            add { this.liste.SelectedIndexChanged += value; }
+            remove { this.liste.SelectedIndexChanged -= value; }
         }
 
-        // TODO: Sans doute plus simple à gérer avec des évènements
+        /// <summary>
+        /// Rend dépendant ce widget d'un autre
+        /// </summary>
+        /// <param name="widget">MultipleSelect parent</param>
+        public void addParent(MultipleSelect widget)
+        {
+            this.hasParent = true;
+            widget.SelectedIndexChanged += new EventHandler(this.liste_SelectedIndexChanged);
+        }
+
         private void liste_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (this.hasChildren)
-                this.child.updateFromParent(liste.CheckedItems.Count, this.liste.CheckedItems[0].ToString());
-        }
-
-        public void updateFromParent(int countSelected, String key)
-        {
-            // Dans tous les cas de changement de séléction on vide la liste
-            liste.Items.Clear();
+            CheckedListBox criteres = ((CheckedListBox)sender);
+            CheckedListBox.CheckedItemCollection items = criteres.CheckedItems;
+            DB db = (DB)criteres.Tag;
 
             // On n'affiche la liste des sujets que si un seul contexte est tické
-            if (countSelected == 1)
-                this.maj(null,key); //TODO: comment récupérer la base ?
+            if (items.Count == 1)
+            {
+                this.maj(db, items[0].ToString());
+                this.box.Enabled = true;
+            }
             else
-                box.Enabled = false;
-
+            {
+                this.liste.Items.Clear();
+                this.box.Checked = true;
+                this.box.Enabled = false;
+            }
         }
 
         public MultipleSelect()
@@ -49,9 +61,7 @@ namespace TaskLeader.GUI
         public MultipleSelect(String title, DBentity entity)
         {
             InitializeComponent();
-            this.Name = title; // Le nom du contrôle sera son titre
             this.titre.Text = title;
-
             this.type = entity;
         }
 
@@ -74,22 +84,11 @@ namespace TaskLeader.GUI
         }
 
         /// <summary>
-        /// Remise à zéro du MultipleSelect
-        /// </summary>
-        public void raz()
-        {
-            // On sélectionne tout
-            box.Checked = true;
-            for (int i = 0; i < this.liste.Items.Count; i++)
-                this.liste.SetItemChecked(i, true);
-
-        }
-
-        /// <summary>
-        /// Applique un critère au MultipleSelect
+        /// Applique un critère au MultipleSelect.
+        /// Pas utilisé pour le moment mais le sera si édition d'un filtre
         /// </summary>
         /// <param name="critere">Criterium à appliquer</param>
-        public void apply(Criterium critere)
+        private void apply(Criterium critere)
         {
             box.Checked = false; // La checkbox "Tous" n'est pas sélectionnée
             for (int i = 0; i < liste.Items.Count; i++) // Parcours de la ListBox
@@ -108,19 +107,28 @@ namespace TaskLeader.GUI
             if (!box.Checked)
                 return new Criterium(type, liste.CheckedItems);
             else
-                return null; 
+                return null;
         }
 
         /// <summary>
         /// Mise à jour de la liste
         /// </summary>
         /// <param name="db">DB de référence</param>
-        /// <param name="entity">DBentity (DB.contexte...)</param>
-        public void maj(DB db,String key=null)
+        public void maj(DB db)
         {
+            // Les contrôles enfants ne doivent pas être mis à jour depuis l'extérieur
+            if (!this.hasParent)
+                this.maj(db, null);
+        }
+
+        private void maj(DB db, String key)
+        {
+            this.liste.Tag = db;
+            this.liste.ClearSelected(); // Permet de déclencher l'évènement SelectedIndexChanged
             this.liste.Items.Clear(); // Vidage de la liste
-            foreach (object item in db.getTitres(this.type,key))
+            foreach (object item in db.getTitres(this.type, key))
                 this.liste.Items.Add(item, true); // Sélection de toutes les valeurs
+            this.box.Checked = true;
         }
     }
 }
