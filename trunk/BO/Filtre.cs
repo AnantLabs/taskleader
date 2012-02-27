@@ -67,6 +67,7 @@ namespace TaskLeader.BO
             this.v_criteria = criteres.ToArray();
         }
 
+
         /// <summary>
         /// Constructeur pour une recherche
         /// </summary>
@@ -77,6 +78,19 @@ namespace TaskLeader.BO
             this.v_type = 2;
             this.dbName = nomDB;
             this.v_nomFiltre = recherche;
+        }
+
+
+        public Filtre(String nomDB)
+        {
+            this.v_type = 1;
+            this.dbName = nomDB;
+        }
+
+        public void addCriterium(Criterium critere)
+        {
+            if (critere != null)
+                criteria[criteria.Length] = critere;
         }
 
         public DataTable getActions()

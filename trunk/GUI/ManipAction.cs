@@ -112,7 +112,7 @@ namespace TaskLeader.GUI
             // On vide les sujets correspondants au contexte actuel
             sujetBox.Items.Clear();
 
-            foreach (String item in db.getSujets(contexteBox.Text))
+            foreach (String item in db.getTitres(DB.sujet,contexteBox.Text))
                 sujetBox.Items.Add(item);
         }
 

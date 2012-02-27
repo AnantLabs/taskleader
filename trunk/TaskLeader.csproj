@@ -72,6 +72,12 @@
     <Compile Include="GUI\Etiquette.Designer.cs">
       <DependentUpon>Etiquette.cs</DependentUpon>
     </Compile>
+    <Compile Include="GUI\MultipleSelect.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\MultipleSelect.Designer.cs">
+      <DependentUpon>MultipleSelect.cs</DependentUpon>
+    </Compile>
     <Compile Include="GUI\SaveFilter.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -115,6 +121,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\Etiquette.resx">
       <DependentUpon>Etiquette.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\MultipleSelect.resx">
+      <DependentUpon>MultipleSelect.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\SaveFilter.resx">
       <DependentUpon>SaveFilter.cs</DependentUpon>

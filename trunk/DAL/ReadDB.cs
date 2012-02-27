@@ -139,16 +139,19 @@ namespace TaskLeader.DAL
 		// =====================================================================================
 		
 		// Récupération de la liste des valeurs d'une entité. Obsolète: getCtxt, getDest, getStatut, getFilters(
-		public object[] getTitres(DBentity entity)
+		public object[] getTitres(DBentity entity,String key=null)
 		{
-			return getList("SELECT Titre FROM "+entity.mainTable+" ORDER BY Titre ASC");
+            if(entity.mainTable!="Sujets")
+			    return getList("SELECT Titre FROM "+entity.mainTable+" ORDER BY Titre ASC");
+            else
+                return getList("SELECT Titre FROM VueSujets WHERE Contexte ='" + key + "' ORDER BY Titre ASC");
 		}
 
         // Renvoie un tableau de tous les sujets correspondant au contexte
-        public object[] getSujets(String contexte)
-        {
-            return getList("SELECT Titre FROM VueSujets WHERE Contexte ='" + contexte + "' ORDER BY Titre ASC");
-        }
+        //public object[] getSujets(String contexte)
+        //{
+        //    return getList("SELECT Titre FROM VueSujets WHERE Contexte ='" + contexte + "' ORDER BY Titre ASC");
+        //}
 
         /// <summary>
         /// Récupération des valeurs par défaut

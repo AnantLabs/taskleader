@@ -1,6 +1,7 @@
 using System;
 using System.Data;
 using System.Collections;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Configuration;
 using System.Windows.Forms;
@@ -22,6 +23,8 @@ namespace TaskLeader.GUI
 
         public String selectedActionID { set { grilleData.Tag = value; } }
 
+        private Dictionary<string, MultipleSelect> criteresSelect = new Dictionary<string, MultipleSelect>();
+
         public Toolbox()
         {
             InitializeComponent();
@@ -40,15 +43,23 @@ namespace TaskLeader.GUI
                 this.baseToolStripMenuItem.DropDown.Items.Add(dbItem);
             }
 
+            // Création des MultipleSelect
+            this.criteresSelect.Add("contextes", new MultipleSelect("Contextes", DB.contexte));
+            this.criteresSelect.Add("sujets", new MultipleSelect("Sujets", DB.sujet));
+            this.criteresSelect["contextes"].addChild(this.criteresSelect["sujets"]);
+            this.criteresSelect.Add("destinataires", new MultipleSelect("Destinataires", DB.destinataire));
+            this.criteresSelect.Add("statuts", new MultipleSelect("Statuts", DB.statut));
+            foreach(Control control in this.criteresSelect.Values)
+                this.selectPanel.Controls.Add(control);
+
             // Remplissage de la combo des filtres
             this.loadFilters();
 
             // Remplissage de la ListBox des statuts + menu contextuel du tableau
+            this.criteresSelect["statuts"].maj(db);
             foreach (object item in db.getTitres(DB.statut))
-            {
-                statutListBox.Items.Add(item, true); // Sélection de tous les statuts par défaut
                 statutTSMenuItem.DropDown.Items.Add(item.ToString(), null, this.changeStat);
-            }
+
             ((ToolStripDropDownMenu)statutTSMenuItem.DropDown).ShowImageMargin = false;
 
             // Création de la colonne des liens
@@ -117,44 +128,15 @@ namespace TaskLeader.GUI
         {
             if (fullUpdate)
             {
-                // Vidage de toutes les ListBox
-                this.ctxtListBox.Items.Clear();
-                this.destListBox.Items.Clear();
-
-                // Remplissage de la ListBox des contextes
-                foreach (object item in db.getTitres(DB.contexte))
-                    ctxtListBox.Items.Add(item, true); // Sélection des contextes par défaut
-
-                // Remplissage de la ListBox des destinataires
-                foreach (object item in db.getTitres(DB.destinataire))
-                    destListBox.Items.Add(item, true); // Sélection des destinataires par défaut
+                // Mise à jour des contextes
+                this.criteresSelect["contextes"].maj(db);
+                // Mise à jour des destinataires
+                this.criteresSelect["destinataires"].maj(db);
             }
 
             // Si un filtre est actif on l'affiche
             if (this.db.CurrentFilter != null)
                 this.showFilter(this.db.CurrentFilter);
-        }
-
-        // Méthode appelée quand checks des contextes changent
-        private void updateSujet(object sender, EventArgs e)
-        {
-            // Dans tous les cas de changements de séléction on vide la liste
-            sujetListBox.Items.Clear();
-
-            // On n'affiche la liste des sujets que si un seul contexte est tické
-            if (ctxtListBox.CheckedItems.Count == 1)
-            {
-                //Activation de la checkBox all
-                allSujt.Enabled = true;
-                //Remplissage de la liste
-                foreach (object item in db.getSujets((String)ctxtListBox.CheckedItems[0].ToString()))
-                    sujetListBox.Items.Add(item, true);
-            }
-            else
-            {
-                //Dans tous les autres cas on grise la checkbox All
-                allSujt.Enabled = false;
-            }
         }
 
         // Fermeture de la Form si minimisée
@@ -392,7 +374,9 @@ namespace TaskLeader.GUI
         // Affichage des actions sur filtre manuel
         private void filtreAction(object sender, EventArgs e)
         {
-            Filtre filtre = new Filtre(this.db.name, allCtxt.Checked, allSujt.Checked, allDest.Checked, allStat.Checked, ctxtListBox.CheckedItems, sujetListBox.CheckedItems, destListBox.CheckedItems, statutListBox.CheckedItems);
+            Filtre filtre = new Filtre(this.db.name);
+            foreach (MultipleSelect widget in this.criteresSelect.Values)
+                filtre.addCriterium(widget.getCriterium());
 
             if (saveFilterCheck.Checked) //Sauvegarde du filtre si checkbox cochée
             {
@@ -422,57 +406,6 @@ namespace TaskLeader.GUI
             Export.Instance.clipAction(((ToolStripItem)sender).Text, grilleData.SelectedRows[0]);
         }
 
-        //Routine générique permettant de (dé)sélectionner tous les items
-        private void allBox_Click(object sender, EventArgs e)
-        {
-            CheckedListBox list = new CheckedListBox();
-
-            switch (((Control)sender).Name)
-            {
-                case ("allCtxt"): //Contexte
-                    list = ctxtListBox;
-                    break;
-                case ("allSujt"): //Contexte
-                    list = sujetListBox;
-                    break;
-                case ("allDest"): //Contexte
-                    list = destListBox;
-                    break;
-                case ("allStat"): //Contexte
-                    list = statutListBox;
-                    break;
-            }
-
-            for (int i = 0; i < list.Items.Count; i++)
-                list.SetItemChecked(i, ((CheckBox)sender).Checked);
-        }
-
-        //Routine générique pour activation checkbox all
-        private void listBox_Click(object sender, EventArgs e)
-        {
-            CheckBox box = new CheckBox();
-
-            switch (((Control)sender).Name)
-            {
-                case ("ctxtListBox"):
-                    //updateSujet(sender,e);
-                    box = allCtxt;
-                    break;
-                case ("sujetListBox"):
-                    box = allSujt;
-                    break;
-                case ("destListBox"):
-                    box = allDest;
-                    break;
-                case ("statutListBox"):
-                    box = allStat;
-                    break;
-            }
-
-            if (box.Checked)
-                box.Checked = false;
-        }
-
         //Remise à zéro de tous les filtres
         private void razFiltres()
         {
@@ -480,20 +413,20 @@ namespace TaskLeader.GUI
             //filterCombo.SelectedIndex = 0;
             searchBox.Text = "";
 
+            //TODO: sans doute plus pratiques de parcourir tous les MultipleSelect
+
             // Contextes
-            allCtxt.Checked = true;
-            allBox_Click(allCtxt, new EventArgs());
+            this.criteresSelect["contextes"].raz();
 
             // Sujets
-            updateSujet(new Object(), new EventArgs());
+            //TODO: quid du raz des fenêtres enfants ?
+            //updateSujet(new Object(), new EventArgs());
 
             // Destinataires
-            allDest.Checked = true;
-            allBox_Click(allDest, new EventArgs());
+            this.criteresSelect["destinataires"].raz();
 
             // Statuts
-            allStat.Checked = true;
-            allBox_Click(allStat, new EventArgs());
+            this.criteresSelect["statuts"].raz();
         }
 
         // Remise à zéro du tableau d'actions
@@ -542,25 +475,15 @@ namespace TaskLeader.GUI
                     else
                         searchedText.Text = "manuel";
 
-                    CheckBox box = new CheckBox();
-                    CheckedListBox list = new CheckedListBox();
-
                     // Tickage des bons critères
                     foreach (Criterium critere in filtre.criteria)
                     {
                         String table = critere.entity.mainTable;
 
-                        if (table == DB.contexte.mainTable) { box = allCtxt; list = ctxtListBox; }
-                        if (table == DB.sujet.mainTable) { box = allSujt; list = sujetListBox; }
-                        if (table == DB.destinataire.mainTable) { box = allDest; list = destListBox; }
-                        if (table == DB.statut.mainTable) { box = allStat; list = statutListBox; }
-
-                        box.Checked = false; // La checkbox "Tous" n'est pas sélectionnée
-                        for (int i = 0; i < list.Items.Count; i++) // Parcours de la ListBox
-                        {
-                            int index = critere.selected.IndexOf(list.Items[i]); // Recherche de l'item dans le filtre
-                            list.SetItemChecked(i, !(index == -1));
-                        }
+                        if (table == DB.contexte.mainTable) { this.criteresSelect["contextes"].apply(critere); }
+                        if (table == DB.sujet.mainTable) { this.criteresSelect["sujets"].apply(critere); }
+                        if (table == DB.destinataire.mainTable) { this.criteresSelect["destinataires"].apply(critere); }
+                        if (table == DB.statut.mainTable) { this.criteresSelect["statuts"].apply(critere); }
                     }
 
                     break;
@@ -607,6 +530,24 @@ namespace TaskLeader.GUI
         private void defaultValuesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             new AdminDefaut(this.db.name).Show();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            String state = ((Button)sender).Text;
+
+            if (state == "^")
+            {
+                RowStyle small = new RowStyle(SizeType.Absolute, 30);
+                this.mainTableLayout.RowStyles[0] = small;
+                ((Button)sender).Text = "v";
+            }
+            else
+            {
+                RowStyle big = new RowStyle(SizeType.Absolute, 155);
+                this.mainTableLayout.RowStyles[0] = big;
+                ((Button)sender).Text = "^";
+            }
         }
     }
 }
