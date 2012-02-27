@@ -37,8 +37,8 @@ namespace TaskLeader.BO
         private DB db { get { return TrayIcon.dbs[dbName]; } }
 
         // Tableau qui donne la liste des critères sélectionnés autre que ALL        
-        private Object[] v_criteria;
-        public Object[] criteria { get { return v_criteria; } }
+        private ArrayList v_criteria = new ArrayList();
+        public Object[] criteria { get { return v_criteria.ToArray(); } }
 
         // Nom du filtre
         private String v_nomFiltre = "";
@@ -49,22 +49,18 @@ namespace TaskLeader.BO
         {
             this.v_type = 1;
             this.dbName = nomDB;
-            
-            ArrayList criteres = new ArrayList();
 
             if (!allCtxt)
-                criteres.Add(new Criterium(DB.contexte, ctxt));
+                this.v_criteria.Add(new Criterium(DB.contexte, ctxt));
 
             if (ctxt != null && ctxt.Count == 1 && !allSuj)
-                criteres.Add(new Criterium(DB.sujet, suj));
+                this.v_criteria.Add(new Criterium(DB.sujet, suj));
 
             if (!allDest)
-                criteres.Add(new Criterium(DB.destinataire, dest));
+                this.v_criteria.Add(new Criterium(DB.destinataire, dest));
 
             if (!allStat)
-                criteres.Add(new Criterium(DB.statut, stat));
-
-            this.v_criteria = criteres.ToArray();
+                this.v_criteria.Add(new Criterium(DB.statut, stat));
         }
 
 
@@ -90,7 +86,7 @@ namespace TaskLeader.BO
         public void addCriterium(Criterium critere)
         {
             if (critere != null)
-                criteria[criteria.Length] = critere;
+                this.v_criteria.Add(critere);
         }
 
         public DataTable getActions()

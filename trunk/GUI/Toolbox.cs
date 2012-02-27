@@ -23,6 +23,9 @@ namespace TaskLeader.GUI
 
         public String selectedActionID { set { grilleData.Tag = value; } }
 
+        /// <summary>
+        /// Dictionnaire des widgets de sélection des critères
+        /// </summary>
         private Dictionary<string, MultipleSelect> criteresSelect = new Dictionary<string, MultipleSelect>();
 
         public Toolbox()
@@ -36,27 +39,34 @@ namespace TaskLeader.GUI
             // Remplissage de la liste des bases d'action disponibles
             foreach (String nomBase in TrayIcon.dbs.Keys)
             {
+                manuelDBcombo.Items.Add(TrayIcon.dbs[nomBase]);
                 ToolStripMenuItem dbItem = new ToolStripMenuItem(nomBase);
                 dbItem.Checked = TrayIcon.activeDBs.Contains(nomBase);
                 dbItem.CheckOnClick = true;
-                dbItem.CheckedChanged += new EventHandler(changeDB);
+                dbItem.CheckedChanged += new EventHandler(changeActiveDBs);
                 this.baseToolStripMenuItem.DropDown.Items.Add(dbItem);
             }
+
+            // -------------------
+            // Tab 'filtre manuel'
+            // -------------------
 
             // Création des MultipleSelect
             this.criteresSelect.Add("contextes", new MultipleSelect("Contextes", DB.contexte));
             this.criteresSelect.Add("sujets", new MultipleSelect("Sujets", DB.sujet));
-            this.criteresSelect["contextes"].addChild(this.criteresSelect["sujets"]);
+            this.criteresSelect["sujets"].addParent(this.criteresSelect["contextes"]);
             this.criteresSelect.Add("destinataires", new MultipleSelect("Destinataires", DB.destinataire));
             this.criteresSelect.Add("statuts", new MultipleSelect("Statuts", DB.statut));
             foreach(Control control in this.criteresSelect.Values)
                 this.selectPanel.Controls.Add(control);
 
+            this.manuelDBcombo.Text = TrayIcon.defaultDB.name;
+            // ATTENTION: déclenche la mise à jour de toutes les MuitipleSelect!!
+
             // Remplissage de la combo des filtres
             this.loadFilters();
 
             // Remplissage de la ListBox des statuts + menu contextuel du tableau
-            this.criteresSelect["statuts"].maj(db);
             foreach (object item in db.getTitres(DB.statut))
                 statutTSMenuItem.DropDown.Items.Add(item.ToString(), null, this.changeStat);
 
@@ -75,13 +85,13 @@ namespace TaskLeader.GUI
             ((ToolStripDropDownMenu)exportMenuItem.DropDown).ShowImageMargin = false;
 
             // Remplissage des dernières ListBox
-            this.miseAjour(true);
+            //this.miseAjour(true);
         }
 
         /// <summary>
-        /// Change la base d'actions courante
+        /// Modifie la liste des bases actives
         /// </summary>
-        private void changeDB(object sender, EventArgs e)
+        private void changeActiveDBs(object sender, EventArgs e)
         {
             // Mise à jour de la liste des bases actives
             if (((ToolStripMenuItem)sender).Checked) // La base vient d'être activée
@@ -374,30 +384,45 @@ namespace TaskLeader.GUI
         // Affichage des actions sur filtre manuel
         private void filtreAction(object sender, EventArgs e)
         {
-            Filtre filtre = new Filtre(this.db.name);
+            Filtre filtre = new Filtre(manuelDBcombo.Text);
             foreach (MultipleSelect widget in this.criteresSelect.Values)
                 filtre.addCriterium(widget.getCriterium());
 
             if (saveFilterCheck.Checked) //Sauvegarde du filtre si checkbox cochée
             {
-                // Désélection de la checkbox
-                saveFilterCheck.Checked = false;
-
-                String nomFiltre = "";
-
-                if ((new SaveFilter()).getFilterName(ref nomFiltre, this.db.name) == DialogResult.OK)// Affichage de la Fom SaveFilter
+                if (nameBox.Text == "")
                 {
-                    //Sauvegarde du filtre
-                    filtre.nom = nomFiltre;
-                    db.insertFiltre(filtre);
+                    errorLabel.Text = "Le nom du filtre ne peut être vide";
+                    errorLabel.Visible = true;
+                }
+                else
+                {
+                    DB db = (DB)manuelDBcombo.Items[manuelDBcombo.SelectedIndex];
+                    if (!db.isNvo(DB.filtre, nameBox.Text))
+                    {
+                        errorLabel.Text = "Ce nom de filtre existe déjà.";
+                        errorLabel.Visible = true;
+                    }
+                    else
+                    {
+                        // Sauvegarde du filtre
+                        filtre.nom = nameBox.Text;
+                        db.insertFiltre(filtre);
 
-                    // Mise à jour de la liste des filtres
-                    this.loadFilters();
+                        // Raz du formulaire
+                        saveFilterCheck.Checked = false;
+                        nameBox.Text = "";
+
+                        // Mise à jour de la liste des filtres
+                        this.loadFilters();
+
+                        // Affichage du filtre
+                        this.showFilter(filtre);
+                    }
                 }
             }
-
-            // Quoiqu'il arrive, affichage du filtre
-            this.showFilter(filtre);
+            else
+                this.showFilter(filtre);            
         }
 
         // Copie de l'action dans le presse-papier
@@ -406,37 +431,13 @@ namespace TaskLeader.GUI
             Export.Instance.clipAction(((ToolStripItem)sender).Text, grilleData.SelectedRows[0]);
         }
 
-        //Remise à zéro de tous les filtres
-        private void razFiltres()
-        {
-            // Reset des champs recherches et filtres enregistrés
-            //filterCombo.SelectedIndex = 0;
-            searchBox.Text = "";
-
-            //TODO: sans doute plus pratiques de parcourir tous les MultipleSelect
-
-            // Contextes
-            this.criteresSelect["contextes"].raz();
-
-            // Sujets
-            //TODO: quid du raz des fenêtres enfants ?
-            //updateSujet(new Object(), new EventArgs());
-
-            // Destinataires
-            this.criteresSelect["destinataires"].raz();
-
-            // Statuts
-            this.criteresSelect["statuts"].raz();
-        }
-
         // Remise à zéro du tableau d'actions
         private void razTableau()
         {
             // On cache l'étiquette de recherche et le label de résultat
-            searchFlowLayoutPanel.Visible = false;
+            //TODO: supprimer toutes les étiquettes
             resultLabel.Visible = false;
             grilleData.DataSource = null; // Suppression des lignes du tableau
-            razFiltres();
         }
 
         // Ouverture d'un filtre enregistré
@@ -447,51 +448,10 @@ namespace TaskLeader.GUI
         }
 
         /// <summary>
-        /// Application d'un filtre sur les différents widgets + affichage des actions correspondantes
+        /// Application d'un filtre: affichage des actions correspondantes
         /// </summary>
         private void showFilter(Filtre filtre)
         {
-            // Reset des checkedlistbox de filtre
-            razFiltres();
-
-            // Récupération de l'objet Filtre correspondant à la liste
-            typeLabel.Tag = filtre;
-
-            switch (filtre.type)
-            {
-                case (2): // C'est une recherche
-
-                    // Affichage de l'étiquette correspondant à la recherche
-                    typeLabel.Text = "Recherche:";
-                    searchedText.Text = filtre.nom;
-                    break;
-
-                case (1):
-
-                    // Affichage de l'étiquette correspondant au filtre
-                    typeLabel.Text = "Filtre:";
-                    if (filtre.nom != "")
-                        searchedText.Text = filtre.ToString();
-                    else
-                        searchedText.Text = "manuel";
-
-                    // Tickage des bons critères
-                    foreach (Criterium critere in filtre.criteria)
-                    {
-                        String table = critere.entity.mainTable;
-
-                        if (table == DB.contexte.mainTable) { this.criteresSelect["contextes"].apply(critere); }
-                        if (table == DB.sujet.mainTable) { this.criteresSelect["sujets"].apply(critere); }
-                        if (table == DB.destinataire.mainTable) { this.criteresSelect["destinataires"].apply(critere); }
-                        if (table == DB.statut.mainTable) { this.criteresSelect["statuts"].apply(critere); }
-                    }
-
-                    break;
-            }
-
-            // Affichage de l'étiquette
-            searchFlowLayoutPanel.Visible = true;
-
             statusPanel.Controls.Add(new Etiquette(filtre));
 
             // Application du filtre
@@ -518,13 +478,13 @@ namespace TaskLeader.GUI
         private void exitSearchBut_Click(object sender, EventArgs e)
         {
             // Si un filtre était actif avant la (ou les) recherche(s), on l'affiche
-            if (((Filtre)this.typeLabel.Tag).type == 2 && this.db.OldFilter != null)
-                this.showFilter(this.db.OldFilter);
-            else
-            {
-                this.db.CurrentFilter = null;
-                razTableau();
-            }
+            //if (((Filtre)this.typeLabel.Tag).type == 2 && this.db.OldFilter != null)
+            //    this.showFilter(this.db.OldFilter);
+            //else
+            //{
+            //    this.db.CurrentFilter = null;
+            //    razTableau();
+            //}
         }
 
         private void defaultValuesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -532,22 +492,43 @@ namespace TaskLeader.GUI
             new AdminDefaut(this.db.name).Show();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void hideCollapse(object sender, EventArgs e)
         {
-            String state = ((Button)sender).Text;
+            String state = this.button1.Text;
 
-            if (state == "^")
+            if (state == "^" && sender.GetType() == typeof(Button)) // Bandeau déployé
             {
+                this.tabControl1.Appearance = TabAppearance.FlatButtons;
                 RowStyle small = new RowStyle(SizeType.Absolute, 30);
                 this.mainTableLayout.RowStyles[0] = small;
-                ((Button)sender).Text = "v";
+                this.button1.Text = "v";
             }
-            else
+            else // Bandeau replié
             {
+                this.tabControl1.Appearance = TabAppearance.Normal;
                 RowStyle big = new RowStyle(SizeType.Absolute, 155);
                 this.mainTableLayout.RowStyles[0] = big;
-                ((Button)sender).Text = "^";
+                this.button1.Text = "^";
             }
+        }
+
+        /// <summary>
+        /// Changement de DB dans le tab 'Filtre manuel'
+        /// </summary>
+        private void manuelDBcombo_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            foreach(MultipleSelect widget in this.criteresSelect.Values)
+                widget.maj((DB)manuelDBcombo.Items[manuelDBcombo.SelectedIndex]);
+        }
+
+        private void saveFilterCheck_CheckedChanged(object sender, EventArgs e)
+        {
+            this.nameBox.Enabled = this.saveFilterCheck.Checked;
+        }
+
+        private void nameBox_Enter(object sender, EventArgs e)
+        {
+            errorLabel.Visible = false;
         }
     }
 }

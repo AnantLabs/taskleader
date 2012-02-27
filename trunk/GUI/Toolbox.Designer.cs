@@ -35,10 +35,6 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.mainTableLayout = new System.Windows.Forms.TableLayoutPanel();
             this.statusPanel = new System.Windows.Forms.FlowLayoutPanel();
-            this.searchFlowLayoutPanel = new System.Windows.Forms.FlowLayoutPanel();
-            this.typeLabel = new System.Windows.Forms.Label();
-            this.searchedText = new System.Windows.Forms.Label();
-            this.exitSearchBut = new System.Windows.Forms.Button();
             this.resultLabel = new System.Windows.Forms.Label();
             this.topMenu = new System.Windows.Forms.MenuStrip();
             this.ajouterItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -53,7 +49,12 @@
             this.selectPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.saveFilterCheck = new System.Windows.Forms.CheckBox();
+            this.nameBox = new System.Windows.Forms.TextBox();
+            this.errorLabel = new System.Windows.Forms.Label();
             this.filtreBout = new System.Windows.Forms.Button();
+            this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
+            this.label1 = new System.Windows.Forms.Label();
+            this.manuelDBcombo = new System.Windows.Forms.ComboBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
             this.searchButton = new System.Windows.Forms.Button();
@@ -76,12 +77,12 @@
             this.linksContext = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.mainTableLayout.SuspendLayout();
             this.statusPanel.SuspendLayout();
-            this.searchFlowLayoutPanel.SuspendLayout();
             this.topMenu.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.manuelTable.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
+            this.flowLayoutPanel2.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.flowLayoutPanel3.SuspendLayout();
             this.tabPage3.SuspendLayout();
@@ -114,7 +115,6 @@
             // 
             // statusPanel
             // 
-            this.statusPanel.Controls.Add(this.searchFlowLayoutPanel);
             this.statusPanel.Controls.Add(this.resultLabel);
             this.statusPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.statusPanel.Location = new System.Drawing.Point(0, 155);
@@ -123,57 +123,10 @@
             this.statusPanel.Size = new System.Drawing.Size(599, 30);
             this.statusPanel.TabIndex = 5;
             // 
-            // searchFlowLayoutPanel
-            // 
-            this.searchFlowLayoutPanel.AutoSize = true;
-            this.searchFlowLayoutPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.searchFlowLayoutPanel.BackColor = System.Drawing.Color.LightSteelBlue;
-            this.searchFlowLayoutPanel.Controls.Add(this.typeLabel);
-            this.searchFlowLayoutPanel.Controls.Add(this.searchedText);
-            this.searchFlowLayoutPanel.Controls.Add(this.exitSearchBut);
-            this.searchFlowLayoutPanel.Location = new System.Drawing.Point(5, 4);
-            this.searchFlowLayoutPanel.Margin = new System.Windows.Forms.Padding(5, 4, 0, 4);
-            this.searchFlowLayoutPanel.Name = "searchFlowLayoutPanel";
-            this.searchFlowLayoutPanel.Size = new System.Drawing.Size(98, 22);
-            this.searchFlowLayoutPanel.TabIndex = 5;
-            this.searchFlowLayoutPanel.Visible = false;
-            // 
-            // typeLabel
-            // 
-            this.typeLabel.AutoSize = true;
-            this.typeLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.typeLabel.Location = new System.Drawing.Point(3, 4);
-            this.typeLabel.Margin = new System.Windows.Forms.Padding(3, 4, 0, 0);
-            this.typeLabel.Name = "typeLabel";
-            this.typeLabel.Size = new System.Drawing.Size(35, 13);
-            this.typeLabel.TabIndex = 5;
-            this.typeLabel.Text = "Type";
-            // 
-            // searchedText
-            // 
-            this.searchedText.AutoSize = true;
-            this.searchedText.Location = new System.Drawing.Point(38, 4);
-            this.searchedText.Margin = new System.Windows.Forms.Padding(0, 4, 0, 0);
-            this.searchedText.Name = "searchedText";
-            this.searchedText.Size = new System.Drawing.Size(36, 13);
-            this.searchedText.TabIndex = 4;
-            this.searchedText.Text = "valeur";
-            // 
-            // exitSearchBut
-            // 
-            this.exitSearchBut.Location = new System.Drawing.Point(77, 1);
-            this.exitSearchBut.Margin = new System.Windows.Forms.Padding(3, 1, 1, 1);
-            this.exitSearchBut.Name = "exitSearchBut";
-            this.exitSearchBut.Size = new System.Drawing.Size(20, 20);
-            this.exitSearchBut.TabIndex = 3;
-            this.exitSearchBut.Text = "X";
-            this.exitSearchBut.UseVisualStyleBackColor = true;
-            this.exitSearchBut.Click += new System.EventHandler(this.exitSearchBut_Click);
-            // 
             // resultLabel
             // 
             this.resultLabel.AutoSize = true;
-            this.resultLabel.Location = new System.Drawing.Point(113, 8);
+            this.resultLabel.Location = new System.Drawing.Point(10, 8);
             this.resultLabel.Margin = new System.Windows.Forms.Padding(10, 8, 3, 0);
             this.resultLabel.Name = "resultLabel";
             this.resultLabel.Size = new System.Drawing.Size(44, 13);
@@ -248,7 +201,6 @@
             // 
             // tabControl1
             // 
-            this.tabControl1.Appearance = System.Windows.Forms.TabAppearance.FlatButtons;
             this.mainTableLayout.SetColumnSpan(this.tabControl1, 2);
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
@@ -260,14 +212,15 @@
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(686, 152);
             this.tabControl1.TabIndex = 8;
+            this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.hideCollapse);
             // 
             // tabPage1
             // 
             this.tabPage1.Controls.Add(this.manuelTable);
-            this.tabPage1.Location = new System.Drawing.Point(4, 25);
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Margin = new System.Windows.Forms.Padding(0);
             this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Size = new System.Drawing.Size(678, 123);
+            this.tabPage1.Size = new System.Drawing.Size(678, 126);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Filtre manuel";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -275,57 +228,84 @@
             // manuelTable
             // 
             this.manuelTable.ColumnCount = 3;
-            this.manuelTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 19.56912F));
-            this.manuelTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 80.43088F));
-            this.manuelTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 117F));
+            this.manuelTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 150F));
+            this.manuelTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.manuelTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 160F));
             this.manuelTable.Controls.Add(this.selectPanel, 1, 0);
             this.manuelTable.Controls.Add(this.flowLayoutPanel1, 2, 0);
+            this.manuelTable.Controls.Add(this.flowLayoutPanel2, 0, 0);
             this.manuelTable.Dock = System.Windows.Forms.DockStyle.Fill;
             this.manuelTable.Location = new System.Drawing.Point(0, 0);
             this.manuelTable.Margin = new System.Windows.Forms.Padding(0);
             this.manuelTable.Name = "manuelTable";
             this.manuelTable.RowCount = 1;
             this.manuelTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.manuelTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.manuelTable.Size = new System.Drawing.Size(678, 123);
+            this.manuelTable.Size = new System.Drawing.Size(678, 126);
             this.manuelTable.TabIndex = 2;
             // 
             // selectPanel
             // 
             this.selectPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.selectPanel.Location = new System.Drawing.Point(109, 0);
+            this.selectPanel.Location = new System.Drawing.Point(150, 0);
             this.selectPanel.Margin = new System.Windows.Forms.Padding(0);
             this.selectPanel.Name = "selectPanel";
-            this.selectPanel.Size = new System.Drawing.Size(451, 123);
+            this.selectPanel.Size = new System.Drawing.Size(368, 126);
             this.selectPanel.TabIndex = 1;
             // 
             // flowLayoutPanel1
             // 
             this.flowLayoutPanel1.Controls.Add(this.saveFilterCheck);
+            this.flowLayoutPanel1.Controls.Add(this.nameBox);
+            this.flowLayoutPanel1.Controls.Add(this.errorLabel);
             this.flowLayoutPanel1.Controls.Add(this.filtreBout);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(560, 0);
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(518, 0);
             this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(118, 123);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(160, 126);
             this.flowLayoutPanel1.TabIndex = 2;
             // 
             // saveFilterCheck
             // 
             this.saveFilterCheck.AutoSize = true;
-            this.saveFilterCheck.Location = new System.Drawing.Point(3, 10);
-            this.saveFilterCheck.Margin = new System.Windows.Forms.Padding(3, 10, 10, 3);
+            this.flowLayoutPanel1.SetFlowBreak(this.saveFilterCheck, true);
+            this.saveFilterCheck.Location = new System.Drawing.Point(3, 7);
+            this.saveFilterCheck.Margin = new System.Windows.Forms.Padding(3, 7, 3, 3);
             this.saveFilterCheck.Name = "saveFilterCheck";
             this.saveFilterCheck.Size = new System.Drawing.Size(98, 17);
             this.saveFilterCheck.TabIndex = 11;
             this.saveFilterCheck.Text = "Enregistrer filtre";
             this.saveFilterCheck.UseVisualStyleBackColor = true;
+            this.saveFilterCheck.CheckedChanged += new System.EventHandler(this.saveFilterCheck_CheckedChanged);
+            // 
+            // nameBox
+            // 
+            this.nameBox.Enabled = false;
+            this.flowLayoutPanel1.SetFlowBreak(this.nameBox, true);
+            this.nameBox.Location = new System.Drawing.Point(3, 30);
+            this.nameBox.Name = "nameBox";
+            this.nameBox.Size = new System.Drawing.Size(154, 20);
+            this.nameBox.TabIndex = 1;
+            this.nameBox.Enter += new System.EventHandler(this.nameBox_Enter);
+            // 
+            // errorLabel
+            // 
+            this.errorLabel.AutoSize = true;
+            this.flowLayoutPanel1.SetFlowBreak(this.errorLabel, true);
+            this.errorLabel.ForeColor = System.Drawing.Color.Red;
+            this.errorLabel.Location = new System.Drawing.Point(3, 53);
+            this.errorLabel.Name = "errorLabel";
+            this.errorLabel.Size = new System.Drawing.Size(35, 13);
+            this.errorLabel.TabIndex = 2;
+            this.errorLabel.Text = "Erreur";
+            this.errorLabel.Visible = false;
             // 
             // filtreBout
             // 
             this.filtreBout.Image = global::TaskLeader.Properties.Resources.filtre;
             this.filtreBout.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.filtreBout.Location = new System.Drawing.Point(3, 33);
+            this.filtreBout.Location = new System.Drawing.Point(50, 89);
+            this.filtreBout.Margin = new System.Windows.Forms.Padding(50, 3, 0, 0);
             this.filtreBout.Name = "filtreBout";
             this.filtreBout.Size = new System.Drawing.Size(65, 30);
             this.filtreBout.TabIndex = 8;
@@ -334,13 +314,46 @@
             this.filtreBout.UseVisualStyleBackColor = true;
             this.filtreBout.Click += new System.EventHandler(this.filtreAction);
             // 
+            // flowLayoutPanel2
+            // 
+            this.flowLayoutPanel2.Controls.Add(this.label1);
+            this.flowLayoutPanel2.Controls.Add(this.manuelDBcombo);
+            this.flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanel2.Location = new System.Drawing.Point(0, 0);
+            this.flowLayoutPanel2.Margin = new System.Windows.Forms.Padding(0);
+            this.flowLayoutPanel2.Name = "flowLayoutPanel2";
+            this.flowLayoutPanel2.Size = new System.Drawing.Size(150, 126);
+            this.flowLayoutPanel2.TabIndex = 3;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.flowLayoutPanel2.SetFlowBreak(this.label1, true);
+            this.label1.Location = new System.Drawing.Point(3, 7);
+            this.label1.Margin = new System.Windows.Forms.Padding(3, 7, 3, 0);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(79, 13);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "Base d\'actions:";
+            // 
+            // manuelDBcombo
+            // 
+            this.manuelDBcombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.manuelDBcombo.FormattingEnabled = true;
+            this.manuelDBcombo.Location = new System.Drawing.Point(3, 28);
+            this.manuelDBcombo.Margin = new System.Windows.Forms.Padding(3, 8, 3, 3);
+            this.manuelDBcombo.Name = "manuelDBcombo";
+            this.manuelDBcombo.Size = new System.Drawing.Size(144, 21);
+            this.manuelDBcombo.TabIndex = 1;
+            this.manuelDBcombo.SelectedIndexChanged += new System.EventHandler(this.manuelDBcombo_SelectedIndexChanged);
+            // 
             // tabPage2
             // 
             this.tabPage2.Controls.Add(this.flowLayoutPanel3);
-            this.tabPage2.Location = new System.Drawing.Point(4, 25);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(678, 123);
+            this.tabPage2.Size = new System.Drawing.Size(678, 126);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Recherche";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -381,9 +394,9 @@
             // tabPage3
             // 
             this.tabPage3.Controls.Add(this.flowLayoutPanel4);
-            this.tabPage3.Location = new System.Drawing.Point(4, 25);
+            this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(678, 123);
+            this.tabPage3.Size = new System.Drawing.Size(678, 126);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Filtres enregistrés";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -415,7 +428,7 @@
             this.button1.TabIndex = 7;
             this.button1.Text = "^";
             this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.button1.Click += new System.EventHandler(this.hideCollapse);
             // 
             // grilleData
             // 
@@ -568,8 +581,6 @@
             this.mainTableLayout.PerformLayout();
             this.statusPanel.ResumeLayout(false);
             this.statusPanel.PerformLayout();
-            this.searchFlowLayoutPanel.ResumeLayout(false);
-            this.searchFlowLayoutPanel.PerformLayout();
             this.topMenu.ResumeLayout(false);
             this.topMenu.PerformLayout();
             this.tabControl1.ResumeLayout(false);
@@ -577,6 +588,8 @@
             this.manuelTable.ResumeLayout(false);
             this.flowLayoutPanel1.ResumeLayout(false);
             this.flowLayoutPanel1.PerformLayout();
+            this.flowLayoutPanel2.ResumeLayout(false);
+            this.flowLayoutPanel2.PerformLayout();
             this.tabPage2.ResumeLayout(false);
             this.flowLayoutPanel3.ResumeLayout(false);
             this.flowLayoutPanel3.PerformLayout();
@@ -599,13 +612,9 @@
         private System.Windows.Forms.FlowLayoutPanel statusPanel;
         private System.Windows.Forms.TextBox searchBox;
         private System.Windows.Forms.Button searchButton;
-        private System.Windows.Forms.FlowLayoutPanel searchFlowLayoutPanel;
-        private System.Windows.Forms.Label searchedText;
-        private System.Windows.Forms.Button exitSearchBut;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel4;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel3;
         private System.Windows.Forms.Label resultLabel;
-        private System.Windows.Forms.Label typeLabel;
         private System.Windows.Forms.CheckBox saveFilterCheck;
         private System.Windows.Forms.ToolStripMenuItem ajouterToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem nouvelleActionToolStripMenuItem;
@@ -631,6 +640,11 @@
         private System.Windows.Forms.FlowLayoutPanel selectPanel;
         private System.Windows.Forms.TableLayoutPanel manuelTable;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel2;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ComboBox manuelDBcombo;
+        private System.Windows.Forms.Label errorLabel;
+        private System.Windows.Forms.TextBox nameBox;
 
     }
 }

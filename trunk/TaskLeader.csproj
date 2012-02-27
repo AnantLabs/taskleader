@@ -78,12 +78,6 @@
     <Compile Include="GUI\MultipleSelect.Designer.cs">
       <DependentUpon>MultipleSelect.cs</DependentUpon>
     </Compile>
-    <Compile Include="GUI\SaveFilter.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="GUI\SaveFilter.Designer.cs">
-      <DependentUpon>SaveFilter.cs</DependentUpon>
-    </Compile>
     <Compile Include="GUI\ManipAction.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -124,9 +118,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\MultipleSelect.resx">
       <DependentUpon>MultipleSelect.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="GUI\SaveFilter.resx">
-      <DependentUpon>SaveFilter.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\ManipAction.resx">
       <DependentUpon>ManipAction.cs</DependentUpon>
