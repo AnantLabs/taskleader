@@ -63,7 +63,7 @@ namespace TaskLeader.GUI
             if (ctxtListBox.SelectedIndex > 0) // Uniquement si contexte différent de "Aucun"
             {
                 // Remplissage de la liste
-                sujetListBox.Items.AddRange(db.getSujets(ctxtListBox.Text));
+                sujetListBox.Items.AddRange(db.getTitres(DB.sujet,ctxtListBox.Text));
 
                 // Sélection du sujet par défaut
                 sujetListBox.Text = db.getDefault(DB.sujet);
