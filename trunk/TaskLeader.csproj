@@ -72,11 +72,17 @@
     <Compile Include="GUI\Etiquette.Designer.cs">
       <DependentUpon>Etiquette.cs</DependentUpon>
     </Compile>
-    <Compile Include="GUI\MultipleSelect.cs">
+    <Compile Include="GUI\CritereSelect.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="GUI\MultipleSelect.Designer.cs">
-      <DependentUpon>MultipleSelect.cs</DependentUpon>
+    <Compile Include="GUI\CritereSelect.Designer.cs">
+      <DependentUpon>CritereSelect.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\FiltreSelect.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\FiltreSelect.Designer.cs">
+      <DependentUpon>FiltreSelect.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\ManipAction.cs">
       <SubType>Form</SubType>
@@ -116,8 +122,11 @@
     <EmbeddedResource Include="GUI\Etiquette.resx">
       <DependentUpon>Etiquette.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="GUI\MultipleSelect.resx">
-      <DependentUpon>MultipleSelect.cs</DependentUpon>
+    <EmbeddedResource Include="GUI\CritereSelect.resx">
+      <DependentUpon>CritereSelect.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\FiltreSelect.resx">
+      <DependentUpon>FiltreSelect.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\ManipAction.resx">
       <DependentUpon>ManipAction.cs</DependentUpon>

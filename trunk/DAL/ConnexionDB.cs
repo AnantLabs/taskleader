@@ -26,6 +26,9 @@ namespace TaskLeader.DAL
         public String path = "";
         public String name = "";
 
+        /// <summary>
+        /// Retourne le nom de la base
+        /// </summary>
         public override string ToString()
         {
             return this.name;

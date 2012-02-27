@@ -1,6 +1,6 @@
 ﻿namespace TaskLeader.GUI
 {
-    partial class MultipleSelect
+    partial class CritereSelect
     {
         /// <summary> 
         /// Variable nécessaire au concepteur.
@@ -53,10 +53,11 @@
             // titre
             // 
             this.titre.AutoSize = true;
+            this.titre.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.titre.Location = new System.Drawing.Point(3, 4);
             this.titre.Margin = new System.Windows.Forms.Padding(3, 4, 0, 0);
             this.titre.Name = "titre";
-            this.titre.Size = new System.Drawing.Size(28, 13);
+            this.titre.Size = new System.Drawing.Size(33, 13);
             this.titre.TabIndex = 9;
             this.titre.Text = "Titre";
             // 
