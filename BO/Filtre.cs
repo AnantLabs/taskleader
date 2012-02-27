@@ -119,7 +119,7 @@ namespace TaskLeader.BO
         /// <returns>Nom du filtre</returns>
         public override String ToString()
         {
-            return "["+this.dbName+"] " + this.v_nomFiltre;
+            return this.v_nomFiltre;
         }
     }
 }

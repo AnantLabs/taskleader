@@ -5,7 +5,7 @@ using TaskLeader.DAL;
 
 namespace TaskLeader.GUI
 {
-    public partial class MultipleSelect : UserControl
+    public partial class CritereSelect : UserControl
     {
         private DBentity type;
         private bool hasParent = false;
@@ -23,7 +23,7 @@ namespace TaskLeader.GUI
         /// Rend dépendant ce widget d'un autre
         /// </summary>
         /// <param name="widget">MultipleSelect parent</param>
-        public void addParent(MultipleSelect widget)
+        public void addParent(CritereSelect widget)
         {
             this.hasParent = true;
             widget.SelectedIndexChanged += new EventHandler(this.liste_SelectedIndexChanged);
@@ -49,7 +49,7 @@ namespace TaskLeader.GUI
             }
         }
 
-        public MultipleSelect()
+        public CritereSelect()
         {
             InitializeComponent();
         }
@@ -58,7 +58,7 @@ namespace TaskLeader.GUI
         /// Constructeur de widget MultipleSelect
         /// </summary>
         /// <param name="title">Titre du critère (et aussi nom du contrôle)</param>
-        public MultipleSelect(String title, DBentity entity)
+        public CritereSelect(String title, DBentity entity)
         {
             InitializeComponent();
             this.titre.Text = title;

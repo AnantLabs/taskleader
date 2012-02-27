@@ -30,9 +30,9 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Toolbox));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             this.mainTableLayout = new System.Windows.Forms.TableLayoutPanel();
             this.statusPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.resultLabel = new System.Windows.Forms.Label();
@@ -51,7 +51,7 @@
             this.saveFilterCheck = new System.Windows.Forms.CheckBox();
             this.nameBox = new System.Windows.Forms.TextBox();
             this.errorLabel = new System.Windows.Forms.Label();
-            this.filtreBout = new System.Windows.Forms.Button();
+            this.manuelFiltreBout = new System.Windows.Forms.Button();
             this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
             this.label1 = new System.Windows.Forms.Label();
             this.manuelDBcombo = new System.Windows.Forms.ComboBox();
@@ -60,8 +60,8 @@
             this.searchButton = new System.Windows.Forms.Button();
             this.searchBox = new System.Windows.Forms.TextBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.flowLayoutPanel4 = new System.Windows.Forms.FlowLayoutPanel();
-            this.dbsTree = new System.Windows.Forms.TreeView();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.filtersPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.button1 = new System.Windows.Forms.Button();
             this.grilleData = new System.Windows.Forms.DataGridView();
             this.ajouterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -75,6 +75,8 @@
             this.nouvelleActionToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.actionsEvernoteToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.linksContext = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.flowLayoutPanel4 = new System.Windows.Forms.FlowLayoutPanel();
+            this.storedFilterBout = new System.Windows.Forms.Button();
             this.mainTableLayout.SuspendLayout();
             this.statusPanel.SuspendLayout();
             this.topMenu.SuspendLayout();
@@ -86,9 +88,10 @@
             this.tabPage2.SuspendLayout();
             this.flowLayoutPanel3.SuspendLayout();
             this.tabPage3.SuspendLayout();
-            this.flowLayoutPanel4.SuspendLayout();
+            this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grilleData)).BeginInit();
             this.listeContext.SuspendLayout();
+            this.flowLayoutPanel4.SuspendLayout();
             this.SuspendLayout();
             // 
             // mainTableLayout
@@ -257,7 +260,7 @@
             this.flowLayoutPanel1.Controls.Add(this.saveFilterCheck);
             this.flowLayoutPanel1.Controls.Add(this.nameBox);
             this.flowLayoutPanel1.Controls.Add(this.errorLabel);
-            this.flowLayoutPanel1.Controls.Add(this.filtreBout);
+            this.flowLayoutPanel1.Controls.Add(this.manuelFiltreBout);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(518, 0);
             this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
@@ -300,19 +303,19 @@
             this.errorLabel.Text = "Erreur";
             this.errorLabel.Visible = false;
             // 
-            // filtreBout
+            // manuelFiltreBout
             // 
-            this.filtreBout.Image = global::TaskLeader.Properties.Resources.filtre;
-            this.filtreBout.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.filtreBout.Location = new System.Drawing.Point(50, 89);
-            this.filtreBout.Margin = new System.Windows.Forms.Padding(50, 3, 0, 0);
-            this.filtreBout.Name = "filtreBout";
-            this.filtreBout.Size = new System.Drawing.Size(65, 30);
-            this.filtreBout.TabIndex = 8;
-            this.filtreBout.Text = "Filtrer";
-            this.filtreBout.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.filtreBout.UseVisualStyleBackColor = true;
-            this.filtreBout.Click += new System.EventHandler(this.filtreAction);
+            this.manuelFiltreBout.Image = global::TaskLeader.Properties.Resources.filtre;
+            this.manuelFiltreBout.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.manuelFiltreBout.Location = new System.Drawing.Point(50, 89);
+            this.manuelFiltreBout.Margin = new System.Windows.Forms.Padding(50, 3, 0, 0);
+            this.manuelFiltreBout.Name = "manuelFiltreBout";
+            this.manuelFiltreBout.Size = new System.Drawing.Size(65, 30);
+            this.manuelFiltreBout.TabIndex = 8;
+            this.manuelFiltreBout.Text = "Filtrer";
+            this.manuelFiltreBout.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.manuelFiltreBout.UseVisualStyleBackColor = true;
+            this.manuelFiltreBout.Click += new System.EventHandler(this.filtreAction);
             // 
             // flowLayoutPanel2
             // 
@@ -393,7 +396,7 @@
             // 
             // tabPage3
             // 
-            this.tabPage3.Controls.Add(this.flowLayoutPanel4);
+            this.tabPage3.Controls.Add(this.tableLayoutPanel1);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Size = new System.Drawing.Size(678, 126);
@@ -401,24 +404,30 @@
             this.tabPage3.Text = "Filtres enregistrés";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
-            // flowLayoutPanel4
+            // tableLayoutPanel1
             // 
-            this.flowLayoutPanel4.Controls.Add(this.dbsTree);
-            this.flowLayoutPanel4.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
-            this.flowLayoutPanel4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.flowLayoutPanel4.Location = new System.Drawing.Point(39, 23);
-            this.flowLayoutPanel4.Margin = new System.Windows.Forms.Padding(0);
-            this.flowLayoutPanel4.Name = "flowLayoutPanel4";
-            this.flowLayoutPanel4.Size = new System.Drawing.Size(182, 111);
-            this.flowLayoutPanel4.TabIndex = 0;
+            this.tableLayoutPanel1.ColumnCount = 2;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 80F));
+            this.tableLayoutPanel1.Controls.Add(this.filtersPanel, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.flowLayoutPanel4, 1, 0);
+            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 1;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(678, 126);
+            this.tableLayoutPanel1.TabIndex = 0;
             // 
-            // dbsTree
+            // filtersPanel
             // 
-            this.dbsTree.CheckBoxes = true;
-            this.dbsTree.Location = new System.Drawing.Point(3, 3);
-            this.dbsTree.Name = "dbsTree";
-            this.dbsTree.Size = new System.Drawing.Size(176, 105);
-            this.dbsTree.TabIndex = 12;
+            this.filtersPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.filtersPanel.Location = new System.Drawing.Point(0, 0);
+            this.filtersPanel.Margin = new System.Windows.Forms.Padding(0);
+            this.filtersPanel.Name = "filtersPanel";
+            this.filtersPanel.Size = new System.Drawing.Size(598, 126);
+            this.filtersPanel.TabIndex = 0;
             // 
             // button1
             // 
@@ -438,25 +447,25 @@
             this.grilleData.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.DisplayedCells;
             this.grilleData.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.DisplayedCells;
             this.grilleData.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableAlwaysIncludeHeaderText;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.ControlDark;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.grilleData.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.ControlDark;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.grilleData.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
             this.grilleData.ColumnHeadersHeight = 30;
             this.grilleData.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.mainTableLayout.SetColumnSpan(this.grilleData, 3);
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.grilleData.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.grilleData.DefaultCellStyle = dataGridViewCellStyle5;
             this.grilleData.Dock = System.Windows.Forms.DockStyle.Fill;
             this.grilleData.Location = new System.Drawing.Point(0, 185);
             this.grilleData.Margin = new System.Windows.Forms.Padding(0);
@@ -464,8 +473,8 @@
             this.grilleData.Name = "grilleData";
             this.grilleData.ReadOnly = true;
             this.grilleData.RowHeadersVisible = false;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.grilleData.RowsDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.grilleData.RowsDefaultCellStyle = dataGridViewCellStyle6;
             this.grilleData.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.grilleData.Size = new System.Drawing.Size(721, 720);
             this.grilleData.TabIndex = 4;
@@ -561,6 +570,29 @@
             this.linksContext.Name = "linksContext";
             this.linksContext.Size = new System.Drawing.Size(61, 4);
             // 
+            // flowLayoutPanel4
+            // 
+            this.flowLayoutPanel4.Controls.Add(this.storedFilterBout);
+            this.flowLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanel4.Location = new System.Drawing.Point(598, 0);
+            this.flowLayoutPanel4.Margin = new System.Windows.Forms.Padding(0);
+            this.flowLayoutPanel4.Name = "flowLayoutPanel4";
+            this.flowLayoutPanel4.Size = new System.Drawing.Size(80, 126);
+            this.flowLayoutPanel4.TabIndex = 1;
+            // 
+            // storedFilterBout
+            // 
+            this.storedFilterBout.Image = global::TaskLeader.Properties.Resources.filtre;
+            this.storedFilterBout.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.storedFilterBout.Location = new System.Drawing.Point(7, 45);
+            this.storedFilterBout.Margin = new System.Windows.Forms.Padding(7, 45, 0, 0);
+            this.storedFilterBout.Name = "storedFilterBout";
+            this.storedFilterBout.Size = new System.Drawing.Size(65, 30);
+            this.storedFilterBout.TabIndex = 9;
+            this.storedFilterBout.Text = "Filtrer";
+            this.storedFilterBout.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.storedFilterBout.UseVisualStyleBackColor = true;
+            // 
             // Toolbox
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -594,16 +626,17 @@
             this.flowLayoutPanel3.ResumeLayout(false);
             this.flowLayoutPanel3.PerformLayout();
             this.tabPage3.ResumeLayout(false);
-            this.flowLayoutPanel4.ResumeLayout(false);
+            this.tableLayoutPanel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.grilleData)).EndInit();
             this.listeContext.ResumeLayout(false);
+            this.flowLayoutPanel4.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.Button filtreBout;
+        private System.Windows.Forms.Button manuelFiltreBout;
         private System.Windows.Forms.ContextMenuStrip listeContext;
         private System.Windows.Forms.ToolStripMenuItem statutTSMenuItem;
         private System.Windows.Forms.ToolStripMenuItem editActionItem;
@@ -612,7 +645,6 @@
         private System.Windows.Forms.FlowLayoutPanel statusPanel;
         private System.Windows.Forms.TextBox searchBox;
         private System.Windows.Forms.Button searchButton;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel4;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel3;
         private System.Windows.Forms.Label resultLabel;
         private System.Windows.Forms.CheckBox saveFilterCheck;
@@ -631,7 +663,6 @@
         private System.Windows.Forms.ToolStripMenuItem defaultValuesToolStripMenuItem;
         private System.Windows.Forms.DataGridView grilleData;
         private System.Windows.Forms.ToolStripMenuItem baseToolStripMenuItem;
-        private System.Windows.Forms.TreeView dbsTree;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
@@ -645,6 +676,10 @@
         private System.Windows.Forms.ComboBox manuelDBcombo;
         private System.Windows.Forms.Label errorLabel;
         private System.Windows.Forms.TextBox nameBox;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.FlowLayoutPanel filtersPanel;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel4;
+        private System.Windows.Forms.Button storedFilterBout;
 
     }
 }

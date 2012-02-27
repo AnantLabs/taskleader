@@ -26,7 +26,7 @@ namespace TaskLeader.GUI
         /// <summary>
         /// Dictionnaire des widgets de sélection des critères
         /// </summary>
-        private Dictionary<string, MultipleSelect> criteresSelect = new Dictionary<string, MultipleSelect>();
+        private Dictionary<string, CritereSelect> criteresSelect = new Dictionary<string, CritereSelect>();
 
         public Toolbox()
         {
@@ -37,11 +37,17 @@ namespace TaskLeader.GUI
         private void Toolbox_Load(object sender, EventArgs e)
         {
             // Remplissage de la liste des bases d'action disponibles
-            foreach (String nomBase in TrayIcon.dbs.Keys)
+            foreach (DB db in TrayIcon.dbs.Values)
             {
-                manuelDBcombo.Items.Add(TrayIcon.dbs[nomBase]);
-                ToolStripMenuItem dbItem = new ToolStripMenuItem(nomBase);
-                dbItem.Checked = TrayIcon.activeDBs.Contains(nomBase);
+                // Filtre manuel
+                manuelDBcombo.Items.Add(db);
+
+                // Filtres enregistrés
+                this.filtersPanel.Controls.Add(new FiltreSelect(db));
+
+                // Menu admin
+                ToolStripMenuItem dbItem = new ToolStripMenuItem(db.name);
+                dbItem.Checked = TrayIcon.activeDBs.Contains(db.name);
                 dbItem.CheckOnClick = true;
                 dbItem.CheckedChanged += new EventHandler(changeActiveDBs);
                 this.baseToolStripMenuItem.DropDown.Items.Add(dbItem);
@@ -52,22 +58,22 @@ namespace TaskLeader.GUI
             // -------------------
 
             // Création des MultipleSelect
-            this.criteresSelect.Add("contextes", new MultipleSelect("Contextes", DB.contexte));
-            this.criteresSelect.Add("sujets", new MultipleSelect("Sujets", DB.sujet));
+            this.criteresSelect.Add("contextes", new CritereSelect("Contextes", DB.contexte));
+            this.criteresSelect.Add("sujets", new CritereSelect("Sujets", DB.sujet));
             this.criteresSelect["sujets"].addParent(this.criteresSelect["contextes"]);
-            this.criteresSelect.Add("destinataires", new MultipleSelect("Destinataires", DB.destinataire));
-            this.criteresSelect.Add("statuts", new MultipleSelect("Statuts", DB.statut));
+            this.criteresSelect.Add("destinataires", new CritereSelect("Destinataires", DB.destinataire));
+            this.criteresSelect.Add("statuts", new CritereSelect("Statuts", DB.statut));
             foreach(Control control in this.criteresSelect.Values)
                 this.selectPanel.Controls.Add(control);
 
             this.manuelDBcombo.Text = TrayIcon.defaultDB.name;
-            // ATTENTION: déclenche la mise à jour de toutes les MuitipleSelect!!
+            // ATTENTION: déclenche la mise à jour de toutes les CritereSelect!!
 
             // Remplissage de la combo des filtres
             this.loadFilters();
 
             // Remplissage de la ListBox des statuts + menu contextuel du tableau
-            foreach (object item in db.getTitres(DB.statut))
+            foreach (object item in this.db.getTitres(DB.statut))
                 statutTSMenuItem.DropDown.Items.Add(item.ToString(), null, this.changeStat);
 
             ((ToolStripDropDownMenu)statutTSMenuItem.DropDown).ShowImageMargin = false;
@@ -110,24 +116,7 @@ namespace TaskLeader.GUI
         /// </summary>
         private void loadFilters()
         {
-            // Suppression des valeurs courantes
-            this.dbsTree.BeginUpdate();
-            this.dbsTree.Nodes.Clear();
-            
-            // Récupération des filtres des bases actives         
-            foreach (String nomDB in TrayIcon.activeDBs)
-            {
-                ArrayList filtres = new ArrayList();
-                foreach (Filtre filtre in TrayIcon.dbs[nomDB].getFilters())
-                {
-                    TreeNode node = new TreeNode(filtre.nom);
-                    node.Tag = filtre;
-                    filtres.Add(node);
-                }
-                dbsTree.Nodes.Add(new TreeNode(nomDB, (TreeNode[])filtres.ToArray(typeof(TreeNode))));
-            }
 
-            this.dbsTree.EndUpdate();
         }
 
         /// <summary>
@@ -385,7 +374,7 @@ namespace TaskLeader.GUI
         private void filtreAction(object sender, EventArgs e)
         {
             Filtre filtre = new Filtre(manuelDBcombo.Text);
-            foreach (MultipleSelect widget in this.criteresSelect.Values)
+            foreach (CritereSelect widget in this.criteresSelect.Values)
                 filtre.addCriterium(widget.getCriterium());
 
             if (saveFilterCheck.Checked) //Sauvegarde du filtre si checkbox cochée
@@ -517,7 +506,7 @@ namespace TaskLeader.GUI
         /// </summary>
         private void manuelDBcombo_SelectedIndexChanged(object sender, EventArgs e)
         {
-            foreach(MultipleSelect widget in this.criteresSelect.Values)
+            foreach(CritereSelect widget in this.criteresSelect.Values)
                 widget.maj((DB)manuelDBcombo.Items[manuelDBcombo.SelectedIndex]);
         }
 
