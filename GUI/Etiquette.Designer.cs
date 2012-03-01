@@ -44,6 +44,7 @@
             this.exitSearchBut.TabIndex = 3;
             this.exitSearchBut.Text = "X";
             this.exitSearchBut.UseVisualStyleBackColor = true;
+            this.exitSearchBut.Click += new System.EventHandler(this.exitSearchBut_Click);
             // 
             // searchedText
             // 
