@@ -28,9 +28,9 @@ namespace TaskLeader.GUI
         public static ArrayList activeDBs = new ArrayList();
         public static DB defaultDB
         {
-            get
+            get // Et si la base par défaut a été
             {
-                if(dbs.ContainsKey(ConfigurationManager.AppSettings["defaultDB"])) // La DB par défaut n'est pas forcément valide
+                if(activeDBs.Contains(ConfigurationManager.AppSettings["defaultDB"])) // La DB par défaut n'est pas forcément active
                     return dbs[ConfigurationManager.AppSettings["defaultDB"]]; // Si c'est le cas, elle est la DB par défaut
                 else
                     return dbs[activeDBs[0].ToString()]; // Sinon, on prend la première de la liste

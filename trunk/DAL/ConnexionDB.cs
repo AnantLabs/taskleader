@@ -38,7 +38,6 @@ namespace TaskLeader.DAL
         {
             this.path = chemin;
             this.name = nom;
-            v_currentFilter = this.getFilter(this.getDefault(filtre));
         }
 
         // Connexion à la base SQLite
@@ -70,20 +69,5 @@ namespace TaskLeader.DAL
         public static DBentity destinataire = new DBentity("Destinataire", "Destinataires", "AllDest");
         public static DBentity statut = new DBentity("Statut", "Statuts", "AllStat");
 		public static DBentity filtre = new DBentity("","Filtres","");
-
-        // Filtres associés à la DB
-        private Filtre v_currentFilter; // Variable locale pour stocker une référence vers le filtre en cours
-        private Filtre v_oldFilter = null; // Et le filtre de type 1 précédent
-        public Filtre CurrentFilter
-        {
-            get { return v_currentFilter; }
-            set
-            {
-                if (v_currentFilter != null && v_currentFilter.type == 1)
-                    v_oldFilter = v_currentFilter; // Mémorisation du dernier filtre de type 1
-                v_currentFilter = value;
-            }
-        }
-        public Filtre OldFilter { get { return v_oldFilter; } }
     }
 }

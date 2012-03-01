@@ -54,8 +54,9 @@
             this.selectPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
-            this.searchButton = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
             this.searchBox = new System.Windows.Forms.TextBox();
+            this.searchButton = new System.Windows.Forms.Button();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.filtersPanel = new System.Windows.Forms.FlowLayoutPanel();
@@ -67,6 +68,9 @@
             this.ajouterToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.nouvelleActionToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.actionsEvernoteToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.erreurSearch = new System.Windows.Forms.Label();
+            this.dbSelect = new TaskLeader.GUI.CritereSelect();
+            this.flowLayoutPanel5 = new System.Windows.Forms.FlowLayoutPanel();
             this.mainTableLayout.SuspendLayout();
             this.topMenu.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -79,6 +83,7 @@
             this.tabPage3.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel4.SuspendLayout();
+            this.flowLayoutPanel5.SuspendLayout();
             this.SuspendLayout();
             // 
             // mainTableLayout
@@ -354,7 +359,6 @@
             this.tabPage2.Controls.Add(this.flowLayoutPanel3);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage2.Size = new System.Drawing.Size(678, 126);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Recherche";
@@ -362,36 +366,50 @@
             // 
             // flowLayoutPanel3
             // 
-            this.flowLayoutPanel3.Controls.Add(this.searchButton);
-            this.flowLayoutPanel3.Controls.Add(this.searchBox);
-            this.flowLayoutPanel3.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
+            this.flowLayoutPanel3.Controls.Add(this.dbSelect);
+            this.flowLayoutPanel3.Controls.Add(this.label2);
+            this.flowLayoutPanel3.Controls.Add(this.flowLayoutPanel5);
+            this.flowLayoutPanel3.Controls.Add(this.erreurSearch);
+            this.flowLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanel3.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.flowLayoutPanel3.Location = new System.Drawing.Point(4, 12);
+            this.flowLayoutPanel3.Location = new System.Drawing.Point(0, 0);
             this.flowLayoutPanel3.Margin = new System.Windows.Forms.Padding(0);
             this.flowLayoutPanel3.Name = "flowLayoutPanel3";
-            this.flowLayoutPanel3.Size = new System.Drawing.Size(185, 35);
+            this.flowLayoutPanel3.Size = new System.Drawing.Size(678, 126);
             this.flowLayoutPanel3.TabIndex = 0;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(211, 7);
+            this.label2.Margin = new System.Windows.Forms.Padding(30, 7, 3, 0);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(55, 13);
+            this.label2.TabIndex = 4;
+            this.label2.Text = "Mots clés:";
+            // 
+            // searchBox
+            // 
+            this.searchBox.Location = new System.Drawing.Point(3, 5);
+            this.searchBox.Margin = new System.Windows.Forms.Padding(3, 5, 5, 0);
+            this.searchBox.Name = "searchBox";
+            this.searchBox.Size = new System.Drawing.Size(145, 20);
+            this.searchBox.TabIndex = 1;
+            this.searchBox.Enter += new System.EventHandler(this.searchBox_Enter);
+            this.searchBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.searchBox_KeyPress);
             // 
             // searchButton
             // 
             this.searchButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("searchButton.BackgroundImage")));
             this.searchButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.searchButton.Location = new System.Drawing.Point(153, 2);
-            this.searchButton.Margin = new System.Windows.Forms.Padding(2);
+            this.searchButton.Location = new System.Drawing.Point(153, 0);
+            this.searchButton.Margin = new System.Windows.Forms.Padding(0);
             this.searchButton.Name = "searchButton";
             this.searchButton.Size = new System.Drawing.Size(30, 30);
             this.searchButton.TabIndex = 2;
             this.searchButton.UseVisualStyleBackColor = true;
             this.searchButton.Click += new System.EventHandler(this.searchButton_Click);
-            // 
-            // searchBox
-            // 
-            this.searchBox.Location = new System.Drawing.Point(3, 7);
-            this.searchBox.Margin = new System.Windows.Forms.Padding(3, 7, 3, 3);
-            this.searchBox.Name = "searchBox";
-            this.searchBox.Size = new System.Drawing.Size(145, 20);
-            this.searchBox.TabIndex = 1;
-            this.searchBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.searchBox_KeyPress);
             // 
             // tabPage3
             // 
@@ -503,6 +521,36 @@
             this.actionsEvernoteToolStripMenuItem1.Size = new System.Drawing.Size(156, 22);
             this.actionsEvernoteToolStripMenuItem1.Text = "Actions Evernote";
             // 
+            // erreurSearch
+            // 
+            this.erreurSearch.AutoSize = true;
+            this.erreurSearch.ForeColor = System.Drawing.Color.Red;
+            this.erreurSearch.Location = new System.Drawing.Point(214, 56);
+            this.erreurSearch.Margin = new System.Windows.Forms.Padding(33, 0, 3, 0);
+            this.erreurSearch.Name = "erreurSearch";
+            this.erreurSearch.Size = new System.Drawing.Size(35, 13);
+            this.erreurSearch.TabIndex = 5;
+            this.erreurSearch.Text = "Erreur";
+            this.erreurSearch.Visible = false;
+            // 
+            // dbSelect
+            // 
+            this.dbSelect.Location = new System.Drawing.Point(3, 3);
+            this.dbSelect.Name = "dbSelect";
+            this.dbSelect.Size = new System.Drawing.Size(175, 126);
+            this.dbSelect.TabIndex = 3;
+            // 
+            // flowLayoutPanel5
+            // 
+            this.flowLayoutPanel5.AutoSize = true;
+            this.flowLayoutPanel5.Controls.Add(this.searchBox);
+            this.flowLayoutPanel5.Controls.Add(this.searchButton);
+            this.flowLayoutPanel5.Location = new System.Drawing.Point(211, 23);
+            this.flowLayoutPanel5.Margin = new System.Windows.Forms.Padding(30, 3, 3, 3);
+            this.flowLayoutPanel5.Name = "flowLayoutPanel5";
+            this.flowLayoutPanel5.Size = new System.Drawing.Size(183, 30);
+            this.flowLayoutPanel5.TabIndex = 6;
+            // 
             // Toolbox
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -536,6 +584,8 @@
             this.tabPage3.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.flowLayoutPanel4.ResumeLayout(false);
+            this.flowLayoutPanel5.ResumeLayout(false);
+            this.flowLayoutPanel5.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -580,6 +630,10 @@
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel4;
         private System.Windows.Forms.Button storedFilterBout;
         private System.Windows.Forms.FlowLayoutPanel selectPanel;
+        private CritereSelect dbSelect;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label erreurSearch;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel5;
 
     }
 }

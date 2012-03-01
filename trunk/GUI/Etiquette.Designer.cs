@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.exitSearchBut = new System.Windows.Forms.Button();
-            this.searchedText = new System.Windows.Forms.Label();
+            this.valeurLabel = new System.Windows.Forms.Label();
             this.typeLabel = new System.Windows.Forms.Label();
             this.searchFlowLayoutPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.searchFlowLayoutPanel.SuspendLayout();
@@ -46,15 +46,15 @@
             this.exitSearchBut.UseVisualStyleBackColor = true;
             this.exitSearchBut.Click += new System.EventHandler(this.exitSearchBut_Click);
             // 
-            // searchedText
+            // valeurLabel
             // 
-            this.searchedText.AutoSize = true;
-            this.searchedText.Location = new System.Drawing.Point(38, 4);
-            this.searchedText.Margin = new System.Windows.Forms.Padding(0, 4, 0, 0);
-            this.searchedText.Name = "searchedText";
-            this.searchedText.Size = new System.Drawing.Size(36, 13);
-            this.searchedText.TabIndex = 4;
-            this.searchedText.Text = "valeur";
+            this.valeurLabel.AutoSize = true;
+            this.valeurLabel.Location = new System.Drawing.Point(38, 4);
+            this.valeurLabel.Margin = new System.Windows.Forms.Padding(0, 4, 0, 0);
+            this.valeurLabel.Name = "valeurLabel";
+            this.valeurLabel.Size = new System.Drawing.Size(36, 13);
+            this.valeurLabel.TabIndex = 4;
+            this.valeurLabel.Text = "valeur";
             // 
             // typeLabel
             // 
@@ -73,7 +73,7 @@
             this.searchFlowLayoutPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.searchFlowLayoutPanel.BackColor = System.Drawing.Color.LightSteelBlue;
             this.searchFlowLayoutPanel.Controls.Add(this.typeLabel);
-            this.searchFlowLayoutPanel.Controls.Add(this.searchedText);
+            this.searchFlowLayoutPanel.Controls.Add(this.valeurLabel);
             this.searchFlowLayoutPanel.Controls.Add(this.exitSearchBut);
             this.searchFlowLayoutPanel.Location = new System.Drawing.Point(0, 0);
             this.searchFlowLayoutPanel.Margin = new System.Windows.Forms.Padding(5, 4, 0, 4);
@@ -101,7 +101,7 @@
         #endregion
 
         private System.Windows.Forms.Button exitSearchBut;
-        private System.Windows.Forms.Label searchedText;
+        private System.Windows.Forms.Label valeurLabel;
         private System.Windows.Forms.Label typeLabel;
         private System.Windows.Forms.FlowLayoutPanel searchFlowLayoutPanel;
 

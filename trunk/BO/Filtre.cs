@@ -94,9 +94,6 @@ namespace TaskLeader.BO
         /// </summary>
         public DataTable getActions()
         {
-            // Stockage du filtre
-            this.db.CurrentFilter = this;
-
             DataTable data = new DataTable();
 
             // Récupération des actions
