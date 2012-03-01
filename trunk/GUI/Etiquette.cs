@@ -39,5 +39,13 @@ namespace TaskLeader.GUI
                     break;
             }
         }
+
+        /// <summary>
+        /// Suppression du contrôle du contrôle parent quand l'étiquette est fermée
+        /// </summary>
+        private void exitSearchBut_Click(object sender, System.EventArgs e)
+        {
+            this.Parent.Controls.Remove(this);
+        }
     }
 }

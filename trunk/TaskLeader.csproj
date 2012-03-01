@@ -84,6 +84,12 @@
     <Compile Include="GUI\FiltreSelect.Designer.cs">
       <DependentUpon>FiltreSelect.cs</DependentUpon>
     </Compile>
+    <Compile Include="GUI\Grille.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\Grille.Designer.cs">
+      <DependentUpon>Grille.cs</DependentUpon>
+    </Compile>
     <Compile Include="GUI\ManipAction.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -127,6 +133,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\FiltreSelect.resx">
       <DependentUpon>FiltreSelect.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\Grille.resx">
+      <DependentUpon>Grille.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\ManipAction.resx">
       <DependentUpon>ManipAction.cs</DependentUpon>

@@ -28,14 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Toolbox));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             this.mainTableLayout = new System.Windows.Forms.TableLayoutPanel();
-            this.statusPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.resultLabel = new System.Windows.Forms.Label();
+            this.tagsPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.topMenu = new System.Windows.Forms.MenuStrip();
             this.ajouterItem = new System.Windows.Forms.ToolStripMenuItem();
             this.nouvelleActionToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
@@ -43,10 +39,10 @@
             this.adminItem = new System.Windows.Forms.ToolStripMenuItem();
             this.baseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.defaultValuesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.button1 = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.manuelTable = new System.Windows.Forms.TableLayoutPanel();
-            this.selectPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.saveFilterCheck = new System.Windows.Forms.CheckBox();
             this.nameBox = new System.Windows.Forms.TextBox();
@@ -62,23 +58,16 @@
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.filtersPanel = new System.Windows.Forms.FlowLayoutPanel();
-            this.button1 = new System.Windows.Forms.Button();
-            this.grilleData = new System.Windows.Forms.DataGridView();
+            this.flowLayoutPanel4 = new System.Windows.Forms.FlowLayoutPanel();
+            this.storedFilterBout = new System.Windows.Forms.Button();
             this.ajouterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.nouvelleActionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.actionsEvernoteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.listeContext = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.editActionItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.statutTSMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.exportMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ajouterToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.nouvelleActionToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.actionsEvernoteToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.linksContext = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.flowLayoutPanel4 = new System.Windows.Forms.FlowLayoutPanel();
-            this.storedFilterBout = new System.Windows.Forms.Button();
+            this.selectPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.mainTableLayout.SuspendLayout();
-            this.statusPanel.SuspendLayout();
             this.topMenu.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -89,22 +78,21 @@
             this.flowLayoutPanel3.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.grilleData)).BeginInit();
-            this.listeContext.SuspendLayout();
             this.flowLayoutPanel4.SuspendLayout();
             this.SuspendLayout();
             // 
             // mainTableLayout
             // 
-            this.mainTableLayout.ColumnCount = 3;
+            this.mainTableLayout.ColumnCount = 4;
+            this.mainTableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.mainTableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.mainTableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 90F));
             this.mainTableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 32F));
-            this.mainTableLayout.Controls.Add(this.statusPanel, 0, 1);
-            this.mainTableLayout.Controls.Add(this.topMenu, 1, 1);
+            this.mainTableLayout.Controls.Add(this.resultLabel, 0, 1);
+            this.mainTableLayout.Controls.Add(this.tagsPanel, 1, 1);
+            this.mainTableLayout.Controls.Add(this.topMenu, 2, 1);
+            this.mainTableLayout.Controls.Add(this.button1, 3, 0);
             this.mainTableLayout.Controls.Add(this.tabControl1, 0, 0);
-            this.mainTableLayout.Controls.Add(this.button1, 2, 0);
-            this.mainTableLayout.Controls.Add(this.grilleData, 0, 2);
             this.mainTableLayout.Dock = System.Windows.Forms.DockStyle.Fill;
             this.mainTableLayout.Location = new System.Drawing.Point(0, 0);
             this.mainTableLayout.Margin = new System.Windows.Forms.Padding(0);
@@ -116,26 +104,27 @@
             this.mainTableLayout.Size = new System.Drawing.Size(721, 750);
             this.mainTableLayout.TabIndex = 7;
             // 
-            // statusPanel
-            // 
-            this.statusPanel.Controls.Add(this.resultLabel);
-            this.statusPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.statusPanel.Location = new System.Drawing.Point(0, 155);
-            this.statusPanel.Margin = new System.Windows.Forms.Padding(0);
-            this.statusPanel.Name = "statusPanel";
-            this.statusPanel.Size = new System.Drawing.Size(599, 30);
-            this.statusPanel.TabIndex = 5;
-            // 
             // resultLabel
             // 
             this.resultLabel.AutoSize = true;
-            this.resultLabel.Location = new System.Drawing.Point(10, 8);
+            this.resultLabel.Location = new System.Drawing.Point(10, 163);
             this.resultLabel.Margin = new System.Windows.Forms.Padding(10, 8, 3, 0);
             this.resultLabel.Name = "resultLabel";
             this.resultLabel.Size = new System.Drawing.Size(44, 13);
             this.resultLabel.TabIndex = 6;
             this.resultLabel.Text = "Nombre";
             this.resultLabel.Visible = false;
+            // 
+            // tagsPanel
+            // 
+            this.tagsPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tagsPanel.Location = new System.Drawing.Point(57, 155);
+            this.tagsPanel.Margin = new System.Windows.Forms.Padding(0);
+            this.tagsPanel.Name = "tagsPanel";
+            this.tagsPanel.Size = new System.Drawing.Size(542, 30);
+            this.tagsPanel.TabIndex = 5;
+            this.tagsPanel.ControlAdded += new System.Windows.Forms.ControlEventHandler(this.tagsPanel_ControlAdded);
+            this.tagsPanel.ControlRemoved += new System.Windows.Forms.ControlEventHandler(this.tagsPanel_ControlRemoved);
             // 
             // topMenu
             // 
@@ -202,9 +191,19 @@
             this.defaultValuesToolStripMenuItem.Text = "Valeurs par défaut";
             this.defaultValuesToolStripMenuItem.Click += new System.EventHandler(this.defaultValuesToolStripMenuItem_Click);
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(692, 3);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(26, 23);
+            this.button1.TabIndex = 7;
+            this.button1.Text = "^";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.hideCollapse);
+            // 
             // tabControl1
             // 
-            this.mainTableLayout.SetColumnSpan(this.tabControl1, 2);
+            this.mainTableLayout.SetColumnSpan(this.tabControl1, 3);
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage3);
@@ -234,9 +233,9 @@
             this.manuelTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 150F));
             this.manuelTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.manuelTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 160F));
-            this.manuelTable.Controls.Add(this.selectPanel, 1, 0);
             this.manuelTable.Controls.Add(this.flowLayoutPanel1, 2, 0);
             this.manuelTable.Controls.Add(this.flowLayoutPanel2, 0, 0);
+            this.manuelTable.Controls.Add(this.selectPanel, 1, 0);
             this.manuelTable.Dock = System.Windows.Forms.DockStyle.Fill;
             this.manuelTable.Location = new System.Drawing.Point(0, 0);
             this.manuelTable.Margin = new System.Windows.Forms.Padding(0);
@@ -245,15 +244,6 @@
             this.manuelTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.manuelTable.Size = new System.Drawing.Size(678, 126);
             this.manuelTable.TabIndex = 2;
-            // 
-            // selectPanel
-            // 
-            this.selectPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.selectPanel.Location = new System.Drawing.Point(150, 0);
-            this.selectPanel.Margin = new System.Windows.Forms.Padding(0);
-            this.selectPanel.Name = "selectPanel";
-            this.selectPanel.Size = new System.Drawing.Size(368, 126);
-            this.selectPanel.TabIndex = 1;
             // 
             // flowLayoutPanel1
             // 
@@ -315,7 +305,7 @@
             this.manuelFiltreBout.Text = "Filtrer";
             this.manuelFiltreBout.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.manuelFiltreBout.UseVisualStyleBackColor = true;
-            this.manuelFiltreBout.Click += new System.EventHandler(this.filtreAction);
+            this.manuelFiltreBout.Click += new System.EventHandler(this.filtreManuel);
             // 
             // flowLayoutPanel2
             // 
@@ -429,60 +419,28 @@
             this.filtersPanel.Size = new System.Drawing.Size(598, 126);
             this.filtersPanel.TabIndex = 0;
             // 
-            // button1
+            // flowLayoutPanel4
             // 
-            this.button1.Location = new System.Drawing.Point(692, 3);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(26, 23);
-            this.button1.TabIndex = 7;
-            this.button1.Text = "^";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.hideCollapse);
+            this.flowLayoutPanel4.Controls.Add(this.storedFilterBout);
+            this.flowLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanel4.Location = new System.Drawing.Point(598, 0);
+            this.flowLayoutPanel4.Margin = new System.Windows.Forms.Padding(0);
+            this.flowLayoutPanel4.Name = "flowLayoutPanel4";
+            this.flowLayoutPanel4.Size = new System.Drawing.Size(80, 126);
+            this.flowLayoutPanel4.TabIndex = 1;
             // 
-            // grilleData
+            // storedFilterBout
             // 
-            this.grilleData.AllowUserToAddRows = false;
-            this.grilleData.AllowUserToDeleteRows = false;
-            this.grilleData.AllowUserToResizeRows = false;
-            this.grilleData.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.DisplayedCells;
-            this.grilleData.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.DisplayedCells;
-            this.grilleData.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableAlwaysIncludeHeaderText;
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.ControlDark;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.grilleData.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
-            this.grilleData.ColumnHeadersHeight = 30;
-            this.grilleData.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
-            this.mainTableLayout.SetColumnSpan(this.grilleData, 3);
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.grilleData.DefaultCellStyle = dataGridViewCellStyle5;
-            this.grilleData.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.grilleData.Location = new System.Drawing.Point(0, 185);
-            this.grilleData.Margin = new System.Windows.Forms.Padding(0);
-            this.grilleData.MultiSelect = false;
-            this.grilleData.Name = "grilleData";
-            this.grilleData.ReadOnly = true;
-            this.grilleData.RowHeadersVisible = false;
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.grilleData.RowsDefaultCellStyle = dataGridViewCellStyle6;
-            this.grilleData.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.grilleData.Size = new System.Drawing.Size(721, 720);
-            this.grilleData.TabIndex = 4;
-            this.grilleData.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.modifAction);
-            this.grilleData.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.grilleData_CellFormatting);
-            this.grilleData.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.grilleData_CellMouseClick);
-            this.grilleData.CellMouseEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.grilleData_CellMouseEnter);
-            this.grilleData.CellMouseLeave += new System.Windows.Forms.DataGridViewCellEventHandler(this.grilleData_CellMouseLeave);
+            this.storedFilterBout.Image = global::TaskLeader.Properties.Resources.filtre;
+            this.storedFilterBout.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.storedFilterBout.Location = new System.Drawing.Point(7, 45);
+            this.storedFilterBout.Margin = new System.Windows.Forms.Padding(7, 45, 0, 0);
+            this.storedFilterBout.Name = "storedFilterBout";
+            this.storedFilterBout.Size = new System.Drawing.Size(65, 30);
+            this.storedFilterBout.TabIndex = 9;
+            this.storedFilterBout.Text = "Filtrer";
+            this.storedFilterBout.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.storedFilterBout.UseVisualStyleBackColor = true;
             // 
             // ajouterToolStripMenuItem
             // 
@@ -511,35 +469,6 @@
             this.actionsEvernoteToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
             this.actionsEvernoteToolStripMenuItem.Text = "Actions Evernote";
             // 
-            // listeContext
-            // 
-            this.listeContext.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.editActionItem,
-            this.statutTSMenuItem,
-            this.exportMenuItem});
-            this.listeContext.Name = "listeContext";
-            this.listeContext.ShowImageMargin = false;
-            this.listeContext.Size = new System.Drawing.Size(134, 70);
-            // 
-            // editActionItem
-            // 
-            this.editActionItem.Name = "editActionItem";
-            this.editActionItem.Size = new System.Drawing.Size(133, 22);
-            this.editActionItem.Text = "Editer l\'action";
-            this.editActionItem.Click += new System.EventHandler(this.modifAction);
-            // 
-            // statutTSMenuItem
-            // 
-            this.statutTSMenuItem.Name = "statutTSMenuItem";
-            this.statutTSMenuItem.Size = new System.Drawing.Size(133, 22);
-            this.statutTSMenuItem.Text = "Passer l\'action à";
-            // 
-            // exportMenuItem
-            // 
-            this.exportMenuItem.Name = "exportMenuItem";
-            this.exportMenuItem.Size = new System.Drawing.Size(133, 22);
-            this.exportMenuItem.Text = "Exporter vers";
-            // 
             // ajouterToolStripMenuItem1
             // 
             this.ajouterToolStripMenuItem1.Name = "ajouterToolStripMenuItem1";
@@ -565,33 +494,14 @@
             this.actionsEvernoteToolStripMenuItem1.Size = new System.Drawing.Size(156, 22);
             this.actionsEvernoteToolStripMenuItem1.Text = "Actions Evernote";
             // 
-            // linksContext
+            // selectPanel
             // 
-            this.linksContext.Name = "linksContext";
-            this.linksContext.Size = new System.Drawing.Size(61, 4);
-            // 
-            // flowLayoutPanel4
-            // 
-            this.flowLayoutPanel4.Controls.Add(this.storedFilterBout);
-            this.flowLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel4.Location = new System.Drawing.Point(598, 0);
-            this.flowLayoutPanel4.Margin = new System.Windows.Forms.Padding(0);
-            this.flowLayoutPanel4.Name = "flowLayoutPanel4";
-            this.flowLayoutPanel4.Size = new System.Drawing.Size(80, 126);
-            this.flowLayoutPanel4.TabIndex = 1;
-            // 
-            // storedFilterBout
-            // 
-            this.storedFilterBout.Image = global::TaskLeader.Properties.Resources.filtre;
-            this.storedFilterBout.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.storedFilterBout.Location = new System.Drawing.Point(7, 45);
-            this.storedFilterBout.Margin = new System.Windows.Forms.Padding(7, 45, 0, 0);
-            this.storedFilterBout.Name = "storedFilterBout";
-            this.storedFilterBout.Size = new System.Drawing.Size(65, 30);
-            this.storedFilterBout.TabIndex = 9;
-            this.storedFilterBout.Text = "Filtrer";
-            this.storedFilterBout.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.storedFilterBout.UseVisualStyleBackColor = true;
+            this.selectPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.selectPanel.Location = new System.Drawing.Point(150, 0);
+            this.selectPanel.Margin = new System.Windows.Forms.Padding(0);
+            this.selectPanel.Name = "selectPanel";
+            this.selectPanel.Size = new System.Drawing.Size(368, 126);
+            this.selectPanel.TabIndex = 4;
             // 
             // Toolbox
             // 
@@ -611,8 +521,6 @@
             this.Resize += new System.EventHandler(this.Toolbox_Resize);
             this.mainTableLayout.ResumeLayout(false);
             this.mainTableLayout.PerformLayout();
-            this.statusPanel.ResumeLayout(false);
-            this.statusPanel.PerformLayout();
             this.topMenu.ResumeLayout(false);
             this.topMenu.PerformLayout();
             this.tabControl1.ResumeLayout(false);
@@ -627,8 +535,6 @@
             this.flowLayoutPanel3.PerformLayout();
             this.tabPage3.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.grilleData)).EndInit();
-            this.listeContext.ResumeLayout(false);
             this.flowLayoutPanel4.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -637,12 +543,8 @@
         #endregion
 
         private System.Windows.Forms.Button manuelFiltreBout;
-        private System.Windows.Forms.ContextMenuStrip listeContext;
-        private System.Windows.Forms.ToolStripMenuItem statutTSMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem editActionItem;
-        private System.Windows.Forms.ToolStripMenuItem exportMenuItem;
         private System.Windows.Forms.TableLayoutPanel mainTableLayout;
-        private System.Windows.Forms.FlowLayoutPanel statusPanel;
+        private System.Windows.Forms.FlowLayoutPanel tagsPanel;
         private System.Windows.Forms.TextBox searchBox;
         private System.Windows.Forms.Button searchButton;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel3;
@@ -658,17 +560,14 @@
         private System.Windows.Forms.ToolStripMenuItem ajouterItem;
         private System.Windows.Forms.ToolStripMenuItem nouvelleActionToolStripMenuItem2;
         private System.Windows.Forms.ToolStripMenuItem actionsEvernoteToolStripMenuItem2;
-        private System.Windows.Forms.ContextMenuStrip linksContext;
         private System.Windows.Forms.ToolStripMenuItem adminItem;
         private System.Windows.Forms.ToolStripMenuItem defaultValuesToolStripMenuItem;
-        private System.Windows.Forms.DataGridView grilleData;
         private System.Windows.Forms.ToolStripMenuItem baseToolStripMenuItem;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.FlowLayoutPanel selectPanel;
         private System.Windows.Forms.TableLayoutPanel manuelTable;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel2;
@@ -680,6 +579,7 @@
         private System.Windows.Forms.FlowLayoutPanel filtersPanel;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel4;
         private System.Windows.Forms.Button storedFilterBout;
+        private System.Windows.Forms.FlowLayoutPanel selectPanel;
 
     }
 }
