@@ -12,6 +12,8 @@ namespace TaskLeader.GUI
 {
     public partial class Grille : UserControl
     {
+        private DataTable data;
+
         private int P1length = Int32.Parse(ConfigurationManager.AppSettings["P1length"]);
         private DataGridViewImageColumn linkCol = new DataGridViewImageColumn();
 
@@ -35,9 +37,7 @@ namespace TaskLeader.GUI
 
         }
 
-        // --------------------------------
-        // ----------- Business -----------
-        // --------------------------------
+        # region  Business
 
         /// <summary>
         /// Ajoute les actions retournées par le filtre dans le tableau.
@@ -52,15 +52,24 @@ namespace TaskLeader.GUI
             // Récupération des résultats du filtre et association au tableau
             DataTable liste = filtre.getActions();
 
-            grilleData.DataSource = liste;
+            if (this.data == null) // Premier appel à la fonction add
+            {
+                this.data = liste;
+                this.grilleData.DataSource = data;
+            }
+            else
+                this.data.Merge(liste);
+
+            //TODO: il faudrait retrier sur la date
+            data.DefaultView.Sort = "Date ASC";
 
             // Mise en forme du tableau
             grilleData.Columns["id"].Visible = false;
             grilleData.Columns["DB"].Visible = false;
+            grilleData.Columns["Deadline"].Visible = false;
             grilleData.Columns["Liens"].DisplayIndex = 5;
+            grilleData.Columns["Date"].DisplayIndex = 6;
             grilleData.Columns["Titre"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
-
-            //TODO: appeler afficheNombre de Toolbox
 
             grilleData.Focus(); // Focus au tableau pour permettre le scroll direct
 
@@ -73,31 +82,19 @@ namespace TaskLeader.GUI
                 grilleData.Tag = null; // Remise à zéro du tag
             }
 
-            return ((DataTable)grilleData.DataSource).Rows.Count;
-        }
-
-
-        /// <summary>
-        /// Supprime les actions retournées par le filtre du tableau
-        /// </summary>
-        /// <param name="filtre"Filtre demandé></param>
-        public int remove(Filtre filtre)
-        {
-            //TODO: c'est un exemple pour le test
-            this.razTableau();
-
-            return 0;
+            return data.Rows.Count;
         }
 
         // Remise à zéro du tableau d'actions
-        private void razTableau()
+        public void raz()
         {
-            grilleData.DataSource = null; // Suppression des lignes du tableau
+            this.data = null; // Suppression des lignes du tableau
+            this.grilleData.DataSource = null;
         }
 
-        // --------------------------------------
-        // ----------- Widgets events -----------
-        // --------------------------------------
+         #endregion
+
+        #region Widgets events
 
         // ----------- grilleData -----------
 
@@ -107,11 +104,11 @@ namespace TaskLeader.GUI
             DateTime date;
 
             // Association du tooltip
-            if (grilleData.Columns[e.ColumnIndex].Name.Equals("Deadline"))
+            if (grilleData.Columns[e.ColumnIndex].Name.Equals("Date"))
                 grilleData[e.ColumnIndex, e.RowIndex].ToolTipText = "Modifier la date";
 
             // Gestion de la colonne Deadline
-            if (grilleData.Columns[e.ColumnIndex].Name.Equals("Deadline") && DateTime.TryParse(e.Value.ToString(), out date))
+            if (grilleData.Columns[e.ColumnIndex].Name.Equals("Date") && DateTime.TryParse(e.Value.ToString(), out date))
             {
                 // Récupération du delta en jours
                 int diff = (date.Date - DateTime.Now.Date).Days;
@@ -202,7 +199,7 @@ namespace TaskLeader.GUI
             }
 
             if (e.Button == MouseButtons.Left && // Click gauche
-                grilleData.Columns[e.ColumnIndex].Name.Equals("Deadline") && // Colonne "Deadline"
+                grilleData.Columns[e.ColumnIndex].Name.Equals("Date") && // Colonne "Date"
                 e.RowIndex >= 0) // Ce n'est pas la ligne des headers // Cellule non vide
             {
                 grilleData.Cursor = Cursors.Default;
@@ -221,7 +218,7 @@ namespace TaskLeader.GUI
                 grilleData[e.ColumnIndex, e.RowIndex].Value.ToString() != "0";
 
             bool dateActivated =
-                grilleData.Columns[e.ColumnIndex].Name.Equals("Deadline") &&
+                grilleData.Columns[e.ColumnIndex].Name.Equals("Date") &&
                 e.RowIndex >= 0;
 
             if (pjActivated || dateActivated)
@@ -236,7 +233,7 @@ namespace TaskLeader.GUI
                 grilleData[e.ColumnIndex, e.RowIndex].Value.ToString() != "0";
 
             bool dateActivated =
-                grilleData.Columns[e.ColumnIndex].Name.Equals("Deadline") &&
+                grilleData.Columns[e.ColumnIndex].Name.Equals("Date") &&
                 e.RowIndex >= 0;
 
             if (pjActivated || dateActivated)
@@ -305,6 +302,7 @@ namespace TaskLeader.GUI
             }
         }
 
-        
+        #endregion
+    
     }
 }

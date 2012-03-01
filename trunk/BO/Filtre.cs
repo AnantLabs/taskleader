@@ -89,6 +89,9 @@ namespace TaskLeader.BO
                 this.v_criteria.Add(critere);
         }
 
+        /// <summary>
+        /// Retourne une DataTable contenant les actions du filtre
+        /// </summary>
         public DataTable getActions()
         {
             // Stockage du filtre
@@ -96,6 +99,7 @@ namespace TaskLeader.BO
 
             DataTable data = new DataTable();
 
+            // Récupération des actions
             switch (this.type)
             {
                 case (1):
@@ -106,9 +110,23 @@ namespace TaskLeader.BO
                     break;
             }
 
-            data.Columns.Add("DB", typeof(String), "'" + this.dbName + "'");
+            // Ajout d'une colonne contenant le nom de la DB de ce filtre
+            DataColumn col = new DataColumn("DB", typeof(String));
+            col.DefaultValue = this.dbName;
+            data.Columns.Add(col);
+
+            // Ajout d'une colonne formalisant une ref pour chaque action
             data.Columns.Add("Ref", typeof(String), "DB+'" + Environment.NewLine + "#'+ID");
             data.Columns["Ref"].SetOrdinal(0);
+
+            // Ajout d'une nouvelle colonne date typé, clone de Deadline
+            data.Columns.Add("Date", typeof(DateTime), "Deadline");
+
+            // Création de la clé primaire à partir des colonnes DB et ID
+            DataColumn[] keys = new DataColumn[2];
+            keys[0] = data.Columns["DB"];
+            keys[1] = data.Columns["ID"];
+            data.PrimaryKey = keys;
 
             return data;
         }
