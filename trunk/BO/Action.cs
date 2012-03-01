@@ -17,7 +17,7 @@ namespace TaskLeader.BO
 
         // DB d'où provient l'action
         public String dbName = TrayIcon.defaultDB.name;
-        private DB db { get { return TrayIcon.dbs[this.db.name]; } }
+        private DB db { get { return TrayIcon.dbs[this.dbName]; } }
 
         // ID de l'action dans la base TaskLeader
         private String v_TLID = "";

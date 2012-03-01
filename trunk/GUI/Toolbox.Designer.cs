@@ -51,6 +51,7 @@
             this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
             this.label1 = new System.Windows.Forms.Label();
             this.manuelDBcombo = new System.Windows.Forms.ComboBox();
+            this.selectPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
             this.searchButton = new System.Windows.Forms.Button();
@@ -66,7 +67,6 @@
             this.ajouterToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.nouvelleActionToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.actionsEvernoteToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.selectPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.mainTableLayout.SuspendLayout();
             this.topMenu.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -340,6 +340,15 @@
             this.manuelDBcombo.TabIndex = 1;
             this.manuelDBcombo.SelectedIndexChanged += new System.EventHandler(this.manuelDBcombo_SelectedIndexChanged);
             // 
+            // selectPanel
+            // 
+            this.selectPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.selectPanel.Location = new System.Drawing.Point(150, 0);
+            this.selectPanel.Margin = new System.Windows.Forms.Padding(0);
+            this.selectPanel.Name = "selectPanel";
+            this.selectPanel.Size = new System.Drawing.Size(368, 126);
+            this.selectPanel.TabIndex = 4;
+            // 
             // tabPage2
             // 
             this.tabPage2.Controls.Add(this.flowLayoutPanel3);
@@ -493,15 +502,6 @@
             this.actionsEvernoteToolStripMenuItem1.ShowShortcutKeys = false;
             this.actionsEvernoteToolStripMenuItem1.Size = new System.Drawing.Size(156, 22);
             this.actionsEvernoteToolStripMenuItem1.Text = "Actions Evernote";
-            // 
-            // selectPanel
-            // 
-            this.selectPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.selectPanel.Location = new System.Drawing.Point(150, 0);
-            this.selectPanel.Margin = new System.Windows.Forms.Padding(0);
-            this.selectPanel.Name = "selectPanel";
-            this.selectPanel.Size = new System.Drawing.Size(368, 126);
-            this.selectPanel.TabIndex = 4;
             // 
             // Toolbox
             // 
