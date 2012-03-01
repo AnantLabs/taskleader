@@ -25,7 +25,7 @@ namespace TaskLeader.GUI
 
                     // Affichage de l'étiquette correspondant à la recherche
                     typeLabel.Text = "Recherche:";
-                    searchedText.Text = filtre.nom;
+                    valeurLabel.Text = "'" + filtre.nom + "' [" + filtre.dbName + "]";
                     break;
 
                 case (1):
@@ -33,9 +33,9 @@ namespace TaskLeader.GUI
                     // Affichage de l'étiquette correspondant au filtre
                     typeLabel.Text = "Filtre:";
                     if (filtre.nom != "")
-                        searchedText.Text = filtre.ToString();
+                        valeurLabel.Text = filtre.ToString() ;
                     else
-                        searchedText.Text = "manuel";
+                        valeurLabel.Text = "manuel [" + filtre.dbName + "]";
                     break;
             }
         }

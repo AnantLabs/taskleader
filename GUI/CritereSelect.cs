@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Windows.Forms;
 using TaskLeader.BO;
 using TaskLeader.DAL;
@@ -7,7 +8,31 @@ namespace TaskLeader.GUI
 {
     public partial class CritereSelect : UserControl
     {
-        private DBentity type;
+        #region Constructeurs
+
+        /// <summary>
+        /// Constructeur pour le Designer
+        /// </summary>
+        public CritereSelect()
+        {
+            InitializeComponent();
+        }
+
+        /// <summary>
+        /// Constructeur pour un Criterium
+        /// </summary>
+        /// <param name="title">Titre du critère (et aussi nom du contrôle)</param>
+        public CritereSelect(String title, DBentity entity)
+        {
+            InitializeComponent();
+            this.titre.Text = title;
+            this.type = entity;
+        }
+
+        #endregion
+
+        #region Gestion des dépendances entre CritereSelect
+
         private bool hasParent = false;
 
         /// <summary>
@@ -29,6 +54,9 @@ namespace TaskLeader.GUI
             widget.SelectedIndexChanged += new EventHandler(this.liste_SelectedIndexChanged);
         }
 
+        /// <summary>
+        /// Mis à jour du widget en fonction de l'état du parent
+        /// </summary>
         private void liste_SelectedIndexChanged(object sender, EventArgs e)
         {
             CheckedListBox criteres = ((CheckedListBox)sender);
@@ -38,7 +66,7 @@ namespace TaskLeader.GUI
             // On n'affiche la liste des sujets que si un seul contexte est tické
             if (items.Count == 1)
             {
-                this.maj(db, items[0].ToString());
+                this.majCritere(db, items[0].ToString());
                 this.box.Enabled = true;
             }
             else
@@ -49,21 +77,9 @@ namespace TaskLeader.GUI
             }
         }
 
-        public CritereSelect()
-        {
-            InitializeComponent();
-        }
+        #endregion
 
-        /// <summary>
-        /// Constructeur de widget MultipleSelect
-        /// </summary>
-        /// <param name="title">Titre du critère (et aussi nom du contrôle)</param>
-        public CritereSelect(String title, DBentity entity)
-        {
-            InitializeComponent();
-            this.titre.Text = title;
-            this.type = entity;
-        }
+        #region Méthodes internes au widgets
 
         /// <summary>
         /// Méthode appelée si checkbox 'Tous' sélectionnée
@@ -83,6 +99,12 @@ namespace TaskLeader.GUI
                 box.Checked = false;
         }
 
+        #endregion
+
+        #region Membres propres à un Criterium
+
+        private DBentity type;
+
         /// <summary>
         /// Applique un critère au MultipleSelect.
         /// Pas utilisé pour le moment mais le sera si édition d'un filtre
@@ -101,7 +123,6 @@ namespace TaskLeader.GUI
         /// <summary>
         /// Renvoie le Criterium correspondant ou null
         /// </summary>
-        /// <returns></returns>
         public Criterium getCriterium()
         {
             if (!box.Checked)
@@ -114,14 +135,14 @@ namespace TaskLeader.GUI
         /// Mise à jour de la liste
         /// </summary>
         /// <param name="db">DB de référence</param>
-        public void maj(DB db)
+        public void majCritere(DB db)
         {
             // Les contrôles enfants ne doivent pas être mis à jour depuis l'extérieur
             if (!this.hasParent)
-                this.maj(db, null);
+                this.majCritere(db, null);
         }
 
-        private void maj(DB db, String key)
+        private void majCritere(DB db, String key)
         {
             this.liste.Tag = db;
             this.liste.ClearSelected(); // Permet de déclencher l'évènement SelectedIndexChanged
@@ -130,5 +151,42 @@ namespace TaskLeader.GUI
                 this.liste.Items.Add(item, true); // Sélection de toutes les valeurs
             this.box.Checked = true;
         }
+
+        #endregion
+
+        #region Membres propres à une liste de DB
+
+        /// <summary>
+        /// Modifie le label du widget pour une liste de DB
+        /// </summary>
+        public void setForDB()
+        {
+            this.titre.Text = "Base d'actions";
+        }
+
+        /// <summary>
+        /// Ajoute une DB à la liste du widget
+        /// </summary>
+        /// <param name="db">La DB à ajouter</param>
+        public void addDB(DB db)
+        {
+            this.liste.Items.Add(db,true);
+        }
+
+        /// <summary>
+        /// Supprimer une DB de la liste de widget
+        /// </summary>
+        /// <param name="db">La DB à supprimer</param>
+        public void removeDB(DB db)
+        {
+            this.liste.Items.Remove(db);
+        }
+
+        public object[] getDBs()
+        {
+            return new ArrayList(this.liste.CheckedItems).ToArray();
+        }
+        
+        #endregion
     }
 }

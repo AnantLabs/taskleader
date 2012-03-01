@@ -75,8 +75,8 @@
             // tableLayoutPanel1
             // 
             this.tableLayoutPanel1.ColumnCount = 2;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 66.85714F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.14286F));
             this.tableLayoutPanel1.Controls.Add(this.box, 1, 0);
             this.tableLayoutPanel1.Controls.Add(this.titre, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.liste, 0, 1);
@@ -89,12 +89,12 @@
             this.tableLayoutPanel1.Size = new System.Drawing.Size(175, 126);
             this.tableLayoutPanel1.TabIndex = 1;
             // 
-            // MultipleSelect
+            // CritereSelect
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.tableLayoutPanel1);
-            this.Name = "MultipleSelect";
+            this.Name = "CritereSelect";
             this.Size = new System.Drawing.Size(175, 126);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();

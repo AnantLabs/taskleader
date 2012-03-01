@@ -12,7 +12,7 @@ namespace TaskLeader.GUI
 {
     public partial class Grille : UserControl
     {
-        // Récupération de la Data
+        // Récupération de la DataSource de grilleData
         private DataTable data
         {
             get { return this.grilleData.DataSource as DataTable; }
