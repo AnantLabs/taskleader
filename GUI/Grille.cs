@@ -12,7 +12,12 @@ namespace TaskLeader.GUI
 {
     public partial class Grille : UserControl
     {
-        private DataTable data;
+        // Récupération de la Data
+        private DataTable data
+        {
+            get { return this.grilleData.DataSource as DataTable; }
+            set { this.grilleData.DataSource = value; }
+        }
 
         private int P1length = Int32.Parse(ConfigurationManager.AppSettings["P1length"]);
         private DataGridViewImageColumn linkCol = new DataGridViewImageColumn();
@@ -37,7 +42,7 @@ namespace TaskLeader.GUI
 
         }
 
-        # region  Business
+        # region Business
 
         /// <summary>
         /// Ajoute les actions retournées par le filtre dans le tableau.
@@ -53,14 +58,10 @@ namespace TaskLeader.GUI
             DataTable liste = filtre.getActions();
 
             if (this.data == null) // Premier appel à la fonction add
-            {
                 this.data = liste;
-                this.grilleData.DataSource = data;
-            }
             else
                 this.data.Merge(liste);
 
-            //TODO: il faudrait retrier sur la date
             data.DefaultView.Sort = "Date ASC";
 
             // Mise en forme du tableau
@@ -85,18 +86,17 @@ namespace TaskLeader.GUI
             return data.Rows.Count;
         }
 
-        // Remise à zéro du tableau d'actions
+        /// <summary>
+        /// Remise à zéro du tableau d'actions
+        /// </summary>
         public void raz()
         {
             this.data = null; // Suppression des lignes du tableau
-            this.grilleData.DataSource = null;
         }
 
-         #endregion
+        #endregion
 
-        #region Widgets events
-
-        // ----------- grilleData -----------
+        #region grilleData
 
         // Mise en forme des cellules sous certaines conditions
         private void grilleData_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
@@ -241,16 +241,20 @@ namespace TaskLeader.GUI
         }
 
         // Ouverture de la gui édition d'action
-        private void modifAction(object sender, DataGridViewCellEventArgs e)
-        {
-            TrayIcon.displayNewAction(new TLaction(grilleData.SelectedRows[0].Cells["id"].Value.ToString(), grilleData.SelectedRows[0].Cells["DB"].Value.ToString()));
+        private void modifAction(object sender, EventArgs e)
+        {     
+           TrayIcon.displayNewAction(new TLaction(this.grilleData.SelectedRows[0].Cells["id"].Value.ToString(), this.grilleData.SelectedRows[0].Cells["DB"].Value.ToString()));
         }
 
-        // ------------- listeContext -------------
+        #endregion
+
+        #region listeContext
 
         private void listeContext_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
             // Remplissage du menu des différents statuts
+            statutTSMenuItem.DropDown.Items.Clear();
+
             DB db = TrayIcon.dbs[grilleData.SelectedRows[0].Cells["DB"].Value.ToString()];
             foreach (object item in db.getTitres(DB.statut))
                 statutTSMenuItem.DropDown.Items.Add(item.ToString(), null, this.changeStat);
@@ -281,7 +285,9 @@ namespace TaskLeader.GUI
             Export.Instance.clipAction(((ToolStripItem)sender).Text, grilleData.SelectedRows[0]);
         }
 
-        // ------------- linksContext -------------
+        #endregion
+
+        #region linksContext
 
         // Ouverture du lien
         private void linksContext_ItemClicked(object sender, EventArgs e)
@@ -289,7 +295,9 @@ namespace TaskLeader.GUI
             ((Enclosure)((ToolStripMenuItem)sender).Tag).open();
         }
 
-        // ------------- DatePickerPopup -------------
+        #endregion
+
+        #region DatePickerPopup
 
         // Gestion de la fermeture de la pop-up changement de date
         private void popup_Closed(Object sender, ToolStripDropDownClosedEventArgs e)
@@ -303,6 +311,6 @@ namespace TaskLeader.GUI
         }
 
         #endregion
-    
+
     }
 }
