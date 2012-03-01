@@ -279,9 +279,21 @@ namespace TaskLeader.GUI
         /// </summary>
         private void tagsPanel_ControlRemoved(object sender, ControlEventArgs e)
         {
-            //TODO: si tagsPanel ne contient plus d'étiquette, il faut tout désactiver
-            int nombre = data.remove(((Etiquette)e.Control).filtre);
-            this.afficheNombre(nombre);
+            // On efface la grille dans tous les cas
+            data.raz();
+
+            if (tagsPanel.Controls.Count > 0) // S'il reste au moins une étiquette
+            {
+                int nombre = 0;
+
+                // On recalcule le tableau (pas top en perfo mais résout le pb des intersections entre filtres)
+                foreach (Etiquette tag in tagsPanel.Controls)
+                    nombre = data.add(tag.filtre);
+
+                this.afficheNombre(nombre);
+            }
+            else
+                this.resultLabel.Visible = false;
         }
 
         // ----------- resultLabel -----------
