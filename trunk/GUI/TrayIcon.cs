@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Configuration;
-using System.Collections;
+using System.ComponentModel;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Windows.Forms;
@@ -25,7 +25,7 @@ namespace TaskLeader.GUI
 
         // Gestion des DBs
         public static Dictionary<string, DB> dbs = new Dictionary<string, DB>();
-        public static ArrayList activeDBs = new ArrayList();
+        public static BindingList<String> activeDBs = new BindingList<String>();
         public static DB defaultDB
         {
             get // Et si la base par défaut a été
@@ -127,7 +127,8 @@ namespace TaskLeader.GUI
             // Vérification de démarrage
             if (Init.Instance.canLaunch())
             {
-                activeDBs.AddRange(dbs.Keys); // Au lancement toutes les DBs sont actives
+                foreach (String dbName in dbs.Keys)
+                    activeDBs.Add(dbName); // Au lancement toutes les DBs sont actives
                 this.displayToolbox(new Object(), new EventArgs()); // Affichage de la Toolbox
                 invokeControl.CreateControl();
             }
@@ -167,7 +168,7 @@ namespace TaskLeader.GUI
             if (v_toolbox != null && !v_toolbox.IsDisposed && ((ManipAction)sender).dataSaved)
             {
                 //TODO: v_toolbox.selectedActionID = ((ManipAction)sender).ID;
-                v_toolbox.miseAjour(true);
+                //v_toolbox.miseAjour(true);
             }
         }
 

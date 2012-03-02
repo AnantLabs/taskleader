@@ -1,5 +1,6 @@
 using System;
 using System.Data;
+using System.ComponentModel;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using TaskLeader.DAL;
@@ -9,11 +10,6 @@ namespace TaskLeader.GUI
 {
     public partial class Toolbox : Form
     {
-        /// <summary>
-        /// Dictionnaire des widgets de sélection des critères
-        /// </summary>
-        private Dictionary<string, CritereSelect> criteresSelect = new Dictionary<string, CritereSelect>();
-
         private Grille data = new Grille();
 
         public Toolbox()
@@ -41,20 +37,21 @@ namespace TaskLeader.GUI
                 this.baseToolStripMenuItem.DropDown.Items.Add(dbItem);
             }
 
+            TrayIcon.activeDBs.ListChanged += new ListChangedEventHandler(updateDBs);
+
             // -------------------
             // Tab 'filtre manuel'
             // -------------------
 
             // Création des MultipleSelect
-
-            criteresSelect.Add("contextes", new CritereSelect("Contextes", DB.contexte));
-            criteresSelect.Add("sujets", new CritereSelect("Sujets", DB.sujet));
-            criteresSelect["sujets"].addParent(criteresSelect["contextes"]);
-            criteresSelect.Add("destinataires", new CritereSelect("Destinataires", DB.destinataire));
-            criteresSelect.Add("statuts", new CritereSelect("Statuts", DB.statut));
-
-            foreach (Control control in criteresSelect.Values)
-                this.selectPanel.Controls.Add(control);
+            // TODO: la création devrait boucler sur les DBentity de la classe DB
+            CritereSelect ctxt = new CritereSelect(DB.contexte);
+            CritereSelect sujt = new CritereSelect(DB.sujet);
+            sujt.addParent(ctxt);
+            this.selectPanel.Controls.Add(ctxt);
+            this.selectPanel.Controls.Add(sujt);
+            this.selectPanel.Controls.Add(new CritereSelect(DB.destinataire));
+            this.selectPanel.Controls.Add(new CritereSelect(DB.statut));
 
             this.manuelDBcombo.Text = TrayIcon.defaultDB.name;
             // ATTENTION: déclenche la mise à jour de toutes les CritereSelect!!
@@ -74,9 +71,25 @@ namespace TaskLeader.GUI
         private void addDB(DB db)
         {
             this.manuelDBcombo.Items.Add(db); // Filtre manuel
-            // TODO: il faut sélectionner la DB par défaut dans la combo => c'est à la combo de le gérer elle même
+            //this.manuelDBcombo.Text = TrayIcon.defaultDB.name; // C'est à la combo de le gérer elle même
             this.dbSelect.addDB(db); // Recherche
             this.filtersPanel.Controls.Add(new FiltreSelect(db)); // Filtres enregistrés
+        }
+
+        private void updateDBs(object sender, ListChangedEventArgs e)
+        {
+            String dbName = ((BindingList<String>)sender)[e.NewIndex];
+            //TODO: impossible d'accéder à l'item supprimé !!
+
+            if (e.ListChangedType == ListChangedType.ItemAdded)
+                this.addDB(TrayIcon.dbs[dbName]);
+            else if (e.ListChangedType == ListChangedType.ItemDeleted)
+            {
+                this.manuelDBcombo.Items.Remove(TrayIcon.dbs[dbName]);
+                this.manuelDBcombo.Text = TrayIcon.defaultDB.name; // C'est à la combo de le gérer elle même
+                this.dbSelect.removeDB(TrayIcon.dbs[dbName]);
+                this.filtersPanel.Controls.RemoveByKey(dbName);
+            }
         }
 
         #region Menu admin
@@ -87,55 +100,14 @@ namespace TaskLeader.GUI
         private void changeActiveDBs(object sender, EventArgs e)
         {
             if (((ToolStripMenuItem)sender).Checked) // La base vient d'être activée
-            {
-                // Ajout à la liste globale des bases actives
-                TrayIcon.activeDBs.Add(sender.ToString());
-                // Ajout aux widgets concernés
-                this.addDB(TrayIcon.dbs[sender.ToString()]);
-            }
+                TrayIcon.activeDBs.Add(sender.ToString()); // Ajout à la liste globale des bases actives
             else // La base vient d'être désactivée
-            {
-                // Suppression de la liste globale des bases actives
-                TrayIcon.activeDBs.Remove(sender.ToString());
-                // Mise à jour de la 
-                this.manuelDBcombo.Items.Remove(TrayIcon.dbs[sender.ToString()]);
-                this.manuelDBcombo.Text = TrayIcon.defaultDB.name; // C'est à la combo de le gérer elle même
-                //TODO
-            }
-
-            // Mise à jour de la toolbox
-            // TODO: il faut supprimer les bases qui ne sont plus actives
-            //this.razTableau(); //TODO: Pourquoi? 
-            //this.loadFilters();
-            //this.miseAjour(true); //TODO: Pourquoi?
+                TrayIcon.activeDBs.Remove(sender.ToString()); // Suppression de la liste globale des bases actives
         }
 
-        #endregion
-
-        /// <summary>
-        /// Rafraîchissment de la toolbox
-        /// </summary>
-        /// <param name="fullUpdate">true si mise à jour des contextes et destinataires</param>
-        public void miseAjour(bool fullUpdate)
+        private void defaultValuesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (fullUpdate)
-            {
-                // Mise à jour des contextes
-                //TODO: criteresSelect["contextes"].maj(db);
-                // Mise à jour des destinataires
-                //TODO: criteresSelect["destinataires"].maj(db);
-            }
-
-            // Si un filtre est actif on l'affiche
-            //TODO: if (this.db.CurrentFilter != null)
-            //    this.showFilter(this.db.CurrentFilter);
-        }
-
-        // Fermeture de la Form si minimisée
-        private void Toolbox_Resize(object sender, EventArgs e)
-        {
-            if (this.WindowState == FormWindowState.Minimized)
-                this.Close();
+            //TODO:new AdminDefaut(this.db.name).Show();
         }
 
         // Ouverture de la gui création d'action
@@ -144,7 +116,8 @@ namespace TaskLeader.GUI
             TrayIcon.displayNewAction(new TLaction());
         }
 
-        
+        #endregion
+ 
         #region Onglet Recherche
 
         // Validation de la recherche après click sur OK
@@ -174,10 +147,7 @@ namespace TaskLeader.GUI
 
         #endregion
 
-        private void defaultValuesToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            //TODO:new AdminDefaut(this.db.name).Show();
-        }
+        #region comportement Toolbox
 
         private void hideCollapse(object sender, EventArgs e)
         {
@@ -199,6 +169,15 @@ namespace TaskLeader.GUI
             }
         }
 
+        // Fermeture de la Form si minimisée
+        private void Toolbox_Resize(object sender, EventArgs e)
+        {
+            if (this.WindowState == FormWindowState.Minimized)
+                this.Close();
+        }
+
+        #endregion
+
         #region Onglet Filtre manuel
 
         /// <summary>
@@ -206,8 +185,8 @@ namespace TaskLeader.GUI
         /// </summary>
         private void manuelDBcombo_SelectedIndexChanged(object sender, EventArgs e)
         {
-            foreach (CritereSelect widget in criteresSelect.Values)
-                widget.majCritere((DB)manuelDBcombo.Items[manuelDBcombo.SelectedIndex]);
+            foreach (CritereSelect widget in this.selectPanel.Controls)
+                widget.changeDB((DB)manuelDBcombo.Items[manuelDBcombo.SelectedIndex]);
         }
 
         /// <summary>
@@ -230,7 +209,7 @@ namespace TaskLeader.GUI
         private void filtreManuel(object sender, EventArgs e)
         {
             Filtre filtre = new Filtre(manuelDBcombo.Text);
-            foreach (CritereSelect widget in criteresSelect.Values)
+            foreach (CritereSelect widget in this.selectPanel.Controls)
                 filtre.addCriterium(widget.getCriterium());
 
             if (saveFilterCheck.Checked) //Sauvegarde du filtre si checkbox cochée

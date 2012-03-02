@@ -22,10 +22,10 @@ namespace TaskLeader.GUI
         /// Constructeur pour un Criterium
         /// </summary>
         /// <param name="title">Titre du critère (et aussi nom du contrôle)</param>
-        public CritereSelect(String title, DBentity entity)
+        public CritereSelect(DBentity entity)
         {
             InitializeComponent();
-            this.titre.Text = title;
+            this.titre.Text = entity.nom;
             this.type = entity;
         }
 
@@ -59,6 +59,8 @@ namespace TaskLeader.GUI
         /// </summary>
         private void liste_SelectedIndexChanged(object sender, EventArgs e)
         {
+            MessageBox.Show(this.type.nom + " doit changer");
+
             CheckedListBox criteres = ((CheckedListBox)sender);
             CheckedListBox.CheckedItemCollection items = criteres.CheckedItems;
             DB db = (DB)criteres.Tag;
@@ -66,7 +68,7 @@ namespace TaskLeader.GUI
             // On n'affiche la liste des sujets que si un seul contexte est tické
             if (items.Count == 1)
             {
-                this.majCritere(db, items[0].ToString());
+                this.maj(items[0].ToString());
                 this.box.Enabled = true;
             }
             else
@@ -102,8 +104,15 @@ namespace TaskLeader.GUI
         #endregion
 
         #region Membres propres à un Criterium
+        /// <summary>
+        /// Un CritereSelect peut se rafraîchir sur les triggers suivants:
+        /// - Changement de base de référence (sauf pour les widgets enfants)
+        /// - Nouvelle valeur pour la base courante
+        /// </summary>
 
         private DBentity type;
+        // DB attachée à la CheckedListBox pour être récupérée avec les EventArgs
+        private DB db { get { return (DB)this.liste.Tag; } set { this.liste.Tag = value; } }
 
         /// <summary>
         /// Applique un critère au MultipleSelect.
@@ -132,24 +141,38 @@ namespace TaskLeader.GUI
         }
 
         /// <summary>
-        /// Mise à jour de la liste
+        /// Changement de la DB de référence
         /// </summary>
-        /// <param name="db">DB de référence</param>
-        public void majCritere(DB db)
+        /// <param name="db">Nouvelle DB</param>
+        public void changeDB(DB database)
         {
-            // Les contrôles enfants ne doivent pas être mis à jour depuis l'extérieur
-            if (!this.hasParent)
-                this.majCritere(db, null);
+            if (!this.hasParent) // Les contrôles enfants ne doivent pas être mis à jour directement
+            {
+                // Unregister de l'ancienne DB
+                if(this.db != null)
+                    this.db.unsubscribe_NewValue(this.type, new EventHandler(newValue));
+                // Mémorisation de la "nouvelle" DB
+                this.db = database;
+                // Register de la nouvelle DB
+                this.db.subscribe_NewValue(this.type, new EventHandler(newValue));
+                this.maj();
+            }
         }
 
-        private void majCritere(DB db, String key)
+        private void maj(String key=null)
         {
-            this.liste.Tag = db;
             this.liste.ClearSelected(); // Permet de déclencher l'évènement SelectedIndexChanged
             this.liste.Items.Clear(); // Vidage de la liste
-            foreach (object item in db.getTitres(this.type, key))
+            foreach (object item in this.db.getTitres(this.type, key))
                 this.liste.Items.Add(item, true); // Sélection de toutes les valeurs
             this.box.Checked = true;
+        }
+
+        private void newValue(object sender, EventArgs e)
+        {
+            this.maj("");
+            //TODO: si Parent, this.maj()
+            // si Enfant et widget actif, this.maj(key)
         }
 
         #endregion
