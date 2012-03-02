@@ -72,11 +72,11 @@
     <Compile Include="GUI\Etiquette.Designer.cs">
       <DependentUpon>Etiquette.cs</DependentUpon>
     </Compile>
-    <Compile Include="GUI\CritereSelect.cs">
+    <Compile Include="GUI\MultipleSelect.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="GUI\CritereSelect.Designer.cs">
-      <DependentUpon>CritereSelect.cs</DependentUpon>
+    <Compile Include="GUI\MultipleSelect.Designer.cs">
+      <DependentUpon>MultipleSelect.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\FiltreSelect.cs">
       <SubType>UserControl</SubType>
@@ -128,8 +128,8 @@
     <EmbeddedResource Include="GUI\Etiquette.resx">
       <DependentUpon>Etiquette.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="GUI\CritereSelect.resx">
-      <DependentUpon>CritereSelect.cs</DependentUpon>
+    <EmbeddedResource Include="GUI\MultipleSelect.resx">
+      <DependentUpon>MultipleSelect.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\FiltreSelect.resx">
       <DependentUpon>FiltreSelect.cs</DependentUpon>

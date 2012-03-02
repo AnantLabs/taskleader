@@ -114,48 +114,42 @@ namespace TaskLeader.DAL
                 mytransaction.Commit();
             }
 
+
+            this.onNewValue(DB.filtre);
             // On affiche un message de statut sur la TrayIcon
             TrayIcon.afficheMessage("Bilan création/modification", "Nouveau filtre ajouté: " + filtre.nom);
 
         }
 
-        // Insertion d'un nouveau contexte en base
-        public int insertContexte(String value)
+        // Méthode générique d'insertion de certaine DBentity
+        public int insert(DBentity entity, String value)
         {
-            String ctxt = "'" + value.Replace("'", "''") + "'";
-            String requete = "INSERT INTO Contextes (Titre) VALUES (" + ctxt + ")";
+            String sqlValue = "'" + value.Replace("'", "''") + "'";
+            String requete = "INSERT INTO " + entity.mainTable + " (Titre) VALUES (" + sqlValue + ")";
 
             int result = execSQL(requete);
-
-            EventHandler handler;
             if (result == 1)
-                if (null != (handler = (EventHandler)this.newValue[contexte.nom]))
-                    handler(this,new EventArgs());
+                this.onNewValue(contexte);
 
             return result;
         }
 
         // Insertion d'un nouveau sujet en base
-        public int insertSujet(String contexte, String subject)
+        public int insertSujet(String contexte, String value)
         {
             String ctxt = "'" + contexte.Replace("'", "''") + "'";
-            String sujet = "'" + subject.Replace("'", "''") + "'";
+            String sjt = "'" + value.Replace("'", "''") + "'";
 
             String requete = "INSERT INTO Sujets (CtxtID,Titre)" +
-                            " SELECT C.id, " + sujet +
+                            " SELECT C.id, " + sjt +
                             " FROM Contextes C" +
                             " WHERE C.Titre = " + ctxt;
+            
+            int result = execSQL(requete);
+            if (result == 1)
+                this.onNewValue(sujet);
 
-            return execSQL(requete);
-        }
-
-        // Insertion d'un nouveau destinataire en base
-        public int insertDest(String destinataire)
-        {
-            String dest = "'" + destinataire.Replace("'", "''") + "'";
-            String requete = "INSERT INTO Destinataires (Titre) VALUES (" + dest + ")";
-
-            return execSQL(requete);
+            return result;
         }
 
         // Insertion d'un nouveau mail en base
@@ -216,7 +210,7 @@ namespace TaskLeader.DAL
             foreach (Enclosure enc in PJ)
             {
                 //Enregistrement de la PJ dans la bonne table et récupération de l'ID
-                String EncID ="";
+                String EncID = "";
 
                 switch (enc.Type)
                 {

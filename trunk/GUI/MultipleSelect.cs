@@ -6,82 +6,15 @@ using TaskLeader.DAL;
 
 namespace TaskLeader.GUI
 {
-    public partial class CritereSelect : UserControl
+    public partial class MultipleSelect : UserControl
     {
-        #region Constructeurs
-
         /// <summary>
         /// Constructeur pour le Designer
         /// </summary>
-        public CritereSelect()
+        public MultipleSelect()
         {
             InitializeComponent();
         }
-
-        /// <summary>
-        /// Constructeur pour un Criterium
-        /// </summary>
-        /// <param name="title">Titre du critère (et aussi nom du contrôle)</param>
-        public CritereSelect(DBentity entity)
-        {
-            InitializeComponent();
-            this.titre.Text = entity.nom;
-            this.type = entity;
-        }
-
-        #endregion
-
-        #region Gestion des dépendances entre CritereSelect
-
-        private bool hasParent = false;
-
-        /// <summary>
-        /// Evènement déclenché lors du changement de sélection dans la liste du MultipleSelect
-        /// </summary>
-        public event EventHandler SelectedIndexChanged
-        {
-            add { this.liste.SelectedIndexChanged += value; }
-            remove { this.liste.SelectedIndexChanged -= value; }
-        }
-
-        /// <summary>
-        /// Rend dépendant ce widget d'un autre
-        /// </summary>
-        /// <param name="widget">MultipleSelect parent</param>
-        public void addParent(CritereSelect widget)
-        {
-            this.hasParent = true;
-            widget.SelectedIndexChanged += new EventHandler(this.liste_SelectedIndexChanged);
-        }
-
-        /// <summary>
-        /// Mis à jour du widget en fonction de l'état du parent
-        /// </summary>
-        private void liste_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            MessageBox.Show(this.type.nom + " doit changer");
-
-            CheckedListBox criteres = ((CheckedListBox)sender);
-            CheckedListBox.CheckedItemCollection items = criteres.CheckedItems;
-            DB db = (DB)criteres.Tag;
-
-            // On n'affiche la liste des sujets que si un seul contexte est tické
-            if (items.Count == 1)
-            {
-                this.maj(items[0].ToString());
-                this.box.Enabled = true;
-            }
-            else
-            {
-                this.liste.Items.Clear();
-                this.box.Checked = true;
-                this.box.Enabled = false;
-            }
-        }
-
-        #endregion
-
-        #region Méthodes internes au widgets
 
         /// <summary>
         /// Méthode appelée si checkbox 'Tous' sélectionnée
@@ -100,10 +33,10 @@ namespace TaskLeader.GUI
             if (box.Checked)
                 box.Checked = false;
         }
+    }
 
-        #endregion
-
-        #region Membres propres à un Criterium
+    public class CritereSelect : MultipleSelect
+    {
         /// <summary>
         /// Un CritereSelect peut se rafraîchir sur les triggers suivants:
         /// - Changement de base de référence (sauf pour les widgets enfants)
@@ -113,6 +46,62 @@ namespace TaskLeader.GUI
         private DBentity type;
         // DB attachée à la CheckedListBox pour être récupérée avec les EventArgs
         private DB db { get { return (DB)this.liste.Tag; } set { this.liste.Tag = value; } }
+
+        /// <summary>
+        /// Constructeur pour un Criterium
+        /// </summary>
+        /// <param name="title">Titre du critère (et aussi nom du contrôle)</param>
+        public CritereSelect(DBentity entity)
+            : base()
+        {
+            this.Name = entity.nom;
+            this.titre.Text = entity.nom;
+            this.type = entity;
+        }
+
+        private bool hasParent = false;
+
+        /// <summary>
+        /// Evènement déclenché lors du changement de sélection dans la liste du MultipleSelect
+        /// </summary>
+        public event ItemCheckEventHandler ItemCheck
+        {
+            add { this.liste.ItemCheck += value; }
+            remove { this.liste.ItemCheck -= value; }
+        }
+
+        /// <summary>
+        /// Rend dépendant ce widget d'un autre
+        /// </summary>
+        /// <param name="widget">CritereSelect parent</param>
+        public void addParent(CritereSelect widget)
+        {
+            this.hasParent = true;
+            widget.ItemCheck += new ItemCheckEventHandler(this.liste_SelectedIndexChanged);
+        }
+
+        /// <summary>
+        /// Mis à jour du widget en fonction de l'état du parent
+        /// </summary>
+        private void liste_SelectedIndexChanged(object sender, ItemCheckEventArgs e)
+        {
+            CheckedListBox criteres = ((CheckedListBox)sender);
+            CheckedListBox.CheckedItemCollection items = criteres.CheckedItems;
+            this.db = (DB)criteres.Tag;
+
+            // On n'affiche la liste des sujets que si un seul contexte est tické
+            if ((e.NewValue == CheckState.Checked) && (items.Count == 0))
+            {
+                this.maj(criteres.Items[e.Index].ToString());
+                this.box.Enabled = true;
+            }
+            else //TODO: manque le passage de 2 checked à 1
+            {
+                this.liste.Items.Clear();
+                this.box.Checked = true;
+                this.box.Enabled = false;
+            }
+        }
 
         /// <summary>
         /// Applique un critère au MultipleSelect.
@@ -149,7 +138,7 @@ namespace TaskLeader.GUI
             if (!this.hasParent) // Les contrôles enfants ne doivent pas être mis à jour directement
             {
                 // Unregister de l'ancienne DB
-                if(this.db != null)
+                if (this.db != null)
                     this.db.unsubscribe_NewValue(this.type, new EventHandler(newValue));
                 // Mémorisation de la "nouvelle" DB
                 this.db = database;
@@ -159,12 +148,13 @@ namespace TaskLeader.GUI
             }
         }
 
-        private void maj(String key=null)
+        private void maj(String key = null)
         {
-            this.liste.ClearSelected(); // Permet de déclencher l'évènement SelectedIndexChanged
             this.liste.Items.Clear(); // Vidage de la liste
+
             foreach (object item in this.db.getTitres(this.type, key))
                 this.liste.Items.Add(item, true); // Sélection de toutes les valeurs
+
             this.box.Checked = true;
         }
 
@@ -174,15 +164,15 @@ namespace TaskLeader.GUI
             //TODO: si Parent, this.maj()
             // si Enfant et widget actif, this.maj(key)
         }
+    }
 
-        #endregion
-
-        #region Membres propres à une liste de DB
-
+    public class DBSelect : MultipleSelect
+    {
         /// <summary>
-        /// Modifie le label du widget pour une liste de DB
+        /// Constructeur
         /// </summary>
-        public void setForDB()
+        public DBSelect()
+            : base()
         {
             this.titre.Text = "Base d'actions";
         }
@@ -193,7 +183,7 @@ namespace TaskLeader.GUI
         /// <param name="db">La DB à ajouter</param>
         public void addDB(DB db)
         {
-            this.liste.Items.Add(db,true);
+            this.liste.Items.Add(db, true);
         }
 
         /// <summary>
@@ -209,7 +199,5 @@ namespace TaskLeader.GUI
         {
             return new ArrayList(this.liste.CheckedItems).ToArray();
         }
-        
-        #endregion
     }
 }

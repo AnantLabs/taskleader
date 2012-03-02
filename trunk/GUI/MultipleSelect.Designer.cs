@@ -1,6 +1,6 @@
 ﻿namespace TaskLeader.GUI
 {
-    partial class CritereSelect
+    partial class MultipleSelect
     {
         /// <summary> 
         /// Variable nécessaire au concepteur.
@@ -44,7 +44,7 @@
             this.box.CheckState = System.Windows.Forms.CheckState.Checked;
             this.box.Location = new System.Drawing.Point(122, 3);
             this.box.Name = "box";
-            this.box.Size = new System.Drawing.Size(50, 16);
+            this.box.Size = new System.Drawing.Size(50, 17);
             this.box.TabIndex = 10;
             this.box.Text = "Tous";
             this.box.UseVisualStyleBackColor = true;
@@ -66,7 +66,7 @@
             this.liste.CheckOnClick = true;
             this.tableLayoutPanel1.SetColumnSpan(this.liste, 2);
             this.liste.FormattingEnabled = true;
-            this.liste.Location = new System.Drawing.Point(3, 25);
+            this.liste.Location = new System.Drawing.Point(3, 26);
             this.liste.Name = "liste";
             this.liste.Size = new System.Drawing.Size(169, 94);
             this.liste.TabIndex = 1;
@@ -84,17 +84,17 @@
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 2;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 17.55725F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 82.44275F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 23F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(175, 126);
             this.tableLayoutPanel1.TabIndex = 1;
             // 
-            // CritereSelect
+            // MultipleSelect
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.tableLayoutPanel1);
-            this.Name = "CritereSelect";
+            this.Name = "MultipleSelect";
             this.Size = new System.Drawing.Size(175, 126);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
@@ -104,9 +104,9 @@
 
         #endregion
 
-        private System.Windows.Forms.CheckBox box;
-        private System.Windows.Forms.Label titre;
-        private System.Windows.Forms.CheckedListBox liste;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        protected System.Windows.Forms.Label titre;
+        protected System.Windows.Forms.CheckedListBox liste;
+        protected System.Windows.Forms.CheckBox box;
     }
 }
