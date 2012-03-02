@@ -8,7 +8,7 @@ namespace TaskLeader.DAL
 {
     public struct DBvalue
     {
-        public DBentity entity; // Nom de la table principale
+        public DBentity entity; // Nom de l'entité DB
         public String value; // Valeur
 
         public DBvalue(DBentity table, String valeur)
@@ -120,11 +120,19 @@ namespace TaskLeader.DAL
         }
 
         // Insertion d'un nouveau contexte en base
-        public int insertContexte(String contexte)
+        public int insertContexte(String value)
         {
-            String ctxt = "'" + contexte.Replace("'", "''") + "'";
+            String ctxt = "'" + value.Replace("'", "''") + "'";
             String requete = "INSERT INTO Contextes (Titre) VALUES (" + ctxt + ")";
-            return execSQL(requete);
+
+            int result = execSQL(requete);
+
+            EventHandler handler;
+            if (result == 1)
+                if (null != (handler = (EventHandler)this.newValue[contexte.nom]))
+                    handler(this,new EventArgs());
+
+            return result;
         }
 
         // Insertion d'un nouveau sujet en base

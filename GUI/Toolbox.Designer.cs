@@ -54,9 +54,12 @@
             this.selectPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
+            this.dbSelect = new TaskLeader.GUI.CritereSelect();
             this.label2 = new System.Windows.Forms.Label();
+            this.flowLayoutPanel5 = new System.Windows.Forms.FlowLayoutPanel();
             this.searchBox = new System.Windows.Forms.TextBox();
             this.searchButton = new System.Windows.Forms.Button();
+            this.erreurSearch = new System.Windows.Forms.Label();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.filtersPanel = new System.Windows.Forms.FlowLayoutPanel();
@@ -68,9 +71,6 @@
             this.ajouterToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.nouvelleActionToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.actionsEvernoteToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.erreurSearch = new System.Windows.Forms.Label();
-            this.dbSelect = new TaskLeader.GUI.CritereSelect();
-            this.flowLayoutPanel5 = new System.Windows.Forms.FlowLayoutPanel();
             this.mainTableLayout.SuspendLayout();
             this.topMenu.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -80,10 +80,10 @@
             this.flowLayoutPanel2.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.flowLayoutPanel3.SuspendLayout();
+            this.flowLayoutPanel5.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel4.SuspendLayout();
-            this.flowLayoutPanel5.SuspendLayout();
             this.SuspendLayout();
             // 
             // mainTableLayout
@@ -379,6 +379,13 @@
             this.flowLayoutPanel3.Size = new System.Drawing.Size(678, 126);
             this.flowLayoutPanel3.TabIndex = 0;
             // 
+            // dbSelect
+            // 
+            this.dbSelect.Location = new System.Drawing.Point(3, 3);
+            this.dbSelect.Name = "dbSelect";
+            this.dbSelect.Size = new System.Drawing.Size(175, 126);
+            this.dbSelect.TabIndex = 3;
+            // 
             // label2
             // 
             this.label2.AutoSize = true;
@@ -388,6 +395,17 @@
             this.label2.Size = new System.Drawing.Size(55, 13);
             this.label2.TabIndex = 4;
             this.label2.Text = "Mots clés:";
+            // 
+            // flowLayoutPanel5
+            // 
+            this.flowLayoutPanel5.AutoSize = true;
+            this.flowLayoutPanel5.Controls.Add(this.searchBox);
+            this.flowLayoutPanel5.Controls.Add(this.searchButton);
+            this.flowLayoutPanel5.Location = new System.Drawing.Point(211, 23);
+            this.flowLayoutPanel5.Margin = new System.Windows.Forms.Padding(30, 3, 3, 3);
+            this.flowLayoutPanel5.Name = "flowLayoutPanel5";
+            this.flowLayoutPanel5.Size = new System.Drawing.Size(183, 30);
+            this.flowLayoutPanel5.TabIndex = 6;
             // 
             // searchBox
             // 
@@ -410,6 +428,18 @@
             this.searchButton.TabIndex = 2;
             this.searchButton.UseVisualStyleBackColor = true;
             this.searchButton.Click += new System.EventHandler(this.searchButton_Click);
+            // 
+            // erreurSearch
+            // 
+            this.erreurSearch.AutoSize = true;
+            this.erreurSearch.ForeColor = System.Drawing.Color.Red;
+            this.erreurSearch.Location = new System.Drawing.Point(214, 56);
+            this.erreurSearch.Margin = new System.Windows.Forms.Padding(33, 0, 3, 0);
+            this.erreurSearch.Name = "erreurSearch";
+            this.erreurSearch.Size = new System.Drawing.Size(35, 13);
+            this.erreurSearch.TabIndex = 5;
+            this.erreurSearch.Text = "Erreur";
+            this.erreurSearch.Visible = false;
             // 
             // tabPage3
             // 
@@ -521,36 +551,6 @@
             this.actionsEvernoteToolStripMenuItem1.Size = new System.Drawing.Size(156, 22);
             this.actionsEvernoteToolStripMenuItem1.Text = "Actions Evernote";
             // 
-            // erreurSearch
-            // 
-            this.erreurSearch.AutoSize = true;
-            this.erreurSearch.ForeColor = System.Drawing.Color.Red;
-            this.erreurSearch.Location = new System.Drawing.Point(214, 56);
-            this.erreurSearch.Margin = new System.Windows.Forms.Padding(33, 0, 3, 0);
-            this.erreurSearch.Name = "erreurSearch";
-            this.erreurSearch.Size = new System.Drawing.Size(35, 13);
-            this.erreurSearch.TabIndex = 5;
-            this.erreurSearch.Text = "Erreur";
-            this.erreurSearch.Visible = false;
-            // 
-            // dbSelect
-            // 
-            this.dbSelect.Location = new System.Drawing.Point(3, 3);
-            this.dbSelect.Name = "dbSelect";
-            this.dbSelect.Size = new System.Drawing.Size(175, 126);
-            this.dbSelect.TabIndex = 3;
-            // 
-            // flowLayoutPanel5
-            // 
-            this.flowLayoutPanel5.AutoSize = true;
-            this.flowLayoutPanel5.Controls.Add(this.searchBox);
-            this.flowLayoutPanel5.Controls.Add(this.searchButton);
-            this.flowLayoutPanel5.Location = new System.Drawing.Point(211, 23);
-            this.flowLayoutPanel5.Margin = new System.Windows.Forms.Padding(30, 3, 3, 3);
-            this.flowLayoutPanel5.Name = "flowLayoutPanel5";
-            this.flowLayoutPanel5.Size = new System.Drawing.Size(183, 30);
-            this.flowLayoutPanel5.TabIndex = 6;
-            // 
             // Toolbox
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -581,11 +581,11 @@
             this.tabPage2.ResumeLayout(false);
             this.flowLayoutPanel3.ResumeLayout(false);
             this.flowLayoutPanel3.PerformLayout();
+            this.flowLayoutPanel5.ResumeLayout(false);
+            this.flowLayoutPanel5.PerformLayout();
             this.tabPage3.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.flowLayoutPanel4.ResumeLayout(false);
-            this.flowLayoutPanel5.ResumeLayout(false);
-            this.flowLayoutPanel5.PerformLayout();
             this.ResumeLayout(false);
 
         }
