@@ -198,7 +198,7 @@ namespace TaskLeader.BO
             if (this.ctxtHasChanged) // Test uniquement si contexte entré
                 if (db.isNvo(DB.contexte, this.Contexte)) // Si on a un nouveau contexte
                 {
-                    resultat = db.insertContexte(this.Contexte); // On récupère le nombre de lignes insérées
+                    resultat = db.insert(DB.contexte,this.Contexte); // On récupère le nombre de lignes insérées
                     if (resultat == 1)
                         bilan += "Nouveau contexte enregistré\n";
                 }
@@ -214,7 +214,7 @@ namespace TaskLeader.BO
             if (this.destHasChanged)
                 if (db.isNvo(DB.destinataire, this.Destinataire))
                 {
-                    resultat = db.insertDest(this.Destinataire);
+                    resultat = db.insert(DB.destinataire,this.Destinataire);
                     if (resultat == 1)
                         bilan += "Nouveau destinataire enregistré\n";
                 }

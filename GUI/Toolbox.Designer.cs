@@ -54,7 +54,6 @@
             this.selectPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
-            this.dbSelect = new TaskLeader.GUI.CritereSelect();
             this.label2 = new System.Windows.Forms.Label();
             this.flowLayoutPanel5 = new System.Windows.Forms.FlowLayoutPanel();
             this.searchBox = new System.Windows.Forms.TextBox();
@@ -71,6 +70,8 @@
             this.ajouterToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.nouvelleActionToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.actionsEvernoteToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.searchTable = new System.Windows.Forms.TableLayoutPanel();
+            this.searchPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.mainTableLayout.SuspendLayout();
             this.topMenu.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -84,6 +85,7 @@
             this.tabPage3.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel4.SuspendLayout();
+            this.searchTable.SuspendLayout();
             this.SuspendLayout();
             // 
             // mainTableLayout
@@ -103,16 +105,16 @@
             this.mainTableLayout.Margin = new System.Windows.Forms.Padding(0);
             this.mainTableLayout.Name = "mainTableLayout";
             this.mainTableLayout.RowCount = 3;
-            this.mainTableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 155F));
+            this.mainTableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 170F));
             this.mainTableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.mainTableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.mainTableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.mainTableLayout.Size = new System.Drawing.Size(721, 750);
             this.mainTableLayout.TabIndex = 7;
             // 
             // resultLabel
             // 
             this.resultLabel.AutoSize = true;
-            this.resultLabel.Location = new System.Drawing.Point(10, 163);
+            this.resultLabel.Location = new System.Drawing.Point(10, 178);
             this.resultLabel.Margin = new System.Windows.Forms.Padding(10, 8, 3, 0);
             this.resultLabel.Name = "resultLabel";
             this.resultLabel.Size = new System.Drawing.Size(44, 13);
@@ -123,7 +125,7 @@
             // tagsPanel
             // 
             this.tagsPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tagsPanel.Location = new System.Drawing.Point(57, 155);
+            this.tagsPanel.Location = new System.Drawing.Point(57, 170);
             this.tagsPanel.Margin = new System.Windows.Forms.Padding(0);
             this.tagsPanel.Name = "tagsPanel";
             this.tagsPanel.Size = new System.Drawing.Size(542, 30);
@@ -139,7 +141,7 @@
             this.topMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ajouterItem,
             this.adminItem});
-            this.topMenu.Location = new System.Drawing.Point(599, 158);
+            this.topMenu.Location = new System.Drawing.Point(599, 173);
             this.topMenu.Margin = new System.Windows.Forms.Padding(0, 3, 0, 0);
             this.topMenu.Name = "topMenu";
             this.topMenu.Size = new System.Drawing.Size(122, 27);
@@ -217,7 +219,7 @@
             this.tabControl1.Margin = new System.Windows.Forms.Padding(3, 3, 0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(686, 152);
+            this.tabControl1.Size = new System.Drawing.Size(686, 167);
             this.tabControl1.TabIndex = 8;
             this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.hideCollapse);
             // 
@@ -227,7 +229,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Margin = new System.Windows.Forms.Padding(0);
             this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Size = new System.Drawing.Size(678, 126);
+            this.tabPage1.Size = new System.Drawing.Size(678, 141);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Filtre manuel";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -247,7 +249,7 @@
             this.manuelTable.Name = "manuelTable";
             this.manuelTable.RowCount = 1;
             this.manuelTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.manuelTable.Size = new System.Drawing.Size(678, 126);
+            this.manuelTable.Size = new System.Drawing.Size(678, 141);
             this.manuelTable.TabIndex = 2;
             // 
             // flowLayoutPanel1
@@ -260,7 +262,7 @@
             this.flowLayoutPanel1.Location = new System.Drawing.Point(518, 0);
             this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(160, 126);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(160, 141);
             this.flowLayoutPanel1.TabIndex = 2;
             // 
             // saveFilterCheck
@@ -320,7 +322,7 @@
             this.flowLayoutPanel2.Location = new System.Drawing.Point(0, 0);
             this.flowLayoutPanel2.Margin = new System.Windows.Forms.Padding(0);
             this.flowLayoutPanel2.Name = "flowLayoutPanel2";
-            this.flowLayoutPanel2.Size = new System.Drawing.Size(150, 126);
+            this.flowLayoutPanel2.Size = new System.Drawing.Size(150, 141);
             this.flowLayoutPanel2.TabIndex = 3;
             // 
             // label1
@@ -347,17 +349,20 @@
             // 
             // selectPanel
             // 
+            this.selectPanel.AutoScroll = true;
             this.selectPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.selectPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.selectPanel.Location = new System.Drawing.Point(150, 0);
             this.selectPanel.Margin = new System.Windows.Forms.Padding(0);
             this.selectPanel.Name = "selectPanel";
-            this.selectPanel.Size = new System.Drawing.Size(368, 126);
+            this.selectPanel.Size = new System.Drawing.Size(368, 141);
             this.selectPanel.TabIndex = 4;
             // 
             // tabPage2
             // 
-            this.tabPage2.Controls.Add(this.flowLayoutPanel3);
+            this.tabPage2.Controls.Add(this.searchTable);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Margin = new System.Windows.Forms.Padding(0);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Size = new System.Drawing.Size(678, 126);
             this.tabPage2.TabIndex = 1;
@@ -366,7 +371,6 @@
             // 
             // flowLayoutPanel3
             // 
-            this.flowLayoutPanel3.Controls.Add(this.dbSelect);
             this.flowLayoutPanel3.Controls.Add(this.label2);
             this.flowLayoutPanel3.Controls.Add(this.flowLayoutPanel5);
             this.flowLayoutPanel3.Controls.Add(this.erreurSearch);
@@ -379,17 +383,10 @@
             this.flowLayoutPanel3.Size = new System.Drawing.Size(678, 126);
             this.flowLayoutPanel3.TabIndex = 0;
             // 
-            // dbSelect
-            // 
-            this.dbSelect.Location = new System.Drawing.Point(3, 3);
-            this.dbSelect.Name = "dbSelect";
-            this.dbSelect.Size = new System.Drawing.Size(175, 126);
-            this.dbSelect.TabIndex = 3;
-            // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(211, 7);
+            this.label2.Location = new System.Drawing.Point(30, 7);
             this.label2.Margin = new System.Windows.Forms.Padding(30, 7, 3, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(55, 13);
@@ -401,7 +398,7 @@
             this.flowLayoutPanel5.AutoSize = true;
             this.flowLayoutPanel5.Controls.Add(this.searchBox);
             this.flowLayoutPanel5.Controls.Add(this.searchButton);
-            this.flowLayoutPanel5.Location = new System.Drawing.Point(211, 23);
+            this.flowLayoutPanel5.Location = new System.Drawing.Point(30, 23);
             this.flowLayoutPanel5.Margin = new System.Windows.Forms.Padding(30, 3, 3, 3);
             this.flowLayoutPanel5.Name = "flowLayoutPanel5";
             this.flowLayoutPanel5.Size = new System.Drawing.Size(183, 30);
@@ -433,7 +430,7 @@
             // 
             this.erreurSearch.AutoSize = true;
             this.erreurSearch.ForeColor = System.Drawing.Color.Red;
-            this.erreurSearch.Location = new System.Drawing.Point(214, 56);
+            this.erreurSearch.Location = new System.Drawing.Point(33, 56);
             this.erreurSearch.Margin = new System.Windows.Forms.Padding(33, 0, 3, 0);
             this.erreurSearch.Name = "erreurSearch";
             this.erreurSearch.Size = new System.Drawing.Size(35, 13);
@@ -445,6 +442,7 @@
             // 
             this.tabPage3.Controls.Add(this.tableLayoutPanel1);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
+            this.tabPage3.Margin = new System.Windows.Forms.Padding(0);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Size = new System.Drawing.Size(678, 126);
             this.tabPage3.TabIndex = 2;
@@ -551,6 +549,32 @@
             this.actionsEvernoteToolStripMenuItem1.Size = new System.Drawing.Size(156, 22);
             this.actionsEvernoteToolStripMenuItem1.Text = "Actions Evernote";
             // 
+            // searchTable
+            // 
+            this.searchTable.ColumnCount = 2;
+            this.searchTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.searchTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.searchTable.Controls.Add(this.flowLayoutPanel3, 1, 0);
+            this.searchTable.Controls.Add(this.searchPanel, 0, 0);
+            this.searchTable.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.searchTable.Location = new System.Drawing.Point(0, 0);
+            this.searchTable.Margin = new System.Windows.Forms.Padding(0);
+            this.searchTable.Name = "searchTable";
+            this.searchTable.RowCount = 1;
+            this.searchTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.searchTable.Size = new System.Drawing.Size(678, 126);
+            this.searchTable.TabIndex = 1;
+            // 
+            // searchPanel
+            // 
+            this.searchPanel.AutoSize = true;
+            this.searchPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.searchPanel.Location = new System.Drawing.Point(0, 0);
+            this.searchPanel.Margin = new System.Windows.Forms.Padding(0);
+            this.searchPanel.Name = "searchPanel";
+            this.searchPanel.Size = new System.Drawing.Size(1, 126);
+            this.searchPanel.TabIndex = 1;
+            // 
             // Toolbox
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -586,6 +610,8 @@
             this.tabPage3.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.flowLayoutPanel4.ResumeLayout(false);
+            this.searchTable.ResumeLayout(false);
+            this.searchTable.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -630,10 +656,11 @@
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel4;
         private System.Windows.Forms.Button storedFilterBout;
         private System.Windows.Forms.FlowLayoutPanel selectPanel;
-        private CritereSelect dbSelect;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label erreurSearch;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel5;
+        private System.Windows.Forms.TableLayoutPanel searchTable;
+        private System.Windows.Forms.FlowLayoutPanel searchPanel;
 
     }
 }

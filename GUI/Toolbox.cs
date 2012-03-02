@@ -11,6 +11,7 @@ namespace TaskLeader.GUI
     public partial class Toolbox : Form
     {
         private Grille data = new Grille();
+        private DBSelect dbSelect = new DBSelect();
 
         public Toolbox()
         {
@@ -20,9 +21,6 @@ namespace TaskLeader.GUI
         /// <summary>Chargement des différents composants au lancement de la toolbox</summary>
         private void Toolbox_Load(object sender, EventArgs e)
         {
-            // Configuration du dbSelect pour afficher 
-            this.dbSelect.setForDB();
-
             // Remplissage de la liste des bases d'action disponibles
             foreach (DB db in TrayIcon.dbs.Values)
             {
@@ -44,17 +42,21 @@ namespace TaskLeader.GUI
             // -------------------
 
             // Création des MultipleSelect
-            // TODO: la création devrait boucler sur les DBentity de la classe DB
-            CritereSelect ctxt = new CritereSelect(DB.contexte);
-            CritereSelect sujt = new CritereSelect(DB.sujet);
-            sujt.addParent(ctxt);
-            this.selectPanel.Controls.Add(ctxt);
-            this.selectPanel.Controls.Add(sujt);
-            this.selectPanel.Controls.Add(new CritereSelect(DB.destinataire));
-            this.selectPanel.Controls.Add(new CritereSelect(DB.statut));
+            foreach (DBentity entity in DB.entities)
+            {
+                CritereSelect widget = new CritereSelect(entity);
+                if (entity.parent != null)
+                    widget.addParent(this.selectPanel.Controls[entity.parent.nom] as CritereSelect);
+                this.selectPanel.Controls.Add(widget);   
+            }
 
             this.manuelDBcombo.Text = TrayIcon.defaultDB.name;
             // ATTENTION: déclenche la mise à jour de toutes les CritereSelect!!
+
+            // -------------------
+            // Tab 'recherche'
+            // -------------------
+            this.searchPanel.Controls.Add(this.dbSelect);
 
             // -------
             // Grille

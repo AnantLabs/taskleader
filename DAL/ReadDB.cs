@@ -147,12 +147,6 @@ namespace TaskLeader.DAL
                 return getList("SELECT Titre FROM VueSujets WHERE Contexte ='" + key + "' ORDER BY Titre ASC");
 		}
 
-        // Renvoie un tableau de tous les sujets correspondant au contexte
-        //public object[] getSujets(String contexte)
-        //{
-        //    return getList("SELECT Titre FROM VueSujets WHERE Contexte ='" + contexte + "' ORDER BY Titre ASC");
-        //}
-
         /// <summary>
         /// Récupération des valeurs par défaut
         /// </summary>
