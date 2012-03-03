@@ -53,12 +53,14 @@
             this.manuelDBcombo = new System.Windows.Forms.ComboBox();
             this.selectPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.searchTable = new System.Windows.Forms.TableLayoutPanel();
             this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
             this.label2 = new System.Windows.Forms.Label();
             this.flowLayoutPanel5 = new System.Windows.Forms.FlowLayoutPanel();
             this.searchBox = new System.Windows.Forms.TextBox();
             this.searchButton = new System.Windows.Forms.Button();
             this.erreurSearch = new System.Windows.Forms.Label();
+            this.searchPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.filtersPanel = new System.Windows.Forms.FlowLayoutPanel();
@@ -70,8 +72,6 @@
             this.ajouterToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.nouvelleActionToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.actionsEvernoteToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.searchTable = new System.Windows.Forms.TableLayoutPanel();
-            this.searchPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.mainTableLayout.SuspendLayout();
             this.topMenu.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -80,12 +80,12 @@
             this.flowLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
             this.tabPage2.SuspendLayout();
+            this.searchTable.SuspendLayout();
             this.flowLayoutPanel3.SuspendLayout();
             this.flowLayoutPanel5.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel4.SuspendLayout();
-            this.searchTable.SuspendLayout();
             this.SuspendLayout();
             // 
             // mainTableLayout
@@ -364,10 +364,26 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Margin = new System.Windows.Forms.Padding(0);
             this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Size = new System.Drawing.Size(678, 126);
+            this.tabPage2.Size = new System.Drawing.Size(678, 141);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Recherche";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // searchTable
+            // 
+            this.searchTable.ColumnCount = 2;
+            this.searchTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.searchTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.searchTable.Controls.Add(this.flowLayoutPanel3, 1, 0);
+            this.searchTable.Controls.Add(this.searchPanel, 0, 0);
+            this.searchTable.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.searchTable.Location = new System.Drawing.Point(0, 0);
+            this.searchTable.Margin = new System.Windows.Forms.Padding(0);
+            this.searchTable.Name = "searchTable";
+            this.searchTable.RowCount = 1;
+            this.searchTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.searchTable.Size = new System.Drawing.Size(678, 126);
+            this.searchTable.TabIndex = 1;
             // 
             // flowLayoutPanel3
             // 
@@ -438,13 +454,23 @@
             this.erreurSearch.Text = "Erreur";
             this.erreurSearch.Visible = false;
             // 
+            // searchPanel
+            // 
+            this.searchPanel.AutoSize = true;
+            this.searchPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.searchPanel.Location = new System.Drawing.Point(0, 0);
+            this.searchPanel.Margin = new System.Windows.Forms.Padding(0);
+            this.searchPanel.Name = "searchPanel";
+            this.searchPanel.Size = new System.Drawing.Size(1, 126);
+            this.searchPanel.TabIndex = 1;
+            // 
             // tabPage3
             // 
             this.tabPage3.Controls.Add(this.tableLayoutPanel1);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Margin = new System.Windows.Forms.Padding(0);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(678, 126);
+            this.tabPage3.Size = new System.Drawing.Size(678, 141);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Filtres enregistrés";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -462,7 +488,7 @@
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 1;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(678, 126);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(678, 141);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
             // filtersPanel
@@ -471,7 +497,7 @@
             this.filtersPanel.Location = new System.Drawing.Point(0, 0);
             this.filtersPanel.Margin = new System.Windows.Forms.Padding(0);
             this.filtersPanel.Name = "filtersPanel";
-            this.filtersPanel.Size = new System.Drawing.Size(598, 126);
+            this.filtersPanel.Size = new System.Drawing.Size(598, 141);
             this.filtersPanel.TabIndex = 0;
             // 
             // flowLayoutPanel4
@@ -481,7 +507,7 @@
             this.flowLayoutPanel4.Location = new System.Drawing.Point(598, 0);
             this.flowLayoutPanel4.Margin = new System.Windows.Forms.Padding(0);
             this.flowLayoutPanel4.Name = "flowLayoutPanel4";
-            this.flowLayoutPanel4.Size = new System.Drawing.Size(80, 126);
+            this.flowLayoutPanel4.Size = new System.Drawing.Size(80, 141);
             this.flowLayoutPanel4.TabIndex = 1;
             // 
             // storedFilterBout
@@ -496,6 +522,7 @@
             this.storedFilterBout.Text = "Filtrer";
             this.storedFilterBout.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.storedFilterBout.UseVisualStyleBackColor = true;
+            this.storedFilterBout.Click += new System.EventHandler(this.storedFilterBout_Click);
             // 
             // ajouterToolStripMenuItem
             // 
@@ -549,32 +576,6 @@
             this.actionsEvernoteToolStripMenuItem1.Size = new System.Drawing.Size(156, 22);
             this.actionsEvernoteToolStripMenuItem1.Text = "Actions Evernote";
             // 
-            // searchTable
-            // 
-            this.searchTable.ColumnCount = 2;
-            this.searchTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.searchTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.searchTable.Controls.Add(this.flowLayoutPanel3, 1, 0);
-            this.searchTable.Controls.Add(this.searchPanel, 0, 0);
-            this.searchTable.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.searchTable.Location = new System.Drawing.Point(0, 0);
-            this.searchTable.Margin = new System.Windows.Forms.Padding(0);
-            this.searchTable.Name = "searchTable";
-            this.searchTable.RowCount = 1;
-            this.searchTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.searchTable.Size = new System.Drawing.Size(678, 126);
-            this.searchTable.TabIndex = 1;
-            // 
-            // searchPanel
-            // 
-            this.searchPanel.AutoSize = true;
-            this.searchPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.searchPanel.Location = new System.Drawing.Point(0, 0);
-            this.searchPanel.Margin = new System.Windows.Forms.Padding(0);
-            this.searchPanel.Name = "searchPanel";
-            this.searchPanel.Size = new System.Drawing.Size(1, 126);
-            this.searchPanel.TabIndex = 1;
-            // 
             // Toolbox
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -603,6 +604,8 @@
             this.flowLayoutPanel2.ResumeLayout(false);
             this.flowLayoutPanel2.PerformLayout();
             this.tabPage2.ResumeLayout(false);
+            this.searchTable.ResumeLayout(false);
+            this.searchTable.PerformLayout();
             this.flowLayoutPanel3.ResumeLayout(false);
             this.flowLayoutPanel3.PerformLayout();
             this.flowLayoutPanel5.ResumeLayout(false);
@@ -610,8 +613,6 @@
             this.tabPage3.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.flowLayoutPanel4.ResumeLayout(false);
-            this.searchTable.ResumeLayout(false);
-            this.searchTable.PerformLayout();
             this.ResumeLayout(false);
 
         }

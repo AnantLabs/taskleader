@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Configuration;
-using System.ComponentModel;
+using System.Collections.ObjectModel;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Windows.Forms;
@@ -25,10 +25,10 @@ namespace TaskLeader.GUI
 
         // Gestion des DBs
         public static Dictionary<string, DB> dbs = new Dictionary<string, DB>();
-        public static BindingList<String> activeDBs = new BindingList<String>();
+        public static ObservableCollection<string> activeDBs = new ObservableCollection<string>();
         public static DB defaultDB
         {
-            get // Et si la base par défaut a été
+            get
             {
                 if(activeDBs.Contains(ConfigurationManager.AppSettings["defaultDB"])) // La DB par défaut n'est pas forcément active
                     return dbs[ConfigurationManager.AppSettings["defaultDB"]]; // Si c'est le cas, elle est la DB par défaut
