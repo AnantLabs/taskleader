@@ -75,7 +75,7 @@ namespace TaskLeader.BLL
         {
             if (this.connectionNeeded || forceCreation)
             {
-                this.outlook = new Outlook.ApplicationClass();
+                this.outlook = new Outlook.Application();
                 this.outlook.ItemContextMenuDisplay += new Outlook.ApplicationEvents_11_ItemContextMenuDisplayEventHandler(addEntrytoContextMenu);
                 ((Outlook.ApplicationEvents_11_Event)outlook).Quit += new Outlook.ApplicationEvents_11_QuitEventHandler(clean);
             }

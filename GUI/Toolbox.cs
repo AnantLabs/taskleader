@@ -2,6 +2,7 @@ using System;
 using System.Data;
 using System.ComponentModel;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Windows.Forms;
 using TaskLeader.DAL;
 using TaskLeader.BO;
@@ -21,6 +22,16 @@ namespace TaskLeader.GUI
         /// <summary>Chargement des différents composants au lancement de la toolbox</summary>
         private void Toolbox_Load(object sender, EventArgs e)
         {
+            // Création des MultipleSelect
+            CritereSelect widget;
+            foreach (DBentity entity in DB.entities)
+            {
+                widget = new CritereSelect(entity);
+                if (entity.parent != null)
+                    widget.addParent(this.selectPanel.Controls[entity.parent.nom] as CritereSelect);
+                this.selectPanel.Controls.Add(widget);
+            }
+
             // Remplissage de la liste des bases d'action disponibles
             foreach (DB db in TrayIcon.dbs.Values)
             {
@@ -35,23 +46,8 @@ namespace TaskLeader.GUI
                 this.baseToolStripMenuItem.DropDown.Items.Add(dbItem);
             }
 
-            TrayIcon.activeDBs.ListChanged += new ListChangedEventHandler(updateDBs);
-
-            // -------------------
-            // Tab 'filtre manuel'
-            // -------------------
-
-            // Création des MultipleSelect
-            foreach (DBentity entity in DB.entities)
-            {
-                CritereSelect widget = new CritereSelect(entity);
-                if (entity.parent != null)
-                    widget.addParent(this.selectPanel.Controls[entity.parent.nom] as CritereSelect);
-                this.selectPanel.Controls.Add(widget);   
-            }
-
-            this.manuelDBcombo.Text = TrayIcon.defaultDB.name;
-            // ATTENTION: déclenche la mise à jour de toutes les CritereSelect!!
+            this.manuelDBcombo.Text = TrayIcon.defaultDB.name; // ATTENTION: déclenche la mise à jour de toutes les CritereSelect!!
+            TrayIcon.activeDBs.CollectionChanged +=new NotifyCollectionChangedEventHandler(activeDBs_CollectionChanged);           
 
             // -------------------
             // Tab 'recherche'
@@ -73,24 +69,23 @@ namespace TaskLeader.GUI
         private void addDB(DB db)
         {
             this.manuelDBcombo.Items.Add(db); // Filtre manuel
-            //this.manuelDBcombo.Text = TrayIcon.defaultDB.name; // C'est à la combo de le gérer elle même
             this.dbSelect.addDB(db); // Recherche
             this.filtersPanel.Controls.Add(new FiltreSelect(db)); // Filtres enregistrés
         }
 
-        private void updateDBs(object sender, ListChangedEventArgs e)
+        private void activeDBs_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            String dbName = ((BindingList<String>)sender)[e.NewIndex];
-            //TODO: impossible d'accéder à l'item supprimé !!
-
-            if (e.ListChangedType == ListChangedType.ItemAdded)
-                this.addDB(TrayIcon.dbs[dbName]);
-            else if (e.ListChangedType == ListChangedType.ItemDeleted)
+            if (e.Action == NotifyCollectionChangedAction.Add)
             {
-                this.manuelDBcombo.Items.Remove(TrayIcon.dbs[dbName]);
+                this.addDB(TrayIcon.dbs[(String)e.NewItems[0]]);
+                this.manuelDBcombo.Text = TrayIcon.defaultDB.name; // ATTENTION: déclenche la mise à jour de toutes les CritereSelect!!
+            }
+            else if (e.Action == NotifyCollectionChangedAction.Remove)
+            {
+                this.manuelDBcombo.Items.Remove(TrayIcon.dbs[(String)e.OldItems[0]]);
                 this.manuelDBcombo.Text = TrayIcon.defaultDB.name; // C'est à la combo de le gérer elle même
-                this.dbSelect.removeDB(TrayIcon.dbs[dbName]);
-                this.filtersPanel.Controls.RemoveByKey(dbName);
+                this.dbSelect.removeDB(TrayIcon.dbs[(String)e.OldItems[0]]);
+                this.filtersPanel.Controls.RemoveByKey((String)e.OldItems[0]);
             }
         }
 
@@ -120,35 +115,6 @@ namespace TaskLeader.GUI
 
         #endregion
  
-        #region Onglet Recherche
-
-        // Validation de la recherche après click sur OK
-        private void searchButton_Click(object sender, EventArgs e)
-        {
-            if (searchBox.Text != "")
-                foreach (DB db in this.dbSelect.getDBs())
-                    this.tagsPanel.Controls.Add(new Etiquette(new Filtre(searchBox.Text, db.name)));
-            else
-            {
-                this.erreurSearch.Text = "Entrer un mot clé pour la recherche";
-                this.erreurSearch.Visible = true;
-            }
-        }
-
-        // Permet la validation de la recherche par la touche ENTER
-        private void searchBox_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (e.KeyChar == (char)Keys.Enter)
-                this.searchButton_Click(sender, e);
-        }
-
-        private void searchBox_Enter(object sender, EventArgs e)
-        {
-            this.erreurSearch.Visible = false;
-        }
-
-        #endregion
-
         #region comportement Toolbox
 
         private void hideCollapse(object sender, EventArgs e)
@@ -239,9 +205,6 @@ namespace TaskLeader.GUI
                         saveFilterCheck.Checked = false;
                         nameBox.Text = "";
 
-                        // Mise à jour de la liste des filtres de la base correspondante
-                        ((FiltreSelect)this.filtersPanel.Controls[db.name]).maj();
-
                         // Affichage du filtre
                         this.tagsPanel.Controls.Add(new Etiquette(filtre));
                     }
@@ -249,6 +212,68 @@ namespace TaskLeader.GUI
             }
             else
                 this.tagsPanel.Controls.Add(new Etiquette(filtre));
+        }
+
+        #endregion
+        
+        #region Onglet Recherche
+
+        // Validation de la recherche après click sur OK
+        private void searchButton_Click(object sender, EventArgs e)
+        {
+            if (searchBox.Text != "")
+                foreach (DB db in this.dbSelect.getDBs())
+                    this.tagsPanel.Controls.Add(new Etiquette(new Filtre(searchBox.Text, db.name)));
+            else
+            {
+                this.erreurSearch.Text = "Entrer un mot clé pour la recherche";
+                this.erreurSearch.Visible = true;
+            }
+        }
+
+        // Permet la validation de la recherche par la touche ENTER
+        private void searchBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Enter)
+                this.searchButton_Click(sender, e);
+        }
+
+        private void searchBox_Enter(object sender, EventArgs e)
+        {
+            this.erreurSearch.Visible = false;
+        }
+
+        #endregion
+
+        #region Onglet Filtres enregistrés
+
+        private void storedFilterBout_Click(object sender, EventArgs e)
+        {
+            foreach(FiltreSelect widget in this.filtersPanel.Controls)
+                foreach(Filtre filtre in widget.getSelected())
+                    this.tagsPanel.Controls.Add(new Etiquette(filtre));
+        }
+
+        #endregion
+
+        #region resultLabel
+
+        /// <summary>
+        /// Met à jour le label d'affichage des nombre d'actions trouvées
+        /// </summary>
+        /// <param name="nombre">Nombre d'actions affichées par la liste</param>
+        private void afficheNombre(int nombre)
+        {
+            // Définition du label de résultat
+            if (nombre == 0)
+                this.resultLabel.Text = "Aucune action trouvée";
+            else if (nombre == 1)
+                this.resultLabel.Text = "1 action trouvée";
+            else
+                this.resultLabel.Text = nombre.ToString() + " actions trouvées";
+
+            // Affichage du label
+            resultLabel.Visible = true;
         }
 
         #endregion
@@ -288,27 +313,8 @@ namespace TaskLeader.GUI
 
         #endregion
 
-        #region resultLabel
 
-        /// <summary>
-        /// Met à jour le label d'affichage des nombre d'actions trouvées
-        /// </summary>
-        /// <param name="nombre">Nombre d'actions affichées par la liste</param>
-        private void afficheNombre(int nombre)
-        {
-            // Définition du label de résultat
-            if (nombre == 0)
-                this.resultLabel.Text = "Aucune action trouvée";
-            else if (nombre == 1)
-                this.resultLabel.Text = "1 action trouvée";
-            else
-                this.resultLabel.Text = nombre.ToString() + " actions trouvées";
-
-            // Affichage du label
-            resultLabel.Visible = true;
-        }
-
-        #endregion
+        
 
         
 

@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>TaskLeader</RootNamespace>
     <AssemblyName>TaskLeader</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
@@ -78,12 +78,6 @@
     <Compile Include="GUI\MultipleSelect.Designer.cs">
       <DependentUpon>MultipleSelect.cs</DependentUpon>
     </Compile>
-    <Compile Include="GUI\FiltreSelect.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="GUI\FiltreSelect.Designer.cs">
-      <DependentUpon>FiltreSelect.cs</DependentUpon>
-    </Compile>
     <Compile Include="GUI\Grille.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -131,9 +125,6 @@
     <EmbeddedResource Include="GUI\MultipleSelect.resx">
       <DependentUpon>MultipleSelect.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="GUI\FiltreSelect.resx">
-      <DependentUpon>FiltreSelect.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="GUI\Grille.resx">
       <DependentUpon>Grille.cs</DependentUpon>
     </EmbeddedResource>
@@ -157,6 +148,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
@@ -183,6 +175,15 @@
     <None Include="Resources\task_coach.ico" />
   </ItemGroup>
   <ItemGroup>
+    <COMReference Include="AccessibilityCplAdminLib">
+      <Guid>{714DD4F6-7676-4BDE-925A-C2FEC2073F36}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
     <COMReference Include="Microsoft.Office.Core">
       <Guid>{2DF8D04C-5BFA-101B-BDE5-00AA0044DE52}</Guid>
       <VersionMajor>2</VersionMajor>
