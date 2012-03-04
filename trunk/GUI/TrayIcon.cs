@@ -50,13 +50,13 @@ namespace TaskLeader.GUI
             // Menu contextuel de la trayIcon
             this.trayContext.Items.AddRange(new ToolStripItem[] { this.newActionItem, this.maximItem, this.outlookItem, this.closeItem });
             this.trayContext.Name = "trayContext";
-            this.trayContext.ShowImageMargin = false;
             this.trayContext.Size = new System.Drawing.Size(126, 70);
             this.trayContext.Opened += new EventHandler(trayContext_Opened);
 
             // Item "nouvelle action" du menu contextuel
             this.newActionItem.Name = "newActionItem";
             this.newActionItem.ShowShortcutKeys = false;
+            this.newActionItem.Image = TaskLeader.Properties.Resources.add;
             this.newActionItem.Size = new System.Drawing.Size(125, 22);
             this.newActionItem.Text = "Nouvelle action";
             this.newActionItem.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;

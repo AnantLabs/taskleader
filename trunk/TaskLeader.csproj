@@ -163,9 +163,6 @@
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\add.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\evernote.png" />
   </ItemGroup>
   <ItemGroup>
@@ -216,13 +213,22 @@
     <None Include="Resources\loupe.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\filtre.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\PJ.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shortcut.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\add.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\filter_add32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\filter.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\database_go32.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
