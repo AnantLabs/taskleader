@@ -67,6 +67,13 @@ namespace TaskLeader.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap database_go32 {
+            get {
+                object obj = ResourceManager.GetObject("database_go32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap evernote {
             get {
                 object obj = ResourceManager.GetObject("evernote", resourceCulture);
@@ -74,9 +81,16 @@ namespace TaskLeader.Properties {
             }
         }
         
-        internal static System.Drawing.Bitmap filtre {
+        internal static System.Drawing.Bitmap filter {
             get {
-                object obj = ResourceManager.GetObject("filtre", resourceCulture);
+                object obj = ResourceManager.GetObject("filter", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap filter_add32 {
+            get {
+                object obj = ResourceManager.GetObject("filter_add32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
