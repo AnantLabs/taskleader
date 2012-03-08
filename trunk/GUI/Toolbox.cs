@@ -119,21 +119,23 @@ namespace TaskLeader.GUI
 
         private void hideCollapse(object sender, EventArgs e)
         {
-            String state = this.button1.Text;
+            String state = this.reduceButton.Tag as String;
 
-            if (state == "^" && sender.GetType() == typeof(Button)) // Bandeau déployé
-            {
+            if (state == "expanded" && sender.GetType() == typeof(ToolStripMenuItem)) // Bandeau déployé
+            { // Réduction
                 this.tabControl1.Appearance = TabAppearance.FlatButtons;
                 RowStyle small = new RowStyle(SizeType.Absolute, 30);
                 this.mainTableLayout.RowStyles[0] = small;
-                this.button1.Text = "v";
+                this.reduceButton.Tag = "collapsed";
+                this.reduceButton.Image = TaskLeader.Properties.Resources.arrow_out;
             }
             else // Bandeau replié
             {
                 this.tabControl1.Appearance = TabAppearance.Normal;
                 RowStyle big = new RowStyle(SizeType.Absolute, 155);
                 this.mainTableLayout.RowStyles[0] = big;
-                this.button1.Text = "^";
+                this.reduceButton.Tag = "expanded";
+                this.reduceButton.Image = TaskLeader.Properties.Resources.arrow_in;
             }
         }
 

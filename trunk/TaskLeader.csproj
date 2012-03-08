@@ -163,9 +163,6 @@
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\evernote.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\outlook.png" />
   </ItemGroup>
   <ItemGroup>
@@ -210,9 +207,6 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\loupe.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\PJ.png" />
   </ItemGroup>
   <ItemGroup>
@@ -229,6 +223,39 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\database_go32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\database_connect.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\magnifier.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\magnifier32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\database_go.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\door_out.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\database_table.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\database_gear.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\database.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\evernote.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\arrow_in.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\arrow_out.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

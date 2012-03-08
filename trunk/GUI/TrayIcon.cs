@@ -50,33 +50,28 @@ namespace TaskLeader.GUI
             // Menu contextuel de la trayIcon
             this.trayContext.Items.AddRange(new ToolStripItem[] { this.newActionItem, this.maximItem, this.outlookItem, this.closeItem });
             this.trayContext.Name = "trayContext";
-            this.trayContext.Size = new System.Drawing.Size(126, 70);
             this.trayContext.Opened += new EventHandler(trayContext_Opened);
 
             // Item "nouvelle action" du menu contextuel
-            this.newActionItem.Name = "newActionItem";
-            this.newActionItem.ShowShortcutKeys = false;
             this.newActionItem.Image = TaskLeader.Properties.Resources.add;
-            this.newActionItem.Size = new System.Drawing.Size(125, 22);
             this.newActionItem.Text = "Nouvelle action";
-            this.newActionItem.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.newActionItem.ShowShortcutKeys = true;
+            this.newActionItem.ShortcutKeyDisplayString = ((NameValueCollection)ConfigurationManager.GetSection("Hotkey"))["NewAction"];
             this.newActionItem.Click += new System.EventHandler(ajoutAction);
 
             // Item "afficher Toolbox" du menu contextuel
-            this.maximItem.Name = "maximItem";
-            this.maximItem.Size = new System.Drawing.Size(125, 22);
+            this.maximItem.Image = TaskLeader.Properties.Resources.database_table;
             this.maximItem.Text = "Afficher la liste";
+            this.maximItem.ShowShortcutKeys = true;
+            this.maximItem.ShortcutKeyDisplayString = ((NameValueCollection)ConfigurationManager.GetSection("Hotkey"))["ListeActions"];
             this.maximItem.Click += new System.EventHandler(this.displayToolbox);
 
-            // Item "nouvelle action" du menu contextuel
+            // Item "Connecter à Outlook" du menu contextuel
             this.outlookItem.Text = "Connecter à Outlook";
-            this.outlookItem.Size = new System.Drawing.Size(125, 22);
-            this.outlookItem.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.outlookItem.Click += new System.EventHandler(this.connectOutlook);
 
             // Item "fermer" du menu contextuel
-            this.closeItem.Name = "closeItem";
-            this.closeItem.Size = new System.Drawing.Size(125, 22);
+            this.closeItem.Image = TaskLeader.Properties.Resources.door_out;
             this.closeItem.Text = "Fermer";
             this.closeItem.Click += new System.EventHandler(this.closeItem_Click);
         }
