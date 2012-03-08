@@ -39,7 +39,6 @@
             this.adminItem = new System.Windows.Forms.ToolStripMenuItem();
             this.baseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.defaultValuesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.button1 = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.manuelTable = new System.Windows.Forms.TableLayoutPanel();
@@ -74,6 +73,7 @@
             this.ajouterToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.nouvelleActionToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.actionsEvernoteToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.reduceButton = new System.Windows.Forms.ToolStripMenuItem();
             this.mainTableLayout.SuspendLayout();
             this.topMenu.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -94,15 +94,14 @@
             // 
             // mainTableLayout
             // 
-            this.mainTableLayout.ColumnCount = 4;
+            this.mainTableLayout.ColumnCount = 3;
             this.mainTableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.mainTableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.mainTableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 90F));
-            this.mainTableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 32F));
+            this.mainTableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 164F));
+            this.mainTableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.mainTableLayout.Controls.Add(this.resultLabel, 0, 1);
             this.mainTableLayout.Controls.Add(this.tagsPanel, 1, 1);
             this.mainTableLayout.Controls.Add(this.topMenu, 2, 1);
-            this.mainTableLayout.Controls.Add(this.button1, 3, 0);
             this.mainTableLayout.Controls.Add(this.tabControl1, 0, 0);
             this.mainTableLayout.Dock = System.Windows.Forms.DockStyle.Fill;
             this.mainTableLayout.Location = new System.Drawing.Point(0, 0);
@@ -132,7 +131,7 @@
             this.tagsPanel.Location = new System.Drawing.Point(57, 170);
             this.tagsPanel.Margin = new System.Windows.Forms.Padding(0);
             this.tagsPanel.Name = "tagsPanel";
-            this.tagsPanel.Size = new System.Drawing.Size(542, 30);
+            this.tagsPanel.Size = new System.Drawing.Size(500, 30);
             this.tagsPanel.TabIndex = 5;
             this.tagsPanel.ControlAdded += new System.Windows.Forms.ControlEventHandler(this.tagsPanel_ControlAdded);
             this.tagsPanel.ControlRemoved += new System.Windows.Forms.ControlEventHandler(this.tagsPanel_ControlRemoved);
@@ -140,15 +139,15 @@
             // topMenu
             // 
             this.topMenu.BackColor = System.Drawing.SystemColors.Control;
-            this.mainTableLayout.SetColumnSpan(this.topMenu, 2);
             this.topMenu.Dock = System.Windows.Forms.DockStyle.Fill;
             this.topMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ajouterItem,
-            this.adminItem});
-            this.topMenu.Location = new System.Drawing.Point(599, 173);
+            this.adminItem,
+            this.reduceButton});
+            this.topMenu.Location = new System.Drawing.Point(557, 173);
             this.topMenu.Margin = new System.Windows.Forms.Padding(0, 3, 0, 0);
             this.topMenu.Name = "topMenu";
-            this.topMenu.Size = new System.Drawing.Size(122, 27);
+            this.topMenu.Size = new System.Drawing.Size(164, 27);
             this.topMenu.TabIndex = 6;
             this.topMenu.Text = "menuStrip1";
             // 
@@ -174,7 +173,7 @@
             // actionsEvernoteToolStripMenuItem2
             // 
             this.actionsEvernoteToolStripMenuItem2.Enabled = false;
-            this.actionsEvernoteToolStripMenuItem2.Image = global::TaskLeader.Properties.Resources.evernote;
+            this.actionsEvernoteToolStripMenuItem2.Image = ((System.Drawing.Image)(resources.GetObject("actionsEvernoteToolStripMenuItem2.Image")));
             this.actionsEvernoteToolStripMenuItem2.Name = "actionsEvernoteToolStripMenuItem2";
             this.actionsEvernoteToolStripMenuItem2.ShowShortcutKeys = false;
             this.actionsEvernoteToolStripMenuItem2.Size = new System.Drawing.Size(156, 22);
@@ -185,32 +184,25 @@
             this.adminItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.baseToolStripMenuItem,
             this.defaultValuesToolStripMenuItem});
+            this.adminItem.Image = global::TaskLeader.Properties.Resources.database_gear;
             this.adminItem.Name = "adminItem";
-            this.adminItem.Size = new System.Drawing.Size(55, 23);
+            this.adminItem.Size = new System.Drawing.Size(71, 23);
             this.adminItem.Text = "Admin";
             // 
             // baseToolStripMenuItem
             // 
+            this.baseToolStripMenuItem.Image = global::TaskLeader.Properties.Resources.database_connect;
             this.baseToolStripMenuItem.Name = "baseToolStripMenuItem";
             this.baseToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
             this.baseToolStripMenuItem.Text = "Base d\'actions actives";
             // 
             // defaultValuesToolStripMenuItem
             // 
+            this.defaultValuesToolStripMenuItem.Image = global::TaskLeader.Properties.Resources.database_gear;
             this.defaultValuesToolStripMenuItem.Name = "defaultValuesToolStripMenuItem";
             this.defaultValuesToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
             this.defaultValuesToolStripMenuItem.Text = "Valeurs par défaut";
             this.defaultValuesToolStripMenuItem.Click += new System.EventHandler(this.defaultValuesToolStripMenuItem_Click);
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(692, 3);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(26, 23);
-            this.button1.TabIndex = 7;
-            this.button1.Text = "^";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.hideCollapse);
             // 
             // tabControl1
             // 
@@ -223,7 +215,7 @@
             this.tabControl1.Margin = new System.Windows.Forms.Padding(3, 3, 0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(686, 167);
+            this.tabControl1.Size = new System.Drawing.Size(718, 167);
             this.tabControl1.TabIndex = 8;
             this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.hideCollapse);
             // 
@@ -233,7 +225,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Margin = new System.Windows.Forms.Padding(0);
             this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Size = new System.Drawing.Size(678, 141);
+            this.tabPage1.Size = new System.Drawing.Size(710, 141);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Filtre manuel";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -253,7 +245,7 @@
             this.manuelTable.Name = "manuelTable";
             this.manuelTable.RowCount = 1;
             this.manuelTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.manuelTable.Size = new System.Drawing.Size(678, 141);
+            this.manuelTable.Size = new System.Drawing.Size(710, 141);
             this.manuelTable.TabIndex = 2;
             // 
             // flowLayoutPanel1
@@ -264,7 +256,7 @@
             this.flowLayoutPanel1.Controls.Add(this.errorLabel);
             this.flowLayoutPanel1.Controls.Add(this.manuelFiltreBout);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(518, 0);
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(550, 0);
             this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             this.flowLayoutPanel1.Size = new System.Drawing.Size(160, 141);
@@ -356,8 +348,8 @@
             // 
             this.label1.AutoSize = true;
             this.flowLayoutPanel2.SetFlowBreak(this.label1, true);
-            this.label1.Location = new System.Drawing.Point(34, 7);
-            this.label1.Margin = new System.Windows.Forms.Padding(3, 7, 3, 0);
+            this.label1.Location = new System.Drawing.Point(34, 9);
+            this.label1.Margin = new System.Windows.Forms.Padding(3, 9, 3, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(79, 13);
             this.label1.TabIndex = 0;
@@ -381,7 +373,7 @@
             this.selectPanel.Location = new System.Drawing.Point(150, 0);
             this.selectPanel.Margin = new System.Windows.Forms.Padding(0);
             this.selectPanel.Name = "selectPanel";
-            this.selectPanel.Size = new System.Drawing.Size(368, 141);
+            this.selectPanel.Size = new System.Drawing.Size(400, 141);
             this.selectPanel.TabIndex = 4;
             // 
             // tabPage2
@@ -443,13 +435,13 @@
             this.flowLayoutPanel5.Location = new System.Drawing.Point(30, 23);
             this.flowLayoutPanel5.Margin = new System.Windows.Forms.Padding(30, 3, 3, 3);
             this.flowLayoutPanel5.Name = "flowLayoutPanel5";
-            this.flowLayoutPanel5.Size = new System.Drawing.Size(183, 30);
+            this.flowLayoutPanel5.Size = new System.Drawing.Size(191, 38);
             this.flowLayoutPanel5.TabIndex = 6;
             // 
             // searchBox
             // 
-            this.searchBox.Location = new System.Drawing.Point(3, 5);
-            this.searchBox.Margin = new System.Windows.Forms.Padding(3, 5, 5, 0);
+            this.searchBox.Location = new System.Drawing.Point(3, 8);
+            this.searchBox.Margin = new System.Windows.Forms.Padding(3, 8, 5, 0);
             this.searchBox.Name = "searchBox";
             this.searchBox.Size = new System.Drawing.Size(145, 20);
             this.searchBox.TabIndex = 1;
@@ -460,10 +452,11 @@
             // 
             this.searchButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("searchButton.BackgroundImage")));
             this.searchButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.searchButton.Image = global::TaskLeader.Properties.Resources.magnifier32;
             this.searchButton.Location = new System.Drawing.Point(153, 0);
             this.searchButton.Margin = new System.Windows.Forms.Padding(0);
             this.searchButton.Name = "searchButton";
-            this.searchButton.Size = new System.Drawing.Size(30, 30);
+            this.searchButton.Size = new System.Drawing.Size(38, 38);
             this.searchButton.TabIndex = 2;
             this.searchButton.UseVisualStyleBackColor = true;
             this.searchButton.Click += new System.EventHandler(this.searchButton_Click);
@@ -472,7 +465,7 @@
             // 
             this.erreurSearch.AutoSize = true;
             this.erreurSearch.ForeColor = System.Drawing.Color.Red;
-            this.erreurSearch.Location = new System.Drawing.Point(33, 56);
+            this.erreurSearch.Location = new System.Drawing.Point(33, 64);
             this.erreurSearch.Margin = new System.Windows.Forms.Padding(33, 0, 3, 0);
             this.erreurSearch.Name = "erreurSearch";
             this.erreurSearch.Size = new System.Drawing.Size(35, 13);
@@ -538,12 +531,12 @@
             // 
             // storedFilterBout
             // 
-            this.storedFilterBout.Image = ((System.Drawing.Image)(resources.GetObject("storedFilterBout.Image")));
+            this.storedFilterBout.Image = global::TaskLeader.Properties.Resources.filter;
             this.storedFilterBout.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.storedFilterBout.Location = new System.Drawing.Point(7, 45);
             this.storedFilterBout.Margin = new System.Windows.Forms.Padding(7, 45, 0, 0);
             this.storedFilterBout.Name = "storedFilterBout";
-            this.storedFilterBout.Size = new System.Drawing.Size(65, 30);
+            this.storedFilterBout.Size = new System.Drawing.Size(58, 30);
             this.storedFilterBout.TabIndex = 9;
             this.storedFilterBout.Text = "Filtrer";
             this.storedFilterBout.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -571,7 +564,7 @@
             // 
             // actionsEvernoteToolStripMenuItem
             // 
-            this.actionsEvernoteToolStripMenuItem.Image = global::TaskLeader.Properties.Resources.evernote;
+            this.actionsEvernoteToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("actionsEvernoteToolStripMenuItem.Image")));
             this.actionsEvernoteToolStripMenuItem.Name = "actionsEvernoteToolStripMenuItem";
             this.actionsEvernoteToolStripMenuItem.ShowShortcutKeys = false;
             this.actionsEvernoteToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
@@ -596,11 +589,19 @@
             // actionsEvernoteToolStripMenuItem1
             // 
             this.actionsEvernoteToolStripMenuItem1.Enabled = false;
-            this.actionsEvernoteToolStripMenuItem1.Image = global::TaskLeader.Properties.Resources.evernote;
+            this.actionsEvernoteToolStripMenuItem1.Image = ((System.Drawing.Image)(resources.GetObject("actionsEvernoteToolStripMenuItem1.Image")));
             this.actionsEvernoteToolStripMenuItem1.Name = "actionsEvernoteToolStripMenuItem1";
             this.actionsEvernoteToolStripMenuItem1.ShowShortcutKeys = false;
             this.actionsEvernoteToolStripMenuItem1.Size = new System.Drawing.Size(156, 22);
             this.actionsEvernoteToolStripMenuItem1.Text = "Actions Evernote";
+            // 
+            // reduceButton
+            // 
+            this.reduceButton.Image = global::TaskLeader.Properties.Resources.arrow_in;
+            this.reduceButton.Name = "reduceButton";
+            this.reduceButton.Size = new System.Drawing.Size(28, 23);
+            this.reduceButton.Tag = "expanded";
+            this.reduceButton.Click += new System.EventHandler(this.hideCollapse);
             // 
             // Toolbox
             // 
@@ -672,7 +673,6 @@
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.TabPage tabPage3;
-        private System.Windows.Forms.Button button1;
         private System.Windows.Forms.TableLayoutPanel manuelTable;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel2;
@@ -692,6 +692,7 @@
         private System.Windows.Forms.FlowLayoutPanel searchPanel;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.PictureBox pictureBox2;
+        private System.Windows.Forms.ToolStripMenuItem reduceButton;
 
     }
 }

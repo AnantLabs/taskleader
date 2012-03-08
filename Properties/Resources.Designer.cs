@@ -67,9 +67,65 @@ namespace TaskLeader.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap arrow_in {
+            get {
+                object obj = ResourceManager.GetObject("arrow_in", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap arrow_out {
+            get {
+                object obj = ResourceManager.GetObject("arrow_out", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap database {
+            get {
+                object obj = ResourceManager.GetObject("database", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap database_connect {
+            get {
+                object obj = ResourceManager.GetObject("database_connect", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap database_gear {
+            get {
+                object obj = ResourceManager.GetObject("database_gear", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap database_go {
+            get {
+                object obj = ResourceManager.GetObject("database_go", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap database_go32 {
             get {
                 object obj = ResourceManager.GetObject("database_go32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap database_table {
+            get {
+                object obj = ResourceManager.GetObject("database_table", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap door_out {
+            get {
+                object obj = ResourceManager.GetObject("door_out", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -95,9 +151,16 @@ namespace TaskLeader.Properties {
             }
         }
         
-        internal static System.Drawing.Bitmap loupe {
+        internal static System.Drawing.Bitmap magnifier {
             get {
-                object obj = ResourceManager.GetObject("loupe", resourceCulture);
+                object obj = ResourceManager.GetObject("magnifier", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap magnifier32 {
+            get {
+                object obj = ResourceManager.GetObject("magnifier32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

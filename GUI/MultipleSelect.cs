@@ -199,6 +199,8 @@ namespace TaskLeader.GUI
             : base()
         {
             this.titre.Text = "Base d'actions";
+            this.pictureBox1.Image = TaskLeader.Properties.Resources.database_go;
+            this.pictureBox1.Visible = true;
         }
 
         /// <summary>
@@ -245,6 +247,8 @@ namespace TaskLeader.GUI
             // On attribue un nom au contrôle pour pouvoir le récupérer ensuite
             this.Name = this.db.name;
             this.titre.Text = this.db.name;
+            this.pictureBox1.Image = TaskLeader.Properties.Resources.database;
+            this.pictureBox1.Visible = true;
 
             this.liste.Items.AddRange(this.db.getFilters());
             this.db.subscribe_NewValue(DB.filtre, new EventHandler(maj));
