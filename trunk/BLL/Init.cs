@@ -78,7 +78,7 @@ namespace TaskLeader.BLL
             // Copie de sauvegarde du fichier db avant toute manip
             TrayIcon.afficheMessage("Migration", "Copie de sauvegarde de la base");
             String sourceFile = TrayIcon.dbs[dbName].path;
-            String backupFile = sourceFile.Substring(0, sourceFile.Length - 4) + DateTime.Now.ToString("_Back-ddMMyyyy") + ".db3";
+            String backupFile = sourceFile.Substring(0, sourceFile.Length - 4) + DateTime.Now.ToString("_Back-ddMMyyyy") + ".db3";//TODO: P0 ne fonctionne qu'avec des extensions de 3 digits !
             System.IO.File.Copy(sourceFile, backupFile, true);
 
             // Récupération du script de migration

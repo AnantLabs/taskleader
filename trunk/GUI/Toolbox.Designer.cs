@@ -33,12 +33,11 @@
             this.resultLabel = new System.Windows.Forms.Label();
             this.tagsPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.topMenu = new System.Windows.Forms.MenuStrip();
+            this.reduceButton = new System.Windows.Forms.ToolStripMenuItem();
             this.ajouterItem = new System.Windows.Forms.ToolStripMenuItem();
             this.nouvelleActionToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.actionsEvernoteToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.adminItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.baseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.defaultValuesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.manuelTable = new System.Windows.Forms.TableLayoutPanel();
@@ -73,7 +72,6 @@
             this.ajouterToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.nouvelleActionToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.actionsEvernoteToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.reduceButton = new System.Windows.Forms.ToolStripMenuItem();
             this.mainTableLayout.SuspendLayout();
             this.topMenu.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -97,7 +95,7 @@
             this.mainTableLayout.ColumnCount = 3;
             this.mainTableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.mainTableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.mainTableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 164F));
+            this.mainTableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 181F));
             this.mainTableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.mainTableLayout.Controls.Add(this.resultLabel, 0, 1);
             this.mainTableLayout.Controls.Add(this.tagsPanel, 1, 1);
@@ -131,7 +129,7 @@
             this.tagsPanel.Location = new System.Drawing.Point(57, 170);
             this.tagsPanel.Margin = new System.Windows.Forms.Padding(0);
             this.tagsPanel.Name = "tagsPanel";
-            this.tagsPanel.Size = new System.Drawing.Size(500, 30);
+            this.tagsPanel.Size = new System.Drawing.Size(483, 30);
             this.tagsPanel.TabIndex = 5;
             this.tagsPanel.ControlAdded += new System.Windows.Forms.ControlEventHandler(this.tagsPanel_ControlAdded);
             this.tagsPanel.ControlRemoved += new System.Windows.Forms.ControlEventHandler(this.tagsPanel_ControlRemoved);
@@ -144,12 +142,20 @@
             this.ajouterItem,
             this.adminItem,
             this.reduceButton});
-            this.topMenu.Location = new System.Drawing.Point(557, 173);
+            this.topMenu.Location = new System.Drawing.Point(540, 173);
             this.topMenu.Margin = new System.Windows.Forms.Padding(0, 3, 0, 0);
             this.topMenu.Name = "topMenu";
-            this.topMenu.Size = new System.Drawing.Size(164, 27);
+            this.topMenu.Size = new System.Drawing.Size(181, 27);
             this.topMenu.TabIndex = 6;
             this.topMenu.Text = "menuStrip1";
+            // 
+            // reduceButton
+            // 
+            this.reduceButton.Image = global::TaskLeader.Properties.Resources.arrow_in;
+            this.reduceButton.Name = "reduceButton";
+            this.reduceButton.Size = new System.Drawing.Size(28, 23);
+            this.reduceButton.Tag = "expanded";
+            this.reduceButton.Click += new System.EventHandler(this.hideCollapse);
             // 
             // ajouterItem
             // 
@@ -181,28 +187,10 @@
             // 
             // adminItem
             // 
-            this.adminItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.baseToolStripMenuItem,
-            this.defaultValuesToolStripMenuItem});
             this.adminItem.Image = global::TaskLeader.Properties.Resources.database_gear;
             this.adminItem.Name = "adminItem";
-            this.adminItem.Size = new System.Drawing.Size(71, 23);
-            this.adminItem.Text = "Admin";
-            // 
-            // baseToolStripMenuItem
-            // 
-            this.baseToolStripMenuItem.Image = global::TaskLeader.Properties.Resources.database_connect;
-            this.baseToolStripMenuItem.Name = "baseToolStripMenuItem";
-            this.baseToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
-            this.baseToolStripMenuItem.Text = "Base d\'actions actives";
-            // 
-            // defaultValuesToolStripMenuItem
-            // 
-            this.defaultValuesToolStripMenuItem.Image = global::TaskLeader.Properties.Resources.database_gear;
-            this.defaultValuesToolStripMenuItem.Name = "defaultValuesToolStripMenuItem";
-            this.defaultValuesToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
-            this.defaultValuesToolStripMenuItem.Text = "Valeurs par défaut";
-            this.defaultValuesToolStripMenuItem.Click += new System.EventHandler(this.defaultValuesToolStripMenuItem_Click);
+            this.adminItem.Size = new System.Drawing.Size(89, 23);
+            this.adminItem.Text = "Admin DB";
             // 
             // tabControl1
             // 
@@ -382,7 +370,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Margin = new System.Windows.Forms.Padding(0);
             this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Size = new System.Drawing.Size(678, 141);
+            this.tabPage2.Size = new System.Drawing.Size(710, 141);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Recherche";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -400,7 +388,7 @@
             this.searchTable.Name = "searchTable";
             this.searchTable.RowCount = 1;
             this.searchTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.searchTable.Size = new System.Drawing.Size(678, 141);
+            this.searchTable.Size = new System.Drawing.Size(710, 141);
             this.searchTable.TabIndex = 1;
             // 
             // flowLayoutPanel3
@@ -414,7 +402,7 @@
             this.flowLayoutPanel3.Location = new System.Drawing.Point(0, 0);
             this.flowLayoutPanel3.Margin = new System.Windows.Forms.Padding(0);
             this.flowLayoutPanel3.Name = "flowLayoutPanel3";
-            this.flowLayoutPanel3.Size = new System.Drawing.Size(678, 141);
+            this.flowLayoutPanel3.Size = new System.Drawing.Size(710, 141);
             this.flowLayoutPanel3.TabIndex = 0;
             // 
             // label2
@@ -489,7 +477,7 @@
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Margin = new System.Windows.Forms.Padding(0);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(678, 141);
+            this.tabPage3.Size = new System.Drawing.Size(710, 141);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Filtres enregistrés";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -507,7 +495,7 @@
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 1;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(678, 141);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(710, 141);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
             // filtersPanel
@@ -516,14 +504,14 @@
             this.filtersPanel.Location = new System.Drawing.Point(0, 0);
             this.filtersPanel.Margin = new System.Windows.Forms.Padding(0);
             this.filtersPanel.Name = "filtersPanel";
-            this.filtersPanel.Size = new System.Drawing.Size(598, 141);
+            this.filtersPanel.Size = new System.Drawing.Size(630, 141);
             this.filtersPanel.TabIndex = 0;
             // 
             // flowLayoutPanel4
             // 
             this.flowLayoutPanel4.Controls.Add(this.storedFilterBout);
             this.flowLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel4.Location = new System.Drawing.Point(598, 0);
+            this.flowLayoutPanel4.Location = new System.Drawing.Point(630, 0);
             this.flowLayoutPanel4.Margin = new System.Windows.Forms.Padding(0);
             this.flowLayoutPanel4.Name = "flowLayoutPanel4";
             this.flowLayoutPanel4.Size = new System.Drawing.Size(80, 141);
@@ -595,14 +583,6 @@
             this.actionsEvernoteToolStripMenuItem1.Size = new System.Drawing.Size(156, 22);
             this.actionsEvernoteToolStripMenuItem1.Text = "Actions Evernote";
             // 
-            // reduceButton
-            // 
-            this.reduceButton.Image = global::TaskLeader.Properties.Resources.arrow_in;
-            this.reduceButton.Name = "reduceButton";
-            this.reduceButton.Size = new System.Drawing.Size(28, 23);
-            this.reduceButton.Tag = "expanded";
-            this.reduceButton.Click += new System.EventHandler(this.hideCollapse);
-            // 
             // Toolbox
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -667,8 +647,6 @@
         private System.Windows.Forms.ToolStripMenuItem nouvelleActionToolStripMenuItem2;
         private System.Windows.Forms.ToolStripMenuItem actionsEvernoteToolStripMenuItem2;
         private System.Windows.Forms.ToolStripMenuItem adminItem;
-        private System.Windows.Forms.ToolStripMenuItem defaultValuesToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem baseToolStripMenuItem;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;

@@ -81,6 +81,13 @@ namespace TaskLeader.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap bullets {
+            get {
+                object obj = ResourceManager.GetObject("bullets", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap database {
             get {
                 object obj = ResourceManager.GetObject("database", resourceCulture);

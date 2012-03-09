@@ -15,7 +15,7 @@ namespace TaskLeader.GUI
         /// <summary>
         /// Constructeur pour le Designer
         /// </summary>
-        public MultipleSelect(bool displayBox=true)
+        public MultipleSelect(bool displayBox = true)
         {
             InitializeComponent();
             this.box.Visible = displayBox;
@@ -38,6 +38,16 @@ namespace TaskLeader.GUI
             if (box.Checked)
                 box.Checked = false;
         }
+
+        /// <summary>
+        /// Déselectionne tous les éléments de la liste
+        /// </summary>
+        public void clearChecked()
+        {
+            this.liste.ClearSelected();
+            while (this.liste.CheckedIndices.Count > 0)
+                this.liste.SetItemChecked(this.liste.CheckedIndices[0], false);
+        }
     }
 
     /// <summary>
@@ -52,8 +62,7 @@ namespace TaskLeader.GUI
         /// </summary>
 
         private DBentity type;
-        // DB attachée à la CheckedListBox pour être récupérée avec les EventArgs
-        private DB db { get { return (DB)this.liste.Tag; } set { this.liste.Tag = value; } }
+        private DB db;
 
         /// <summary>
         /// Constructeur pour un Criterium
@@ -67,7 +76,7 @@ namespace TaskLeader.GUI
             this.type = entity;
         }
 
-        private bool hasParent = false;
+        private bool hasParent { get { return (this.type.parent != null); } }
 
         /// <summary>
         /// Evènement déclenché lors du changement de sélection dans la liste du MultipleSelect
@@ -84,7 +93,6 @@ namespace TaskLeader.GUI
         /// <param name="widget">CritereSelect parent</param>
         public void addParent(CritereSelect widget)
         {
-            this.hasParent = true;
             widget.ItemCheck += new ItemCheckEventHandler(this.liste_ItemCheck);
         }
 
@@ -95,7 +103,6 @@ namespace TaskLeader.GUI
         {
             CheckedListBox criteres = ((CheckedListBox)sender);
             CheckedListBox.CheckedIndexCollection items = criteres.CheckedIndices;
-            this.db = (DB)criteres.Tag;
 
             // On n'affiche la liste des sujets que si un seul contexte est tické
             if ((items.Count == 0) && (e.NewValue == CheckState.Checked))
@@ -106,7 +113,7 @@ namespace TaskLeader.GUI
             else if ((items.Count == 2) && (e.NewValue == CheckState.Unchecked))
             {
                 String contexte;
-                if(items[0]==e.Index) // C'est l'autre qui va resté tické
+                if (items[0] == e.Index) // C'est l'autre qui va resté tické
                     contexte = criteres.Items[items[1]].ToString();
                 else
                     contexte = criteres.Items[items[0]].ToString();
@@ -119,21 +126,6 @@ namespace TaskLeader.GUI
                 this.liste.Items.Clear();
                 this.box.Checked = true;
                 this.box.Enabled = false;
-            }
-        }
-
-        /// <summary>
-        /// Applique un critère au MultipleSelect.
-        /// Pas utilisé pour le moment mais le sera si édition d'un filtre
-        /// </summary>
-        /// <param name="critere">Criterium à appliquer</param>
-        private void apply(Criterium critere)
-        {
-            box.Checked = false; // La checkbox "Tous" n'est pas sélectionnée
-            for (int i = 0; i < liste.Items.Count; i++) // Parcours de la ListBox
-            {
-                int index = critere.selected.IndexOf(liste.Items[i]); // Recherche de l'item dans le filtre
-                liste.SetItemChecked(i, !(index == -1));
             }
         }
 
@@ -154,34 +146,34 @@ namespace TaskLeader.GUI
         /// <param name="db">Nouvelle DB</param>
         public void changeDB(DB database)
         {
+            // Unregister de l'ancienne DB
+            if (this.db != null)
+                this.db.unsubscribe_NewValue(this.type, new NewValueEventHandler(newValue));
+            // Mémorisation de la "nouvelle" DB
+            this.db = database;
+            // Register de la nouvelle DB
+            this.db.subscribe_NewValue(this.type, new NewValueEventHandler(newValue));
+
             if (!this.hasParent) // Les contrôles enfants ne doivent pas être mis à jour directement
-            {
-                // Unregister de l'ancienne DB
-                if (this.db != null)
-                    this.db.unsubscribe_NewValue(this.type, new EventHandler(newValue));
-                // Mémorisation de la "nouvelle" DB
-                this.db = database;
-                // Register de la nouvelle DB
-                this.db.subscribe_NewValue(this.type, new EventHandler(newValue));
                 this.maj();
-            }
         }
 
         private void maj(String key = null)
         {
             this.liste.Items.Clear(); // Vidage de la liste
 
-            foreach (object item in this.db.getTitres(this.type, key))
+            foreach (object item in this.db.getTitres(this.type, key)) //TODO: à l'init le widget ne connaît pas sa DB
                 this.liste.Items.Add(item, true); // Sélection de toutes les valeurs
 
             this.box.Checked = true;
         }
 
-        private void newValue(object sender, EventArgs e)
+        private void newValue(String parentValue)
         {
-            this.maj("");
-            //TODO: si Parent, this.maj()
-            // si Enfant et widget actif, this.maj(key)
+            if (!this.hasParent) // Ce widget n'a pas de parent
+                this.maj();
+            else if (this.liste.Items.Count > 0) // Ce widget a un parent et la liste n'est pas vide
+                this.maj(parentValue);
         }
     }
 
@@ -240,7 +232,7 @@ namespace TaskLeader.GUI
         private DB db;
 
         public FiltreSelect(DB database)
-            :base(false)
+            : base(false)
         {
             this.db = database;
 
@@ -251,13 +243,13 @@ namespace TaskLeader.GUI
             this.pictureBox1.Visible = true;
 
             this.liste.Items.AddRange(this.db.getFilters());
-            this.db.subscribe_NewValue(DB.filtre, new EventHandler(maj));
+            this.db.subscribe_NewValue(DB.filtre, new NewValueEventHandler(maj));
         }
 
         /// <summary>
         /// Met à jour la liste des filtres de cette base
         /// </summary>
-        private void maj(object sender, EventArgs e)
+        private void maj(String value)
         {
             this.liste.Items.Clear();
             this.liste.Items.AddRange(this.db.getFilters());

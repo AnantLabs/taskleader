@@ -26,6 +26,8 @@ namespace TaskLeader.DAL
         public DBentity parent;
     }
 
+    public delegate void NewValueEventHandler(String parent);
+
     public partial class DB
     {
         // Caractéristiques de la DB
@@ -86,13 +88,18 @@ namespace TaskLeader.DAL
 
         // Gestion des évènements NewValue - http://msdn.microsoft.com/en-us/library/z4ka55h8(v=vs.80).aspx
         private Dictionary<String, Delegate> NewValue = new Dictionary<String, Delegate>();
-        public void subscribe_NewValue(DBentity entity, EventHandler value) { this.NewValue[entity.nom] = (EventHandler)this.NewValue[entity.nom] + value; }
-        public void unsubscribe_NewValue(DBentity entity, EventHandler value) { this.NewValue[entity.nom] = (EventHandler)this.NewValue[entity.nom] - value; }
-        private void onNewValue(DBentity entity)
+        public void subscribe_NewValue(DBentity entity, NewValueEventHandler value) { this.NewValue[entity.nom] = (NewValueEventHandler)this.NewValue[entity.nom] + value; }
+        public void unsubscribe_NewValue(DBentity entity, NewValueEventHandler value) { this.NewValue[entity.nom] = (NewValueEventHandler)this.NewValue[entity.nom] - value; }
+        /// <summary>
+        /// Génération de l'évènement NewValue
+        /// </summary>
+        /// <param name="entity">DBentity concernée</param>
+        /// <param name="parentValue">La valeur courante de la DBentity parente</param>
+        private void onNewValue(DBentity entity,String parentValue=null)
         {
-            EventHandler handler;
-            if (null != (handler = (EventHandler)this.NewValue[entity.nom]))
-                handler(this, new EventArgs());
+            NewValueEventHandler handler;
+            if (null != (handler = (NewValueEventHandler)this.NewValue[entity.nom]))
+                handler(parentValue);
         }
     }
 }

@@ -147,7 +147,7 @@ namespace TaskLeader.DAL
             
             int result = execSQL(requete);
             if (result == 1)
-                this.onNewValue(sujet);
+                this.onNewValue(sujet,contexte);
 
             return result;
         }

@@ -39,15 +39,19 @@ namespace TaskLeader.GUI
                     this.addDB(db);
 
                 // Menu admin
-                ToolStripMenuItem dbItem = new ToolStripMenuItem(db.name);
-                dbItem.Checked = TrayIcon.activeDBs.Contains(db.name);
-                dbItem.CheckOnClick = true;
-                dbItem.CheckedChanged += new EventHandler(changeActiveDBs);
-                this.baseToolStripMenuItem.DropDown.Items.Add(dbItem);
+                ToolStripMenuItem activeItem = new ToolStripMenuItem("Active");
+                activeItem.Checked = TrayIcon.activeDBs.Contains(db.name);
+                activeItem.CheckOnClick = true;
+                activeItem.CheckedChanged += new EventHandler(this.changeActiveDBs);
+
+                this.adminItem.DropDownItems.Add(new ToolStripMenuItem(db.name,TaskLeader.Properties.Resources.database,new ToolStripMenuItem[]{
+                    activeItem,
+                    new ToolStripMenuItem("Valeurs par défaut",TaskLeader.Properties.Resources.bullets,this.defaultValuesToolStripMenuItem_Click),
+                }));
             }
 
             this.manuelDBcombo.Text = TrayIcon.defaultDB.name; // ATTENTION: déclenche la mise à jour de toutes les CritereSelect!!
-            TrayIcon.activeDBs.CollectionChanged +=new NotifyCollectionChangedEventHandler(activeDBs_CollectionChanged);           
+            TrayIcon.activeDBs.CollectionChanged += new NotifyCollectionChangedEventHandler(activeDBs_CollectionChanged);
 
             // -------------------
             // Tab 'recherche'
@@ -61,6 +65,8 @@ namespace TaskLeader.GUI
             this.mainTableLayout.Controls.Add(this.data, 0, 2);
             this.mainTableLayout.SetColumnSpan(this.data, 4);
         }
+
+        #region Gestion de la liste des DBs
 
         /// <summary>
         /// Ajoute la nouvelle DB aux widgets concernés
@@ -89,6 +95,8 @@ namespace TaskLeader.GUI
             }
         }
 
+        #endregion
+
         #region Menu admin
 
         /// <summary>
@@ -96,15 +104,18 @@ namespace TaskLeader.GUI
         /// </summary>
         private void changeActiveDBs(object sender, EventArgs e)
         {
+            ToolStripDropDownMenu menu = ((ToolStripMenuItem)sender).GetCurrentParent() as ToolStripDropDownMenu;
+
             if (((ToolStripMenuItem)sender).Checked) // La base vient d'être activée
-                TrayIcon.activeDBs.Add(sender.ToString()); // Ajout à la liste globale des bases actives
+                TrayIcon.activeDBs.Add(menu.OwnerItem.Text); // Ajout à la liste globale des bases actives
             else // La base vient d'être désactivée
-                TrayIcon.activeDBs.Remove(sender.ToString()); // Suppression de la liste globale des bases actives
+                TrayIcon.activeDBs.Remove(menu.OwnerItem.Text); // Suppression de la liste globale des bases actives
         }
 
         private void defaultValuesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //TODO:new AdminDefaut(this.db.name).Show();
+            ToolStripDropDownMenu menu = ((ToolStripMenuItem)sender).GetCurrentParent() as ToolStripDropDownMenu;
+            new AdminDefaut(menu.OwnerItem.Text).Show();
         }
 
         // Ouverture de la gui création d'action
@@ -114,7 +125,7 @@ namespace TaskLeader.GUI
         }
 
         #endregion
- 
+
         #region comportement Toolbox
 
         private void hideCollapse(object sender, EventArgs e)
@@ -217,7 +228,7 @@ namespace TaskLeader.GUI
         }
 
         #endregion
-        
+
         #region Onglet Recherche
 
         // Validation de la recherche après click sur OK
@@ -249,11 +260,18 @@ namespace TaskLeader.GUI
 
         #region Onglet Filtres enregistrés
 
+        /// <summary>
+        /// Méthode appelée après sélection de filtres enregistrés
+        /// </summary>
         private void storedFilterBout_Click(object sender, EventArgs e)
         {
-            foreach(FiltreSelect widget in this.filtersPanel.Controls)
-                foreach(Filtre filtre in widget.getSelected())
+            foreach (FiltreSelect widget in this.filtersPanel.Controls)
+            {
+                foreach (Filtre filtre in widget.getSelected())
                     this.tagsPanel.Controls.Add(new Etiquette(filtre));
+                widget.clearChecked();
+            }
+
         }
 
         #endregion
@@ -316,9 +334,9 @@ namespace TaskLeader.GUI
         #endregion
 
 
-        
 
-        
+
+
 
     }
 }
