@@ -22,12 +22,23 @@ namespace TaskLeader.GUI
         }
 
         /// <summary>
+        /// Méthodes virtuelles à surcharger dans les classes héritées.
+        /// Permettent de détecter une mise à jour de la liste complète
+        /// </summary>
+        protected virtual void beginListUpdate() { }
+        protected virtual void endListUpdate() { }
+
+        /// <summary>
         /// Méthode appelée si checkbox 'Tous' sélectionnée
         /// </summary>
         private void box_Click(object sender, EventArgs e)
         {
+            this.beginListUpdate();
+
             for (int i = 0; i < this.liste.Items.Count; i++)
                 this.liste.SetItemChecked(i, this.box.Checked);
+
+            this.endListUpdate();
         }
 
         /// <summary>
@@ -47,6 +58,16 @@ namespace TaskLeader.GUI
             this.liste.ClearSelected();
             while (this.liste.CheckedIndices.Count > 0)
                 this.liste.SetItemChecked(this.liste.CheckedIndices[0], false);
+        }
+
+        /// <summary>
+        /// Vide la liste et remet à zéro le contrôle
+        /// </summary>
+        protected void raz()
+        {
+            this.liste.Items.Clear();
+            this.box.Checked = true;
+            this.box.Enabled = false;
         }
     }
 
@@ -76,16 +97,83 @@ namespace TaskLeader.GUI
             this.type = entity;
         }
 
-        private bool hasParent { get { return (this.type.parent != null); } }
+        #region Membres 'parent'
 
         /// <summary>
-        /// Evènement déclenché lors du changement de sélection dans la liste du MultipleSelect
+        /// Evènement déclenché quand une seule valeur de la grille est sélectionnée
         /// </summary>
-        public event ItemCheckEventHandler ItemCheck
+        private ParentValueEventHandler v_NewParentValue;
+        public event ParentValueEventHandler NewParentValue
         {
-            add { this.liste.ItemCheck += value; }
-            remove { this.liste.ItemCheck -= value; }
+            add
+            {
+                this.v_NewParentValue += value;
+                if (this.v_NewParentValue.GetInvocationList().Length == 1) // C'est la première souscription
+                    this.liste.ItemCheck += new ItemCheckEventHandler(this.liste_ItemCheck); // Activation de la surveilance
+            }
+            remove
+            {
+                this.v_NewParentValue -= value;
+                if (this.v_NewParentValue.GetInvocationList().Length == 0)
+                    this.liste.ItemCheck -= new ItemCheckEventHandler(this.liste_ItemCheck); // Désactivation de la surveillance
+            }
         }
+        private void OnNewParentValue(String parentValue)
+        {
+            if (this.v_NewParentValue != null)
+                this.v_NewParentValue(parentValue);
+        }
+
+        /// <summary>
+        /// Evènement déclenché quand:
+        /// - la seule valeur qui était sélectionné ne l'est plus
+        /// - la liste a été intégralement rafraîchie
+        /// </summary>
+        public event ParentValueEventHandler NoParentValue;
+        private void OnNoParentValue()
+        {
+            if (this.NoParentValue != null)
+                this.NoParentValue("");
+        }
+
+        private void liste_ItemCheck(object sender, ItemCheckEventArgs e)
+        {
+            if (!this.listeInProgress) // Si on n'est pas en train de toucher à la liste entière
+            {
+                // On ne lève l'évènement que si un seul contexte est tické
+                if ((this.liste.CheckedIndices.Count == 0) && (e.NewValue == CheckState.Checked))
+                    this.OnNewParentValue(this.liste.Items[e.Index].ToString());
+                else if ((this.liste.CheckedIndices.Count == 2) && (e.NewValue == CheckState.Unchecked))
+                {
+                    String contexte;
+                    if (this.liste.CheckedIndices[0] == e.Index) // C'est l'autre qui va rester tické
+                        contexte = this.liste.Items[this.liste.CheckedIndices[1]].ToString();
+                    else
+                        contexte = this.liste.Items[this.liste.CheckedIndices[0]].ToString();
+
+                    this.OnNewParentValue(contexte);
+                }
+                else if (this.liste.CheckedIndices.Count == 1)
+                    this.OnNoParentValue();
+            }
+        }
+
+        /// <summary>
+        /// Permet d'éviter de dessiner plusieurs fois les contrôles enfants
+        /// </summary>
+        private bool listeInProgress = false;
+        protected override void beginListUpdate() { this.listeInProgress = true; }
+        protected override void endListUpdate()
+        {
+            this.listeInProgress = false;
+            this.OnNoParentValue();
+        }
+
+        #endregion
+
+        #region Membres 'enfant'
+
+        private bool hasParent { get { return (this.type.parent != null); } }
 
         /// <summary>
         /// Rend dépendant ce widget d'un autre
@@ -93,41 +181,11 @@ namespace TaskLeader.GUI
         /// <param name="widget">CritereSelect parent</param>
         public void addParent(CritereSelect widget)
         {
-            widget.ItemCheck += new ItemCheckEventHandler(this.liste_ItemCheck);
+            widget.NewParentValue += (parentValue) => this.maj(parentValue);
+            widget.NoParentValue += (parentValue) => this.raz();
         }
 
-        /// <summary>
-        /// Mis à jour du widget en fonction de l'état du parent
-        /// </summary>
-        private void liste_ItemCheck(object sender, ItemCheckEventArgs e)
-        {
-            CheckedListBox criteres = ((CheckedListBox)sender);
-            CheckedListBox.CheckedIndexCollection items = criteres.CheckedIndices;
-
-            // On n'affiche la liste des sujets que si un seul contexte est tické
-            if ((items.Count == 0) && (e.NewValue == CheckState.Checked))
-            {
-                this.maj(criteres.Items[e.Index].ToString());
-                this.box.Enabled = true;
-            }
-            else if ((items.Count == 2) && (e.NewValue == CheckState.Unchecked))
-            {
-                String contexte;
-                if (items[0] == e.Index) // C'est l'autre qui va resté tické
-                    contexte = criteres.Items[items[1]].ToString();
-                else
-                    contexte = criteres.Items[items[0]].ToString();
-
-                this.maj(contexte);
-                this.box.Enabled = true;
-            }
-            else
-            {
-                this.liste.Items.Clear();
-                this.box.Checked = true;
-                this.box.Enabled = false;
-            }
-        }
+        #endregion
 
         /// <summary>
         /// Renvoie le Criterium correspondant ou null
@@ -148,11 +206,11 @@ namespace TaskLeader.GUI
         {
             // Unregister de l'ancienne DB
             if (this.db != null)
-                this.db.unsubscribe_NewValue(this.type, new NewValueEventHandler(newValue));
+                this.db.unsubscribe_NewValue(this.type, new ParentValueEventHandler(newValue));
             // Mémorisation de la "nouvelle" DB
             this.db = database;
             // Register de la nouvelle DB
-            this.db.subscribe_NewValue(this.type, new NewValueEventHandler(newValue));
+            this.db.subscribe_NewValue(this.type, new ParentValueEventHandler(newValue));
 
             if (!this.hasParent) // Les contrôles enfants ne doivent pas être mis à jour directement
                 this.maj();
@@ -160,12 +218,17 @@ namespace TaskLeader.GUI
 
         private void maj(String key = null)
         {
+            this.beginListUpdate();
+
             this.liste.Items.Clear(); // Vidage de la liste
 
-            foreach (object item in this.db.getTitres(this.type, key)) //TODO: à l'init le widget ne connaît pas sa DB
+            foreach (object item in this.db.getTitres(this.type, key))
                 this.liste.Items.Add(item, true); // Sélection de toutes les valeurs
 
             this.box.Checked = true;
+            this.box.Enabled = true;
+
+            this.endListUpdate();
         }
 
         private void newValue(String parentValue)
@@ -243,7 +306,7 @@ namespace TaskLeader.GUI
             this.pictureBox1.Visible = true;
 
             this.liste.Items.AddRange(this.db.getFilters());
-            this.db.subscribe_NewValue(DB.filtre, new NewValueEventHandler(maj));
+            this.db.subscribe_NewValue(DB.filtre, new ParentValueEventHandler(maj));
         }
 
         /// <summary>

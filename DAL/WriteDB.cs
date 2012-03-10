@@ -115,7 +115,7 @@ namespace TaskLeader.DAL
             }
 
 
-            this.onNewValue(DB.filtre);
+            this.OnNewValue(DB.filtre);
             // On affiche un message de statut sur la TrayIcon
             TrayIcon.afficheMessage("Bilan création/modification", "Nouveau filtre ajouté: " + filtre.nom);
 
@@ -129,7 +129,7 @@ namespace TaskLeader.DAL
 
             int result = execSQL(requete);
             if (result == 1)
-                this.onNewValue(contexte);
+                this.OnNewValue(contexte);
 
             return result;
         }
@@ -147,7 +147,7 @@ namespace TaskLeader.DAL
             
             int result = execSQL(requete);
             if (result == 1)
-                this.onNewValue(sujet,contexte);
+                this.OnNewValue(sujet,contexte);
 
             return result;
         }
