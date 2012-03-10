@@ -26,9 +26,9 @@ namespace TaskLeader.DAL
         public DBentity parent;
     }
 
-    public delegate void NewValueEventHandler(String parent);
+    public delegate void ParentValueEventHandler(String parentValue);
 
-    public partial class DB
+    public partial class DB //TODO: détecter les ouvertures de fichier pour les limiter
     {
         // Caractéristiques de la DB
         public String path = "";
@@ -88,17 +88,17 @@ namespace TaskLeader.DAL
 
         // Gestion des évènements NewValue - http://msdn.microsoft.com/en-us/library/z4ka55h8(v=vs.80).aspx
         private Dictionary<String, Delegate> NewValue = new Dictionary<String, Delegate>();
-        public void subscribe_NewValue(DBentity entity, NewValueEventHandler value) { this.NewValue[entity.nom] = (NewValueEventHandler)this.NewValue[entity.nom] + value; }
-        public void unsubscribe_NewValue(DBentity entity, NewValueEventHandler value) { this.NewValue[entity.nom] = (NewValueEventHandler)this.NewValue[entity.nom] - value; }
+        public void subscribe_NewValue(DBentity entity, ParentValueEventHandler value) { this.NewValue[entity.nom] = (ParentValueEventHandler)this.NewValue[entity.nom] + value; }
+        public void unsubscribe_NewValue(DBentity entity, ParentValueEventHandler value) { this.NewValue[entity.nom] = (ParentValueEventHandler)this.NewValue[entity.nom] - value; }
         /// <summary>
         /// Génération de l'évènement NewValue
         /// </summary>
         /// <param name="entity">DBentity concernée</param>
         /// <param name="parentValue">La valeur courante de la DBentity parente</param>
-        private void onNewValue(DBentity entity,String parentValue=null)
+        private void OnNewValue(DBentity entity,String parentValue=null)
         {
-            NewValueEventHandler handler;
-            if (null != (handler = (NewValueEventHandler)this.NewValue[entity.nom]))
+            ParentValueEventHandler handler;
+            if (null != (handler = (ParentValueEventHandler)this.NewValue[entity.nom]))
                 handler(parentValue);
         }
     }
