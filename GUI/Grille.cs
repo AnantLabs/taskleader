@@ -72,16 +72,7 @@ namespace TaskLeader.GUI
             grilleData.Columns["Date"].DisplayIndex = 6;
             grilleData.Columns["Titre"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
 
-            grilleData.Focus(); // Focus au tableau pour permettre le scroll direct
-
-            // Sélection de l'action si refresh suite à modification d'action
-            if (grilleData.Tag != null && grilleData.Tag.ToString() != "") // ID de l'action stocké dans le tag
-            {
-                DataRow[] rows = liste.Select("id=" + grilleData.Tag.ToString());
-                if (rows.Length == 1)
-                    grilleData.Rows[liste.Rows.IndexOf(rows[0])].Selected = true;
-                grilleData.Tag = null; // Remise à zéro du tag
-            }
+            this.selection();
 
             return data.Rows.Count;
         }
@@ -92,6 +83,12 @@ namespace TaskLeader.GUI
         public void raz()
         {
             this.data = null; // Suppression des lignes du tableau
+        }
+
+        // Ouverture de la gui édition d'action
+        private void modifAction(object sender, EventArgs e)
+        {
+            TrayIcon.displayNewAction(new TLaction(this.grilleData.SelectedRows[0].Cells["id"].Value.ToString(), this.grilleData.SelectedRows[0].Cells["DB"].Value.ToString()));
         }
 
         #endregion
@@ -240,10 +237,18 @@ namespace TaskLeader.GUI
                 grilleData.Cursor = Cursors.Default;
         }
 
-        // Ouverture de la gui édition d'action
-        private void modifAction(object sender, EventArgs e)
-        {     
-           TrayIcon.displayNewAction(new TLaction(this.grilleData.SelectedRows[0].Cells["id"].Value.ToString(), this.grilleData.SelectedRows[0].Cells["DB"].Value.ToString()));
+        private void selection(String id=null)
+        {
+            grilleData.Focus(); // Focus au tableau pour permettre le scroll direct
+
+            // Sélection de l'action si refresh suite à modification d'action
+            if (grilleData.Tag != null && grilleData.Tag.ToString() != "") // ID de l'action stocké dans le tag
+            {
+                DataRow[] rows = this.data.Select("id=" + grilleData.Tag.ToString());
+                if (rows.Length == 1)
+                    grilleData.Rows[this.data.Rows.IndexOf(rows[0])].Selected = true;
+                grilleData.Tag = null; // Remise à zéro du tag
+            }
         }
 
         #endregion
