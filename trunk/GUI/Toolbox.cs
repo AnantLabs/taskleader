@@ -332,11 +332,5 @@ namespace TaskLeader.GUI
         }
 
         #endregion
-
-
-
-
-
-
     }
 }
