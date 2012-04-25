@@ -94,7 +94,7 @@ namespace TaskLeader.BO
         /// </summary>
         public DataTable getActions()
         {
-            DataTable data = new DataTable();
+            DataTable data = new DataTable(this.dbName+"#"+this.nom);//TODO: utilisé ?
 
             // Récupération des actions
             switch (this.type)

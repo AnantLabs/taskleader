@@ -126,7 +126,7 @@ namespace TaskLeader.GUI
 
         #endregion
 
-        #region comportement Toolbox
+        #region Dynamique IHM
 
         private void hideCollapse(object sender, EventArgs e)
         {
@@ -298,7 +298,7 @@ namespace TaskLeader.GUI
 
         #endregion
 
-        #region TagsPanel
+           #region TagsPanel
 
         /// <summary>
         /// Quand une étiquette est ajoutée au panel, on ajoute le filtre à la Grille
@@ -314,21 +314,16 @@ namespace TaskLeader.GUI
         /// </summary>
         private void tagsPanel_ControlRemoved(object sender, ControlEventArgs e)
         {
-            // On efface la grille dans tous les cas
-            data.raz();
-
             if (tagsPanel.Controls.Count > 0) // S'il reste au moins une étiquette
             {
-                int nombre = 0;
-
-                // On recalcule le tableau (pas top en perfo mais résout le pb des intersections entre filtres)
-                foreach (Etiquette tag in tagsPanel.Controls)
-                    nombre = data.add(tag.filtre);
-
+                int nombre = data.remove(((Etiquette)e.Control).filtre);
                 this.afficheNombre(nombre);
             }
             else
+            {
+                data.raz();
                 this.resultLabel.Visible = false;
+            }
         }
 
         #endregion
