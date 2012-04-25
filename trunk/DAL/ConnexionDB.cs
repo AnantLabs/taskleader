@@ -86,6 +86,8 @@ namespace TaskLeader.DAL
         public static DBentity filtre = new DBentity("Filtres", "", "Filtres", "");
         public static DBentity[] entities = { contexte, sujet, destinataire, statut};
 
+        #region Events
+
         // Gestion des évènements NewValue - http://msdn.microsoft.com/en-us/library/z4ka55h8(v=vs.80).aspx
         private Dictionary<String, Delegate> NewValue = new Dictionary<String, Delegate>();
         public void subscribe_NewValue(DBentity entity, ParentValueEventHandler value) { this.NewValue[entity.nom] = (ParentValueEventHandler)this.NewValue[entity.nom] + value; }
@@ -101,5 +103,19 @@ namespace TaskLeader.DAL
             if (null != (handler = (ParentValueEventHandler)this.NewValue[entity.nom]))
                 handler(parentValue);
         }
+
+        // Gestion de l'évènement ActionEdited
+        public event EventHandler ActionEdited;
+        /// <summary>
+        /// Génération de l'évènement ActionEdited
+        /// </summary>
+        /// <param name="action">Action ayant généré l'event</param>
+        private void OnActionEdited(TLaction action)
+        {
+            if (this.ActionEdited != null)
+                this.ActionEdited(action, EventArgs.Empty); //Invoque le délégué
+        }
+
+        #endregion
     }
 }

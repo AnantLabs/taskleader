@@ -13,20 +13,19 @@ namespace TaskLeader.GUI
     public partial class Grille : UserControl
     {
         // Récupération de la DataSource de grilleData
-        private DataTable data
-        {
-            get { return this.grilleData.DataSource as DataTable; }
-            set { this.grilleData.DataSource = value; }
-        }
+        private DataSet data = new DataSet();
+        private DataTable mergeTable { get { return this.grilleData.DataSource as DataTable; } }
 
         private int P1length = Int32.Parse(ConfigurationManager.AppSettings["P1length"]);
         private DataGridViewImageColumn linkCol = new DataGridViewImageColumn();
 
-        public String selectedActionID { set { grilleData.Tag = value; } }
+        //public String selectedActionID { set { grilleData.Tag = value; } } //TODO: surtout pas!
 
         public Grille()
         {
             InitializeComponent();
+
+            this.grilleData.DataSource = new DataTable();
 
             // Création de la colonne des liens
             linkCol.Name = "Liens";
@@ -47,7 +46,7 @@ namespace TaskLeader.GUI
         /// <summary>
         /// Ajoute les actions retournées par le filtre dans le tableau.
         /// </summary>
-        /// <param name="filtre">Filtre demandé</param>
+        /// <param name="filtre">Filtre ajouté</param>
         public int add(Filtre filtre)
         {
             // Ajout si nécessaire de la colonne Mail
@@ -55,14 +54,11 @@ namespace TaskLeader.GUI
                 grilleData.Columns.Add(linkCol);
 
             // Récupération des résultats du filtre et association au tableau
-            DataTable liste = filtre.getActions();
+            DataTable actions = filtre.getActions();
+            this.data.Tables.Add(actions);
+            this.mergeTable.Merge(actions);
 
-            if (this.data == null) // Premier appel à la fonction add
-                this.data = liste;
-            else
-                this.data.Merge(liste);
-
-            data.DefaultView.Sort = "Date ASC";
+            this.mergeTable.DefaultView.Sort = "Date ASC";
 
             // Mise en forme du tableau
             grilleData.Columns["id"].Visible = false;
@@ -72,9 +68,26 @@ namespace TaskLeader.GUI
             grilleData.Columns["Date"].DisplayIndex = 6;
             grilleData.Columns["Titre"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
 
-            this.selection();
+            //this.selection(); //TODO: inutile ?
 
-            return data.Rows.Count;
+            // Hook des éditions d'actions de la base correspondante
+            TrayIcon.dbs[filtre.dbName].ActionEdited +=new EventHandler(actionEdited);
+
+            return this.mergeTable.Rows.Count;
+        }
+
+        /// <summary>
+        /// Supprime les actions retournées par le filtre du tableau
+        /// </summary>
+        /// <param name="filtre">Filtre supprimé</param>
+        public int remove(Filtre filtre)
+        {
+            this.data.Tables.Remove(filtre.dbName + "#" + filtre.nom); // Suppression de la table du DataSet //TODO: les filtres manuels n'ont pas de noms
+            this.mergeTable.Clear(); // Efface toutes les données de la table merge
+            for (int i = 0; i < this.data.Tables.Count; i++)
+                this.mergeTable.Merge(this.data.Tables[i]); // Merge des tables restants dans le dataset
+
+            return this.mergeTable.Rows.Count;
         }
 
         /// <summary>
@@ -83,12 +96,21 @@ namespace TaskLeader.GUI
         public void raz()
         {
             this.data = null; // Suppression des lignes du tableau
+            //TODO: il faut aussi vider le dataset
         }
 
         // Ouverture de la gui édition d'action
         private void modifAction(object sender, EventArgs e)
         {
-            TrayIcon.displayNewAction(new TLaction(this.grilleData.SelectedRows[0].Cells["id"].Value.ToString(), this.grilleData.SelectedRows[0].Cells["DB"].Value.ToString()));
+            new ManipAction(new TLaction(this.grilleData.SelectedRows[0].Cells["id"].Value.ToString(), this.grilleData.SelectedRows[0].Cells["DB"].Value.ToString())).Show();
+            //TrayIcon.displayNewAction(action);//TODO: à supprimer par la suite
+        }
+
+        // Une action a été éditée dans une des bases affichées
+        private void actionEdited(object sender, EventArgs e)
+        {
+            TLaction action = sender as TLaction;
+            TrayIcon.afficheMessage("Test", "Action "+action.ID+"de la DB "+action.dbName); //TODO: test only
         }
 
         #endregion
@@ -244,9 +266,9 @@ namespace TaskLeader.GUI
             // Sélection de l'action si refresh suite à modification d'action
             if (grilleData.Tag != null && grilleData.Tag.ToString() != "") // ID de l'action stocké dans le tag
             {
-                DataRow[] rows = this.data.Select("id=" + grilleData.Tag.ToString());
+                DataRow[] rows = this.data.Tables["merge"].Select("id=" + grilleData.Tag.ToString());
                 if (rows.Length == 1)
-                    grilleData.Rows[this.data.Rows.IndexOf(rows[0])].Selected = true;
+                    grilleData.Rows[this.data.Tables["merge"].Rows.IndexOf(rows[0])].Selected = true;
                 grilleData.Tag = null; // Remise à zéro du tag
             }
         }
@@ -261,7 +283,7 @@ namespace TaskLeader.GUI
             statutTSMenuItem.DropDown.Items.Clear();
 
             DB db = TrayIcon.dbs[grilleData.SelectedRows[0].Cells["DB"].Value.ToString()];
-            foreach (object item in db.getTitres(DB.statut))
+            foreach (object item in db.getTitres(DB.statut)) //TODO: mettre en cache la valeur des statuts
                 statutTSMenuItem.DropDown.Items.Add(item.ToString(), null, this.changeStat);
 
             ((ToolStripDropDownMenu)statutTSMenuItem.DropDown).ShowImageMargin = false;
@@ -280,8 +302,8 @@ namespace TaskLeader.GUI
             if (action.statusHasChanged)
                 action.save();
 
-            this.selectedActionID = grilleData.SelectedRows[0].Cells["id"].Value.ToString();
-            //this.miseAjour(false);
+            //this.selectedActionID = grilleData.SelectedRows[0].Cells["id"].Value.ToString(); //TODO: à supprimer
+            //this.miseAjour(false); //TODO: à supprimer
         }
 
         // Copie de l'action dans le presse-papier
@@ -310,7 +332,7 @@ namespace TaskLeader.GUI
             if (e.CloseReason == ToolStripDropDownCloseReason.ItemClicked)
             {
                 // Mémorisation de ligne sélectionnée
-                this.selectedActionID = grilleData.SelectedRows[0].Cells["id"].Value.ToString();
+                //this.selectedActionID = grilleData.SelectedRows[0].Cells["id"].Value.ToString(); //TODO: à supprimer
                 //TODO: this.miseAjour(false);
             }
         }

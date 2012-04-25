@@ -282,7 +282,7 @@ namespace TaskLeader.DAL
                         valuePart += "(SELECT id FROM VueSujets WHERE Contexte=" + action.ContexteSQL + " AND Titre=" + action.SujetSQL + "),";
                     }
 
-                    insertPart += "Titre,"; // On a déjà vérifier que la chaîne n'était pas nulle
+                    insertPart += "Titre,"; // On a déjà vérifié que la chaîne n'était pas nulle
                     valuePart += action.TexteSQL + ",";
 
                     if (action.hasDueDate)
@@ -308,6 +308,8 @@ namespace TaskLeader.DAL
                 }
                 mytransaction.Commit();
             }
+
+            this.OnActionEdited(action);
 
             return actionID;
         }
@@ -352,6 +354,7 @@ namespace TaskLeader.DAL
             if (updatePart.Length > 0)
             {
                 requete = "UPDATE Actions SET " + updatePart.Substring(0, updatePart.Length - 1) + " WHERE id='" + action.ID + "'";
+                this.OnActionEdited(action);
                 return execSQL(requete);
             }
             else

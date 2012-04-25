@@ -117,7 +117,7 @@ namespace TaskLeader.GUI
         }
 
         // Sauvegarde de l'action
-        public bool dataSaved = false;
+        public bool dataSaved = false; //TODO: à supprimer quand l'évènement sera en place
         private void sauveAction(object sender, EventArgs e)
         {
             //TODO: griser le bouton Sauvegarder si rien n'a été édité
@@ -136,7 +136,7 @@ namespace TaskLeader.GUI
             v_action.save();
 
             // Fermeture de la fenêtre
-            this.dataSaved = true;
+            this.dataSaved = true; //TODO: à supprimer quand l'évènement sera créé
             this.Close();
         }
 
