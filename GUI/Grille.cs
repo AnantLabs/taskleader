@@ -14,36 +14,56 @@ namespace TaskLeader.GUI
 {
     public partial class Grille : UserControl
     {
-        // DataSet contenant toutes les DataTable correspondant aux filtres affichés
+        // Dictionnaire contenant les filtres affichés et les DataTables associés
         private Dictionary<Filtre, DataTable> data = new Dictionary<Filtre, DataTable>();
         /// <summary>
         /// Retourne le nom des tables affichant des actions de la base en paramètre
         /// </summary>
         /// <param name="db">Nom de la base</param>
-        private Filtre[] getTables(String db) //TODO: nom pas adapté
+        private Filtre[] getFiltersFromDB(String db)
         {
             // Source: http://stackoverflow.com/questions/2968356/linq-transform-dictionarykey-value-to-dictionaryvalue-key
             // ou http://stackoverflow.com/questions/146204/duplicate-keys-in-net-dictionaries
             return this.data
-                .ToLookup(kp => kp.Key.dbName, kp => kp.Key)[db] // Inversion key/value avec plusieurs keys identiques (dbName) + select la clé db
+                .ToLookup(kp => kp.Key.dbName, kp => kp.Key)[db] // Key= Nom de la base, Value= Filtres correspondant à cette base
                 .ToArray();
         }
 
         // Récupération de la DataSource de grilleData
         private DataTable mergeTable { get { return this.grilleData.DataSource as DataTable; } }
 
-        private int P1length = Int32.Parse(ConfigurationManager.AppSettings["P1length"]);
-        private DataGridViewImageColumn linkCol = new DataGridViewImageColumn();
+        private DataGridViewTextBoxColumn createSimpleColumn(String name)
+        {
+            DataGridViewTextBoxColumn col = new DataGridViewTextBoxColumn();
+            col.Name = name;
+            col.DataPropertyName = name;
+
+            return col;
+        }
 
         public Grille()
         {
             InitializeComponent();
 
-            this.grilleData.DataSource = new DataTable();
+            this.grilleData.AutoGenerateColumns = false;
+
+            grilleData.Columns.Insert(0,this.createSimpleColumn("Ref"));
+            grilleData.Columns.Insert(1,this.createSimpleColumn("Contexte"));
+            grilleData.Columns.Insert(2,this.createSimpleColumn("Sujet"));
+
+            grilleData.Columns.Insert(3,this.createSimpleColumn("Titre"));
+            grilleData.Columns["Titre"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
 
             // Création de la colonne des liens
+            DataGridViewImageColumn linkCol = new DataGridViewImageColumn();
             linkCol.Name = "Liens";
             linkCol.DataPropertyName = "Liens";
+            grilleData.Columns.Insert(4,linkCol);
+
+            grilleData.Columns.Insert(5,this.createSimpleColumn("Date"));
+            grilleData.Columns.Insert(6,this.createSimpleColumn("Statut"));
+
+            this.grilleData.DataSource = new DataTable();
 
             // On rajoute les lignes qu'il faut dans le contextMenu de la liste d'actions
             NameValueCollection section = (NameValueCollection)ConfigurationManager.GetSection("Export");
@@ -63,27 +83,12 @@ namespace TaskLeader.GUI
         /// <param name="filtre">Filtre ajouté</param>
         public int add(Filtre filtre)
         {
-            // Ajout si nécessaire de la colonne Mail
-            if (!grilleData.Columns.Contains("Liens"))
-                grilleData.Columns.Add(linkCol);
+            this.data.Add(filtre, filtre.getActions()); // Récupération des résultats du filtre et association au tableau
+            TrayIcon.dbs[filtre.dbName].ActionEdited += new EventHandler(actionEdited); // Hook des éditions d'actions de la base correspondante
 
-            // Récupération des résultats du filtre et association au tableau
-            data.Add(filtre, filtre.getActions());
             this.mergeTable.Merge(this.data[filtre]);
-
             this.mergeTable.DefaultView.Sort = "Date ASC";
-
-            // Mise en forme du tableau
-            grilleData.Columns["id"].Visible = false;
-            grilleData.Columns["DB"].Visible = false;
-            grilleData.Columns["Deadline"].Visible = false;
-            grilleData.Columns["Liens"].DisplayIndex = 5;
-            grilleData.Columns["Date"].DisplayIndex = 6;
-            grilleData.Columns["Titre"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
-
-            // Hook des éditions d'actions de la base correspondante
-            TrayIcon.dbs[filtre.dbName].ActionEdited += new EventHandler(actionEdited);
-            //this.DBdisplayed.Add(filtre.getUniqueName(), filtre.dbName);
+            grilleData.Focus();
 
             return this.mergeTable.Rows.Count;
         }
@@ -95,15 +100,11 @@ namespace TaskLeader.GUI
         public int remove(Filtre filtre)
         {
             this.data.Remove(filtre); // Suppression de la table du DataSet
-
             TrayIcon.dbs[filtre.dbName].ActionEdited -= new EventHandler(actionEdited);
-            //this.DBdisplayed.Remove(filtre.getUniqueName());
 
             this.mergeTable.Clear(); // Efface toutes les données de la table merge
             foreach (DataTable table in this.data.Values)
                 this.mergeTable.Merge(table); // Merge des tables restants dans le dataset
-
-            //TODO: le header de la table restera dans ce cas là
 
             return this.mergeTable.Rows.Count;
         }
@@ -113,31 +114,33 @@ namespace TaskLeader.GUI
         /// </summary>
         private void actionEdited(object sender, EventArgs e)
         {
-            //TODO: mettre à jour toutes les DataTable de la base correspondante
-            foreach (Filtre filtre in this.getTables(((TLaction)sender).dbName))
+            TLaction action = sender as TLaction;
+
+            // Mise à jour des DataTables liées à la base de l'action
+            foreach (Filtre filtre in this.getFiltersFromDB(action.dbName))
                 this.data[filtre] = filtre.getActions().Copy();
 
+            // Rafraîchissement de la mergeTable
             this.mergeTable.Clear();
             foreach (DataTable table in this.data.Values)
-                this.mergeTable.Merge(table); // Merge des tables restants dans le dataset
+                this.mergeTable.Merge(table);
 
-            //TODO: sélectionner l'action dans le tableau si présente
-        }
+            grilleData.Focus(); // Focus au tableau pour permettre le scroll direct //TODO: à faire dès qu'une liste est affichée
 
-        /// <summary>
-        /// Remise à zéro du tableau d'actions
-        /// </summary>
-        public void raz()
-        {
-            this.data = null; // Suppression des lignes du tableau
-            //TODO: il faut aussi vider le dataset
+            DataRow[] rows = this.mergeTable.Select("id=" + action.ID + " And DB='" + action.dbName +"'");
+            if (rows.Length == 1)
+                grilleData.Rows[this.mergeTable.Rows.IndexOf(rows[0])].Selected = true;
         }
 
         // Ouverture de la gui édition d'action
         private void modifAction(object sender, EventArgs e)
         {
-            new ManipAction(new TLaction(this.grilleData.SelectedRows[0].Cells["id"].Value.ToString(), this.grilleData.SelectedRows[0].Cells["DB"].Value.ToString())).Show();
-            //TrayIcon.displayNewAction(action);//TODO: à supprimer par la suite
+            new ManipAction(
+                new TLaction(
+                    this.mergeTable.Rows[this.grilleData.CurrentRow.Index]["id"].ToString(),
+                    this.mergeTable.Rows[this.grilleData.CurrentRow.Index]["DB"].ToString()
+                )
+            ).Show();
         }
 
         #endregion
@@ -178,7 +181,7 @@ namespace TaskLeader.GUI
                     e.CellStyle.Font = new Font(e.CellStyle.Font, FontStyle.Bold);
                     e.CellStyle.SelectionForeColor = Color.SaddleBrown; // en darkRed sur séléction 
                 }
-                else if (diff > 0 && diff <= P1length) // Dans le futur "proche"
+                else if (diff > 0 && diff <= Int32.Parse(ConfigurationManager.AppSettings["P1length"])) // Dans le futur "proche"
                 {
                     e.CellStyle.ForeColor = Color.DarkGreen;
                     e.CellStyle.Font = new Font(e.CellStyle.Font, FontStyle.Bold); // en gras
@@ -196,8 +199,8 @@ namespace TaskLeader.GUI
                         break;
                     case ("1"):
                         // Récupération de la PJ
-                        DB db = TrayIcon.dbs[grilleData.SelectedRows[0].Cells["DB"].Value.ToString()];
-                        Enclosure pj = (Enclosure)db.getPJ(grilleData.Rows[e.RowIndex].Cells["id"].Value.ToString()).GetValue(0);
+                        DB db = TrayIcon.dbs[this.mergeTable.Rows[e.RowIndex]["DB"].ToString()]; //TODO: plutôt ((DataRow)grilleData.Rows[e.RowIndex].DataBoundItem)["DB"].ToString()
+                        Enclosure pj = (Enclosure)db.getPJ(this.mergeTable.Rows[e.RowIndex]["id"].ToString()).GetValue(0);
                         e.Value = pj.Icone; // Affichage de la bonne icône
                         grilleData[e.ColumnIndex, e.RowIndex].ToolTipText = pj.Titre; // Modification du tooltip de la cellule
                         grilleData.Rows[e.RowIndex].Tag = pj; // Tag de la DataGridRow
@@ -229,8 +232,8 @@ namespace TaskLeader.GUI
                     ((Enclosure)grilleData.Rows[e.RowIndex].Tag).open(); // Ouverture directe
                 else // Plusieurs liens
                 {
-                    DB db = TrayIcon.dbs[grilleData.SelectedRows[0].Cells["DB"].Value.ToString()];
-                    Array links = db.getPJ(grilleData.SelectedRows[0].Cells["id"].Value.ToString()); //Récupération des différents liens
+                    DB db = TrayIcon.dbs[this.mergeTable.Rows[e.RowIndex]["DB"].ToString()];
+                    Array links = db.getPJ(this.mergeTable.Rows[e.RowIndex]["id"].ToString()); //Récupération des différents liens
                     linksContext.Items.Clear(); // Remise à zéro de la liste
 
                     foreach (Enclosure link in links)
@@ -249,9 +252,7 @@ namespace TaskLeader.GUI
                 e.RowIndex >= 0) // Ce n'est pas la ligne des headers // Cellule non vide
             {
                 grilleData.Cursor = Cursors.Default;
-                DatePickerPopup popup = new DatePickerPopup(new TLaction(grilleData.SelectedRows[0].Cells["id"].Value.ToString(), grilleData.SelectedRows[0].Cells["DB"].Value.ToString()));
-                popup.Closed += new ToolStripDropDownClosedEventHandler(popup_Closed);
-                popup.Show();
+                new DatePickerPopup(new TLaction(this.mergeTable.Rows[e.RowIndex]["id"].ToString(), this.mergeTable.Rows[e.RowIndex]["DB"].ToString())).Show();
             }
         }
 
@@ -286,20 +287,6 @@ namespace TaskLeader.GUI
                 grilleData.Cursor = Cursors.Default;
         }
 
-        private void selection(String id = null)
-        {
-            grilleData.Focus(); // Focus au tableau pour permettre le scroll direct
-
-            // Sélection de l'action si refresh suite à modification d'action 
-            if (grilleData.Tag != null && grilleData.Tag.ToString() != "") // ID de l'action stocké dans le tag
-            {
-                DataRow[] rows = this.mergeTable.Select("id=" + grilleData.Tag.ToString());
-                if (rows.Length == 1)
-                    grilleData.Rows[this.mergeTable.Rows.IndexOf(rows[0])].Selected = true;
-                grilleData.Tag = null; // Remise à zéro du tag
-            }
-        }
-
         #endregion
 
         #region listeContext
@@ -309,7 +296,7 @@ namespace TaskLeader.GUI
             // Remplissage du menu des différents statuts
             statutTSMenuItem.DropDown.Items.Clear();
 
-            DB db = TrayIcon.dbs[grilleData.SelectedRows[0].Cells["DB"].Value.ToString()];
+            DB db = TrayIcon.dbs[this.mergeTable.Rows[this.grilleData.CurrentRow.Index]["DB"].ToString()];
             foreach (object item in db.getTitres(DB.statut)) //TODO: mettre en cache la valeur des statuts
                 statutTSMenuItem.DropDown.Items.Add(item.ToString(), null, this.changeStat);
 
@@ -320,7 +307,10 @@ namespace TaskLeader.GUI
         private void changeStat(object sender, EventArgs e)
         {
             // Récupération de l'action
-            TLaction action = new TLaction(grilleData.SelectedRows[0].Cells["id"].Value.ToString(), grilleData.SelectedRows[0].Cells["DB"].Value.ToString());
+            TLaction action = new TLaction(
+                this.mergeTable.Rows[this.grilleData.CurrentRow.Index]["id"].ToString(),
+                this.mergeTable.Rows[this.grilleData.CurrentRow.Index]["DB"].ToString()
+            );
 
             // On récupère le nouveau statut
             action.Statut = ((ToolStripItem)sender).Text;
@@ -328,9 +318,6 @@ namespace TaskLeader.GUI
             // On met à jour le statut de l'action que s'il a changé
             if (action.statusHasChanged)
                 action.save();
-
-            //this.selectedActionID = grilleData.SelectedRows[0].Cells["id"].Value.ToString(); //TODO: à supprimer
-            //this.miseAjour(false); //TODO: à supprimer
         }
 
         // Copie de l'action dans le presse-papier
@@ -347,21 +334,6 @@ namespace TaskLeader.GUI
         private void linksContext_ItemClicked(object sender, EventArgs e)
         {
             ((Enclosure)((ToolStripMenuItem)sender).Tag).open();
-        }
-
-        #endregion
-
-        #region DatePickerPopup
-
-        // Gestion de la fermeture de la pop-up changement de date
-        private void popup_Closed(Object sender, ToolStripDropDownClosedEventArgs e)
-        {
-            if (e.CloseReason == ToolStripDropDownCloseReason.ItemClicked)
-            {
-                // Mémorisation de ligne sélectionnée
-                //this.selectedActionID = grilleData.SelectedRows[0].Cells["id"].Value.ToString(); //TODO: à supprimer
-                //TODO: this.miseAjour(false);
-            }
         }
 
         #endregion

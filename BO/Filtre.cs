@@ -90,14 +90,6 @@ namespace TaskLeader.BO
         }
 
         /// <summary>
-        /// Retourne un identifiant unique de ce filtre
-        /// </summary>
-        public String getUniqueName()
-        {
-            return this.GetHashCode().ToString();
-        }
-
-        /// <summary>
         /// Retourne une DataTable contenant les actions du filtre
         /// </summary>
         public DataTable getActions()
@@ -122,7 +114,7 @@ namespace TaskLeader.BO
 
             // Ajout d'une colonne formalisant une ref pour chaque action
             data.Columns.Add("Ref", typeof(String), "DB+'" + Environment.NewLine + "#'+ID");
-            data.Columns["Ref"].SetOrdinal(0);
+            data.Columns["Ref"].SetOrdinal(0); //TODO: c'est de la présentation çà, doit être dans Grille
 
             // Ajout d'une nouvelle colonne date typé, clone de Deadline
             data.Columns.Add("Date", typeof(DateTime), "Deadline");
@@ -132,9 +124,6 @@ namespace TaskLeader.BO
             keys[0] = data.Columns["DB"];
             keys[1] = data.Columns["ID"];
             data.PrimaryKey = keys;
-
-            // Ajout d'informations utilisées par la grille
-            data.TableName = this.getUniqueName();
 
             return data;
         }
