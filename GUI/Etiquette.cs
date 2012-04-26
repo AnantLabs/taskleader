@@ -41,7 +41,7 @@ namespace TaskLeader.GUI
         }
 
         /// <summary>
-        /// Suppression du contrôle du contrôle parent quand l'étiquette est fermée
+        /// Suppression de l'étiquette du contrôle parent quand l'étiquette est fermée
         /// </summary>
         private void exitSearchBut_Click(object sender, System.EventArgs e)
         {
