@@ -136,7 +136,6 @@ namespace TaskLeader.GUI
             v_action.save();
 
             // Fermeture de la fenêtre
-            this.dataSaved = true; //TODO: à supprimer quand l'évènement sera créé
             this.Close();
         }
 

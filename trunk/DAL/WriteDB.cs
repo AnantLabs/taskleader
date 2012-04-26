@@ -309,7 +309,7 @@ namespace TaskLeader.DAL
                 mytransaction.Commit();
             }
 
-            this.OnActionEdited(action);
+            this.OnActionEdited(action); //TODO: il faudrait ajouter l'ID à l'action
 
             return actionID;
         }

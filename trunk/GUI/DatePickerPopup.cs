@@ -63,12 +63,12 @@ namespace TaskLeader.GUI
             v_action.save();
 
             // Fermeture de la fenêtre
-            this.popup.Close(ToolStripDropDownCloseReason.ItemClicked);
+            this.popup.Close(ToolStripDropDownCloseReason.ItemClicked); //TODO: la raison de fermeture ne sera finalement pas utile
         }
 
         private void closeBut_Click(object sender, EventArgs e)
         {
-            this.popup.Close(ToolStripDropDownCloseReason.CloseCalled);
+            this.popup.Close(ToolStripDropDownCloseReason.CloseCalled); //TODO: la raison de fermeture ne sera finalement pas utile
         }
     }
 }
