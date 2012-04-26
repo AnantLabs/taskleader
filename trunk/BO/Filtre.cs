@@ -90,20 +90,28 @@ namespace TaskLeader.BO
         }
 
         /// <summary>
+        /// Retourne un identifiant unique de ce filtre
+        /// </summary>
+        public String getUniqueName()
+        {
+            return this.GetHashCode().ToString();
+        }
+
+        /// <summary>
         /// Retourne une DataTable contenant les actions du filtre
         /// </summary>
         public DataTable getActions()
         {
-            DataTable data = new DataTable(this.dbName+"#"+this.nom);//TODO: utilisé ?
+            DataTable data = new DataTable();
 
             // Récupération des actions
             switch (this.type)
             {
                 case (1):
-                    data = db.getActions(this.criteria);
+                    data = db.getActions(this.criteria).Copy();
                     break;
                 case (2):
-                    data = db.searchActions(this.nom);
+                    data = db.searchActions(this.nom).Copy();
                     break;
             }
 
@@ -125,6 +133,9 @@ namespace TaskLeader.BO
             keys[1] = data.Columns["ID"];
             data.PrimaryKey = keys;
 
+            // Ajout d'informations utilisées par la grille
+            data.TableName = this.getUniqueName();
+
             return data;
         }
  
@@ -134,7 +145,7 @@ namespace TaskLeader.BO
         /// <returns>Nom du filtre</returns>
         public override String ToString()
         {
-            return this.v_nomFiltre;
+            return this.v_nomFiltre; //Donc rien pour les filtres manuels.
         }
     }
 }

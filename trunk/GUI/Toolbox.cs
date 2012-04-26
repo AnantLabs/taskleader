@@ -298,13 +298,14 @@ namespace TaskLeader.GUI
 
         #endregion
 
-           #region TagsPanel
+        #region TagsPanel
 
         /// <summary>
         /// Quand une étiquette est ajoutée au panel, on ajoute le filtre à la Grille
         /// </summary>
         private void tagsPanel_ControlAdded(object sender, ControlEventArgs e)
         {
+            // Ajout des actions correspondant à ce filtre au tableau
             int nombre = data.add(((Etiquette)e.Control).filtre);
             this.afficheNombre(nombre);
         }
@@ -314,16 +315,12 @@ namespace TaskLeader.GUI
         /// </summary>
         private void tagsPanel_ControlRemoved(object sender, ControlEventArgs e)
         {
-            if (tagsPanel.Controls.Count > 0) // S'il reste au moins une étiquette
-            {
-                int nombre = data.remove(((Etiquette)e.Control).filtre);
+            int nombre = data.remove(((Etiquette)e.Control).filtre);
+
+            if (tagsPanel.Controls.Count > 0) // S'il reste au moins une étiquette                
                 this.afficheNombre(nombre);
-            }
             else
-            {
-                data.raz();
                 this.resultLabel.Visible = false;
-            }
         }
 
         #endregion

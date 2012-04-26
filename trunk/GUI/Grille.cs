@@ -2,6 +2,8 @@
 using System.Configuration;
 using System.Data;
 using System.Collections.Specialized;
+using System.Linq;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using TaskLeader.BO;
@@ -12,14 +14,26 @@ namespace TaskLeader.GUI
 {
     public partial class Grille : UserControl
     {
+        // DataSet contenant toutes les DataTable correspondant aux filtres affichés
+        private Dictionary<Filtre, DataTable> data = new Dictionary<Filtre, DataTable>();
+        /// <summary>
+        /// Retourne le nom des tables affichant des actions de la base en paramètre
+        /// </summary>
+        /// <param name="db">Nom de la base</param>
+        private Filtre[] getTables(String db) //TODO: nom pas adapté
+        {
+            // Source: http://stackoverflow.com/questions/2968356/linq-transform-dictionarykey-value-to-dictionaryvalue-key
+            // ou http://stackoverflow.com/questions/146204/duplicate-keys-in-net-dictionaries
+            return this.data
+                .ToLookup(kp => kp.Key.dbName, kp => kp.Key)[db] // Inversion key/value avec plusieurs keys identiques (dbName) + select la clé db
+                .ToArray();
+        }
+
         // Récupération de la DataSource de grilleData
-        private DataSet data = new DataSet();
         private DataTable mergeTable { get { return this.grilleData.DataSource as DataTable; } }
 
         private int P1length = Int32.Parse(ConfigurationManager.AppSettings["P1length"]);
         private DataGridViewImageColumn linkCol = new DataGridViewImageColumn();
-
-        //public String selectedActionID { set { grilleData.Tag = value; } } //TODO: surtout pas!
 
         public Grille()
         {
@@ -54,9 +68,8 @@ namespace TaskLeader.GUI
                 grilleData.Columns.Add(linkCol);
 
             // Récupération des résultats du filtre et association au tableau
-            DataTable actions = filtre.getActions();
-            this.data.Tables.Add(actions);
-            this.mergeTable.Merge(actions);
+            data.Add(filtre, filtre.getActions());
+            this.mergeTable.Merge(this.data[filtre]);
 
             this.mergeTable.DefaultView.Sort = "Date ASC";
 
@@ -68,10 +81,9 @@ namespace TaskLeader.GUI
             grilleData.Columns["Date"].DisplayIndex = 6;
             grilleData.Columns["Titre"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
 
-            //this.selection(); //TODO: inutile ?
-
             // Hook des éditions d'actions de la base correspondante
-            TrayIcon.dbs[filtre.dbName].ActionEdited +=new EventHandler(actionEdited);
+            TrayIcon.dbs[filtre.dbName].ActionEdited += new EventHandler(actionEdited);
+            //this.DBdisplayed.Add(filtre.getUniqueName(), filtre.dbName);
 
             return this.mergeTable.Rows.Count;
         }
@@ -79,15 +91,37 @@ namespace TaskLeader.GUI
         /// <summary>
         /// Supprime les actions retournées par le filtre du tableau
         /// </summary>
-        /// <param name="filtre">Filtre supprimé</param>
+        /// <param name="filtre">Filtre à supprimer</param>
         public int remove(Filtre filtre)
         {
-            this.data.Tables.Remove(filtre.dbName + "#" + filtre.nom); // Suppression de la table du DataSet //TODO: les filtres manuels n'ont pas de noms
+            this.data.Remove(filtre); // Suppression de la table du DataSet
+
+            TrayIcon.dbs[filtre.dbName].ActionEdited -= new EventHandler(actionEdited);
+            //this.DBdisplayed.Remove(filtre.getUniqueName());
+
             this.mergeTable.Clear(); // Efface toutes les données de la table merge
-            for (int i = 0; i < this.data.Tables.Count; i++)
-                this.mergeTable.Merge(this.data.Tables[i]); // Merge des tables restants dans le dataset
+            foreach (DataTable table in this.data.Values)
+                this.mergeTable.Merge(table); // Merge des tables restants dans le dataset
+
+            //TODO: le header de la table restera dans ce cas là
 
             return this.mergeTable.Rows.Count;
+        }
+
+        /// <summary>
+        /// Mise à jour du contenu de la table quand une action est créée/modifiée
+        /// </summary>
+        private void actionEdited(object sender, EventArgs e)
+        {
+            //TODO: mettre à jour toutes les DataTable de la base correspondante
+            foreach (Filtre filtre in this.getTables(((TLaction)sender).dbName))
+                this.data[filtre] = filtre.getActions().Copy();
+
+            this.mergeTable.Clear();
+            foreach (DataTable table in this.data.Values)
+                this.mergeTable.Merge(table); // Merge des tables restants dans le dataset
+
+            //TODO: sélectionner l'action dans le tableau si présente
         }
 
         /// <summary>
@@ -104,13 +138,6 @@ namespace TaskLeader.GUI
         {
             new ManipAction(new TLaction(this.grilleData.SelectedRows[0].Cells["id"].Value.ToString(), this.grilleData.SelectedRows[0].Cells["DB"].Value.ToString())).Show();
             //TrayIcon.displayNewAction(action);//TODO: à supprimer par la suite
-        }
-
-        // Une action a été éditée dans une des bases affichées
-        private void actionEdited(object sender, EventArgs e)
-        {
-            TLaction action = sender as TLaction;
-            TrayIcon.afficheMessage("Test", "Action "+action.ID+"de la DB "+action.dbName); //TODO: test only
         }
 
         #endregion
@@ -259,16 +286,16 @@ namespace TaskLeader.GUI
                 grilleData.Cursor = Cursors.Default;
         }
 
-        private void selection(String id=null)
+        private void selection(String id = null)
         {
             grilleData.Focus(); // Focus au tableau pour permettre le scroll direct
 
-            // Sélection de l'action si refresh suite à modification d'action
+            // Sélection de l'action si refresh suite à modification d'action 
             if (grilleData.Tag != null && grilleData.Tag.ToString() != "") // ID de l'action stocké dans le tag
             {
-                DataRow[] rows = this.data.Tables["merge"].Select("id=" + grilleData.Tag.ToString());
+                DataRow[] rows = this.mergeTable.Select("id=" + grilleData.Tag.ToString());
                 if (rows.Length == 1)
-                    grilleData.Rows[this.data.Tables["merge"].Rows.IndexOf(rows[0])].Selected = true;
+                    grilleData.Rows[this.mergeTable.Rows.IndexOf(rows[0])].Selected = true;
                 grilleData.Tag = null; // Remise à zéro du tag
             }
         }

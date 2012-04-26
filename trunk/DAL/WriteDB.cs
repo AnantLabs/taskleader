@@ -354,8 +354,11 @@ namespace TaskLeader.DAL
             if (updatePart.Length > 0)
             {
                 requete = "UPDATE Actions SET " + updatePart.Substring(0, updatePart.Length - 1) + " WHERE id='" + action.ID + "'";
+                
+                int result = execSQL(requete);
                 this.OnActionEdited(action);
-                return execSQL(requete);
+
+                return result;
             }
             else
                 return 0;
