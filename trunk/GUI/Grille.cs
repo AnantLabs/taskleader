@@ -32,6 +32,9 @@ namespace TaskLeader.GUI
         // Récupération de la DataSource de grilleData
         private DataTable mergeTable { get { return this.grilleData.DataSource as DataTable; } }
 
+        /// <summary>
+        /// Retourne une DataGridViewTextBoxColumn à partir du nom de la colonne fournie
+        /// </summary>
         private DataGridViewTextBoxColumn createSimpleColumn(String name)
         {
             DataGridViewTextBoxColumn col = new DataGridViewTextBoxColumn();
@@ -45,7 +48,7 @@ namespace TaskLeader.GUI
         {
             InitializeComponent();
 
-            this.grilleData.AutoGenerateColumns = false;
+            this.grilleData.AutoGenerateColumns = false; //Les colonnes sont créées manuellement
 
             grilleData.Columns.Insert(0,this.createSimpleColumn("Ref"));
             grilleData.Columns.Insert(1,this.createSimpleColumn("Contexte"));
@@ -60,7 +63,7 @@ namespace TaskLeader.GUI
             linkCol.DataPropertyName = "Liens";
             grilleData.Columns.Insert(4,linkCol);
 
-            grilleData.Columns.Insert(5,this.createSimpleColumn("Date"));
+            grilleData.Columns.Insert(5,this.createSimpleColumn("Deadline"));
             grilleData.Columns.Insert(6,this.createSimpleColumn("Statut"));
 
             this.grilleData.DataSource = new DataTable();
@@ -85,10 +88,11 @@ namespace TaskLeader.GUI
         {
             this.data.Add(filtre, filtre.getActions()); // Récupération des résultats du filtre et association au tableau
             TrayIcon.dbs[filtre.dbName].ActionEdited += new EventHandler(actionEdited); // Hook des éditions d'actions de la base correspondante
-
+            
             this.mergeTable.Merge(this.data[filtre]);
-            this.mergeTable.DefaultView.Sort = "Date ASC";
-            grilleData.Focus();
+
+            this.mergeTable.DefaultView.Sort = "Deadline ASC";
+            this.grilleData.Focus();
 
             return this.mergeTable.Rows.Count;
         }
@@ -137,8 +141,8 @@ namespace TaskLeader.GUI
         {
             new ManipAction(
                 new TLaction(
-                    this.mergeTable.Rows[this.grilleData.CurrentRow.Index]["id"].ToString(),
-                    this.mergeTable.Rows[this.grilleData.CurrentRow.Index]["DB"].ToString()
+                    this.getDataFromRow(this.grilleData.SelectedRows[0].Index,"id").ToString(),
+                    this.getDataFromRow(this.grilleData.SelectedRows[0].Index, "DB").ToString()
                 )
             ).Show();
         }
@@ -147,24 +151,34 @@ namespace TaskLeader.GUI
 
         #region grilleData
 
+        /// <summary>
+        /// Retourne une donnée de la DataTable à partir de l'index dans la grille
+        /// </summary>
+        /// <param name="index">Index de la ligne dans la grille</param>
+        /// <param name="col">Nom du champ</param>
+        private String getDataFromRow(int index,String col)
+        {
+            return ((DataRowView)grilleData.Rows[index].DataBoundItem).Row[col].ToString();
+        }
+
         // Mise en forme des cellules sous certaines conditions
         private void grilleData_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
             DateTime date;
 
             // Association du tooltip
-            if (grilleData.Columns[e.ColumnIndex].Name.Equals("Date"))
+            if (grilleData.Columns[e.ColumnIndex].Name.Equals("Deadline"))
                 grilleData[e.ColumnIndex, e.RowIndex].ToolTipText = "Modifier la date";
 
             // Gestion de la colonne Deadline
-            if (grilleData.Columns[e.ColumnIndex].Name.Equals("Date") && DateTime.TryParse(e.Value.ToString(), out date))
+            if (grilleData.Columns[e.ColumnIndex].Name.Equals("Deadline") && DateTime.TryParse(e.Value.ToString(), out date))
             {
                 // Récupération du delta en jours
                 int diff = (date.Date - DateTime.Now.Date).Days;
 
                 // Modification du contenu des cellules
                 if (diff == 0) // Aujourd'hui
-                    e.Value = e.Value.ToString() + Environment.NewLine + "Today"; // Valeur modifiée      
+                    e.Value = date.ToShortDateString() + Environment.NewLine + "Today"; // Valeur modifiée      
                 else if (diff > 0)// Dans le futur
                     e.Value = e.Value.ToString() + Environment.NewLine + "+ " + diff.ToString() + " jours"; // Valeur modifiée
 
@@ -199,8 +213,8 @@ namespace TaskLeader.GUI
                         break;
                     case ("1"):
                         // Récupération de la PJ
-                        DB db = TrayIcon.dbs[this.mergeTable.Rows[e.RowIndex]["DB"].ToString()]; //TODO: plutôt ((DataRow)grilleData.Rows[e.RowIndex].DataBoundItem)["DB"].ToString()
-                        Enclosure pj = (Enclosure)db.getPJ(this.mergeTable.Rows[e.RowIndex]["id"].ToString()).GetValue(0);
+                        DB db = TrayIcon.dbs[this.getDataFromRow(e.RowIndex, "DB")];
+                        Enclosure pj = (Enclosure)db.getPJ(this.getDataFromRow(e.RowIndex, "id")).GetValue(0);
                         e.Value = pj.Icone; // Affichage de la bonne icône
                         grilleData[e.ColumnIndex, e.RowIndex].ToolTipText = pj.Titre; // Modification du tooltip de la cellule
                         grilleData.Rows[e.RowIndex].Tag = pj; // Tag de la DataGridRow
@@ -232,8 +246,8 @@ namespace TaskLeader.GUI
                     ((Enclosure)grilleData.Rows[e.RowIndex].Tag).open(); // Ouverture directe
                 else // Plusieurs liens
                 {
-                    DB db = TrayIcon.dbs[this.mergeTable.Rows[e.RowIndex]["DB"].ToString()];
-                    Array links = db.getPJ(this.mergeTable.Rows[e.RowIndex]["id"].ToString()); //Récupération des différents liens
+                    DB db = TrayIcon.dbs[this.getDataFromRow(e.RowIndex, "DB")];
+                    Array links = db.getPJ(this.getDataFromRow(e.RowIndex, "id")); //Récupération des différents liens
                     linksContext.Items.Clear(); // Remise à zéro de la liste
 
                     foreach (Enclosure link in links)
@@ -248,11 +262,11 @@ namespace TaskLeader.GUI
             }
 
             if (e.Button == MouseButtons.Left && // Click gauche
-                grilleData.Columns[e.ColumnIndex].Name.Equals("Date") && // Colonne "Date"
+                grilleData.Columns[e.ColumnIndex].Name.Equals("Deadline") && // Colonne "Deadline"
                 e.RowIndex >= 0) // Ce n'est pas la ligne des headers // Cellule non vide
             {
                 grilleData.Cursor = Cursors.Default;
-                new DatePickerPopup(new TLaction(this.mergeTable.Rows[e.RowIndex]["id"].ToString(), this.mergeTable.Rows[e.RowIndex]["DB"].ToString())).Show();
+                new DatePickerPopup(new TLaction(this.getDataFromRow(e.RowIndex, "id"), this.getDataFromRow(e.RowIndex, "DB"))).Show();
             }
         }
 
@@ -265,7 +279,7 @@ namespace TaskLeader.GUI
                 grilleData[e.ColumnIndex, e.RowIndex].Value.ToString() != "0";
 
             bool dateActivated =
-                grilleData.Columns[e.ColumnIndex].Name.Equals("Date") &&
+                grilleData.Columns[e.ColumnIndex].Name.Equals("Deadline") &&
                 e.RowIndex >= 0;
 
             if (pjActivated || dateActivated)
@@ -280,7 +294,7 @@ namespace TaskLeader.GUI
                 grilleData[e.ColumnIndex, e.RowIndex].Value.ToString() != "0";
 
             bool dateActivated =
-                grilleData.Columns[e.ColumnIndex].Name.Equals("Date") &&
+                grilleData.Columns[e.ColumnIndex].Name.Equals("Deadline") &&
                 e.RowIndex >= 0;
 
             if (pjActivated || dateActivated)
@@ -296,7 +310,7 @@ namespace TaskLeader.GUI
             // Remplissage du menu des différents statuts
             statutTSMenuItem.DropDown.Items.Clear();
 
-            DB db = TrayIcon.dbs[this.mergeTable.Rows[this.grilleData.CurrentRow.Index]["DB"].ToString()];
+            DB db = TrayIcon.dbs[this.getDataFromRow(grilleData.SelectedRows[0].Index, "DB")];
             foreach (object item in db.getTitres(DB.statut)) //TODO: mettre en cache la valeur des statuts
                 statutTSMenuItem.DropDown.Items.Add(item.ToString(), null, this.changeStat);
 
@@ -308,8 +322,8 @@ namespace TaskLeader.GUI
         {
             // Récupération de l'action
             TLaction action = new TLaction(
-                this.mergeTable.Rows[this.grilleData.CurrentRow.Index]["id"].ToString(),
-                this.mergeTable.Rows[this.grilleData.CurrentRow.Index]["DB"].ToString()
+                this.getDataFromRow(grilleData.SelectedRows[0].Index, "id"),
+                this.getDataFromRow(grilleData.SelectedRows[0].Index, "DB")
             );
 
             // On récupère le nouveau statut

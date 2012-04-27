@@ -94,18 +94,26 @@ namespace TaskLeader.BO
         /// </summary>
         public DataTable getActions()
         {
-            DataTable data = new DataTable();
-
             // Récupération des actions
+            DataTable dbData;
             switch (this.type)
             {
                 case (1):
-                    data = db.getActions(this.criteria).Copy();
+                    dbData = db.getActions(this.criteria);
                     break;
                 case (2):
-                    data = db.searchActions(this.nom).Copy();
+                    dbData = db.searchActions(this.nom);
+                    break;
+                default:
+                    dbData = new DataTable();
                     break;
             }
+
+            // Modification du type de la colonne Deadline
+            DataTable data = dbData.Clone(); // Copie du schéma uniquement
+            data.Columns["Deadline"].DataType = typeof(DateTime);
+            foreach (DataRow row in dbData.Rows)
+                data.ImportRow(row);
 
             // Ajout d'une colonne contenant le nom de la DB de ce filtre
             DataColumn col = new DataColumn("DB", typeof(String));
@@ -114,10 +122,6 @@ namespace TaskLeader.BO
 
             // Ajout d'une colonne formalisant une ref pour chaque action
             data.Columns.Add("Ref", typeof(String), "DB+'" + Environment.NewLine + "#'+ID");
-            data.Columns["Ref"].SetOrdinal(0); //TODO: c'est de la présentation çà, doit être dans Grille
-
-            // Ajout d'une nouvelle colonne date typé, clone de Deadline
-            data.Columns.Add("Date", typeof(DateTime), "Deadline");
 
             // Création de la clé primaire à partir des colonnes DB et ID
             DataColumn[] keys = new DataColumn[2];
