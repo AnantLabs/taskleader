@@ -8,7 +8,7 @@ namespace TaskLeader.GUI
     {
         // Déclaration du ToolStripDown sous-jacent
         private ToolStripDropDown popup = new ToolStripDropDown();
-        public event ToolStripDropDownClosedEventHandler Closed
+        public event ToolStripDropDownClosedEventHandler Closed //TODO: qui l'utilise ?
         {
             add { popup.Closed += value; }
             remove { popup.Closed -= value; }
@@ -57,18 +57,18 @@ namespace TaskLeader.GUI
             if (noDueDate.Checked)
                 v_action.DueDate = DateTime.MinValue; // Remise à zéro de la dueDate
             else
-                v_action.DueDate = calendar.SelectionStart;
+                v_action.DueDate = calendar.SelectionStart.Date;
 
             // On sauvegarde l'action
             v_action.save();
 
             // Fermeture de la fenêtre
-            this.popup.Close(ToolStripDropDownCloseReason.ItemClicked); //TODO: la raison de fermeture ne sera finalement pas utile
+            this.popup.Close();
         }
 
         private void closeBut_Click(object sender, EventArgs e)
         {
-            this.popup.Close(ToolStripDropDownCloseReason.CloseCalled); //TODO: la raison de fermeture ne sera finalement pas utile
+            this.popup.Close();
         }
     }
 }
