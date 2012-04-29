@@ -66,6 +66,12 @@
     <Compile Include="GUI\DatePickerPopup.Designer.cs">
       <DependentUpon>DatePickerPopup.cs</DependentUpon>
     </Compile>
+    <Compile Include="GUI\EditFilter.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\EditFilter.Designer.cs">
+      <DependentUpon>EditFilter.cs</DependentUpon>
+    </Compile>
     <Compile Include="GUI\Etiquette.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -118,6 +124,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\DatePickerPopup.resx">
       <DependentUpon>DatePickerPopup.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\EditFilter.resx">
+      <DependentUpon>EditFilter.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\Etiquette.resx">
       <DependentUpon>Etiquette.cs</DependentUpon>
@@ -260,6 +269,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\bullets.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\information.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\cross.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

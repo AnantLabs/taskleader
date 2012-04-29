@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Configuration;
 using System.Data;
+using System.ComponentModel;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Collections.Generic;
@@ -87,11 +88,11 @@ namespace TaskLeader.GUI
         public int add(Filtre filtre)
         {
             this.data.Add(filtre, filtre.getActions()); // Récupération des résultats du filtre et association au tableau
-            TrayIcon.dbs[filtre.dbName].ActionEdited += new EventHandler(actionEdited); // Hook des éditions d'actions de la base correspondante
-            
+            TrayIcon.dbs[filtre.dbName].ActionEdited += new ActionEditedEventHandler(actionEdited); // Hook des éditions d'actions de la base correspondante
+
             this.mergeTable.Merge(this.data[filtre]);
 
-            this.mergeTable.DefaultView.Sort = "Deadline ASC";
+            this.mergeTable.DefaultView.Sort = "Deadline ASC"; // Tri sur les dates à chaque ajout (même si un autre filtre est en place)
             this.grilleData.Focus();
 
             return this.mergeTable.Rows.Count;
@@ -104,7 +105,7 @@ namespace TaskLeader.GUI
         public int remove(Filtre filtre)
         {
             this.data.Remove(filtre); // Suppression de la table du DataSet
-            TrayIcon.dbs[filtre.dbName].ActionEdited -= new EventHandler(actionEdited);
+            TrayIcon.dbs[filtre.dbName].ActionEdited -= new ActionEditedEventHandler(actionEdited);
 
             this.mergeTable.Clear(); // Efface toutes les données de la table merge
             foreach (DataTable table in this.data.Values)
@@ -116,12 +117,10 @@ namespace TaskLeader.GUI
         /// <summary>
         /// Mise à jour du contenu de la table quand une action est créée/modifiée
         /// </summary>
-        private void actionEdited(object sender, EventArgs e)
+        private void actionEdited(String db, String id)
         {
-            TLaction action = sender as TLaction;
-
             // Mise à jour des DataTables liées à la base de l'action
-            foreach (Filtre filtre in this.getFiltersFromDB(action.dbName))
+            foreach (Filtre filtre in this.getFiltersFromDB(db))
                 this.data[filtre] = filtre.getActions().Copy();
 
             // Rafraîchissement de la mergeTable
@@ -129,11 +128,12 @@ namespace TaskLeader.GUI
             foreach (DataTable table in this.data.Values)
                 this.mergeTable.Merge(table);
 
-            grilleData.Focus(); // Focus au tableau pour permettre le scroll direct //TODO: à faire dès qu'une liste est affichée
+            this.grilleData.Focus(); // Focus sur tableau pour permettre le scroll direct
 
-            DataRow[] rows = this.mergeTable.Select("id=" + action.ID + " And DB='" + action.dbName +"'");
-            if (rows.Length == 1)
-                grilleData.Rows[this.mergeTable.Rows.IndexOf(rows[0])].Selected = true;
+            // Sélection de la bonne ligne
+            this.grilleData.Rows.Cast<DataGridViewRow>()
+                .Where(r => r.Cells["Ref"].Value.ToString().Equals(db + Environment.NewLine + "#" + id))
+                .ToList().ForEach(r => r.Selected = true);
         }
 
         // Ouverture de la gui édition d'action
@@ -180,7 +180,7 @@ namespace TaskLeader.GUI
                 if (diff == 0) // Aujourd'hui
                     e.Value = date.ToShortDateString() + Environment.NewLine + "Today"; // Valeur modifiée      
                 else if (diff > 0)// Dans le futur
-                    e.Value = e.Value.ToString() + Environment.NewLine + "+ " + diff.ToString() + " jours"; // Valeur modifiée
+                    e.Value = date.ToShortDateString() + Environment.NewLine + "+ " + diff.ToString() + " jours"; // Valeur modifiée
 
                 // Modification de la mise en forme des cellules
                 if (diff < 0) // En retard

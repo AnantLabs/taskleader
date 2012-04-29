@@ -47,5 +47,13 @@ namespace TaskLeader.GUI
         {
             this.Parent.Controls.Remove(this);
         }
+        
+        /// <summary>
+        ///  Affichage d'un panel décrivant le filtre
+        /// </summary>
+        private void infoBox_Click(object sender, System.EventArgs e)
+        {
+            new EditFilter().Show();
+        }
     }
 }

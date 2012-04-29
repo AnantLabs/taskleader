@@ -109,8 +109,10 @@ namespace TaskLeader.BO
                     break;
             }
 
-            // Modification du type de la colonne Deadline
+            // Typage des colonnes pour éviter les problèmes de Merge
             DataTable data = dbData.Clone(); // Copie du schéma uniquement
+            foreach (DataColumn column in data.Columns)
+                column.DataType = typeof(String);
             data.Columns["Deadline"].DataType = typeof(DateTime);
             foreach (DataRow row in dbData.Rows)
                 data.ImportRow(row);
