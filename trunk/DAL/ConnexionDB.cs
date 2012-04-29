@@ -27,6 +27,7 @@ namespace TaskLeader.DAL
     }
 
     public delegate void ParentValueEventHandler(String parentValue);
+    public delegate void ActionEditedEventHandler(String dbName, String actionID);
 
     public partial class DB //TODO: détecter les ouvertures de fichier pour les limiter
     {
@@ -78,7 +79,7 @@ namespace TaskLeader.DAL
             v_connex.Close();
         }
 
-        // "Schéma de base"
+        // "Schéma de base" = Nom de l'entité pour IHM, Nom de la colonne dans vueActions, Nom de la table principale, Nom de la colonne "All" dans la table Filtre
         public static DBentity contexte = new DBentity("Contextes", "Contexte", "Contextes", "AllCtxt");
         public static DBentity sujet = new DBentity("Sujets", "Sujet", "Sujets", "AllSuj");
         public static DBentity destinataire = new DBentity("Destinataires", "Destinataire", "Destinataires", "AllDest");
@@ -105,15 +106,15 @@ namespace TaskLeader.DAL
         }
 
         // Gestion de l'évènement ActionEdited
-        public event EventHandler ActionEdited;
+        public event ActionEditedEventHandler ActionEdited;
         /// <summary>
         /// Génération de l'évènement ActionEdited
         /// </summary>
         /// <param name="action">Action ayant généré l'event</param>
-        private void OnActionEdited(TLaction action)
+        private void OnActionEdited(String actionID)
         {
             if (this.ActionEdited != null)
-                this.ActionEdited(action, EventArgs.Empty); //Invoque le délégué
+                this.ActionEdited(this.name, actionID); //Invoque le délégué
         }
 
         #endregion

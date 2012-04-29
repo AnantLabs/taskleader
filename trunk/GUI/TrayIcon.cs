@@ -157,20 +157,11 @@ namespace TaskLeader.GUI
                 v_toolbox.BringToFront(); // Sinon on l'affiche au premier plan     
         }
 
-        // Update de la Toolbox si elle est affichée
-        private static void updateToolbox(object sender, EventArgs e)
-        {
-            if (v_toolbox != null && !v_toolbox.IsDisposed && ((ManipAction)sender).dataSaved)
-            {
-                //TODO: v_toolbox.selectedActionID = ((ManipAction)sender).ID;
-                //v_toolbox.miseAjour(true);
-            }
-        }
-
         // Méthode permettant d'afficher le formulaire nouvelle action vide
         private static void ajoutAction(object sender, EventArgs e)
         {
-            displayNewAction(new TLaction());
+            new ManipAction(new TLaction())
+                .Show();
         }
 
         // Méthode appelée sur nouveau mail
@@ -183,16 +174,8 @@ namespace TaskLeader.GUI
                 TLaction action = new TLaction();
                 action.Texte = e.Mail.Titre;
                 action.addPJ(e.Mail);
-                displayNewAction(action);
+                new ManipAction(action).Show();
             }
-        }
-
-        // Affichage d'une form ManipAction
-        public static void displayNewAction(TLaction action)
-        {
-            ManipAction v_manipAction = new ManipAction(action);
-            v_manipAction.Disposed += new EventHandler(updateToolbox);
-            v_manipAction.Show();
         }
 
         // Activation si nécessaire de l'item outlook

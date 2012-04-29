@@ -88,6 +88,13 @@ namespace TaskLeader.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap cross {
+            get {
+                object obj = ResourceManager.GetObject("cross", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap database {
             get {
                 object obj = ResourceManager.GetObject("database", resourceCulture);
@@ -154,6 +161,13 @@ namespace TaskLeader.Properties {
         internal static System.Drawing.Bitmap filter_add32 {
             get {
                 object obj = ResourceManager.GetObject("filter_add32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap information {
+            get {
+                object obj = ResourceManager.GetObject("information", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

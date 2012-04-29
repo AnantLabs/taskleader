@@ -121,7 +121,8 @@ namespace TaskLeader.GUI
         // Ouverture de la gui création d'action
         private void ajoutAction(object sender, EventArgs e)
         {
-            TrayIcon.displayNewAction(new TLaction());
+            new ManipAction(new TLaction()).
+                Show();
         }
 
         #endregion

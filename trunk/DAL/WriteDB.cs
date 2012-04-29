@@ -309,8 +309,7 @@ namespace TaskLeader.DAL
                 mytransaction.Commit();
             }
 
-            this.OnActionEdited(action); //TODO: il faudrait ajouter l'ID à l'action
-
+            this.OnActionEdited(actionID);
             return actionID;
         }
 
@@ -356,8 +355,7 @@ namespace TaskLeader.DAL
                 requete = "UPDATE Actions SET " + updatePart.Substring(0, updatePart.Length - 1) + " WHERE id='" + action.ID + "'";
                 
                 int result = execSQL(requete);
-                this.OnActionEdited(action);
-
+                this.OnActionEdited(action.ID);
                 return result;
             }
             else
