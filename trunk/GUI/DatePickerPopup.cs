@@ -4,15 +4,20 @@ using TaskLeader.BO;
 
 namespace TaskLeader.GUI
 {
-    public partial class DatePickerPopup : UserControl
+    public partial class DatePickerPopup : UserControl, IComplexToolTipContent
     {
-        // Déclaration du ToolStripDown sous-jacent
-        private ToolStripDropDown popup = new ToolStripDropDown();
-        public event ToolStripDropDownClosedEventHandler Closed //TODO: qui l'utilise ?
+        #region Implémentation de l'interface IComplexToolTipContent
+
+        public event EventHandler ClosureRequested;
+        private void OnClosureRequested(object sender,EventArgs e)
         {
-            add { popup.Closed += value; }
-            remove { popup.Closed -= value; }
+            if (this.ClosureRequested != null)
+                this.ClosureRequested(sender,e); //Invoque le délégué
         }
+
+        public Control control { get { return this; } }
+
+        #endregion
 
         // Déclaration de l'action associée
         private TLaction v_action;
@@ -23,25 +28,11 @@ namespace TaskLeader.GUI
             InitializeComponent();
             v_action = action;
 
-            // Initialisation de la pop-up
-            popup.Margin = Padding.Empty;
-            popup.Padding = Padding.Empty;
-            ToolStripControlHost host = new ToolStripControlHost(this);
-            host.Margin = Padding.Empty;
-            host.Padding = Padding.Empty;
-            popup.Items.Add(host);
-
             // Initialisation du composant calendar
             if (action.hasDueDate)
                 calendar.SelectionStart = action.DueDate;
             else
                 this.noDueDate.Checked = true;
-        }
-
-        // Affichage de la pop-up
-        new public void Show()
-        {
-            popup.Show(Cursor.Position);
         }
 
         // Désactivation du calendrier si nécessaire
@@ -63,12 +54,12 @@ namespace TaskLeader.GUI
             v_action.save();
 
             // Fermeture de la fenêtre
-            this.popup.Close();
+            this.OnClosureRequested(sender, e);
         }
 
         private void closeBut_Click(object sender, EventArgs e)
         {
-            this.popup.Close();
+            this.OnClosureRequested(sender, e);
         }
     }
 }

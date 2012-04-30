@@ -22,8 +22,9 @@ namespace TaskLeader.GUI
         /// <summary>Chargement des différents composants au lancement de la toolbox</summary>
         private void Toolbox_Load(object sender, EventArgs e)
         {
-            // Création des MultipleSelect
+            // Création des CritereSelect
             CritereSelect widget;
+            this.selectPanel.SuspendLayout();
             foreach (DBentity entity in DB.entities)
             {
                 widget = new CritereSelect(entity);
@@ -31,6 +32,12 @@ namespace TaskLeader.GUI
                     widget.addParent(this.selectPanel.Controls[entity.parent.nom] as CritereSelect);
                 this.selectPanel.Controls.Add(widget);
             }
+            this.selectPanel.ResumeLayout();
+            this.selectPanel.SuspendLayout(); // Etrange mais çà accélère l'affichage
+            foreach (Control control in this.selectPanel.Controls)
+                this.selectPanel.SetFlowBreak(control, true);
+            this.selectPanel.ResumeLayout();
+
 
             // Remplissage de la liste des bases d'action disponibles
             foreach (DB db in TrayIcon.dbs.Values)
@@ -76,7 +83,12 @@ namespace TaskLeader.GUI
         {
             this.manuelDBcombo.Items.Add(db); // Filtre manuel
             this.dbSelect.addDB(db); // Recherche
-            this.filtersPanel.Controls.Add(new FiltreSelect(db)); // Filtres enregistrés
+
+            this.filtersPanel.Controls.Add(new FiltreSelect(db));
+            this.filtersPanel.SetFlowBreak(
+                this.filtersPanel.Controls[this.filtersPanel.Controls.Count - 1], //Dernier contrôle ajouté
+                true
+            );
         }
 
         private void activeDBs_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)

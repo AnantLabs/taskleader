@@ -60,6 +60,7 @@
     <Compile Include="GUI\AdminDefaut.Designer.cs">
       <DependentUpon>AdminDefaut.cs</DependentUpon>
     </Compile>
+    <Compile Include="GUI\ComplexTooltip.cs" />
     <Compile Include="GUI\DatePickerPopup.cs">
       <SubType>UserControl</SubType>
     </Compile>

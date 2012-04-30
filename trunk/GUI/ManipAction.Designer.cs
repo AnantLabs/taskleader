@@ -61,6 +61,7 @@
             this.addLinksMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.ajouterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mailItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.tableLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
@@ -69,6 +70,7 @@
             this.flowLayoutPanel4.SuspendLayout();
             this.flowLayoutPanel5.SuspendLayout();
             this.addLinksMenu.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // saveButton
@@ -360,6 +362,7 @@
             // flowLayoutPanel5
             // 
             this.tableLayoutPanel1.SetColumnSpan(this.flowLayoutPanel5, 2);
+            this.flowLayoutPanel5.Controls.Add(this.pictureBox1);
             this.flowLayoutPanel5.Controls.Add(this.label7);
             this.flowLayoutPanel5.Controls.Add(this.dbsBox);
             this.flowLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -371,7 +374,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(3, 10);
+            this.label7.Location = new System.Drawing.Point(43, 10);
             this.label7.Margin = new System.Windows.Forms.Padding(3, 10, 3, 0);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(79, 13);
@@ -382,7 +385,7 @@
             // 
             this.dbsBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.dbsBox.FormattingEnabled = true;
-            this.dbsBox.Location = new System.Drawing.Point(88, 7);
+            this.dbsBox.Location = new System.Drawing.Point(128, 7);
             this.dbsBox.Margin = new System.Windows.Forms.Padding(3, 7, 3, 3);
             this.dbsBox.Name = "dbsBox";
             this.dbsBox.Size = new System.Drawing.Size(164, 21);
@@ -413,6 +416,17 @@
             this.mailItem.Text = "Mail Outlook";
             this.mailItem.Click += new System.EventHandler(this.mailItem_Click);
             // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = global::TaskLeader.Properties.Resources.database_go32;
+            this.pictureBox1.Location = new System.Drawing.Point(5, 2);
+            this.pictureBox1.Margin = new System.Windows.Forms.Padding(5, 2, 3, 0);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(32, 32);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox1.TabIndex = 2;
+            this.pictureBox1.TabStop = false;
+            // 
             // ManipAction
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -439,6 +453,7 @@
             this.flowLayoutPanel5.ResumeLayout(false);
             this.flowLayoutPanel5.PerformLayout();
             this.addLinksMenu.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -477,6 +492,7 @@
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel5;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.ComboBox dbsBox;
+        private System.Windows.Forms.PictureBox pictureBox1;
 
 
     }
