@@ -53,7 +53,9 @@ namespace TaskLeader.GUI
         /// </summary>
         private void infoBox_Click(object sender, System.EventArgs e)
         {
-            new EditFilter().Show();
+            new ComplexTooltip(
+                new EditFilter(this.filtre)
+            ).Show();
         }
     }
 }

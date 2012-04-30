@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Configuration;
 using System.Data;
-using System.ComponentModel;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Collections.Generic;
@@ -266,7 +265,11 @@ namespace TaskLeader.GUI
                 e.RowIndex >= 0) // Ce n'est pas la ligne des headers // Cellule non vide
             {
                 grilleData.Cursor = Cursors.Default;
-                new DatePickerPopup(new TLaction(this.getDataFromRow(e.RowIndex, "id"), this.getDataFromRow(e.RowIndex, "DB"))).Show();
+                new ComplexTooltip(
+                    new DatePickerPopup(
+                        new TLaction(this.getDataFromRow(e.RowIndex, "id"), this.getDataFromRow(e.RowIndex, "DB"))
+                    )
+                ).Show();
             }
         }
 

@@ -19,6 +19,8 @@ namespace TaskLeader.GUI
         {
             InitializeComponent();
             this.box.Visible = displayBox;
+
+            this.Margin = Padding.Empty;
         }
 
         /// <summary>

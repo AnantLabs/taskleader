@@ -33,11 +33,11 @@
             this.resultLabel = new System.Windows.Forms.Label();
             this.tagsPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.topMenu = new System.Windows.Forms.MenuStrip();
-            this.reduceButton = new System.Windows.Forms.ToolStripMenuItem();
             this.ajouterItem = new System.Windows.Forms.ToolStripMenuItem();
             this.nouvelleActionToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.actionsEvernoteToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.adminItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.reduceButton = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.manuelTable = new System.Windows.Forms.TableLayoutPanel();
@@ -64,7 +64,7 @@
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.filtersPanel = new System.Windows.Forms.FlowLayoutPanel();
-            this.flowLayoutPanel4 = new System.Windows.Forms.FlowLayoutPanel();
+            this.addStoredFilterLayoutPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.storedFilterBout = new System.Windows.Forms.Button();
             this.ajouterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.nouvelleActionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -87,7 +87,7 @@
             this.flowLayoutPanel5.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
-            this.flowLayoutPanel4.SuspendLayout();
+            this.addStoredFilterLayoutPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // mainTableLayout
@@ -96,7 +96,6 @@
             this.mainTableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.mainTableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.mainTableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 181F));
-            this.mainTableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.mainTableLayout.Controls.Add(this.resultLabel, 0, 1);
             this.mainTableLayout.Controls.Add(this.tagsPanel, 1, 1);
             this.mainTableLayout.Controls.Add(this.topMenu, 2, 1);
@@ -106,7 +105,7 @@
             this.mainTableLayout.Margin = new System.Windows.Forms.Padding(0);
             this.mainTableLayout.Name = "mainTableLayout";
             this.mainTableLayout.RowCount = 3;
-            this.mainTableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 170F));
+            this.mainTableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 155F));
             this.mainTableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.mainTableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.mainTableLayout.Size = new System.Drawing.Size(721, 750);
@@ -115,7 +114,7 @@
             // resultLabel
             // 
             this.resultLabel.AutoSize = true;
-            this.resultLabel.Location = new System.Drawing.Point(10, 178);
+            this.resultLabel.Location = new System.Drawing.Point(10, 163);
             this.resultLabel.Margin = new System.Windows.Forms.Padding(10, 8, 3, 0);
             this.resultLabel.Name = "resultLabel";
             this.resultLabel.Size = new System.Drawing.Size(44, 13);
@@ -126,7 +125,7 @@
             // tagsPanel
             // 
             this.tagsPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tagsPanel.Location = new System.Drawing.Point(57, 170);
+            this.tagsPanel.Location = new System.Drawing.Point(57, 155);
             this.tagsPanel.Margin = new System.Windows.Forms.Padding(0);
             this.tagsPanel.Name = "tagsPanel";
             this.tagsPanel.Size = new System.Drawing.Size(483, 30);
@@ -142,20 +141,12 @@
             this.ajouterItem,
             this.adminItem,
             this.reduceButton});
-            this.topMenu.Location = new System.Drawing.Point(540, 173);
+            this.topMenu.Location = new System.Drawing.Point(540, 158);
             this.topMenu.Margin = new System.Windows.Forms.Padding(0, 3, 0, 0);
             this.topMenu.Name = "topMenu";
             this.topMenu.Size = new System.Drawing.Size(181, 27);
             this.topMenu.TabIndex = 6;
             this.topMenu.Text = "menuStrip1";
-            // 
-            // reduceButton
-            // 
-            this.reduceButton.Image = global::TaskLeader.Properties.Resources.arrow_in;
-            this.reduceButton.Name = "reduceButton";
-            this.reduceButton.Size = new System.Drawing.Size(28, 23);
-            this.reduceButton.Tag = "expanded";
-            this.reduceButton.Click += new System.EventHandler(this.hideCollapse);
             // 
             // ajouterItem
             // 
@@ -192,6 +183,14 @@
             this.adminItem.Size = new System.Drawing.Size(89, 23);
             this.adminItem.Text = "Admin DB";
             // 
+            // reduceButton
+            // 
+            this.reduceButton.Image = global::TaskLeader.Properties.Resources.arrow_in;
+            this.reduceButton.Name = "reduceButton";
+            this.reduceButton.Size = new System.Drawing.Size(28, 23);
+            this.reduceButton.Tag = "expanded";
+            this.reduceButton.Click += new System.EventHandler(this.hideCollapse);
+            // 
             // tabControl1
             // 
             this.mainTableLayout.SetColumnSpan(this.tabControl1, 3);
@@ -203,7 +202,7 @@
             this.tabControl1.Margin = new System.Windows.Forms.Padding(3, 3, 0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(718, 167);
+            this.tabControl1.Size = new System.Drawing.Size(718, 152);
             this.tabControl1.TabIndex = 8;
             this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.hideCollapse);
             // 
@@ -213,7 +212,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Margin = new System.Windows.Forms.Padding(0);
             this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Size = new System.Drawing.Size(710, 141);
+            this.tabPage1.Size = new System.Drawing.Size(710, 126);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Filtre manuel";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -222,8 +221,8 @@
             // 
             this.manuelTable.ColumnCount = 3;
             this.manuelTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 150F));
+            this.manuelTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.manuelTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.manuelTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 160F));
             this.manuelTable.Controls.Add(this.flowLayoutPanel1, 2, 0);
             this.manuelTable.Controls.Add(this.flowLayoutPanel2, 0, 0);
             this.manuelTable.Controls.Add(this.selectPanel, 1, 0);
@@ -233,7 +232,7 @@
             this.manuelTable.Name = "manuelTable";
             this.manuelTable.RowCount = 1;
             this.manuelTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.manuelTable.Size = new System.Drawing.Size(710, 141);
+            this.manuelTable.Size = new System.Drawing.Size(710, 126);
             this.manuelTable.TabIndex = 2;
             // 
             // flowLayoutPanel1
@@ -244,16 +243,17 @@
             this.flowLayoutPanel1.Controls.Add(this.errorLabel);
             this.flowLayoutPanel1.Controls.Add(this.manuelFiltreBout);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(550, 0);
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(160, 0);
             this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(160, 141);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(550, 126);
             this.flowLayoutPanel1.TabIndex = 2;
             // 
             // pictureBox1
             // 
             this.pictureBox1.Image = global::TaskLeader.Properties.Resources.filter_add32;
-            this.pictureBox1.Location = new System.Drawing.Point(3, 3);
+            this.pictureBox1.Location = new System.Drawing.Point(10, 3);
+            this.pictureBox1.Margin = new System.Windows.Forms.Padding(10, 3, 3, 3);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(25, 25);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -264,7 +264,7 @@
             // 
             this.saveFilterCheck.AutoSize = true;
             this.flowLayoutPanel1.SetFlowBreak(this.saveFilterCheck, true);
-            this.saveFilterCheck.Location = new System.Drawing.Point(34, 7);
+            this.saveFilterCheck.Location = new System.Drawing.Point(41, 7);
             this.saveFilterCheck.Margin = new System.Windows.Forms.Padding(3, 7, 3, 3);
             this.saveFilterCheck.Name = "saveFilterCheck";
             this.saveFilterCheck.Size = new System.Drawing.Size(98, 17);
@@ -277,7 +277,8 @@
             // 
             this.nameBox.Enabled = false;
             this.flowLayoutPanel1.SetFlowBreak(this.nameBox, true);
-            this.nameBox.Location = new System.Drawing.Point(3, 34);
+            this.nameBox.Location = new System.Drawing.Point(10, 34);
+            this.nameBox.Margin = new System.Windows.Forms.Padding(10, 3, 3, 3);
             this.nameBox.Name = "nameBox";
             this.nameBox.Size = new System.Drawing.Size(154, 20);
             this.nameBox.TabIndex = 1;
@@ -288,7 +289,8 @@
             this.errorLabel.AutoSize = true;
             this.flowLayoutPanel1.SetFlowBreak(this.errorLabel, true);
             this.errorLabel.ForeColor = System.Drawing.Color.Red;
-            this.errorLabel.Location = new System.Drawing.Point(3, 57);
+            this.errorLabel.Location = new System.Drawing.Point(10, 57);
+            this.errorLabel.Margin = new System.Windows.Forms.Padding(10, 0, 3, 0);
             this.errorLabel.Name = "errorLabel";
             this.errorLabel.Size = new System.Drawing.Size(35, 13);
             this.errorLabel.TabIndex = 2;
@@ -299,8 +301,8 @@
             // 
             this.manuelFiltreBout.Image = global::TaskLeader.Properties.Resources.filter;
             this.manuelFiltreBout.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.manuelFiltreBout.Location = new System.Drawing.Point(55, 127);
-            this.manuelFiltreBout.Margin = new System.Windows.Forms.Padding(55, 20, 0, 0);
+            this.manuelFiltreBout.Location = new System.Drawing.Point(55, 87);
+            this.manuelFiltreBout.Margin = new System.Windows.Forms.Padding(55, 0, 0, 0);
             this.manuelFiltreBout.Name = "manuelFiltreBout";
             this.manuelFiltreBout.Size = new System.Drawing.Size(57, 30);
             this.manuelFiltreBout.TabIndex = 8;
@@ -318,7 +320,7 @@
             this.flowLayoutPanel2.Location = new System.Drawing.Point(0, 0);
             this.flowLayoutPanel2.Margin = new System.Windows.Forms.Padding(0);
             this.flowLayoutPanel2.Name = "flowLayoutPanel2";
-            this.flowLayoutPanel2.Size = new System.Drawing.Size(150, 141);
+            this.flowLayoutPanel2.Size = new System.Drawing.Size(150, 126);
             this.flowLayoutPanel2.TabIndex = 3;
             // 
             // pictureBox2
@@ -356,12 +358,15 @@
             // selectPanel
             // 
             this.selectPanel.AutoScroll = true;
+            this.selectPanel.AutoSize = true;
+            this.selectPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.selectPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.selectPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.selectPanel.Location = new System.Drawing.Point(150, 0);
             this.selectPanel.Margin = new System.Windows.Forms.Padding(0);
             this.selectPanel.Name = "selectPanel";
-            this.selectPanel.Size = new System.Drawing.Size(400, 141);
+            this.selectPanel.Padding = new System.Windows.Forms.Padding(5, 0, 5, 0);
+            this.selectPanel.Size = new System.Drawing.Size(10, 126);
             this.selectPanel.TabIndex = 4;
             // 
             // tabPage2
@@ -370,7 +375,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Margin = new System.Windows.Forms.Padding(0);
             this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Size = new System.Drawing.Size(710, 141);
+            this.tabPage2.Size = new System.Drawing.Size(710, 126);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Recherche";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -388,7 +393,7 @@
             this.searchTable.Name = "searchTable";
             this.searchTable.RowCount = 1;
             this.searchTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.searchTable.Size = new System.Drawing.Size(710, 141);
+            this.searchTable.Size = new System.Drawing.Size(710, 126);
             this.searchTable.TabIndex = 1;
             // 
             // flowLayoutPanel3
@@ -402,7 +407,7 @@
             this.flowLayoutPanel3.Location = new System.Drawing.Point(0, 0);
             this.flowLayoutPanel3.Margin = new System.Windows.Forms.Padding(0);
             this.flowLayoutPanel3.Name = "flowLayoutPanel3";
-            this.flowLayoutPanel3.Size = new System.Drawing.Size(710, 141);
+            this.flowLayoutPanel3.Size = new System.Drawing.Size(710, 126);
             this.flowLayoutPanel3.TabIndex = 0;
             // 
             // label2
@@ -468,7 +473,7 @@
             this.searchPanel.Location = new System.Drawing.Point(0, 0);
             this.searchPanel.Margin = new System.Windows.Forms.Padding(0);
             this.searchPanel.Name = "searchPanel";
-            this.searchPanel.Size = new System.Drawing.Size(1, 141);
+            this.searchPanel.Size = new System.Drawing.Size(1, 126);
             this.searchPanel.TabIndex = 1;
             // 
             // tabPage3
@@ -477,7 +482,7 @@
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Margin = new System.Windows.Forms.Padding(0);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(710, 141);
+            this.tabPage3.Size = new System.Drawing.Size(710, 126);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Filtres enregistrés";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -485,37 +490,41 @@
             // tableLayoutPanel1
             // 
             this.tableLayoutPanel1.ColumnCount = 2;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 80F));
             this.tableLayoutPanel1.Controls.Add(this.filtersPanel, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.flowLayoutPanel4, 1, 0);
+            this.tableLayoutPanel1.Controls.Add(this.addStoredFilterLayoutPanel, 1, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 1;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(710, 141);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(710, 126);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
             // filtersPanel
             // 
+            this.filtersPanel.AutoScroll = true;
+            this.filtersPanel.AutoSize = true;
+            this.filtersPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.filtersPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.filtersPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.filtersPanel.Location = new System.Drawing.Point(0, 0);
             this.filtersPanel.Margin = new System.Windows.Forms.Padding(0);
             this.filtersPanel.Name = "filtersPanel";
-            this.filtersPanel.Size = new System.Drawing.Size(630, 141);
+            this.filtersPanel.Size = new System.Drawing.Size(1, 126);
             this.filtersPanel.TabIndex = 0;
             // 
-            // flowLayoutPanel4
+            // addStoredFilterLayoutPanel
             // 
-            this.flowLayoutPanel4.Controls.Add(this.storedFilterBout);
-            this.flowLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel4.Location = new System.Drawing.Point(630, 0);
-            this.flowLayoutPanel4.Margin = new System.Windows.Forms.Padding(0);
-            this.flowLayoutPanel4.Name = "flowLayoutPanel4";
-            this.flowLayoutPanel4.Size = new System.Drawing.Size(80, 141);
-            this.flowLayoutPanel4.TabIndex = 1;
+            this.addStoredFilterLayoutPanel.Controls.Add(this.storedFilterBout);
+            this.addStoredFilterLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.addStoredFilterLayoutPanel.Location = new System.Drawing.Point(0, 0);
+            this.addStoredFilterLayoutPanel.Margin = new System.Windows.Forms.Padding(0);
+            this.addStoredFilterLayoutPanel.Name = "addStoredFilterLayoutPanel";
+            this.addStoredFilterLayoutPanel.Size = new System.Drawing.Size(710, 126);
+            this.addStoredFilterLayoutPanel.TabIndex = 1;
             // 
             // storedFilterBout
             // 
@@ -606,6 +615,7 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.manuelTable.ResumeLayout(false);
+            this.manuelTable.PerformLayout();
             this.flowLayoutPanel1.ResumeLayout(false);
             this.flowLayoutPanel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
@@ -621,7 +631,8 @@
             this.flowLayoutPanel5.PerformLayout();
             this.tabPage3.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
-            this.flowLayoutPanel4.ResumeLayout(false);
+            this.tableLayoutPanel1.PerformLayout();
+            this.addStoredFilterLayoutPanel.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -660,7 +671,7 @@
         private System.Windows.Forms.TextBox nameBox;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.FlowLayoutPanel filtersPanel;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel4;
+        private System.Windows.Forms.FlowLayoutPanel addStoredFilterLayoutPanel;
         private System.Windows.Forms.Button storedFilterBout;
         private System.Windows.Forms.FlowLayoutPanel selectPanel;
         private System.Windows.Forms.Label label2;
