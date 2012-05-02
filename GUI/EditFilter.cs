@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using TaskLeader.BO;
+using TaskLeader.DAL;
 
 namespace TaskLeader.GUI
 {
@@ -22,7 +23,16 @@ namespace TaskLeader.GUI
         {
             InitializeComponent();
 
-        }
+            this.dbLabel.Text += filtre.dbName;
 
+            Label label;
+            foreach(Criterium critere in filtre.criteria){
+                label = new Label();
+                label.Text = critere.ToString();
+                label.AutoSize = true;
+                this.criteriaPanel.Controls.Add(label);
+            }
+
+        }
     }
 }

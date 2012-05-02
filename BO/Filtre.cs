@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections;
-using System.Configuration;
+using System.Collections.Generic;
 using System.Data;
 using TaskLeader.GUI;
 using TaskLeader.DAL;
@@ -21,6 +21,16 @@ namespace TaskLeader.BO
 
             if (criteres!=null)
                 v_selected.AddRange(criteres);
+        }
+
+        public override String ToString()
+        {
+           
+            List<String> liste = new List<String>();
+            foreach(String valeur in this.v_selected)
+                liste.Add(valeur);
+
+            return v_champ.nom + ": " + String.Join(", ", liste);
         }
     }
 

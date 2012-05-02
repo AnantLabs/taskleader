@@ -26,7 +26,9 @@ namespace TaskLeader.GUI
             this.popup.Padding = Padding.Empty;
 
             // ToolStripItem initialisation
+
             ToolStripControlHost host = new ToolStripControlHost(content.control);
+            host.AutoSize = true;
             host.Margin = Padding.Empty;
             host.Padding = Padding.Empty;
             this.popup.Items.Add(host);
