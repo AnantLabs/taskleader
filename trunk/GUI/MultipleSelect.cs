@@ -48,7 +48,7 @@ namespace TaskLeader.GUI
         /// </summary>
         private void liste_Click(object sender, EventArgs e)
         {
-            if (box.Checked)
+            if (box.Checked && box.Enabled)
                 box.Checked = false;
         }
 
