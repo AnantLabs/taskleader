@@ -28,70 +28,64 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.criteriaPanel = new System.Windows.Forms.FlowLayoutPanel();
-            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.tablePanel = new System.Windows.Forms.TableLayoutPanel();
             this.dbLabel = new System.Windows.Forms.Label();
+            this.dbTitreLabel = new System.Windows.Forms.Label();
             this.closeBox = new System.Windows.Forms.PictureBox();
-            this.tableLayoutPanel1.SuspendLayout();
-            this.flowLayoutPanel1.SuspendLayout();
+            this.tablePanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.closeBox)).BeginInit();
             this.SuspendLayout();
             // 
-            // tableLayoutPanel1
+            // tablePanel
             // 
-            this.tableLayoutPanel1.AutoSize = true;
-            this.tableLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tableLayoutPanel1.ColumnCount = 2;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.Controls.Add(this.closeBox, 1, 0);
-            this.tableLayoutPanel1.Controls.Add(this.criteriaPanel, 0, 1);
-            this.tableLayoutPanel1.Controls.Add(this.flowLayoutPanel1, 0, 0);
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 2;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 23F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(122, 28);
-            this.tableLayoutPanel1.TabIndex = 1;
-            // 
-            // criteriaPanel
-            // 
-            this.criteriaPanel.AutoSize = true;
-            this.criteriaPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tableLayoutPanel1.SetColumnSpan(this.criteriaPanel, 2);
-            this.criteriaPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.criteriaPanel.Location = new System.Drawing.Point(3, 25);
-            this.criteriaPanel.Name = "criteriaPanel";
-            this.criteriaPanel.Size = new System.Drawing.Size(0, 0);
-            this.criteriaPanel.TabIndex = 2;
-            // 
-            // flowLayoutPanel1
-            // 
-            this.flowLayoutPanel1.AutoSize = true;
-            this.flowLayoutPanel1.Controls.Add(this.dbLabel);
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 3);
-            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(94, 15);
-            this.flowLayoutPanel1.TabIndex = 3;
+            this.tablePanel.AutoSize = true;
+            this.tablePanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.tablePanel.ColumnCount = 3;
+            this.tablePanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tablePanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tablePanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tablePanel.Controls.Add(this.dbLabel, 1, 0);
+            this.tablePanel.Controls.Add(this.dbTitreLabel, 0, 0);
+            this.tablePanel.Controls.Add(this.closeBox, 2, 0);
+            this.tablePanel.Location = new System.Drawing.Point(0, 0);
+            this.tablePanel.Name = "tablePanel";
+            this.tablePanel.RowCount = 1;
+            this.tablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tablePanel.Size = new System.Drawing.Size(142, 23);
+            this.tablePanel.TabIndex = 1;
+            this.tablePanel.CellPaint += new System.Windows.Forms.TableLayoutCellPaintEventHandler(this.tablePanel_CellPaint);
             // 
             // dbLabel
             // 
             this.dbLabel.AutoSize = true;
-            this.dbLabel.Location = new System.Drawing.Point(3, 0);
+            this.dbLabel.BackColor = System.Drawing.Color.Transparent;
+            this.dbLabel.Location = new System.Drawing.Point(85, 5);
+            this.dbLabel.Margin = new System.Windows.Forms.Padding(3, 5, 3, 3);
             this.dbLabel.Name = "dbLabel";
-            this.dbLabel.Size = new System.Drawing.Size(88, 15);
-            this.dbLabel.TabIndex = 0;
-            this.dbLabel.Text = "Base d\'actions: ";
+            this.dbLabel.Size = new System.Drawing.Size(35, 13);
+            this.dbLabel.TabIndex = 1;
+            this.dbLabel.Text = "label1";
+            // 
+            // dbTitreLabel
+            // 
+            this.dbTitreLabel.AutoSize = true;
+            this.dbTitreLabel.BackColor = System.Drawing.Color.Transparent;
+            this.dbTitreLabel.Location = new System.Drawing.Point(3, 5);
+            this.dbTitreLabel.Margin = new System.Windows.Forms.Padding(3, 5, 3, 3);
+            this.dbTitreLabel.Name = "dbTitreLabel";
+            this.dbTitreLabel.Size = new System.Drawing.Size(76, 13);
+            this.dbTitreLabel.TabIndex = 0;
+            this.dbTitreLabel.Text = "Base d\'actions";
             // 
             // closeBox
             // 
             this.closeBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.closeBox.BackColor = System.Drawing.Color.Transparent;
             this.closeBox.Cursor = System.Windows.Forms.Cursors.Hand;
             this.closeBox.Image = global::TaskLeader.Properties.Resources.cross;
-            this.closeBox.Location = new System.Drawing.Point(103, 3);
+            this.closeBox.Location = new System.Drawing.Point(123, 3);
+            this.closeBox.Margin = new System.Windows.Forms.Padding(0, 3, 3, 4);
             this.closeBox.Name = "closeBox";
             this.closeBox.Size = new System.Drawing.Size(16, 16);
             this.closeBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -100,18 +94,15 @@
             // 
             // EditFilter
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.Controls.Add(this.tableLayoutPanel1);
-            this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Controls.Add(this.tablePanel);
             this.Name = "EditFilter";
-            this.Size = new System.Drawing.Size(125, 31);
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.tableLayoutPanel1.PerformLayout();
-            this.flowLayoutPanel1.ResumeLayout(false);
-            this.flowLayoutPanel1.PerformLayout();
+            this.Size = new System.Drawing.Size(145, 26);
+            this.tablePanel.ResumeLayout(false);
+            this.tablePanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.closeBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -120,10 +111,9 @@
 
         #endregion
 
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.FlowLayoutPanel criteriaPanel;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
-        private System.Windows.Forms.Label dbLabel;
+        private System.Windows.Forms.TableLayoutPanel tablePanel;
+        private System.Windows.Forms.Label dbTitreLabel;
         private System.Windows.Forms.PictureBox closeBox;
+        private System.Windows.Forms.Label dbLabel;
     }
 }

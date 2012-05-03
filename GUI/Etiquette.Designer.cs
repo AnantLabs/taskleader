@@ -28,25 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.exitSearchBut = new System.Windows.Forms.Button();
             this.valeurLabel = new System.Windows.Forms.Label();
             this.typeLabel = new System.Windows.Forms.Label();
             this.searchFlowLayoutPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.infoBox = new System.Windows.Forms.PictureBox();
+            this.closeBox = new System.Windows.Forms.PictureBox();
             this.searchFlowLayoutPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.infoBox)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.closeBox)).BeginInit();
             this.SuspendLayout();
-            // 
-            // exitSearchBut
-            // 
-            this.exitSearchBut.Location = new System.Drawing.Point(99, 1);
-            this.exitSearchBut.Margin = new System.Windows.Forms.Padding(3, 1, 1, 1);
-            this.exitSearchBut.Name = "exitSearchBut";
-            this.exitSearchBut.Size = new System.Drawing.Size(20, 20);
-            this.exitSearchBut.TabIndex = 3;
-            this.exitSearchBut.Text = "X";
-            this.exitSearchBut.UseVisualStyleBackColor = true;
-            this.exitSearchBut.Click += new System.EventHandler(this.exitSearchBut_Click);
             // 
             // valeurLabel
             // 
@@ -77,11 +67,11 @@
             this.searchFlowLayoutPanel.Controls.Add(this.typeLabel);
             this.searchFlowLayoutPanel.Controls.Add(this.valeurLabel);
             this.searchFlowLayoutPanel.Controls.Add(this.infoBox);
-            this.searchFlowLayoutPanel.Controls.Add(this.exitSearchBut);
+            this.searchFlowLayoutPanel.Controls.Add(this.closeBox);
             this.searchFlowLayoutPanel.Location = new System.Drawing.Point(0, 0);
             this.searchFlowLayoutPanel.Margin = new System.Windows.Forms.Padding(5, 4, 0, 4);
             this.searchFlowLayoutPanel.Name = "searchFlowLayoutPanel";
-            this.searchFlowLayoutPanel.Size = new System.Drawing.Size(120, 22);
+            this.searchFlowLayoutPanel.Size = new System.Drawing.Size(118, 22);
             this.searchFlowLayoutPanel.TabIndex = 6;
             // 
             // infoBox
@@ -96,6 +86,19 @@
             this.infoBox.TabStop = false;
             this.infoBox.Click += new System.EventHandler(this.infoBox_Click);
             // 
+            // closeBox
+            // 
+            this.closeBox.BackColor = System.Drawing.Color.Transparent;
+            this.closeBox.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.closeBox.Image = global::TaskLeader.Properties.Resources.cross;
+            this.closeBox.Location = new System.Drawing.Point(99, 3);
+            this.closeBox.Name = "closeBox";
+            this.closeBox.Size = new System.Drawing.Size(16, 16);
+            this.closeBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.closeBox.TabIndex = 7;
+            this.closeBox.TabStop = false;
+            this.closeBox.Click += new System.EventHandler(this.exitSearchBut_Click);
+            // 
             // Etiquette
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -105,10 +108,11 @@
             this.Controls.Add(this.searchFlowLayoutPanel);
             this.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
             this.Name = "Etiquette";
-            this.Size = new System.Drawing.Size(120, 26);
+            this.Size = new System.Drawing.Size(118, 26);
             this.searchFlowLayoutPanel.ResumeLayout(false);
             this.searchFlowLayoutPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.infoBox)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.closeBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -116,11 +120,11 @@
 
         #endregion
 
-        private System.Windows.Forms.Button exitSearchBut;
         private System.Windows.Forms.Label valeurLabel;
         private System.Windows.Forms.Label typeLabel;
         private System.Windows.Forms.FlowLayoutPanel searchFlowLayoutPanel;
         private System.Windows.Forms.PictureBox infoBox;
+        private System.Windows.Forms.PictureBox closeBox;
 
     }
 }

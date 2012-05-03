@@ -26,6 +26,7 @@ namespace TaskLeader.GUI
                     // Affichage de l'étiquette correspondant à la recherche
                     typeLabel.Text = "Recherche:";
                     valeurLabel.Text = "'" + filtre.nom + "' [" + filtre.dbName + "]";
+                    this.infoBox.Visible = false;
                     break;
 
                 case (1):
