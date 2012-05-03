@@ -8,11 +8,18 @@ namespace TaskLeader.GUI
         private Filtre v_filtre;
         public Filtre filtre { get { return v_filtre; } }
 
+        /// <summary>
+        /// Constructeur pour le designer
+        /// </summary>
         public Etiquette()
         {
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Constructeur de base
+        /// </summary>
+        /// <param name="filtre">Filtre de l'étiquette</param>
         public Etiquette(Filtre filtre)
         {
             InitializeComponent();

@@ -1,5 +1,6 @@
 using System;
 using System.Data;
+using System.Linq;
 using System.ComponentModel;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -71,6 +72,17 @@ namespace TaskLeader.GUI
             this.data.Dock = DockStyle.Fill;
             this.mainTableLayout.Controls.Add(this.data, 0, 2);
             this.mainTableLayout.SetColumnSpan(this.data, 4);
+            
+            // ---------
+            // TagsPanel
+            // ---------
+            TrayIcon.displayedFilters.CollectionChanged += new NotifyCollectionChangedEventHandler(displayedFilters_CollectionChanged);
+            
+            this.tagsPanel.Controls.AddRange(
+                TrayIcon.displayedFilters.
+                Select<Filtre, Etiquette>(f => new Etiquette(f)).
+                ToArray<Etiquette>()
+            );
         }
 
         #region Gestion de la liste des DBs
@@ -232,12 +244,12 @@ namespace TaskLeader.GUI
                         nameBox.Text = "";
 
                         // Affichage du filtre
-                        this.tagsPanel.Controls.Add(new Etiquette(filtre));
+                        TrayIcon.displayedFilters.Add(filtre);
                     }
                 }
             }
             else
-                this.tagsPanel.Controls.Add(new Etiquette(filtre));
+                TrayIcon.displayedFilters.Add(filtre);
         }
 
         #endregion
@@ -249,7 +261,7 @@ namespace TaskLeader.GUI
         {
             if (searchBox.Text != "")
                 foreach (DB db in this.dbSelect.getDBs())
-                    this.tagsPanel.Controls.Add(new Etiquette(new Filtre(searchBox.Text, db.name)));
+                    TrayIcon.displayedFilters.Add(new Filtre(searchBox.Text, db.name));
             else
             {
                 this.erreurSearch.Text = "Entrer un mot clé pour la recherche";
@@ -281,10 +293,9 @@ namespace TaskLeader.GUI
             foreach (FiltreSelect widget in this.filtersPanel.Controls)
             {
                 foreach (Filtre filtre in widget.getSelected())
-                    this.tagsPanel.Controls.Add(new Etiquette(filtre));
+                    TrayIcon.displayedFilters.Add(filtre);
                 widget.clearChecked();
             }
-
         }
 
         #endregion
@@ -314,6 +325,15 @@ namespace TaskLeader.GUI
         #region TagsPanel
 
         /// <summary>
+        /// Gestion des ajouts de filtre à TrayIcon.displayedFilters
+        /// </summary>
+        private void displayedFilters_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action == NotifyCollectionChangedAction.Add)
+                this.tagsPanel.Controls.Add(new Etiquette(e.NewItems[0] as Filtre));
+        }
+
+        /// <summary>
         /// Quand une étiquette est ajoutée au panel, on ajoute le filtre à la Grille
         /// </summary>
         private void tagsPanel_ControlAdded(object sender, ControlEventArgs e)
@@ -328,6 +348,7 @@ namespace TaskLeader.GUI
         /// </summary>
         private void tagsPanel_ControlRemoved(object sender, ControlEventArgs e)
         {
+            TrayIcon.displayedFilters.Remove(((Etiquette)e.Control).filtre);
             int nombre = data.remove(((Etiquette)e.Control).filtre);
 
             if (tagsPanel.Controls.Count > 0) // S'il reste au moins une étiquette                

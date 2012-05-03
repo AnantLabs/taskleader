@@ -63,7 +63,7 @@ namespace TaskLeader.GUI
             this.AutoSize = true;
             this.Text = texte;
             this.Font = new Font(this.Font, style);
-            this.Margin = new Padding(0, 3, 0, 0);
+            this.Margin = new Padding(3, 3, 0, 0);
             this.BackColor = Color.Transparent;
         }
     }

@@ -18,6 +18,7 @@ namespace TaskLeader.GUI
         {
             InitializeComponent();
             this.dbName = database;
+            this.Text += " - Base: " + dbName;
         }
 
         private void AdminDefaut_Load(object sender, EventArgs e)
