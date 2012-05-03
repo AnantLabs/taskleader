@@ -64,7 +64,8 @@ namespace TaskLeader.GUI
             grilleData.Columns.Insert(4,linkCol);
 
             grilleData.Columns.Insert(5,this.createSimpleColumn("Deadline"));
-            grilleData.Columns.Insert(6,this.createSimpleColumn("Statut"));
+            grilleData.Columns.Insert(6, this.createSimpleColumn("Destinataire"));
+            grilleData.Columns.Insert(7,this.createSimpleColumn("Statut"));
 
             this.grilleData.DataSource = new DataTable();
 

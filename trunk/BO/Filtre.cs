@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Data;
 using TaskLeader.GUI;
 using TaskLeader.DAL;
@@ -12,7 +13,7 @@ namespace TaskLeader.BO
         private DBentity v_champ;
         public DBentity entity { get { return v_champ; } }
  
-        private ArrayList v_selected = new ArrayList();
+        private ArrayList v_selected = new ArrayList(); //TODO: à remplacer par une List<String>
         public ArrayList selected { get { return v_selected; } }
 
         public Criterium(DBentity entity, IList criteres)
@@ -25,12 +26,10 @@ namespace TaskLeader.BO
 
         public override String ToString()
         {
-           
             List<String> liste = new List<String>();
             foreach(String valeur in this.v_selected)
                 liste.Add(valeur);
-
-            return v_champ.nom + ": " + String.Join(", ", liste);
+            return String.Join(" + ", liste);
         }
     }
 
@@ -47,8 +46,8 @@ namespace TaskLeader.BO
         private DB db { get { return TrayIcon.dbs[dbName]; } }
 
         // Tableau qui donne la liste des critères sélectionnés autre que ALL        
-        private ArrayList v_criteria = new ArrayList();
-        public Object[] criteria { get { return v_criteria.ToArray(); } }
+        private Dictionary<DBentity, Criterium> criteriaList = new Dictionary<DBentity, Criterium>();
+        public List<Criterium> criteria { get { return criteriaList.Values.ToList<Criterium>(); } }
 
         // Nom du filtre
         private String v_nomFiltre = "";
@@ -61,16 +60,16 @@ namespace TaskLeader.BO
             this.dbName = nomDB;
 
             if (!allCtxt)
-                this.v_criteria.Add(new Criterium(DB.contexte, ctxt));
+                this.criteriaList.Add(DB.contexte, new Criterium(DB.contexte, ctxt));
 
             if (ctxt != null && ctxt.Count == 1 && !allSuj)
-                this.v_criteria.Add(new Criterium(DB.sujet, suj));
+                this.criteriaList.Add(DB.sujet,new Criterium(DB.sujet, suj));
 
             if (!allDest)
-                this.v_criteria.Add(new Criterium(DB.destinataire, dest));
+                this.criteriaList.Add(DB.destinataire, new Criterium(DB.destinataire, dest));
 
             if (!allStat)
-                this.v_criteria.Add(new Criterium(DB.statut, stat));
+                this.criteriaList.Add(DB.statut, new Criterium(DB.statut, stat));
         }
 
 
@@ -96,7 +95,7 @@ namespace TaskLeader.BO
         public void addCriterium(Criterium critere)
         {
             if (critere != null)
-                this.v_criteria.Add(critere);
+                this.criteriaList.Add(critere.entity, critere);
         }
 
         /// <summary>
@@ -151,6 +150,23 @@ namespace TaskLeader.BO
         public override String ToString()
         {
             return this.v_nomFiltre; //Donc rien pour les filtres manuels.
+        }
+
+        /// <summary>
+        /// Retourne un Dictionnaire DBentity => Valeur décrivant le filtre.
+        /// Valeur = "" si All sélectionné.
+        /// </summary>
+        public Dictionary<String, String> getDescription()
+        {
+            Dictionary<String, String> description = new Dictionary<string, string>();
+
+            foreach (DBentity entity in DB.entities)
+                if (this.criteriaList.ContainsKey(entity))
+                    description.Add(entity.nom, this.criteriaList[entity].ToString());
+                else
+                    description.Add(entity.nom, "");
+
+            return description;
         }
     }
 }

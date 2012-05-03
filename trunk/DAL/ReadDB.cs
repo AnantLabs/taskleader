@@ -1,5 +1,6 @@
  using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
 using System.Windows.Forms;
@@ -214,14 +215,14 @@ namespace TaskLeader.DAL
         }
 
         // Renvoie un DataTable de toutes les actions
-        public DataTable getActions(Object[] criteria)
+        public DataTable getActions(List<Criterium> criteria)
         {
             // Création de la requête de filtrage
             String requete = "SELECT * FROM VueActions";
 
             String selection, nomColonne;
 
-            if (criteria.Length > 0) // Il n'y a de WHERE que si au moins un criterium a été entré
+            if (criteria.Count > 0) // Il n'y a de WHERE que si au moins un criterium a été entré
             {
                 requete += " WHERE ";
 
