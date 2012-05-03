@@ -301,12 +301,12 @@
             // 
             this.manuelFiltreBout.Image = global::TaskLeader.Properties.Resources.filter;
             this.manuelFiltreBout.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.manuelFiltreBout.Location = new System.Drawing.Point(55, 87);
-            this.manuelFiltreBout.Margin = new System.Windows.Forms.Padding(55, 0, 0, 0);
+            this.manuelFiltreBout.Location = new System.Drawing.Point(30, 87);
+            this.manuelFiltreBout.Margin = new System.Windows.Forms.Padding(30, 0, 0, 0);
             this.manuelFiltreBout.Name = "manuelFiltreBout";
-            this.manuelFiltreBout.Size = new System.Drawing.Size(57, 30);
+            this.manuelFiltreBout.Size = new System.Drawing.Size(97, 30);
             this.manuelFiltreBout.TabIndex = 8;
-            this.manuelFiltreBout.Text = "Filtrer";
+            this.manuelFiltreBout.Text = "Ajouter le filtre";
             this.manuelFiltreBout.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.manuelFiltreBout.UseVisualStyleBackColor = true;
             this.manuelFiltreBout.Click += new System.EventHandler(this.filtreManuel);
@@ -533,9 +533,9 @@
             this.storedFilterBout.Location = new System.Drawing.Point(7, 45);
             this.storedFilterBout.Margin = new System.Windows.Forms.Padding(7, 45, 0, 0);
             this.storedFilterBout.Name = "storedFilterBout";
-            this.storedFilterBout.Size = new System.Drawing.Size(58, 30);
+            this.storedFilterBout.Size = new System.Drawing.Size(96, 30);
             this.storedFilterBout.TabIndex = 9;
-            this.storedFilterBout.Text = "Filtrer";
+            this.storedFilterBout.Text = "Ajouter le filtre";
             this.storedFilterBout.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.storedFilterBout.UseVisualStyleBackColor = true;
             this.storedFilterBout.Click += new System.EventHandler(this.storedFilterBout_Click);

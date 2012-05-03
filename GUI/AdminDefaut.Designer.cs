@@ -187,7 +187,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "AdminDefaut";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Choix des valeurs par défaut";
+            this.Text = "Valeurs par défaut";
             this.Load += new System.EventHandler(this.AdminDefaut_Load);
             this.flowLayoutPanel1.ResumeLayout(false);
             this.flowLayoutPanel1.PerformLayout();

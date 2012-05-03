@@ -26,6 +26,7 @@ namespace TaskLeader.GUI
         // Gestion des DBs
         public static Dictionary<string, DB> dbs = new Dictionary<string, DB>();
         public static ObservableCollection<string> activeDBs = new ObservableCollection<string>();
+        public static ObservableCollection<Filtre> displayedFilters = new ObservableCollection<Filtre>();
         public static DB defaultDB
         {
             get
