@@ -39,7 +39,6 @@ namespace TaskLeader.GUI
                 this.selectPanel.SetFlowBreak(control, true);
             this.selectPanel.ResumeLayout();
 
-
             // Remplissage de la liste des bases d'action disponibles
             foreach (DB db in TrayIcon.dbs.Values)
             {
@@ -191,6 +190,8 @@ namespace TaskLeader.GUI
         /// </summary>
         private void manuelDBcombo_SelectedIndexChanged(object sender, EventArgs e)
         {
+            //TODO: il faut annuler le changement de base si elle n'est plus dispo.
+            // http://stackoverflow.com/questions/314503/how-to-prevent-cancel-a-comboboxs-value-change-in-c?answertab=votes#tab-top
             foreach (CritereSelect widget in this.selectPanel.Controls)
                 widget.changeDB((DB)manuelDBcombo.Items[manuelDBcombo.SelectedIndex]);
         }
