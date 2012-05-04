@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Configuration;
 using System.Collections;
+using System.Collections.Specialized;
 using System.Data;
 using TaskLeader.DAL;
 using TaskLeader.GUI;
@@ -281,6 +282,37 @@ namespace TaskLeader.BO
             this.v_sujt = TrayIcon.dbs[dbName].getDefault(DB.sujet);
             this.v_dest = TrayIcon.dbs[dbName].getDefault(DB.destinataire);
             this.v_stat = TrayIcon.dbs[dbName].getDefault(DB.statut);
+        }
+
+        /// <summary>
+        /// Export vers presse-papier à partir du template de la clé fournie
+        /// </summary>
+        public void clip(String key)
+        {
+            //Récupération des templates d'export
+            NameValueCollection section = (NameValueCollection)ConfigurationManager.GetSection("Export");
+            String template = section[key];
+
+            // Remplacement des caractères spéciaux
+            String resultat = template.Replace("(VIDE)", "");
+            resultat = resultat.Replace("(TAB)", "\t");
+
+            // Remplacement du sujet (Attention les sauts de ligne ne sont pas gérés)
+            resultat = resultat.Replace("(Sujet)", this.v_sujt);
+
+            // Remplacement de l'action en rentrant une formule excel pour les passages à la ligne
+            String action = this.v_texte.Replace("\"", "\"\"");
+            action = action.Replace(Environment.NewLine, "\"&CAR(10)&\""); // Attention compatible avec la version fr de excel seulement
+            action = "=\"" + action + "\"";
+            resultat = resultat.Replace("(Action)", action);
+
+            // Remplacement du statut, de la due date et de la date courante
+            resultat = resultat.Replace("(Statut)", this.v_stat);
+            resultat = resultat.Replace("(DueDate)", this.v_dueDate.ToShortDateString());
+            resultat = resultat.Replace("(NOW)", DateTime.Now.ToShortDateString());
+
+            //Copie dans le presse-papier
+            System.Windows.Forms.Clipboard.SetText(resultat);
         }
     }
 }

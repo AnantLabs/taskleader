@@ -58,7 +58,6 @@
     <StartupObject>TaskLeader.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="BLL\Export.cs" />
     <Compile Include="BLL\Init.cs" />
     <Compile Include="BO\Action.cs" />
     <Compile Include="BO\Enclosure.cs" />
