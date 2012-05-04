@@ -56,12 +56,12 @@
             this.biblio = new System.Windows.Forms.ImageList(this.components);
             this.flowLayoutPanel4 = new System.Windows.Forms.FlowLayoutPanel();
             this.flowLayoutPanel5 = new System.Windows.Forms.FlowLayoutPanel();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.label7 = new System.Windows.Forms.Label();
             this.dbsBox = new System.Windows.Forms.ComboBox();
             this.addLinksMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.ajouterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mailItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.tableLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
@@ -69,8 +69,8 @@
             this.linksViewMenu.SuspendLayout();
             this.flowLayoutPanel4.SuspendLayout();
             this.flowLayoutPanel5.SuspendLayout();
-            this.addLinksMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.addLinksMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // saveButton
@@ -330,14 +330,14 @@
             this.linksViewMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.deleteEncItem});
             this.linksViewMenu.Name = "linksViewMenu";
-            this.linksViewMenu.ShowImageMargin = false;
-            this.linksViewMenu.Size = new System.Drawing.Size(139, 26);
+            this.linksViewMenu.Size = new System.Drawing.Size(164, 48);
             this.linksViewMenu.Opening += new System.ComponentModel.CancelEventHandler(this.linksViewMenu_Opening);
             // 
             // deleteEncItem
             // 
+            this.deleteEncItem.Image = global::TaskLeader.Properties.Resources.cross;
             this.deleteEncItem.Name = "deleteEncItem";
-            this.deleteEncItem.Size = new System.Drawing.Size(138, 22);
+            this.deleteEncItem.Size = new System.Drawing.Size(163, 22);
             this.deleteEncItem.Text = "Supprimer le lien";
             this.deleteEncItem.Click += new System.EventHandler(this.deleteEncItem_Click);
             // 
@@ -370,6 +370,17 @@
             this.flowLayoutPanel5.Name = "flowLayoutPanel5";
             this.flowLayoutPanel5.Size = new System.Drawing.Size(624, 36);
             this.flowLayoutPanel5.TabIndex = 21;
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = global::TaskLeader.Properties.Resources.database_go32;
+            this.pictureBox1.Location = new System.Drawing.Point(5, 2);
+            this.pictureBox1.Margin = new System.Windows.Forms.Padding(5, 2, 3, 0);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(32, 32);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox1.TabIndex = 2;
+            this.pictureBox1.TabStop = false;
             // 
             // label7
             // 
@@ -416,17 +427,6 @@
             this.mailItem.Text = "Mail Outlook";
             this.mailItem.Click += new System.EventHandler(this.mailItem_Click);
             // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Image = global::TaskLeader.Properties.Resources.database_go32;
-            this.pictureBox1.Location = new System.Drawing.Point(5, 2);
-            this.pictureBox1.Margin = new System.Windows.Forms.Padding(5, 2, 3, 0);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(32, 32);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pictureBox1.TabIndex = 2;
-            this.pictureBox1.TabStop = false;
-            // 
             // ManipAction
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -452,8 +452,8 @@
             this.flowLayoutPanel4.PerformLayout();
             this.flowLayoutPanel5.ResumeLayout(false);
             this.flowLayoutPanel5.PerformLayout();
-            this.addLinksMenu.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            this.addLinksMenu.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
