@@ -117,7 +117,6 @@ namespace TaskLeader.GUI
         }
 
         // Sauvegarde de l'action
-        public bool dataSaved = false; //TODO: à supprimer quand l'évènement sera en place
         private void sauveAction(object sender, EventArgs e)
         {
             //TODO: griser le bouton Sauvegarder si rien n'a été édité
@@ -132,7 +131,6 @@ namespace TaskLeader.GUI
                 v_action.DueDate = actionDatePicker.Value;
 
             // On sauvegarde l'action
-            //TODO: ici il faut donner le nom de la base pour une action non scratchpad
             v_action.save();
 
             // Fermeture de la fenêtre
