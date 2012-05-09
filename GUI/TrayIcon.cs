@@ -29,6 +29,9 @@ namespace TaskLeader.GUI
         /// </summary>
         public static Dictionary<string, DB> dbs = new Dictionary<string, DB>();
         public static ObservableCollection<string> activeDBs = new ObservableCollection<string>();
+        /// <summary>
+        /// Liste des filtres affichés dans la Toolbox
+        /// </summary>
         public static ObservableCollection<Filtre> displayedFilters = new ObservableCollection<Filtre>();
         public static DB defaultDB
         {
