@@ -1,5 +1,6 @@
 using System;
 using System.Drawing;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Configuration;
@@ -94,11 +95,11 @@ namespace TaskLeader.GUI
             this.loadWidgets();
 
             // Affichage des pièces jointes
-            Array links = action.PJ;
+            List<Enclosure> links = action.PJ;
             foreach (Enclosure link in links)
                 this.addPJToView(link);
 
-            this.linksView.Visible = (links.Length > 0);
+            this.linksView.Visible = (links.Count > 0);
 
             // Affichage du descriptif de l'action
             desField.Text = action.Texte;

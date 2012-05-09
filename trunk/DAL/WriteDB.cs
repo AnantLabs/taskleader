@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Windows.Forms;
 using TaskLeader.BO;
@@ -144,10 +145,10 @@ namespace TaskLeader.DAL
                             " SELECT C.id, " + sjt +
                             " FROM Contextes C" +
                             " WHERE C.Titre = " + ctxt;
-            
+
             int result = execSQL(requete);
             if (result == 1)
-                this.OnNewValue(sujet,contexte);
+                this.OnNewValue(sujet, contexte);
 
             return result;
         }
@@ -203,7 +204,7 @@ namespace TaskLeader.DAL
         }
 
         // Insertion des PJ
-        public void insertPJ(String actionID, Array PJ)
+        public void insertPJ(String actionID, List<Enclosure> PJ)
         {
             String requete;
 
@@ -229,11 +230,12 @@ namespace TaskLeader.DAL
                 requete += EncID + ");";
 
                 execSQL(requete);
+                this.OnActionEdited(actionID);
             }
         }
 
-        // Suppression d'une PJ de la base
-        public void removePJ(Array PJ)
+        // Suppression d'une liste de PJs de la base (toutes liées à la même action)
+        public void removePJ(String actionID, List<Enclosure> PJ)
         {
             foreach (Enclosure pj in PJ)
             {
@@ -252,6 +254,9 @@ namespace TaskLeader.DAL
                     mytransaction.Commit();
                 }
             }
+
+            if (PJ.Count > 0)
+                this.OnActionEdited(actionID);
         }
 
         // Insertion d'une nouvelle action
@@ -353,7 +358,7 @@ namespace TaskLeader.DAL
             if (updatePart.Length > 0)
             {
                 requete = "UPDATE Actions SET " + updatePart.Substring(0, updatePart.Length - 1) + " WHERE id='" + action.ID + "'";
-                
+
                 int result = execSQL(requete);
                 this.OnActionEdited(action.ID);
                 return result;

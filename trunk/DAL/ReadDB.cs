@@ -263,10 +263,10 @@ namespace TaskLeader.DAL
 		}
 
         /// <summary>Récupération des liens attachés à une action</summary>
-        public Array getPJ(String actionID)
+        public List<Enclosure> getPJ(String actionID)
         {
             DataTable linksData = getTable("SELECT EncType,EncID FROM Enclosures WHERE ActionID=" + actionID);
-            ArrayList liste = new ArrayList();
+            List<Enclosure> liste = new List<Enclosure>();
 
             foreach (DataRow pj in linksData.Rows)
                 switch (pj["EncType"].ToString())
@@ -279,7 +279,7 @@ namespace TaskLeader.DAL
                         break;
                 }
 
-            return liste.ToArray();
+            return liste;
         }
 
         // Récupération des informations d'un mail à partir de son ID
