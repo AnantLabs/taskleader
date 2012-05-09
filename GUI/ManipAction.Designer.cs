@@ -62,6 +62,7 @@
             this.addLinksMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.ajouterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mailItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.errorLabel = new System.Windows.Forms.Label();
             this.tableLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
@@ -130,6 +131,7 @@
             this.desField.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.desField.Size = new System.Drawing.Size(312, 155);
             this.desField.TabIndex = 16;
+            this.desField.Enter += new System.EventHandler(this.desField_Enter);
             // 
             // sujetBox
             // 
@@ -230,6 +232,7 @@
             // flowLayoutPanel1
             // 
             this.flowLayoutPanel1.Controls.Add(this.label3);
+            this.flowLayoutPanel1.Controls.Add(this.errorLabel);
             this.flowLayoutPanel1.Controls.Add(this.desField);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 45);
@@ -240,7 +243,6 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.flowLayoutPanel1.SetFlowBreak(this.label3, true);
             this.label3.Location = new System.Drawing.Point(3, 5);
             this.label3.Margin = new System.Windows.Forms.Padding(3, 5, 3, 0);
             this.label3.Name = "label3";
@@ -330,7 +332,7 @@
             this.linksViewMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.deleteEncItem});
             this.linksViewMenu.Name = "linksViewMenu";
-            this.linksViewMenu.Size = new System.Drawing.Size(164, 48);
+            this.linksViewMenu.Size = new System.Drawing.Size(164, 26);
             this.linksViewMenu.Opening += new System.ComponentModel.CancelEventHandler(this.linksViewMenu_Opening);
             // 
             // deleteEncItem
@@ -427,6 +429,19 @@
             this.mailItem.Text = "Mail Outlook";
             this.mailItem.Click += new System.EventHandler(this.mailItem_Click);
             // 
+            // errorLabel
+            // 
+            this.errorLabel.AutoSize = true;
+            this.flowLayoutPanel1.SetFlowBreak(this.errorLabel, true);
+            this.errorLabel.ForeColor = System.Drawing.Color.Red;
+            this.errorLabel.Location = new System.Drawing.Point(63, 5);
+            this.errorLabel.Margin = new System.Windows.Forms.Padding(3, 5, 3, 0);
+            this.errorLabel.Name = "errorLabel";
+            this.errorLabel.Size = new System.Drawing.Size(163, 13);
+            this.errorLabel.TabIndex = 17;
+            this.errorLabel.Text = "le champ descriptif est obligatoire";
+            this.errorLabel.Visible = false;
+            // 
             // ManipAction
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -493,6 +508,7 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.ComboBox dbsBox;
         private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.Label errorLabel;
 
 
     }

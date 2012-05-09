@@ -104,7 +104,7 @@ namespace TaskLeader.GUI
             // Affichage du descriptif de l'action
             desField.Text = action.Texte;
             desField.Select(desField.Text.Length, 0); // Curseur placé à la fin par défaut
-            
+
         }
 
         // Mise à jour de la combobox présentant les sujets
@@ -113,7 +113,7 @@ namespace TaskLeader.GUI
             // On vide les sujets correspondants au contexte actuel
             sujetBox.Items.Clear();
 
-            foreach (String item in db.getTitres(DB.sujet,contexteBox.Text))
+            foreach (String item in db.getTitres(DB.sujet, contexteBox.Text))
                 sujetBox.Items.Add(item);
         }
 
@@ -121,6 +121,13 @@ namespace TaskLeader.GUI
         private void sauveAction(object sender, EventArgs e)
         {
             //TODO: griser le bouton Sauvegarder si rien n'a été édité
+
+            // Erreur lorsque le champ descriptif est vide
+            if (String.IsNullOrWhiteSpace(this.desField.Text))
+            {
+                this.errorLabel.Visible = true;
+                return;
+            }
 
             // Update de l'action avec les nouveaux champs
             v_action.updateDefault(contexteBox.Text, sujetBox.Text, desField.Text, destBox.Text, statutBox.Text);
@@ -268,6 +275,11 @@ namespace TaskLeader.GUI
                 // Mise à jour des widgets
                 this.loadWidgets();
             }
+        }
+
+        private void desField_Enter(object sender, EventArgs e)
+        {
+            this.errorLabel.Visible = false;
         }
 
     }
