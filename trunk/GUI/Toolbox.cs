@@ -295,7 +295,10 @@ namespace TaskLeader.GUI
             foreach (FiltreSelect widget in this.filtersPanel.Controls)
             {
                 foreach (Filtre filtre in widget.getSelected())
-                    TrayIcon.displayedFilters.Add(filtre);
+                    if (!TrayIcon.displayedFilters.Contains(filtre))
+                        TrayIcon.displayedFilters.Add(filtre);
+                    else
+                        TrayIcon.afficheMessage("Base d'actions "+filtre.dbName, "Le filtre " + filtre.ToString() + " est déjà affiché");
                 widget.clearChecked(false);
             }
         }
