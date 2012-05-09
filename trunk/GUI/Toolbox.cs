@@ -1,8 +1,5 @@
 using System;
-using System.Data;
 using System.Linq;
-using System.ComponentModel;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Windows.Forms;
 using TaskLeader.DAL;
@@ -51,7 +48,7 @@ namespace TaskLeader.GUI
                 activeItem.CheckOnClick = true;
                 activeItem.CheckedChanged += new EventHandler(this.changeActiveDBs);
 
-                this.adminItem.DropDownItems.Add(new ToolStripMenuItem(db.name,TaskLeader.Properties.Resources.database,new ToolStripMenuItem[]{
+                this.adminItem.DropDownItems.Add(new ToolStripMenuItem(db.name, TaskLeader.Properties.Resources.database, new ToolStripMenuItem[]{
                     activeItem,
                     new ToolStripMenuItem("Valeurs par défaut",TaskLeader.Properties.Resources.bullets,this.defaultValuesToolStripMenuItem_Click),
                 }));
@@ -71,12 +68,12 @@ namespace TaskLeader.GUI
             this.data.Dock = DockStyle.Fill;
             this.mainTableLayout.Controls.Add(this.data, 0, 2);
             this.mainTableLayout.SetColumnSpan(this.data, 4);
-            
+
             // ---------
             // TagsPanel
             // ---------
             TrayIcon.displayedFilters.CollectionChanged += new NotifyCollectionChangedEventHandler(displayedFilters_CollectionChanged);
-            
+
             this.tagsPanel.Controls.AddRange(
                 TrayIcon.displayedFilters.
                 Select<Filtre, Etiquette>(f => new Etiquette(f)).
@@ -260,9 +257,13 @@ namespace TaskLeader.GUI
         // Validation de la recherche après click sur OK
         private void searchButton_Click(object sender, EventArgs e)
         {
-            if (searchBox.Text != "")
+            if (!String.IsNullOrWhiteSpace(this.searchBox.Text))
+            {
                 foreach (DB db in this.dbSelect.getDBs())
                     TrayIcon.displayedFilters.Add(new Filtre(searchBox.Text, db.name));
+                this.searchBox.Clear();
+                this.dbSelect.clearChecked(true);
+            }
             else
             {
                 this.erreurSearch.Text = "Entrer un mot clé pour la recherche";
@@ -295,7 +296,7 @@ namespace TaskLeader.GUI
             {
                 foreach (Filtre filtre in widget.getSelected())
                     TrayIcon.displayedFilters.Add(filtre);
-                widget.clearChecked();
+                widget.clearChecked(false);
             }
         }
 

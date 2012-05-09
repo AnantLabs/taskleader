@@ -55,11 +55,20 @@ namespace TaskLeader.GUI
         /// <summary>
         /// Déselectionne tous les éléments de la liste
         /// </summary>
-        public void clearChecked()
+        /// <param name="selectAll">true si tous les éléments doivent être sélectionnés</param>
+        public void clearChecked(bool selectAll)
         {
+            this.beginListUpdate();
+
             this.liste.ClearSelected();
-            while (this.liste.CheckedIndices.Count > 0)
-                this.liste.SetItemChecked(this.liste.CheckedIndices[0], false);
+            if (selectAll)
+                for (int i = 0; i < this.liste.Items.Count; i++)
+                    this.liste.SetItemChecked(i, true);
+            else
+                while (this.liste.CheckedIndices.Count > 0)
+                    this.liste.SetItemChecked(this.liste.CheckedIndices[0], false);
+
+            this.endListUpdate();   
         }
 
         /// <summary>
@@ -248,8 +257,8 @@ namespace TaskLeader.GUI
     public class DBSelect : MultipleSelect
     {
         /// <summary>
-        /// Un FiltreSelect peut se rafraîchir sur les triggers suivants:
-        /// - Nouvelle filtre pour la base courante
+        /// Un DBSelect peut se rafraîchir sur les triggers suivants:
+        /// - Base activée ou désactivée
         /// </summary>
 
         public DBSelect()
