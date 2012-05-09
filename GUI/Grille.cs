@@ -14,7 +14,9 @@ namespace TaskLeader.GUI
 {
     public partial class Grille : UserControl
     {
-        // Dictionnaire contenant les filtres affichés et les DataTables associés
+        /// <summary>
+        /// Dictionnaire filtre affiché => DataTable associé
+        /// </summary>
         private Dictionary<Filtre, DataTable> data = new Dictionary<Filtre, DataTable>();
         /// <summary>
         /// Retourne le nom des tables affichant des actions de la base en paramètre
@@ -50,22 +52,22 @@ namespace TaskLeader.GUI
 
             this.grilleData.AutoGenerateColumns = false; //Les colonnes sont créées manuellement
 
-            grilleData.Columns.Insert(0,this.createSimpleColumn("Ref"));
-            grilleData.Columns.Insert(1,this.createSimpleColumn("Contexte"));
-            grilleData.Columns.Insert(2,this.createSimpleColumn("Sujet"));
+            grilleData.Columns.Insert(0, this.createSimpleColumn("Ref"));
+            grilleData.Columns.Insert(1, this.createSimpleColumn("Contexte"));
+            grilleData.Columns.Insert(2, this.createSimpleColumn("Sujet"));
 
-            grilleData.Columns.Insert(3,this.createSimpleColumn("Titre"));
+            grilleData.Columns.Insert(3, this.createSimpleColumn("Titre"));
             grilleData.Columns["Titre"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
 
             // Création de la colonne des liens
             DataGridViewImageColumn linkCol = new DataGridViewImageColumn();
             linkCol.Name = "Liens";
             linkCol.DataPropertyName = "Liens";
-            grilleData.Columns.Insert(4,linkCol);
+            grilleData.Columns.Insert(4, linkCol);
 
-            grilleData.Columns.Insert(5,this.createSimpleColumn("Deadline"));
+            grilleData.Columns.Insert(5, this.createSimpleColumn("Deadline"));
             grilleData.Columns.Insert(6, this.createSimpleColumn("Destinataire"));
-            grilleData.Columns.Insert(7,this.createSimpleColumn("Statut"));
+            grilleData.Columns.Insert(7, this.createSimpleColumn("Statut"));
 
             this.grilleData.DataSource = new DataTable();
 
@@ -141,8 +143,8 @@ namespace TaskLeader.GUI
         {
             new ManipAction(
                 new TLaction(
-                    this.getDataFromRow(this.grilleData.SelectedRows[0].Index,"id").ToString(),
-                    this.getDataFromRow(this.grilleData.SelectedRows[0].Index, "DB").ToString()
+                    this.getDataFromRow(this.grilleData.SelectedRows[0].Index, "id"),
+                    this.getDataFromRow(this.grilleData.SelectedRows[0].Index, "DB")
                 )
             ).Show();
         }
@@ -156,7 +158,7 @@ namespace TaskLeader.GUI
         /// </summary>
         /// <param name="index">Index de la ligne dans la grille</param>
         /// <param name="col">Nom du champ</param>
-        private String getDataFromRow(int index,String col)
+        private String getDataFromRow(int index, String col)
         {
             return ((DataRowView)grilleData.Rows[index].DataBoundItem).Row[col].ToString();
         }
@@ -170,7 +172,7 @@ namespace TaskLeader.GUI
             if (grilleData.Columns[e.ColumnIndex].Name.Equals("Deadline"))
                 grilleData[e.ColumnIndex, e.RowIndex].ToolTipText = "Modifier la date";
 
-            // Gestion de la colonne Deadline
+            #region Gestion de la colonne Deadline
             if (grilleData.Columns[e.ColumnIndex].Name.Equals("Deadline") && DateTime.TryParse(e.Value.ToString(), out date))
             {
                 // Récupération du delta en jours
@@ -201,8 +203,9 @@ namespace TaskLeader.GUI
                     e.CellStyle.Font = new Font(e.CellStyle.Font, FontStyle.Bold); // en gras
                 }
             }
+            #endregion
 
-            // Gestion de la colonne PJ
+            #region Gestion de la colonne PJ
             if (grilleData.Columns[e.ColumnIndex].Name.Equals("Liens"))
             {
                 switch (e.Value.ToString())
@@ -214,7 +217,7 @@ namespace TaskLeader.GUI
                     case ("1"):
                         // Récupération de la PJ
                         DB db = TrayIcon.dbs[this.getDataFromRow(e.RowIndex, "DB")];
-                        Enclosure pj = (Enclosure)db.getPJ(this.getDataFromRow(e.RowIndex, "id")).GetValue(0);
+                        Enclosure pj = db.getPJ(this.getDataFromRow(e.RowIndex, "id"))[0];
                         e.Value = pj.Icone; // Affichage de la bonne icône
                         grilleData[e.ColumnIndex, e.RowIndex].ToolTipText = pj.Titre; // Modification du tooltip de la cellule
                         grilleData.Rows[e.RowIndex].Tag = pj; // Tag de la DataGridRow
@@ -225,6 +228,7 @@ namespace TaskLeader.GUI
                         break;
                 }
             }
+            #endregion
         }
 
         // Gestion des clicks sur le tableau d'actions
@@ -247,7 +251,7 @@ namespace TaskLeader.GUI
                 else // Plusieurs liens
                 {
                     DB db = TrayIcon.dbs[this.getDataFromRow(e.RowIndex, "DB")];
-                    Array links = db.getPJ(this.getDataFromRow(e.RowIndex, "id")); //Récupération des différents liens
+                    List<Enclosure> links = db.getPJ(this.getDataFromRow(e.RowIndex, "id")); //Récupération des différents liens
                     linksContext.Items.Clear(); // Remise à zéro de la liste
 
                     foreach (Enclosure link in links)

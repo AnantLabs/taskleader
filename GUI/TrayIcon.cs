@@ -24,6 +24,9 @@ namespace TaskLeader.GUI
         static Control invokeControl = new Control();
 
         // Gestion des DBs
+        /// <summary>
+        /// Nom de la DB => Objet DB
+        /// </summary>
         public static Dictionary<string, DB> dbs = new Dictionary<string, DB>();
         public static ObservableCollection<string> activeDBs = new ObservableCollection<string>();
         public static ObservableCollection<Filtre> displayedFilters = new ObservableCollection<Filtre>();

@@ -2,6 +2,7 @@
 using System.Configuration;
 using System.Collections;
 using System.Collections.Specialized;
+using System.Collections.Generic;
 using System.Data;
 using TaskLeader.DAL;
 using TaskLeader.GUI;
@@ -126,13 +127,13 @@ namespace TaskLeader.BO
         public String StatutSQL { get { return sqlFactory(v_stat); } }       
 
         // PJ à l'action
-        private ArrayList v_links = new ArrayList();
-        private ArrayList added_links = new ArrayList();
-        private ArrayList removed_links = new ArrayList();
+        private List<Enclosure> v_links = new List<Enclosure>();
+        private List<Enclosure> added_links = new List<Enclosure>();
+        private List<Enclosure> removed_links = new List<Enclosure>();
         public void addPJ(Enclosure link) { v_links.Add(link); added_links.Add(link); }
         public void removePJ(Enclosure link) { v_links.Remove(link); removed_links.Add(link); }
         public bool hasPJ { get { return (v_links.Count > 0); } }
-        public Array PJ { get { return v_links.ToArray(); } }
+        public List<Enclosure> PJ { get { return v_links; } }
 
         /// <summary>
         /// Constructeur permettant d'initialiser les valeurs par défaut
@@ -245,7 +246,7 @@ namespace TaskLeader.BO
                     int nbAdded = this.added_links.Count;
                     if (nbAdded > 0)
                     {
-                        db.insertPJ(this.v_TLID, this.added_links.ToArray()); // Sauvegarde des PJ
+                        db.insertPJ(this.v_TLID, this.added_links); // Sauvegarde des PJ
                         bilan += nbAdded.ToString() + " PJ enregistrée"; // Préparation du bilan
                         if (nbAdded > 1) bilan += "s";
                         bilan += "\n";
@@ -255,7 +256,7 @@ namespace TaskLeader.BO
                     int nbSupp = this.removed_links.Count;
                     if (nbSupp > 0)
                     {
-                        db.removePJ(this.removed_links.ToArray());
+                        db.removePJ(this.v_TLID, this.removed_links);
                         bilan += nbSupp.ToString() + " PJ supprimée"; // Préparation du bilan
                         if (nbSupp > 1) bilan += "s";
                         bilan += "\n";
