@@ -33,7 +33,7 @@ namespace TaskLeader.BO
         }
     }
 
-    public class Filtre
+    public class Filtre : IEquatable<Filtre>
     {
         /// <summary>
         /// Type du filtre: 1=Critères, 2=Recherche
@@ -84,7 +84,6 @@ namespace TaskLeader.BO
             this.dbName = nomDB;
             this.v_nomFiltre = recherche;
         }
-
 
         public Filtre(String nomDB)
         {
@@ -168,5 +167,37 @@ namespace TaskLeader.BO
 
             return description;
         }
+
+        #region Implémentation de IEquatable http://msdn.microsoft.com/en-us/library/ms131190.aspx
+
+        /// <summary>
+        /// Méthode permettant la comparaison de 2 Filtres
+        /// </summary>
+        /// <param name="compFilter">Filtre à comparer</param>
+        public bool Equals(Filtre compFilter)
+        {
+            if (compFilter == null)
+                return false;
+
+            //TODO: pertinent uniquement pour les filtre enregistrés
+            if ((compFilter.nom == this.nom) && (compFilter.dbName == this.dbName))
+                return true;
+            else
+                return false;
+        }
+
+        public override bool Equals(Object obj)
+        {
+            if (obj == null)
+                return false;
+
+            Filtre compFilter = obj as Filtre;
+            if (compFilter == null)
+                return false;
+            else
+                return Equals(compFilter);
+        } 
+
+        #endregion
     }
 }
