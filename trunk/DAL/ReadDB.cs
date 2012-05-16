@@ -193,8 +193,8 @@ namespace TaskLeader.DAL
                 liste = getList(requete);
 
                 // On met à jour le critère du filtre correspondant
-                foreach(object item in liste)
-                    critere.selected.Add(item);            
+                foreach(String item in liste)
+                    critere.valuesSelected.Add(item);            
             }
 
             return filtre;
@@ -231,10 +231,10 @@ namespace TaskLeader.DAL
                     // On récupère le nom de la colonne correspondant au critère
                     nomColonne = critere.entity.viewColName;
 
-                    if (critere.selected.Count > 0) // Requête SQL si au moins un élément a été sélectionné
+                    if (critere.valuesSelected.Count > 0) // Requête SQL si au moins un élément a été sélectionné
                     {
                         requete += nomColonne + " IN (";
-                        foreach (String item in critere.selected)
+                        foreach (String item in critere.valuesSelected)
                         {
                             selection = item.Replace("'", "''"); // On gère les simple quote
                             requete += "'" + selection + "', ";

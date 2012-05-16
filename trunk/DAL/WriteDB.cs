@@ -100,7 +100,7 @@ namespace TaskLeader.DAL
                         SQLiteParameter p_Titre = new SQLiteParameter("@Titre");
                         SQLCmd.Parameters.Add(p_Titre);
 
-                        foreach (String item in critere.selected)
+                        foreach (String item in critere.valuesSelected)
                         {
                             selection = item.Replace("'", "''"); // On gère les simple quote
                             p_Titre.Value = selection;

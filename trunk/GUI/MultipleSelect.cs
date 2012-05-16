@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 using TaskLeader.BO;
 using TaskLeader.DAL;
@@ -204,7 +205,7 @@ namespace TaskLeader.GUI
         public Criterium getCriterium()
         {
             if (!box.Checked)
-                return new Criterium(type, liste.CheckedItems);
+                return new Criterium(type, liste.CheckedItems.Cast<String>().ToList<String>());
             else
                 return null;
         }
