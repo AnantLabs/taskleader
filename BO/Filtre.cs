@@ -8,29 +8,54 @@ using TaskLeader.DAL;
 
 namespace TaskLeader.BO
 {
-    public class Criterium
+    public class Criterium : IEquatable<Criterium>
     {
-        private DBentity v_champ;
-        public DBentity entity { get { return v_champ; } }
- 
-        private ArrayList v_selected = new ArrayList(); //TODO: à remplacer par une List<String>
-        public ArrayList selected { get { return v_selected; } }
+        private DBentity _champ;
+        public DBentity entity { get { return _champ; } }
+
+        private List<String> _selected = new List<String>();
+        public List<String> valuesSelected { get { return _selected; } }
 
         public Criterium(DBentity entity, IList criteres)
         {
-            this.v_champ = entity;
+            this._champ = entity;
 
-            if (criteres!=null)
-                v_selected.AddRange(criteres);
+            if (criteres as IEnumerable<String> != null)
+                _selected.AddRange(criteres as IEnumerable<String>);
         }
 
         public override String ToString()
         {
-            List<String> liste = new List<String>();
-            foreach(String valeur in this.v_selected)
-                liste.Add(valeur);
-            return String.Join(" + ", liste);
+            return String.Join(" + ", _selected);
         }
+
+        #region Implémentation de IEquatable http://msdn.microsoft.com/en-us/library/ms131190.aspx
+
+        /// <summary>
+        /// Méthode permettant la comparaison de 2 Criterium
+        /// </summary>
+        /// <param name="compCriter">Filtre à comparer</param>
+        public bool Equals(Criterium compCriter)
+        {
+            if (compCriter == null)
+                return false;
+
+            return ((this._champ.nom == compCriter._champ.nom) && this._selected.SequenceEqual(compCriter._selected));
+        }
+
+        public override bool Equals(Object obj)
+        {
+            if (obj == null)
+                return false;
+
+            Criterium compCriter = obj as Criterium;
+            if (compCriter == null)
+                return false;
+            else
+                return Equals(compCriter);
+        }
+
+        #endregion
     }
 
     public class Filtre : IEquatable<Filtre>
@@ -38,40 +63,41 @@ namespace TaskLeader.BO
         /// <summary>
         /// Type du filtre: 1=Critères, 2=Recherche
         /// </summary>
-        public int type { get { return v_type; } }
-        private int v_type;
+        public int type { get { return _type; } }
+        private int _type;
 
         // DB d'application de ce filtre
         public String dbName;
         private DB db { get { return TrayIcon.dbs[dbName]; } }
 
         // Tableau qui donne la liste des critères sélectionnés autre que ALL        
-        private Dictionary<DBentity, Criterium> criteriaList = new Dictionary<DBentity, Criterium>();
-        public List<Criterium> criteria { get { return criteriaList.Values.ToList<Criterium>(); } }
+        private Dictionary<DBentity, Criterium> _criteriaList = new Dictionary<DBentity, Criterium>();
+        public List<Criterium> criteria { get { return _criteriaList.Values.ToList<Criterium>(); } }
 
         // Nom du filtre
         private String v_nomFiltre = "";
-        public String nom { get { return v_nomFiltre; } set { v_nomFiltre = value; } }        
+        public String nom { get { return v_nomFiltre; } set { v_nomFiltre = value; } }
+
+        #region Constructeurs
 
         // Constructeur complet
         public Filtre(String nomDB, bool allCtxt, bool allSuj, bool allDest, bool allStat, IList ctxt = null, IList suj = null, IList dest = null, IList stat = null)
         {
-            this.v_type = 1;
+            this._type = 1;
             this.dbName = nomDB;
 
             if (!allCtxt)
-                this.criteriaList.Add(DB.contexte, new Criterium(DB.contexte, ctxt));
+                this._criteriaList.Add(DB.contexte, new Criterium(DB.contexte, ctxt));
 
             if (ctxt != null && ctxt.Count == 1 && !allSuj)
-                this.criteriaList.Add(DB.sujet,new Criterium(DB.sujet, suj));
+                this._criteriaList.Add(DB.sujet, new Criterium(DB.sujet, suj));
 
             if (!allDest)
-                this.criteriaList.Add(DB.destinataire, new Criterium(DB.destinataire, dest));
+                this._criteriaList.Add(DB.destinataire, new Criterium(DB.destinataire, dest));
 
             if (!allStat)
-                this.criteriaList.Add(DB.statut, new Criterium(DB.statut, stat));
+                this._criteriaList.Add(DB.statut, new Criterium(DB.statut, stat));
         }
-
 
         /// <summary>
         /// Constructeur pour une recherche
@@ -80,21 +106,23 @@ namespace TaskLeader.BO
         /// <param name="nomDB">Nom de la base</param>
         public Filtre(String recherche, String nomDB)
         {
-            this.v_type = 2;
+            this._type = 2;
             this.dbName = nomDB;
             this.v_nomFiltre = recherche;
         }
 
         public Filtre(String nomDB)
         {
-            this.v_type = 1;
+            this._type = 1;
             this.dbName = nomDB;
         }
+
+        #endregion
 
         public void addCriterium(Criterium critere)
         {
             if (critere != null)
-                this.criteriaList.Add(critere.entity, critere);
+                this._criteriaList.Add(critere.entity, critere);
         }
 
         /// <summary>
@@ -141,7 +169,7 @@ namespace TaskLeader.BO
 
             return data;
         }
- 
+
         /// <summary>
         /// Retourne le nom du filtre
         /// </summary>
@@ -160,8 +188,8 @@ namespace TaskLeader.BO
             Dictionary<String, String> description = new Dictionary<string, string>();
 
             foreach (DBentity entity in DB.entities)
-                if (this.criteriaList.ContainsKey(entity))
-                    description.Add(entity.nom, this.criteriaList[entity].ToString());
+                if (this._criteriaList.ContainsKey(entity))
+                    description.Add(entity.nom, this._criteriaList[entity].ToString());
                 else
                     description.Add(entity.nom, "");
 
@@ -179,11 +207,20 @@ namespace TaskLeader.BO
             if (compFilter == null)
                 return false;
 
-            //TODO: pertinent uniquement pour les filtre enregistrés
-            if ((compFilter.nom == this.nom) && (compFilter.dbName == this.dbName))
-                return true;
-            else
+            // Les filtres ont des types différents
+            if (this._type != compFilter.type)
                 return false;
+
+            // Les 2 filtres sont des recherches
+            if (this._type == 2)
+                return ((compFilter.nom == this.nom) && (compFilter.dbName == this.dbName));
+
+            // Les 2 filtres sont des filtres enregistrés
+            if (!String.IsNullOrEmpty(this.nom) && !String.IsNullOrEmpty(compFilter.nom))
+                return ((compFilter.nom == this.nom) && (compFilter.dbName == this.dbName));
+
+            // Un des 2 filtres est un fitre manuel, comparaison des critères
+            return this._criteriaList.SequenceEqual(compFilter._criteriaList);
         }
 
         public override bool Equals(Object obj)
@@ -196,7 +233,7 @@ namespace TaskLeader.BO
                 return false;
             else
                 return Equals(compFilter);
-        } 
+        }
 
         #endregion
     }
