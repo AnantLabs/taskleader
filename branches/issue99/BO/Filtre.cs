@@ -29,7 +29,7 @@ namespace TaskLeader.BO
             return String.Join(" + ", _selected);
         }
 
-        #region Implémentation de IEquatable http://msdn.microsoft.com/en-us/library/ms131190.aspx
+        #region Implémentation de IEquatable
 
         /// <summary>
         /// Méthode permettant la comparaison de 2 Criterium
@@ -87,16 +87,16 @@ namespace TaskLeader.BO
             this.dbName = nomDB;
 
             if (!allCtxt)
-                this._criteriaList.Add(DB.contexte, new Criterium(DB.contexte, ctxt));
+                this._criteriaList.Add(DBField.contexte, new Criterium(DBField.contexte, ctxt));
 
             if (ctxt != null && ctxt.Count == 1 && !allSuj)
-                this._criteriaList.Add(DB.sujet, new Criterium(DB.sujet, suj));
+                this._criteriaList.Add(DBField.sujet, new Criterium(DBField.sujet, suj));
 
             if (!allDest)
-                this._criteriaList.Add(DB.destinataire, new Criterium(DB.destinataire, dest));
+                this._criteriaList.Add(DBField.destinataire, new Criterium(DBField.destinataire, dest));
 
             if (!allStat)
-                this._criteriaList.Add(DB.statut, new Criterium(DB.statut, stat));
+                this._criteriaList.Add(DBField.statut, new Criterium(DBField.statut, stat));
         }
 
         /// <summary>

@@ -23,11 +23,11 @@ namespace TaskLeader.GUI
             // Création des CritereSelect
             CritereSelect widget;
             this.selectPanel.SuspendLayout();
-            foreach (DBentity entity in DB.entities)
+            foreach (DBField field in Enum.GetValues(typeof(DBField)))
             {
-                widget = new CritereSelect(entity);
-                if (entity.parent != null)
-                    widget.addParent(this.selectPanel.Controls[entity.parent.nom] as CritereSelect);
+                widget = new CritereSelect(field);
+                if ((int)field > 100)
+                    widget.addParent(this.selectPanel.Controls[Enum.ToObject(typeof(DBField), (int)field-100).ToString("G")] as CritereSelect);
                 this.selectPanel.Controls.Add(widget);
             }
             this.selectPanel.ResumeLayout();
@@ -227,7 +227,7 @@ namespace TaskLeader.GUI
                 else
                 {
                     DB db = (DB)manuelDBcombo.Items[manuelDBcombo.SelectedIndex];
-                    if (!db.isNvo(DB.filtre, nameBox.Text))
+                    if (!db.isNvo(DBField.filtre, nameBox.Text))
                     {
                         errorLabel.Text = "Ce nom de filtre existe déjà.";
                         errorLabel.Visible = true;

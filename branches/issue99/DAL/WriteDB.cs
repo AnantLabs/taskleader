@@ -19,7 +19,7 @@ namespace TaskLeader.DAL
         }
     }
 
-    public partial class DB
+    public partial class SQLiteDB
     {
         // Méthode générique pour exécuter une requête sql fournie en paramètre, retourne le nombre de lignes modifiées
         public int execSQL(String requete)

@@ -65,7 +65,8 @@
     <Compile Include="BO\Hotkey.cs" />
     <Compile Include="BO\Link.cs" />
     <Compile Include="BO\Mail.cs" />
-    <Compile Include="DAL\ConnexionDB.cs" />
+    <Compile Include="DAL\SQLiteDB.cs" />
+    <Compile Include="DAL\DB.cs" />
     <Compile Include="DAL\ReadDB.cs" />
     <Compile Include="DAL\WriteDB.cs" />
     <Compile Include="GUI\AdminDefaut.cs">

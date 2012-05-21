@@ -94,19 +94,19 @@ namespace TaskLeader.GUI
         /// - Nouvelle valeur pour la base courante
         /// </summary>
 
-        private DBentity type;
+        private DBField type;
         private DB db;
 
         /// <summary>
         /// Constructeur pour un Criterium
         /// </summary>
         /// <param name="title">Titre du critère (et aussi nom du contrôle)</param>
-        public CritereSelect(DBentity entity)
+        public CritereSelect(DBField field)
             : base()
         {
-            this.Name = entity.nom;
-            this.titre.Text = entity.nom;
-            this.type = entity;
+            this.Name = field.ToString("G");
+            this.titre.Text = field.ToString("G");
+            this.type = field;
         }
 
         #region Membres 'parent'

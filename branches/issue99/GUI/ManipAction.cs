@@ -28,7 +28,7 @@ namespace TaskLeader.GUI
         {
             // Contextes
             this.contexteBox.Items.Clear();
-            contexteBox.Items.AddRange(db.getTitres(DB.contexte));
+            contexteBox.Items.AddRange(db.getTitres(DBField.contexte));
             contexteBox.Text = v_action.Contexte;
 
             // Sujets
@@ -38,12 +38,12 @@ namespace TaskLeader.GUI
 
             // Destinataires
             this.destBox.Items.Clear();
-            destBox.Items.AddRange(db.getTitres(DB.destinataire));
+            destBox.Items.AddRange(db.getTitres(DBField.destinataire));
             destBox.Text = v_action.Destinataire;
 
             // Statuts
             this.statutBox.Items.Clear();
-            statutBox.Items.AddRange(db.getTitres(DB.statut)); // On remplit la liste des statuts
+            statutBox.Items.AddRange(db.getTitres(DBField.statut)); // On remplit la liste des statuts
             statutBox.SelectedItem = v_action.Statut;
         }
 
@@ -113,7 +113,7 @@ namespace TaskLeader.GUI
             // On vide les sujets correspondants au contexte actuel
             sujetBox.Items.Clear();
 
-            foreach (String item in db.getTitres(DB.sujet, contexteBox.Text))
+            foreach (String item in db.getTitres(DBField.sujet, contexteBox.Text))
                 sujetBox.Items.Add(item);
         }
 

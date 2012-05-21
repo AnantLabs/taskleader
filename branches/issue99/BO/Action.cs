@@ -27,7 +27,7 @@ namespace TaskLeader.BO
         public bool isScratchpad { get { return (v_TLID == ""); } }
 
         // Contexte de l'action
-        private String v_ctxt = TrayIcon.defaultDB.getDefault(DB.contexte);
+        private String v_ctxt = TrayIcon.defaultDB.getDefault(DBField.contexte);
         public bool ctxtHasChanged = false;
         public String Contexte {
             get { return v_ctxt; }
@@ -42,7 +42,7 @@ namespace TaskLeader.BO
         public String ContexteSQL { get { return sqlFactory(v_ctxt); } }        
 
         // Sujet de l'action
-        private String v_sujt = TrayIcon.defaultDB.getDefault(DB.sujet);
+        private String v_sujt = TrayIcon.defaultDB.getDefault(DBField.sujet);
         public bool sujetHasChanged = false;
         public String Sujet
         {
@@ -93,7 +93,7 @@ namespace TaskLeader.BO
         public String DueDateSQL { get { return "'"+v_dueDate.ToString("yyyy-MM-dd")+"'"; } }
 
         // Destinataire de l'action
-        private String v_dest = TrayIcon.defaultDB.getDefault(DB.destinataire);
+        private String v_dest = TrayIcon.defaultDB.getDefault(DBField.destinataire);
         public bool destHasChanged = false;
         public String Destinataire
         {
@@ -110,7 +110,7 @@ namespace TaskLeader.BO
         public String DestinataireSQL { get { return sqlFactory(v_dest); } } 
 
         // Statut de l'action
-        private String v_stat = TrayIcon.defaultDB.getDefault(DB.statut); // Le statut est initialisé avec la valeur par défaut
+        private String v_stat = TrayIcon.defaultDB.getDefault(DBField.statut); // Le statut est initialisé avec la valeur par défaut
         public bool statusHasChanged = false;
         public String Statut
         {
@@ -193,14 +193,14 @@ namespace TaskLeader.BO
             int resultat;
 
             // On rajoute une ligne d'historique si le statut est différent de Ouverte et si le statut a changé
-            if (this.Statut != db.getDefault(DB.statut) && this.statusHasChanged)
+            if (this.Statut != db.getDefault(DBField.statut) && this.statusHasChanged)
                 this.Texte += Environment.NewLine + "Action " + this.Statut + " le: " + DateTime.Now.ToString("dd-MM-yyyy");
 
             // Vérification des nouveautés
             if (this.ctxtHasChanged) // Test uniquement si contexte entré
-                if (db.isNvo(DB.contexte, this.Contexte)) // Si on a un nouveau contexte
+                if (db.isNvo(DBField.contexte, this.Contexte)) // Si on a un nouveau contexte
                 {
-                    resultat = db.insert(DB.contexte,this.Contexte); // On récupère le nombre de lignes insérées
+                    resultat = db.insert(DBField.contexte,this.Contexte); // On récupère le nombre de lignes insérées
                     if (resultat == 1)
                         bilan += "Nouveau contexte enregistré\n";
                 }
@@ -214,9 +214,9 @@ namespace TaskLeader.BO
                 }
 
             if (this.destHasChanged)
-                if (db.isNvo(DB.destinataire, this.Destinataire))
+                if (db.isNvo(DBField.destinataire, this.Destinataire))
                 {
-                    resultat = db.insert(DB.destinataire,this.Destinataire);
+                    resultat = db.insert(DBField.destinataire,this.Destinataire);
                     if (resultat == 1)
                         bilan += "Nouveau destinataire enregistré\n";
                 }
@@ -279,10 +279,10 @@ namespace TaskLeader.BO
             this.dbName = nomDB;
 
             // Changement des valeurs par défaut
-            this.v_ctxt = TrayIcon.dbs[dbName].getDefault(DB.contexte);
-            this.v_sujt = TrayIcon.dbs[dbName].getDefault(DB.sujet);
-            this.v_dest = TrayIcon.dbs[dbName].getDefault(DB.destinataire);
-            this.v_stat = TrayIcon.dbs[dbName].getDefault(DB.statut);
+            this.v_ctxt = TrayIcon.dbs[dbName].getDefault(DBField.contexte);
+            this.v_sujt = TrayIcon.dbs[dbName].getDefault(DBField.sujet);
+            this.v_dest = TrayIcon.dbs[dbName].getDefault(DBField.destinataire);
+            this.v_stat = TrayIcon.dbs[dbName].getDefault(DBField.statut);
         }
 
         /// <summary>
