@@ -28,10 +28,7 @@ namespace TaskLeader.DAL
         public DBentity parent;
     }
 
-    public delegate void ParentValueEventHandler(String parentValue);
-    public delegate void ActionEditedEventHandler(String dbName, String actionID);
-
-    public partial class DB //TODO: détecter les ouvertures de fichier pour les limiter
+    public partial class SQLiteDB: DB //TODO: détecter les ouvertures de fichier pour les limiter
     {
         // Caractéristiques de la DB
         public String path = "";
@@ -45,7 +42,7 @@ namespace TaskLeader.DAL
             return this.name;
         }
 
-        public DB(String chemin, String nom)
+        public SQLiteDB(String chemin, String nom)
         {
             this.path = chemin;
             this.name = nom;
@@ -82,43 +79,12 @@ namespace TaskLeader.DAL
         }
 
         // "Schéma de base" = Nom de l'entité pour IHM, Nom de la colonne dans vueActions, Nom de la table principale, Nom de la colonne "All" dans la table Filtre
-        public static DBentity contexte = new DBentity("Contextes", "Contexte", "Contextes", "AllCtxt");
-        public static DBentity sujet = new DBentity("Sujets", "Sujet", "Sujets", "AllSuj");
-        public static DBentity destinataire = new DBentity("Destinataires", "Destinataire", "Destinataires", "AllDest");
-        public static DBentity statut = new DBentity("Statuts", "Statut", "Statuts", "AllStat");
-        public static DBentity filtre = new DBentity("Filtres", "", "Filtres", "");
-        public static DBentity[] entities = { contexte, sujet, destinataire, statut};
+        public DBentity contexte = new DBentity("Contextes", "Contexte", "Contextes", "AllCtxt");
+        public DBentity sujet = new DBentity("Sujets", "Sujet", "Sujets", "AllSuj");
+        public DBentity destinataire = new DBentity("Destinataires", "Destinataire", "Destinataires", "AllDest");
+        public DBentity statut = new DBentity("Statuts", "Statut", "Statuts", "AllStat");
+        public DBentity filtre = new DBentity("Filtres", "", "Filtres", "");
+        public static DBentity[] entities = { contexte, sujet, destinataire, statut };
 
-        #region Events
-
-        // Gestion des évènements NewValue - http://msdn.microsoft.com/en-us/library/z4ka55h8(v=vs.80).aspx
-        private Dictionary<String, Delegate> NewValue = new Dictionary<String, Delegate>();
-        public void subscribe_NewValue(DBentity entity, ParentValueEventHandler value) { this.NewValue[entity.nom] = (ParentValueEventHandler)this.NewValue[entity.nom] + value; }
-        public void unsubscribe_NewValue(DBentity entity, ParentValueEventHandler value) { this.NewValue[entity.nom] = (ParentValueEventHandler)this.NewValue[entity.nom] - value; }
-        /// <summary>
-        /// Génération de l'évènement NewValue
-        /// </summary>
-        /// <param name="entity">DBentity concernée</param>
-        /// <param name="parentValue">La valeur courante de la DBentity parente</param>
-        private void OnNewValue(DBentity entity,String parentValue=null)
-        {
-            ParentValueEventHandler handler;
-            if (null != (handler = (ParentValueEventHandler)this.NewValue[entity.nom]))
-                handler(parentValue);
-        }
-
-        // Gestion de l'évènement ActionEdited
-        public event ActionEditedEventHandler ActionEdited;
-        /// <summary>
-        /// Génération de l'évènement ActionEdited
-        /// </summary>
-        /// <param name="action">Action ayant généré l'event</param>
-        private void OnActionEdited(String actionID)
-        {
-            if (this.ActionEdited != null)
-                this.ActionEdited(this.name, actionID); //Invoque le délégué
-        }
-
-        #endregion
     }
 }

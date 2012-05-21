@@ -9,7 +9,8 @@ using TaskLeader.GUI;
 
 namespace TaskLeader.DAL
 {
-    public partial class DB
+
+    public partial class SQLiteDB
     {    
         // Méthode générique pour récupérer une seule colonne
         private object[] getList(String requete)
@@ -115,7 +116,7 @@ namespace TaskLeader.DAL
 		// =====================================================================================
 		
 		// Vérification de la présence d'une nouvelle valeur d'une entité
-		public bool isNvo(DBentity entity, String title)
+		public override bool isNvo(DBField entity, String title)
 		{
 			String titre = "'" + title.Replace("'", "''") + "'";
             String requete = "SELECT count(id) FROM "+entity.mainTable+" WHERE Titre=" + titre;
@@ -124,7 +125,7 @@ namespace TaskLeader.DAL
 		}
     
         // Vérification de la présence d'un nouveau sujet
-        public bool isNvoSujet(String contexte, String subject)
+        public override bool isNvoSujet(String contexte, String subject)
         {
             String ctxt = "'" + contexte.Replace("'", "''") + "'";
             String sujet = "'" + subject.Replace("'", "''") + "'";
@@ -139,7 +140,7 @@ namespace TaskLeader.DAL
         
 		// =====================================================================================
 		
-		// Récupération de la liste des valeurs d'une entité. Obsolète: getCtxt, getDest, getStatut, getFilters(
+		// Récupération de la liste des valeurs d'une entité. Obsolète
 		public object[] getTitres(DBentity entity,String key=null)
 		{
             if(entity.mainTable!="Sujets")
@@ -151,7 +152,7 @@ namespace TaskLeader.DAL
         /// <summary>
         /// Récupération des valeurs par défaut
         /// </summary>
-        /// <param name="entity">DB.contexte, DB.destinataire ...</param>
+        /// <param name="entity">DBFields.contexte, DBFields.destinataire ...</param>
         /// <returns>Valeur par défaut de l'entité</returns>
         public String getDefault(DBentity entity)
         {

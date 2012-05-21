@@ -321,7 +321,7 @@ namespace TaskLeader.GUI
             statutTSMenuItem.DropDown.Items.Clear();
 
             DB db = TrayIcon.dbs[this.getDataFromRow(grilleData.SelectedRows[0].Index, "DB")];
-            foreach (object item in db.getTitres(DB.statut)) //TODO: mettre en cache la valeur des statuts
+            foreach (object item in db.getTitres(DBField.statut)) //TODO: mettre en cache la valeur des statuts
                 statutTSMenuItem.DropDown.Items.Add(item.ToString(), null, this.changeStat);
 
             ((ToolStripDropDownMenu)statutTSMenuItem.DropDown).ShowImageMargin = false;
