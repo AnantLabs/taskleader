@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Configuration;
 using TaskLeader.BO;
+using System.Windows.Forms;
 
 namespace TaskLeader.DAL
 {
@@ -56,6 +57,8 @@ namespace TaskLeader.DAL
             this.NewValue.Add(filtre.nom, null);
         }
 
+        private String _connectionString { get { return "Data Source=" + this.path + ";FailIfMissing=True;"; } }
+
         // Connexion à la base SQLite
         private SQLiteConnection v_connex = null;
         // Renvoie la connection
@@ -64,10 +67,16 @@ namespace TaskLeader.DAL
             get
             {
                 if (v_connex == null)
-                    v_connex = new SQLiteConnection("Data Source=" + path);
+                {
+                    v_connex = new SQLiteConnection("Data Source=" + path + ";FailIfMissing=True;");
+                    MessageBox.Show("Création de la connection pour la base " + this.ToString());
+                }
 
                 if (v_connex.State == System.Data.ConnectionState.Closed)
+                {
                     v_connex.Open();
+                    MessageBox.Show("Ouverture de la connection pour la base " + this.ToString());
+                }
 
                 return v_connex;
             }
