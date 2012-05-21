@@ -225,7 +225,7 @@ namespace TaskLeader.GUI
                         break;
                     default:
                         // On diffère la récupération de liste
-                        e.Value = TaskLeader.Properties.Resources.PJ;
+                        e.Value = TaskLeader.Properties.Resources.attach32;
                         grilleData[e.ColumnIndex, e.RowIndex].ToolTipText = String.Empty;
                         break;
                 }
