@@ -244,6 +244,8 @@ namespace TaskLeader.GUI
                 OutlookIF.Instance.NewMail -= new NewMailEventHandler(addMail); // Désinscription de l'event NewMail
         }
 
+        #region linksView
+
         // Gestion de l"ouverture de menu contextuel sur la linksView
         private void linksViewMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
@@ -263,6 +265,8 @@ namespace TaskLeader.GUI
             if (linksView.Items.Count == 0)
                 linksView.Visible = false;
         }
+
+        #endregion
 
         // Sélection d'une autre DB
         private void changeDB(object sender, EventArgs e)
