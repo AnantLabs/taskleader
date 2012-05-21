@@ -213,6 +213,7 @@ namespace TaskLeader.GUI
                     case ("0"):
                         e.Value = null; // Vidage la cellule
                         e.CellStyle.NullValue = null; // Aucun affichage si cellule vide
+                        grilleData[e.ColumnIndex, e.RowIndex].ToolTipText = String.Empty;
                         break;
                     case ("1"):
                         // Récupération de la PJ
@@ -225,6 +226,7 @@ namespace TaskLeader.GUI
                     default:
                         // On diffère la récupération de liste
                         e.Value = TaskLeader.Properties.Resources.PJ;
+                        grilleData[e.ColumnIndex, e.RowIndex].ToolTipText = String.Empty;
                         break;
                 }
             }

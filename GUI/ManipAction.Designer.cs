@@ -45,6 +45,7 @@
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.label3 = new System.Windows.Forms.Label();
+            this.errorLabel = new System.Windows.Forms.Label();
             this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
             this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
             this.linksLabel = new System.Windows.Forms.Label();
@@ -62,7 +63,6 @@
             this.addLinksMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.ajouterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mailItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.errorLabel = new System.Windows.Forms.Label();
             this.tableLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
@@ -250,6 +250,19 @@
             this.label3.TabIndex = 15;
             this.label3.Text = "Descriptif:";
             // 
+            // errorLabel
+            // 
+            this.errorLabel.AutoSize = true;
+            this.flowLayoutPanel1.SetFlowBreak(this.errorLabel, true);
+            this.errorLabel.ForeColor = System.Drawing.Color.Red;
+            this.errorLabel.Location = new System.Drawing.Point(63, 5);
+            this.errorLabel.Margin = new System.Windows.Forms.Padding(3, 5, 3, 0);
+            this.errorLabel.Name = "errorLabel";
+            this.errorLabel.Size = new System.Drawing.Size(163, 13);
+            this.errorLabel.TabIndex = 17;
+            this.errorLabel.Text = "le champ descriptif est obligatoire";
+            this.errorLabel.Visible = false;
+            // 
             // flowLayoutPanel2
             // 
             this.flowLayoutPanel2.Controls.Add(this.label5);
@@ -428,19 +441,6 @@
             this.mailItem.Size = new System.Drawing.Size(143, 22);
             this.mailItem.Text = "Mail Outlook";
             this.mailItem.Click += new System.EventHandler(this.mailItem_Click);
-            // 
-            // errorLabel
-            // 
-            this.errorLabel.AutoSize = true;
-            this.flowLayoutPanel1.SetFlowBreak(this.errorLabel, true);
-            this.errorLabel.ForeColor = System.Drawing.Color.Red;
-            this.errorLabel.Location = new System.Drawing.Point(63, 5);
-            this.errorLabel.Margin = new System.Windows.Forms.Padding(3, 5, 3, 0);
-            this.errorLabel.Name = "errorLabel";
-            this.errorLabel.Size = new System.Drawing.Size(163, 13);
-            this.errorLabel.TabIndex = 17;
-            this.errorLabel.Text = "le champ descriptif est obligatoire";
-            this.errorLabel.Visible = false;
             // 
             // ManipAction
             // 
