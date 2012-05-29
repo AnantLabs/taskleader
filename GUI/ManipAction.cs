@@ -177,66 +177,6 @@ namespace TaskLeader.GUI
             this.linksView.Visible = true;
         }
 
-        private void ajouterLink_Click(object sender, EventArgs e)
-        {
-            this.TopMost = false; // Passage de la fenêtre ManipAction en arrière plan temporairement
-
-            SaveLink saveForm = new SaveLink();
-            if (saveForm.ShowDialog() == DialogResult.OK) // Affichage de la fenêtre SaveLink
-                this.addPJToForm(saveForm.lien);
-
-            this.linksView.Visible = true;
-            this.TopMost = true;
-        }
-
-        private void addPJBut_Click(object sender, EventArgs e)
-        {
-            this.addLinksMenu.Show(Cursor.Position);// Affichage du menu d'ajout des liens
-        }
-
-        // Gestion de la demande d'ajout de mail
-        private bool addMailRequested = false;
-        private void mailItem_Click(object sender, EventArgs e)
-        {
-            // Mise en valeur de la fenêtre Outlook
-            if (!OutlookIF.Instance.addMailInProgress)
-            {
-                // Mise en place de l'IHM
-                this.addMailRequested = true;
-                this.AddMailLabel.Text = "Sélectionner le mail à ajouter";
-                this.AddMailLabel.ForeColor = SystemColors.HotTrack;
-                this.AddMailLabel.Visible = true;
-
-                // Affichage en premier plan de la fenêtre Outlook
-                Process[] p = Process.GetProcessesByName("OUTLOOK");
-                if (p.Length > 0)
-                    SetForegroundWindow(p[0].MainWindowHandle);
-
-                // Récupération de l'évènement "Nouveau mail"
-                OutlookIF.Instance.NewMail += new NewMailEventHandler(addMail);
-            }
-            else
-            {
-                this.AddMailLabel.Text = "Ajout de mail déjà en cours";
-                this.AddMailLabel.ForeColor = Color.Red;
-                this.AddMailLabel.Visible = true;
-            }
-        }
-
-        // Gestion de l'arrivée des mails
-        private void addMail(object sender, NewMailEventArgs e)
-        {
-            if (linksView.InvokeRequired) // Gestion des appels depuis un autre thread
-                linksView.Invoke(new NewMailEventHandler(addMail), new object[] { sender, e });
-            else
-            {
-                this.addMailRequested = false;
-                this.addPJToForm(e.Mail); // Ajout de mail à l'action
-                this.AddMailLabel.Visible = false; // Disparition du label de statut
-                OutlookIF.Instance.NewMail -= new NewMailEventHandler(addMail); // Inscription à l'event NewMail
-            }
-        }
-
         // Nettoyage sur fermeture de la fenêtre
         private void ManipAction_FormClosed(object sender, FormClosedEventArgs e)
         {
@@ -285,6 +225,66 @@ namespace TaskLeader.GUI
         {
             this.errorLabel.Visible = false;
         }
+
+        private void addLinkBut_Click(object sender, EventArgs e)
+        {
+            this.TopMost = false; // Passage de la fenêtre ManipAction en arrière plan temporairement
+
+            SaveLink saveForm = new SaveLink();
+            if (saveForm.ShowDialog() == DialogResult.OK) // Affichage de la fenêtre SaveLink
+                this.addPJToForm(saveForm.lien);
+
+            this.linksView.Visible = true;
+            this.TopMost = true;
+        }
+
+        // Gestion de la demande d'ajout de mail
+        private bool addMailRequested = false;
+        private void addMailBut_Click(object sender, EventArgs e)
+        {
+            // Mise en valeur de la fenêtre Outlook
+            if (!OutlookIF.Instance.addMailInProgress)
+            {
+                // Mise en place de l'IHM
+                this.addMailRequested = true;
+                this.AddMailLabel.Text = "Sélectionner le mail à ajouter";
+                this.AddMailLabel.ForeColor = SystemColors.HotTrack;
+                this.addLinkBut.Visible = false;
+                this.addMailBut.Visible = false;
+                this.AddMailLabel.Visible = true;
+
+                // Affichage en premier plan de la fenêtre Outlook
+                Process[] p = Process.GetProcessesByName("OUTLOOK");
+                if (p.Length > 0)
+                    SetForegroundWindow(p[0].MainWindowHandle);
+
+                // Récupération de l'évènement "Nouveau mail"
+                OutlookIF.Instance.NewMail += new NewMailEventHandler(addMail);
+            }
+            else
+            {
+                this.AddMailLabel.Text = "Ajout de mail déjà en cours";
+                this.AddMailLabel.ForeColor = Color.Red;
+                this.AddMailLabel.Visible = true;
+            }
+        }
+
+        // Gestion de l'arrivée des mails
+        private void addMail(object sender, NewMailEventArgs e)
+        {
+            if (linksView.InvokeRequired) // Gestion des appels depuis un autre thread
+                linksView.Invoke(new NewMailEventHandler(addMail), new object[] { sender, e });
+            else
+            {
+                this.addMailRequested = false;
+                this.addPJToForm(e.Mail); // Ajout de mail à l'action
+                this.AddMailLabel.Visible = false; // Disparition du label de statut
+                this.addLinkBut.Visible = true;
+                this.addMailBut.Visible = true;
+                OutlookIF.Instance.NewMail -= new NewMailEventHandler(addMail); // Inscription à l'event NewMail
+            }
+        }
+
 
     }
 }
