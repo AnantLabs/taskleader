@@ -219,7 +219,7 @@ namespace TaskLeader.GUI
                         // Récupération de la PJ
                         DB db = TrayIcon.dbs[this.getDataFromRow(e.RowIndex, "DB")];
                         Enclosure pj = db.getPJ(this.getDataFromRow(e.RowIndex, "id"))[0];
-                        e.Value = pj.Icone; // Affichage de la bonne icône
+                        e.Value = pj.BigIcon; // Affichage de la bonne icône
                         grilleData[e.ColumnIndex, e.RowIndex].ToolTipText = pj.Titre; // Modification du tooltip de la cellule
                         grilleData.Rows[e.RowIndex].Tag = pj; // Tag de la DataGridRow
                         break;
@@ -258,7 +258,7 @@ namespace TaskLeader.GUI
 
                     foreach (Enclosure link in links)
                     {
-                        ToolStripMenuItem item = new ToolStripMenuItem(link.Titre, link.Icone, this.linksContext_ItemClicked); // Création du lien avec le titre et l'icône
+                        ToolStripMenuItem item = new ToolStripMenuItem(link.Titre, link.SmallIcon, this.linksContext_ItemClicked); // Création du lien avec le titre et l'icône
                         item.Tag = link; // Association du link
                         linksContext.Items.Add(item); // Ajout au menu
                     }

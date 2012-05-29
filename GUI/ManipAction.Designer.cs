@@ -424,13 +424,13 @@
             this.ajouterToolStripMenuItem,
             this.mailItem});
             this.addLinksMenu.Name = "linksMenu";
-            this.addLinksMenu.Size = new System.Drawing.Size(144, 48);
+            this.addLinksMenu.Size = new System.Drawing.Size(153, 70);
             // 
             // ajouterToolStripMenuItem
             // 
-            this.ajouterToolStripMenuItem.Image = global::TaskLeader.Properties.Resources.shortcut;
+            this.ajouterToolStripMenuItem.Image = global::TaskLeader.Properties.Resources.link;
             this.ajouterToolStripMenuItem.Name = "ajouterToolStripMenuItem";
-            this.ajouterToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
+            this.ajouterToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.ajouterToolStripMenuItem.Text = "Fichier / URL";
             this.ajouterToolStripMenuItem.Click += new System.EventHandler(this.ajouterLink_Click);
             // 
@@ -438,7 +438,7 @@
             // 
             this.mailItem.Image = global::TaskLeader.Properties.Resources.outlook;
             this.mailItem.Name = "mailItem";
-            this.mailItem.Size = new System.Drawing.Size(143, 22);
+            this.mailItem.Size = new System.Drawing.Size(152, 22);
             this.mailItem.Text = "Mail Outlook";
             this.mailItem.Click += new System.EventHandler(this.mailItem_Click);
             // 
