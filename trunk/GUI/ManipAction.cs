@@ -52,7 +52,7 @@ namespace TaskLeader.GUI
         {
             // Ajout de l'image correspondant au lien dans la bibliothèque
             if (!biblio.Images.Keys.Contains(pj.IconeKey))
-                this.biblio.Images.Add(pj.IconeKey, pj.Icone);
+                this.biblio.Images.Add(pj.IconeKey, pj.BigIcon);
 
             // Ajout du lien à la ListView
             ListViewItem item = new ListViewItem(pj.Titre, pj.IconeKey);

@@ -15,8 +15,10 @@ namespace TaskLeader.BO
         public String Titre { get { return v_titre; } set { v_titre = value; } }
 
         // Icône de la pièce jointe
-        private Bitmap v_icone;
-        public Image Icone { get { return v_icone; } }
+        private Bitmap _iconeBig;
+        private Bitmap _iconeSmall;
+        public Image BigIcon { get { return _iconeBig; } }
+        public Image SmallIcon { get { return _iconeSmall; } }
         public String IconeKey { get { return type_string; } }
 
         // Type de la pièce jointe
@@ -33,10 +35,12 @@ namespace TaskLeader.BO
             switch (type)
             {
                 case "Mails":
-                    v_icone = TaskLeader.Properties.Resources.outlook;
+                    _iconeBig = TaskLeader.Properties.Resources.outlook;
+                    _iconeSmall = TaskLeader.Properties.Resources.outlook;
                     break;
 				case "Links":
-					v_icone = TaskLeader.Properties.Resources.link;
+					_iconeBig = TaskLeader.Properties.Resources.link32;
+                    _iconeSmall = TaskLeader.Properties.Resources.link;
                     break;
             }          
         }
