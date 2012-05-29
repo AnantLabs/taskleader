@@ -55,6 +55,7 @@
             this.linksView = new System.Windows.Forms.ListView();
             this.linksViewMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.deleteEncItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.renameEncItem = new System.Windows.Forms.ToolStripMenuItem();
             this.biblio = new System.Windows.Forms.ImageList(this.components);
             this.flowLayoutPanel4 = new System.Windows.Forms.FlowLayoutPanel();
             this.flowLayoutPanel5 = new System.Windows.Forms.FlowLayoutPanel();
@@ -338,7 +339,6 @@
             // 
             // linksView
             // 
-            this.linksView.Activation = System.Windows.Forms.ItemActivation.OneClick;
             this.linksView.ContextMenuStrip = this.linksViewMenu;
             this.linksView.HoverSelection = true;
             this.linksView.LabelEdit = true;
@@ -351,23 +351,32 @@
             this.linksView.UseCompatibleStateImageBehavior = false;
             this.linksView.View = System.Windows.Forms.View.SmallIcon;
             this.linksView.Visible = false;
-            this.linksView.ItemActivate += new System.EventHandler(this.pj_Click);
+            this.linksView.AfterLabelEdit += new System.Windows.Forms.LabelEditEventHandler(this.linksView_AfterLabelEdit);
+            this.linksView.DoubleClick += new System.EventHandler(this.pj_Click);
             // 
             // linksViewMenu
             // 
             this.linksViewMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.deleteEncItem});
+            this.deleteEncItem,
+            this.renameEncItem});
             this.linksViewMenu.Name = "linksViewMenu";
-            this.linksViewMenu.Size = new System.Drawing.Size(164, 26);
+            this.linksViewMenu.Size = new System.Drawing.Size(168, 70);
             this.linksViewMenu.Opening += new System.ComponentModel.CancelEventHandler(this.linksViewMenu_Opening);
             // 
             // deleteEncItem
             // 
             this.deleteEncItem.Image = global::TaskLeader.Properties.Resources.cross;
             this.deleteEncItem.Name = "deleteEncItem";
-            this.deleteEncItem.Size = new System.Drawing.Size(163, 22);
+            this.deleteEncItem.Size = new System.Drawing.Size(167, 22);
             this.deleteEncItem.Text = "Supprimer le lien";
             this.deleteEncItem.Click += new System.EventHandler(this.deleteEncItem_Click);
+            // 
+            // renameEncItem
+            // 
+            this.renameEncItem.Name = "renameEncItem";
+            this.renameEncItem.Size = new System.Drawing.Size(167, 22);
+            this.renameEncItem.Text = "Renommer le lien";
+            this.renameEncItem.Click += new System.EventHandler(this.renameEncItem_Click);
             // 
             // biblio
             // 
@@ -495,6 +504,7 @@
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Label errorLabel;
         private System.Windows.Forms.Button addLinkBut;
+        private System.Windows.Forms.ToolStripMenuItem renameEncItem;
 
 
     }

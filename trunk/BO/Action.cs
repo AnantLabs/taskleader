@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Configuration;
-using System.Collections;
 using System.Collections.Specialized;
 using System.Collections.Generic;
+using System.Linq;
 using System.Data;
 using TaskLeader.DAL;
 using TaskLeader.GUI;
@@ -26,7 +26,8 @@ namespace TaskLeader.BO
         public String ID { get { return v_TLID; } }
         public bool isScratchpad { get { return (v_TLID == ""); } }
 
-        // Contexte de l'action
+        #region Contexte de l'action
+
         private String v_ctxt = TrayIcon.defaultDB.getDefault(DB.contexte);
         public bool ctxtHasChanged = false;
         public String Contexte
@@ -43,7 +44,10 @@ namespace TaskLeader.BO
         }
         public String ContexteSQL { get { return sqlFactory(v_ctxt); } }
 
-        // Sujet de l'action
+        #endregion
+
+        #region Sujet de l'action
+
         private String v_sujt = TrayIcon.defaultDB.getDefault(DB.sujet);
         public bool sujetHasChanged = false;
         public String Sujet
@@ -60,7 +64,10 @@ namespace TaskLeader.BO
         }
         public String SujetSQL { get { return sqlFactory(v_sujt); } }
 
-        // Libéllé de l'action
+        #endregion
+
+        #region Libéllé de l'action
+
         private String v_texte = "";
         public bool texteHasChanged = false;
         public String Texte
@@ -77,7 +84,10 @@ namespace TaskLeader.BO
         }
         public String TexteSQL { get { return sqlFactory(v_texte); } }
 
-        // DueDate de l'action
+        #endregion
+
+        #region DueDate de l'action
+
         private DateTime v_dueDate = DateTime.MinValue;
         public bool dueDateHasChanged = false;
         public bool hasDueDate { get { return (v_dueDate != DateTime.MinValue); } }
@@ -96,7 +106,10 @@ namespace TaskLeader.BO
         public void parseDueDate(String date) { DateTime.TryParse(date, out v_dueDate); }
         public String DueDateSQL { get { return "'" + v_dueDate.ToString("yyyy-MM-dd") + "'"; } }
 
-        // Destinataire de l'action
+        #endregion
+
+        #region Destinataire de l'action
+
         private String v_dest = TrayIcon.defaultDB.getDefault(DB.destinataire);
         public bool destHasChanged = false;
         public String Destinataire
@@ -113,7 +126,10 @@ namespace TaskLeader.BO
         }
         public String DestinataireSQL { get { return sqlFactory(v_dest); } }
 
-        // Statut de l'action
+        #endregion
+
+        #region Statut de l'action
+
         private String v_stat = TrayIcon.defaultDB.getDefault(DB.statut); // Le statut est initialisé avec la valeur par défaut
         public bool statusHasChanged = false;
         public String Statut
@@ -130,21 +146,71 @@ namespace TaskLeader.BO
         }
         public String StatutSQL { get { return sqlFactory(v_stat); } }
 
-        // PJ à l'action
-        private List<Enclosure> v_links = new List<Enclosure>();
-        private List<Enclosure> added_links = new List<Enclosure>();
-        private List<Enclosure> removed_links = new List<Enclosure>();
-        public void addPJ(Enclosure link) { v_links.Add(link); added_links.Add(link); }
-        public void removePJ(Enclosure link)
+        #endregion
+
+        #region PJs de l'action
+
+        private enum encStatus
         {
-            v_links.Remove(link);
-            if (added_links.Contains(link))
-                added_links.Remove(link);
-            else
-                removed_links.Add(link);
+            /// <summary>
+            /// New enclosure added to the list
+            /// </summary>
+            added,
+            /// <summary>
+            /// Original enclosure removed from the list
+            /// </summary>
+            removed,
+            /// <summary>
+            /// Original enclosure renamed
+            /// </summary>
+            renamed, //TODO:Plutôt modified
+            /// <summary>
+            /// Original enclosure
+            /// </summary>
+            original,
+            /// <summary>
+            /// New enclosure deleted at the end
+            /// </summary>
+            bin
+        };
+
+        private List<KeyValuePair<Enclosure, encStatus>> _links = new List<KeyValuePair<Enclosure, encStatus>>();
+        public List<Enclosure> PJ { get { return _links.Select(kvp => kvp.Key).ToList<Enclosure>(); } }
+        public bool hasPJ { get { return (_links.Count > 0); } }
+
+        public int addPJ(Enclosure enc)
+        {
+            _links.Add(new KeyValuePair<Enclosure, encStatus>(enc, encStatus.added));
+            return _links.Count - 1;
         }
-        public bool hasPJ { get { return (v_links.Count > 0); } }
-        public List<Enclosure> PJ { get { return v_links; } }
+
+        public void removePJ(int encIndex)
+        {
+            switch (_links[encIndex].Value)
+            {
+                case encStatus.original:
+                case encStatus.renamed:
+                    _links[encIndex].Value = encStatus.removed;
+                    break;
+
+                case encStatus.added:
+                    _links[encIndex].Value = encStatus.bin;
+                    break;
+            }
+        }
+
+        public void renamePJ(int encIndex, String newTitle)
+        {
+            //TODO
+            if (_links[encIndex].Value == encStatus.original)
+                _links[encIndex].Value = encStatus.renamed;
+
+            TrayIcon.afficheMessage("Renommage PJ", newTitle);
+        }
+
+        #endregion
+
+        #region Constructeurs
 
         /// <summary>
         /// Constructeur permettant d'initialiser les valeurs par défaut
@@ -172,10 +238,14 @@ namespace TaskLeader.BO
             this.v_stat = data["Statut"] as String;
 
             //Récupération des liens
-            this.v_links.AddRange(db.getPJ(ID));
+            this._links.AddRange(db.getPJ(ID));
 
             this.initialStateFrozen = true;
         }
+
+        #endregion
+
+        #region Mises à jour
 
         /// <summary>
         /// Mise à jour des champs principaux
@@ -194,6 +264,24 @@ namespace TaskLeader.BO
             this.Destinataire = destinataire;
             this.Statut = stat;
         }
+
+        /// <summary>
+        /// Change la base correspondant à l'action scratchpad
+        /// </summary>
+        /// <param name="nomDB">Nom de la nouvelle base</param>
+        public void changeDB(String nomDB)
+        {
+            // Changement du nom de la base
+            this.dbName = nomDB;
+
+            // Changement des valeurs par défaut
+            this.v_ctxt = TrayIcon.dbs[dbName].getDefault(DB.contexte);
+            this.v_sujt = TrayIcon.dbs[dbName].getDefault(DB.sujet);
+            this.v_dest = TrayIcon.dbs[dbName].getDefault(DB.destinataire);
+            this.v_stat = TrayIcon.dbs[dbName].getDefault(DB.statut);
+        }
+
+        #endregion
 
         /// <summary>
         /// Sauvegarde de l'action dans la base correspondante
@@ -242,8 +330,8 @@ namespace TaskLeader.BO
                     if (this.hasPJ)
                     {
                         db.insertPJ(this.v_TLID, this.PJ); // Sauvegarde des PJ
-                        bilan += v_links.Count.ToString() + " PJ enregistrée";
-                        if (v_links.Count > 1) bilan += "s";
+                        bilan += _links.Count.ToString() + " PJ enregistrée";
+                        if (_links.Count > 1) bilan += "s";
                         bilan += "\n";
                     }
                 }
@@ -280,21 +368,7 @@ namespace TaskLeader.BO
                 TrayIcon.afficheMessage("Bilan sauvegarde", bilan.Substring(0, bilan.Length - 1)); // On supprime le dernier \n            
         }
 
-        /// <summary>
-        /// Change la base correspondant à l'action scratchpad
-        /// </summary>
-        /// <param name="nomDB">Nom de la nouvelle base</param>
-        public void changeDB(String nomDB)
-        {
-            // Changement du nom de la base
-            this.dbName = nomDB;
-
-            // Changement des valeurs par défaut
-            this.v_ctxt = TrayIcon.dbs[dbName].getDefault(DB.contexte);
-            this.v_sujt = TrayIcon.dbs[dbName].getDefault(DB.sujet);
-            this.v_dest = TrayIcon.dbs[dbName].getDefault(DB.destinataire);
-            this.v_stat = TrayIcon.dbs[dbName].getDefault(DB.statut);
-        }
+        #region Export
 
         /// <summary>
         /// Export vers presse-papier à partir du template de la clé fournie
@@ -326,5 +400,7 @@ namespace TaskLeader.BO
             //Copie dans le presse-papier
             System.Windows.Forms.Clipboard.SetText(resultat);
         }
+
+        #endregion
     }
 }

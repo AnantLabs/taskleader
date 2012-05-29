@@ -18,10 +18,10 @@ namespace TaskLeader.GUI
         [DllImportAttribute("User32.dll")]
         private static extern IntPtr SetForegroundWindow(IntPtr hWnd);
 
-        private TLaction v_action;
-        private DB db { get { return TrayIcon.dbs[v_action.dbName]; } }
+        private TLaction _action;
+        private DB db { get { return TrayIcon.dbs[_action.dbName]; } }
 
-        public String ID { get { return v_action.ID; } }
+        public String ID { get { return _action.ID; } }
 
         // Préparation des widgets
         private void loadWidgets()
@@ -29,37 +29,22 @@ namespace TaskLeader.GUI
             // Contextes
             this.contexteBox.Items.Clear();
             contexteBox.Items.AddRange(db.getTitres(DB.contexte));
-            contexteBox.Text = v_action.Contexte;
+            contexteBox.Text = _action.Contexte;
 
             // Sujets
             if (contexteBox.Text != "")
                 updateSujet(); // Mise à jour de la liste des sujets
-            sujetBox.Text = v_action.Sujet;
+            sujetBox.Text = _action.Sujet;
 
             // Destinataires
             this.destBox.Items.Clear();
             destBox.Items.AddRange(db.getTitres(DB.destinataire));
-            destBox.Text = v_action.Destinataire;
+            destBox.Text = _action.Destinataire;
 
             // Statuts
             this.statutBox.Items.Clear();
             statutBox.Items.AddRange(db.getTitres(DB.statut)); // On remplit la liste des statuts
-            statutBox.SelectedItem = v_action.Statut;
-        }
-
-        // Ajout d'un lien à la ListView
-        private void addPJToView(Enclosure pj)
-        {
-            // Ajout de l'image correspondant au lien dans la bibliothèque
-            if (!biblio.Images.Keys.Contains(pj.IconeKey))
-                this.biblio.Images.Add(pj.IconeKey, pj.BigIcon);
-
-            // Ajout du lien à la ListView
-            ListViewItem item = new ListViewItem(pj.Titre, pj.IconeKey);
-            item.Tag = pj;
-
-            // Ajout du lien à la listView
-            linksView.Items.Add(item);
+            statutBox.SelectedItem = _action.Statut;
         }
 
         /// <summary>Constructeur de la fenêtre</summary>
@@ -70,12 +55,12 @@ namespace TaskLeader.GUI
             this.Icon = TaskLeader.Properties.Resources.task_coach;
 
             // On mémorise l'action
-            this.v_action = action;
+            this._action = action;
 
             // Remplissage de la liste des bases disponibles
             foreach (String dbName in TrayIcon.dbs.Keys)
                 dbsBox.Items.Add(dbName);
-            dbsBox.Text = v_action.dbName;
+            dbsBox.Text = _action.dbName;
 
             if (action.isScratchpad)
                 this.Text += "Ajouter une action - TaskLeader";
@@ -95,11 +80,10 @@ namespace TaskLeader.GUI
             this.loadWidgets();
 
             // Affichage des pièces jointes
-            List<Enclosure> links = action.PJ;
-            foreach (Enclosure link in links)
+            foreach (Enclosure link in action.PJ)
                 this.addPJToView(link);
 
-            this.linksView.Visible = (links.Count > 0);
+            this.linksView.Visible = (action.PJ.Count > 0);
 
             // Affichage du descriptif de l'action
             desField.Text = action.Texte;
@@ -130,16 +114,16 @@ namespace TaskLeader.GUI
             }
 
             // Update de l'action avec les nouveaux champs
-            v_action.updateDefault(contexteBox.Text, sujetBox.Text, desField.Text, destBox.Text, statutBox.Text);
+            _action.updateDefault(contexteBox.Text, sujetBox.Text, desField.Text, destBox.Text, statutBox.Text);
 
             // Update de la DueDate que si c'est nécessaire
             if (noDueDate.Checked)
-                v_action.DueDate = DateTime.MinValue; // Remise à zéro de la dueDate
+                _action.DueDate = DateTime.MinValue; // Remise à zéro de la dueDate
             else
-                v_action.DueDate = actionDatePicker.Value;
+                _action.DueDate = actionDatePicker.Value;
 
             // On sauvegarde l'action
-            v_action.save();
+            _action.save();
 
             // Fermeture de la fenêtre
             this.Close();
@@ -157,12 +141,6 @@ namespace TaskLeader.GUI
             actionDatePicker.Enabled = !noDueDate.Checked;
         }
 
-        private void pj_Click(object sender, EventArgs e)
-        {
-            // On ouvre le lien
-            ((Enclosure)linksView.SelectedItems[0].Tag).open();
-        }
-
         /// <summary>
         /// Ajoute une PJ au formulaire et à l'action correspondante
         /// </summary>
@@ -170,7 +148,7 @@ namespace TaskLeader.GUI
         public void addPJToForm(Enclosure pj)
         {
             // Ajout du lien à l'action
-            v_action.addPJ(pj);
+            _action.addPJ(pj);
             // Ajout à la linksView
             this.addPJToView(pj);
             // Affichage de la linksView
@@ -186,6 +164,21 @@ namespace TaskLeader.GUI
 
         #region linksView
 
+        // Ajout d'un lien à la ListView
+        private void addPJToView(Enclosure pj)
+        {
+            // Ajout de l'image correspondant au lien dans la bibliothèque
+            if (!biblio.Images.Keys.Contains(pj.IconeKey))
+                this.biblio.Images.Add(pj.IconeKey, pj.BigIcon);
+
+            // Ajout du lien à la ListView
+            ListViewItem item = new ListViewItem(pj.Titre, pj.IconeKey);
+            item.Tag = _action.PJ.IndexOf(pj);
+
+            // Ajout du lien à la listView
+            linksView.Items.Add(item);
+        }
+
         // Gestion de l"ouverture de menu contextuel sur la linksView
         private void linksViewMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
@@ -198,7 +191,7 @@ namespace TaskLeader.GUI
         private void deleteEncItem_Click(object sender, EventArgs e)
         {
             // Suppression de la PJ sélectionnée de l'action associée
-            v_action.removePJ((Enclosure)linksView.SelectedItems[0].Tag);
+            _action.removePJ((Enclosure)linksView.SelectedItems[0].Tag);
 
             // Suppression de la pj de la vue
             linksView.Items.Remove(linksView.SelectedItems[0]);
@@ -206,15 +199,34 @@ namespace TaskLeader.GUI
                 linksView.Visible = false;
         }
 
+        // Passage de l'item en mode édition
+        private void renameEncItem_Click(object sender, EventArgs e)
+        {
+            linksView.SelectedItems[0].BeginEdit();
+        }
+
+        // Renommage de la PJ
+        private void linksView_AfterLabelEdit(object sender, LabelEditEventArgs e)
+        {
+            if (!String.IsNullOrEmpty(e.Label))
+                _action.renamePJ((int)linksView.Items[e.Item].Tag, e.Label);
+        }
+
+        private void pj_Click(object sender, EventArgs e)
+        {
+            // On ouvre le lien
+            ((Enclosure)linksView.SelectedItems[0].Tag).open();
+        }
+
         #endregion
 
         // Sélection d'une autre DB
         private void changeDB(object sender, EventArgs e)
         {
-            if (dbsBox.Text != v_action.dbName)
+            if (dbsBox.Text != _action.dbName)
             {
                 // Mise à jour de l'action
-                v_action.changeDB(dbsBox.Text);
+                _action.changeDB(dbsBox.Text);
 
                 // Mise à jour des widgets
                 this.loadWidgets();
@@ -225,6 +237,8 @@ namespace TaskLeader.GUI
         {
             this.errorLabel.Visible = false;
         }
+
+        #region Ajout de PJs
 
         private void addLinkBut_Click(object sender, EventArgs e)
         {
@@ -285,6 +299,6 @@ namespace TaskLeader.GUI
             }
         }
 
-
+        #endregion
     }
 }
