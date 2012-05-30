@@ -259,6 +259,27 @@ namespace TaskLeader.DAL
                 this.OnActionEdited(actionID);
         }
 
+        // Mise à jour d'une liste de PJs
+        public void renamePJ(String actionID, List<Enclosure> PJ)
+        {
+            foreach (Enclosure pj in PJ)
+            {
+                using (SQLiteTransaction mytransaction = this.SQLC.BeginTransaction())
+                {
+                    using (SQLiteCommand SQLCmd = new SQLiteCommand(this.SQLC))
+                    {
+                        // Suppression de la pj dans la table correspondante
+                        SQLCmd.CommandText = "UPDATE " + pj.Type + " SET Titre='"+pj.Titre+"' WHERE id=" + pj.ID + ";";
+                        SQLCmd.ExecuteNonQuery();
+                    }
+                    mytransaction.Commit();
+                }
+            }
+
+            if (PJ.Count > 0)
+                this.OnActionEdited(actionID);
+        }
+
         // Insertion d'une nouvelle action
         // Renvoie l'ID de stockage de l'action
         public String insertAction(TLaction action)

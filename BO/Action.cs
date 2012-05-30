@@ -9,6 +9,37 @@ using TaskLeader.GUI;
 
 namespace TaskLeader.BO
 {
+    public enum EncStatus
+    {
+        /// <summary>
+        /// New enclosure added to the list
+        /// </summary>
+        added,
+        /// <summary>
+        /// Original enclosure removed from the list
+        /// </summary>
+        removed,
+        /// <summary>
+        /// Original enclosure renamed
+        /// </summary>
+        renamed, //TODO:Plutôt modified
+        /// <summary>
+        /// Original enclosure
+        /// </summary>
+        original,
+        /// <summary>
+        /// New enclosure deleted at the end
+        /// </summary>
+        bin
+    }
+
+    public class EncWithStatus
+    {
+        public Enclosure enclosure;
+        public EncStatus status;
+        public EncWithStatus(Enclosure enc, EncStatus stat) { enclosure = enc; status = stat; }
+    }
+
     public class TLaction
     {
         // Méthode privée pour fabriquer des string compatible sql
@@ -150,62 +181,39 @@ namespace TaskLeader.BO
 
         #region PJs de l'action
 
-        private enum encStatus
-        {
-            /// <summary>
-            /// New enclosure added to the list
-            /// </summary>
-            added,
-            /// <summary>
-            /// Original enclosure removed from the list
-            /// </summary>
-            removed,
-            /// <summary>
-            /// Original enclosure renamed
-            /// </summary>
-            renamed, //TODO:Plutôt modified
-            /// <summary>
-            /// Original enclosure
-            /// </summary>
-            original,
-            /// <summary>
-            /// New enclosure deleted at the end
-            /// </summary>
-            bin
-        };
-
-        private List<KeyValuePair<Enclosure, encStatus>> _links = new List<KeyValuePair<Enclosure, encStatus>>();
-        public List<Enclosure> PJ { get { return _links.Select(kvp => kvp.Key).ToList<Enclosure>(); } }
+        private List<EncWithStatus> _links = new List<EncWithStatus>();
+        public List<Enclosure> PJ { get { return _links.Select(ews => ews.enclosure).ToList<Enclosure>(); } }
         public bool hasPJ { get { return (_links.Count > 0); } }
+
+        private void initAdd(List<Enclosure> list) { _links.AddRange(list.Select(enc => new EncWithStatus(enc, EncStatus.original))); }
 
         public int addPJ(Enclosure enc)
         {
-            _links.Add(new KeyValuePair<Enclosure, encStatus>(enc, encStatus.added));
+            _links.Add(new EncWithStatus(enc, EncStatus.added));
             return _links.Count - 1;
         }
 
         public void removePJ(int encIndex)
         {
-            switch (_links[encIndex].Value)
+            switch (_links[encIndex].status)
             {
-                case encStatus.original:
-                case encStatus.renamed:
-                    _links[encIndex].Value = encStatus.removed;
+                case EncStatus.original:
+                case EncStatus.renamed:
+                    _links[encIndex].status = EncStatus.removed;
                     break;
 
-                case encStatus.added:
-                    _links[encIndex].Value = encStatus.bin;
+                case EncStatus.added:
+                    _links[encIndex].status = EncStatus.bin;
                     break;
             }
         }
 
         public void renamePJ(int encIndex, String newTitle)
         {
-            //TODO
-            if (_links[encIndex].Value == encStatus.original)
-                _links[encIndex].Value = encStatus.renamed;
+            _links[encIndex].enclosure.Titre = newTitle;
 
-            TrayIcon.afficheMessage("Renommage PJ", newTitle);
+            if (_links[encIndex].status == EncStatus.original) // Dans tous les autres cas, on reste en 'renamed'
+                _links[encIndex].status = EncStatus.renamed;
         }
 
         #endregion
@@ -238,7 +246,7 @@ namespace TaskLeader.BO
             this.v_stat = data["Statut"] as String;
 
             //Récupération des liens
-            this._links.AddRange(db.getPJ(ID));
+            this.initAdd(db.getPJ(ID));
 
             this.initialStateFrozen = true;
         }
@@ -342,23 +350,51 @@ namespace TaskLeader.BO
                         bilan += "Action mise à jour\n";
 
                     // Insertion des pj
-                    int nbAdded = this.added_links.Count;
+                    List<Enclosure> added_links =
+                        this._links.
+                        Where(ews => ews.status == EncStatus.added).
+                        Select(ews => ews.enclosure).
+                        ToList<Enclosure>();
+
+                    int nbAdded = added_links.Count;
                     if (nbAdded > 0)
                     {
-                        db.insertPJ(this.v_TLID, this.added_links); // Sauvegarde des PJ
+                        db.insertPJ(this.v_TLID, added_links); // Sauvegarde des PJ
                         bilan += nbAdded.ToString() + " PJ enregistrée"; // Préparation du bilan
                         if (nbAdded > 1) bilan += "s";
                         bilan += "\n";
                     }
 
                     // Suppression des pj
-                    int nbSupp = this.removed_links.Count;
+                    List<Enclosure> removed_links =
+                        this._links.
+                        Where(ews => ews.status == EncStatus.removed).
+                        Select(ews => ews.enclosure).
+                        ToList<Enclosure>();
+
+                    int nbSupp = removed_links.Count;
                     if (nbSupp > 0)
                     {
-                        db.removePJ(this.v_TLID, this.removed_links);
+                        db.removePJ(this.v_TLID, removed_links);
                         bilan += nbSupp.ToString() + " PJ supprimée"; // Préparation du bilan
                         if (nbSupp > 1) bilan += "s";
                         bilan += "\n";
+                    }
+
+                    // Mise àjour des pj
+                    List<Enclosure> updated_links =
+                        this._links.
+                        Where(ews => ews.status == EncStatus.renamed).
+                        Select(ews => ews.enclosure).
+                        ToList<Enclosure>();
+
+                    int nbUpd = updated_links.Count;
+                    if (nbUpd > 0)
+                    {
+                        db.renamePJ(this.v_TLID, updated_links);
+                        bilan += nbUpd.ToString() + " PJ mise"; // Préparation du bilan
+                        if (nbUpd > 1) bilan += "s";
+                        bilan += " à jour\n";
                     }
                 }
             }

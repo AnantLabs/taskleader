@@ -357,8 +357,8 @@
             // linksViewMenu
             // 
             this.linksViewMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.deleteEncItem,
-            this.renameEncItem});
+            this.renameEncItem,
+            this.deleteEncItem});
             this.linksViewMenu.Name = "linksViewMenu";
             this.linksViewMenu.Size = new System.Drawing.Size(168, 70);
             this.linksViewMenu.Opening += new System.ComponentModel.CancelEventHandler(this.linksViewMenu_Opening);

@@ -80,8 +80,8 @@ namespace TaskLeader.GUI
             this.loadWidgets();
 
             // Affichage des pièces jointes
-            foreach (Enclosure link in action.PJ)
-                this.addPJToView(link);
+            for (int i = 0; i < action.PJ.Count; i++)
+                this.addPJToView(action.PJ[i],i);
 
             this.linksView.Visible = (action.PJ.Count > 0);
 
@@ -148,9 +148,9 @@ namespace TaskLeader.GUI
         public void addPJToForm(Enclosure pj)
         {
             // Ajout du lien à l'action
-            _action.addPJ(pj);
+            int index = _action.addPJ(pj);
             // Ajout à la linksView
-            this.addPJToView(pj);
+            this.addPJToView(pj,index);
             // Affichage de la linksView
             this.linksView.Visible = true;
         }
@@ -165,7 +165,7 @@ namespace TaskLeader.GUI
         #region linksView
 
         // Ajout d'un lien à la ListView
-        private void addPJToView(Enclosure pj)
+        private void addPJToView(Enclosure pj, int encIndex)
         {
             // Ajout de l'image correspondant au lien dans la bibliothèque
             if (!biblio.Images.Keys.Contains(pj.IconeKey))
@@ -173,7 +173,7 @@ namespace TaskLeader.GUI
 
             // Ajout du lien à la ListView
             ListViewItem item = new ListViewItem(pj.Titre, pj.IconeKey);
-            item.Tag = _action.PJ.IndexOf(pj);
+            item.Tag = encIndex;
 
             // Ajout du lien à la listView
             linksView.Items.Add(item);
@@ -191,7 +191,7 @@ namespace TaskLeader.GUI
         private void deleteEncItem_Click(object sender, EventArgs e)
         {
             // Suppression de la PJ sélectionnée de l'action associée
-            _action.removePJ((Enclosure)linksView.SelectedItems[0].Tag);
+            _action.removePJ((int)linksView.SelectedItems[0].Tag);
 
             // Suppression de la pj de la vue
             linksView.Items.Remove(linksView.SelectedItems[0]);
@@ -215,7 +215,7 @@ namespace TaskLeader.GUI
         private void pj_Click(object sender, EventArgs e)
         {
             // On ouvre le lien
-            ((Enclosure)linksView.SelectedItems[0].Tag).open();
+            _action.PJ[(int)linksView.SelectedItems[0].Tag].open();
         }
 
         #endregion
