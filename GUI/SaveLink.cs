@@ -19,7 +19,6 @@ namespace TaskLeader.GUI
             {
                 String path = openFileDialog.FileName;
                 this.pathBox.Text = path;
-                this.titreBox.Text = path.Substring(path.LastIndexOf(@"\")+1);
             }
         }
 
@@ -27,6 +26,11 @@ namespace TaskLeader.GUI
         {
             lien = new Link(titreBox.Text, pathBox.Text);
             this.DialogResult = DialogResult.OK;
+        }
+
+        private void pathBox_TextChanged(object sender, EventArgs e)
+        {
+            this.titreBox.Text = this.pathBox.Text.Substring(this.pathBox.Text.LastIndexOf(@"\") + 1);
         }
     }
 }
