@@ -221,6 +221,8 @@ namespace TaskLeader.GUI
                         Enclosure pj = db.getPJ(this.getDataFromRow(e.RowIndex, "id"))[0];
                         e.Value = pj.BigIcon; // Affichage de la bonne icône
                         grilleData[e.ColumnIndex, e.RowIndex].ToolTipText = pj.Titre; // Modification du tooltip de la cellule
+                        if (pj.Type == "Links")
+                            grilleData[e.ColumnIndex, e.RowIndex].ToolTipText += Environment.NewLine + ((Link)pj).url;
                         grilleData.Rows[e.RowIndex].Tag = pj; // Tag de la DataGridRow
                         break;
                     default:
