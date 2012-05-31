@@ -4,6 +4,7 @@ using System.Data.SQLite;
 using System.Windows.Forms;
 using TaskLeader.BO;
 using TaskLeader.GUI;
+using System.IO;
 
 namespace TaskLeader.DAL
 {
@@ -30,13 +31,21 @@ namespace TaskLeader.DAL
 
             try
             {
-                using (SQLiteCommand SQLCmd = new SQLiteCommand(this.SQLC))
+                using (SQLiteConnection SQLC = new SQLiteConnection(this._connectionString))
                 {
+                    if (File.Exists(this.path))
+                        SQLC.Open();
+                    else
+                        throw new Exception("Base inaccessible");
+
+                    using (SQLiteCommand SQLCmd = new SQLiteCommand(SQLC))
+                    {
                     // Création d'une nouvelle commande à partir de la connexion
                     SQLCmd.CommandText = requete;
                     //Exécution de la commande
                     return SQLCmd.ExecuteNonQuery();
                 }
+            }
             }
             catch (Exception Ex)
             {
@@ -49,10 +58,17 @@ namespace TaskLeader.DAL
         // Insertion d'une valeur par défaut
         public void insertDefaut(object[] values)
         {
-            using (SQLiteTransaction mytransaction = this.SQLC.BeginTransaction())
+            using (SQLiteConnection SQLC = new SQLiteConnection(this._connectionString))
             {
-                using (SQLiteCommand SQLCmd = new SQLiteCommand(this.SQLC))
+                if (File.Exists(this.path))
+                    SQLC.Open();
+                else
+                    throw new Exception("Base inaccessible");
+
+                using (SQLiteTransaction mytransaction = SQLC.BeginTransaction())
                 {
+                    using (SQLiteCommand SQLCmd = new SQLiteCommand(SQLC))
+                    {
                     // On efface toutes les valeurs par défaut
                     SQLCmd.CommandText = "UPDATE Contextes SET Defaut=NULL WHERE Defaut=1;";
                     SQLCmd.CommandText += "UPDATE Sujets SET Defaut=NULL WHERE Defaut=1;";
@@ -72,14 +88,22 @@ namespace TaskLeader.DAL
                 mytransaction.Commit();
             }
         }
+        }
 
         // Insertion en base d'un nouveau filtre
         public void insertFiltre(Filtre filtre)
         {
-            using (SQLiteTransaction mytransaction = this.SQLC.BeginTransaction())
+            using (SQLiteConnection SQLC = new SQLiteConnection(this._connectionString))
             {
-                using (SQLiteCommand SQLCmd = new SQLiteCommand(this.SQLC))
+                if (File.Exists(this.path))
+                    SQLC.Open();
+                else
+                    throw new Exception("Base inaccessible");
+
+                using (SQLiteTransaction mytransaction = SQLC.BeginTransaction())
                 {
+                    using (SQLiteCommand SQLCmd = new SQLiteCommand(SQLC))
+                    {
                     // On insère le nom du filtre
                     String nomFiltre = "'" + filtre.nom.Replace("'", "''") + "'"; // Le titre du filtre ne doit pas contenir de quote
                     SQLCmd.CommandText = "INSERT INTO Filtres (Titre) VALUES (" + nomFiltre + ");";
@@ -113,6 +137,7 @@ namespace TaskLeader.DAL
                     }
                 }
                 mytransaction.Commit();
+            }
             }
 
 
@@ -159,10 +184,17 @@ namespace TaskLeader.DAL
             String EncID = "";
             String titre = "'" + mail.Titre.Replace("'", "''") + "'";
 
-            using (SQLiteTransaction mytransaction = this.SQLC.BeginTransaction())
+            using (SQLiteConnection SQLC = new SQLiteConnection(this._connectionString))
             {
-                using (SQLiteCommand SQLCmd = new SQLiteCommand(this.SQLC))
+                if (File.Exists(this.path))
+                    SQLC.Open();
+                else
+                    throw new Exception("Base inaccessible");
+
+                using (SQLiteTransaction mytransaction = SQLC.BeginTransaction())
                 {
+                    using (SQLiteCommand SQLCmd = new SQLiteCommand(SQLC))
+                    {
                     // Insertion du mail
                     SQLCmd.CommandText = "INSERT INTO Mails (Titre,StoreID,EntryID,MessageID) ";
                     SQLCmd.CommandText += "VALUES(" + titre + "," + mail.StoreIDSQL + "," + mail.EntryIDSQL + "," + mail.MessageIDSQL + ");";
@@ -174,7 +206,7 @@ namespace TaskLeader.DAL
                 }
                 mytransaction.Commit();
             }
-
+            }
             return EncID;
         }
 
@@ -184,10 +216,17 @@ namespace TaskLeader.DAL
             String EncID = "";
             String titre = "'" + lien.Titre.Replace("'", "''") + "'";
 
-            using (SQLiteTransaction mytransaction = this.SQLC.BeginTransaction())
+            using (SQLiteConnection SQLC = new SQLiteConnection(this._connectionString))
             {
-                using (SQLiteCommand SQLCmd = new SQLiteCommand(this.SQLC))
+                if (File.Exists(this.path))
+                    SQLC.Open();
+                else
+                    throw new Exception("Base inaccessible");
+
+                using (SQLiteTransaction mytransaction = SQLC.BeginTransaction())
                 {
+                    using (SQLiteCommand SQLCmd = new SQLiteCommand(SQLC))
+                    {
                     // Insertion du mail
                     SQLCmd.CommandText = "INSERT INTO Links (Titre,Path) ";
                     SQLCmd.CommandText += "VALUES(" + titre + "," + lien.urlSQL + ");";
@@ -199,7 +238,7 @@ namespace TaskLeader.DAL
                 }
                 mytransaction.Commit();
             }
-
+            }
             return EncID;
         }
 
@@ -239,10 +278,17 @@ namespace TaskLeader.DAL
         {
             foreach (Enclosure pj in PJ)
             {
-                using (SQLiteTransaction mytransaction = this.SQLC.BeginTransaction())
+                using (SQLiteConnection SQLC = new SQLiteConnection(this._connectionString))
                 {
-                    using (SQLiteCommand SQLCmd = new SQLiteCommand(this.SQLC))
+                    if (File.Exists(this.path))
+                        SQLC.Open();
+                    else
+                        throw new Exception("Base inaccessible");
+
+                    using (SQLiteTransaction mytransaction = SQLC.BeginTransaction())
                     {
+                        using (SQLiteCommand SQLCmd = new SQLiteCommand(SQLC))
+                        {
                         // Suppression de la pj dans la table correspondante
                         SQLCmd.CommandText = "DELETE FROM " + pj.Type + " WHERE id=" + pj.ID + ";";
                         SQLCmd.ExecuteNonQuery();
@@ -254,6 +300,7 @@ namespace TaskLeader.DAL
                     mytransaction.Commit();
                 }
             }
+            }
 
             if (PJ.Count > 0)
                 this.OnActionEdited(actionID);
@@ -264,16 +311,24 @@ namespace TaskLeader.DAL
         {
             foreach (Enclosure pj in PJ)
             {
-                using (SQLiteTransaction mytransaction = this.SQLC.BeginTransaction())
+                using (SQLiteConnection SQLC = new SQLiteConnection(this._connectionString))
                 {
-                    using (SQLiteCommand SQLCmd = new SQLiteCommand(this.SQLC))
+                    if (File.Exists(this.path))
+                        SQLC.Open();
+                    else
+                        throw new Exception("Base inaccessible");
+
+                    using (SQLiteTransaction mytransaction = SQLC.BeginTransaction())
                     {
+                        using (SQLiteCommand SQLCmd = new SQLiteCommand(SQLC))
+                        {
                         // Suppression de la pj dans la table correspondante
-                        SQLCmd.CommandText = "UPDATE " + pj.Type + " SET Titre='"+pj.Titre+"' WHERE id=" + pj.ID + ";";
+                            SQLCmd.CommandText = "UPDATE " + pj.Type + " SET Titre='" + pj.Titre + "' WHERE id=" + pj.ID + ";";
                         SQLCmd.ExecuteNonQuery();
                     }
                     mytransaction.Commit();
                 }
+            }
             }
 
             if (PJ.Count > 0)
@@ -286,10 +341,17 @@ namespace TaskLeader.DAL
         {
             String actionID;
 
-            using (SQLiteTransaction mytransaction = this.SQLC.BeginTransaction())
+            using (SQLiteConnection SQLC = new SQLiteConnection(this._connectionString))
             {
-                using (SQLiteCommand SQLCmd = new SQLiteCommand(this.SQLC))
+                if (File.Exists(this.path))
+                    SQLC.Open();
+                else
+                    throw new Exception("Base inaccessible");
+
+                using (SQLiteTransaction mytransaction = SQLC.BeginTransaction())
                 {
+                    using (SQLiteCommand SQLCmd = new SQLiteCommand(SQLC))
+                    {
                     //Syntaxe: INSERT INTO Actions (nom des colonnes avec ,) VALUES(valeurs avec ' et ,)     
 
                     // Préparation des différents morceaux de la requête
@@ -334,7 +396,7 @@ namespace TaskLeader.DAL
                 }
                 mytransaction.Commit();
             }
-
+            }
             this.OnActionEdited(actionID);
             return actionID;
         }
