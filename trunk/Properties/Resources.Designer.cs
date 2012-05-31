@@ -67,6 +67,13 @@ namespace TaskLeader.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap application_form_edit {
+            get {
+                object obj = ResourceManager.GetObject("application_form_edit", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap arrow_in {
             get {
                 object obj = ResourceManager.GetObject("arrow_in", resourceCulture);
@@ -151,6 +158,27 @@ namespace TaskLeader.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap email {
+            get {
+                object obj = ResourceManager.GetObject("email", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap email_add {
+            get {
+                object obj = ResourceManager.GetObject("email_add", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap email32 {
+            get {
+                object obj = ResourceManager.GetObject("email32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap evernote {
             get {
                 object obj = ResourceManager.GetObject("evernote", resourceCulture);
@@ -172,6 +200,13 @@ namespace TaskLeader.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap flag_finish {
+            get {
+                object obj = ResourceManager.GetObject("flag_finish", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap information {
             get {
                 object obj = ResourceManager.GetObject("information", resourceCulture);
@@ -182,6 +217,13 @@ namespace TaskLeader.Properties {
         internal static System.Drawing.Bitmap link {
             get {
                 object obj = ResourceManager.GetObject("link", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap link_add {
+            get {
+                object obj = ResourceManager.GetObject("link_add", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -207,9 +249,9 @@ namespace TaskLeader.Properties {
             }
         }
         
-        internal static System.Drawing.Bitmap outlook {
+        internal static System.Drawing.Bitmap table_export {
             get {
-                object obj = ResourceManager.GetObject("outlook", resourceCulture);
+                object obj = ResourceManager.GetObject("table_export", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -218,6 +260,13 @@ namespace TaskLeader.Properties {
             get {
                 object obj = ResourceManager.GetObject("task_coach", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap textfield_rename {
+            get {
+                object obj = ResourceManager.GetObject("textfield_rename", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
     }

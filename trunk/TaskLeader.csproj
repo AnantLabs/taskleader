@@ -317,6 +317,30 @@
   <ItemGroup>
     <None Include="Resources\link32.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\textfield_rename.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\link_add.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\email_add.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\email32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\email.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\application_form_edit.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\table_export.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\flag_finish.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
