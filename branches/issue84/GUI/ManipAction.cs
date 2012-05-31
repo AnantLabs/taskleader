@@ -18,10 +18,10 @@ namespace TaskLeader.GUI
         [DllImportAttribute("User32.dll")]
         private static extern IntPtr SetForegroundWindow(IntPtr hWnd);
 
-        private TLaction v_action;
-        private DB db { get { return TrayIcon.dbs[v_action.dbName]; } }
+        private TLaction _action;
+        private DB db { get { return TrayIcon.dbs[_action.dbName]; } }
 
-        public String ID { get { return v_action.ID; } }
+        public String ID { get { return _action.ID; } }
 
         // Préparation des widgets
         private void loadWidgets()
@@ -29,37 +29,22 @@ namespace TaskLeader.GUI
             // Contextes
             this.contexteBox.Items.Clear();
             contexteBox.Items.AddRange(db.getTitres(DB.contexte));
-            contexteBox.Text = v_action.Contexte;
+            contexteBox.Text = _action.Contexte;
 
             // Sujets
             if (contexteBox.Text != "")
                 updateSujet(); // Mise à jour de la liste des sujets
-            sujetBox.Text = v_action.Sujet;
+            sujetBox.Text = _action.Sujet;
 
             // Destinataires
             this.destBox.Items.Clear();
             destBox.Items.AddRange(db.getTitres(DB.destinataire));
-            destBox.Text = v_action.Destinataire;
+            destBox.Text = _action.Destinataire;
 
             // Statuts
             this.statutBox.Items.Clear();
             statutBox.Items.AddRange(db.getTitres(DB.statut)); // On remplit la liste des statuts
-            statutBox.SelectedItem = v_action.Statut;
-        }
-
-        // Ajout d'un lien à la ListView
-        private void addPJToView(Enclosure pj)
-        {
-            // Ajout de l'image correspondant au lien dans la bibliothèque
-            if (!biblio.Images.Keys.Contains(pj.IconeKey))
-                this.biblio.Images.Add(pj.IconeKey, pj.Icone);
-
-            // Ajout du lien à la ListView
-            ListViewItem item = new ListViewItem(pj.Titre, pj.IconeKey);
-            item.Tag = pj;
-
-            // Ajout du lien à la listView
-            linksView.Items.Add(item);
+            statutBox.SelectedItem = _action.Statut;
         }
 
         /// <summary>Constructeur de la fenêtre</summary>
@@ -70,12 +55,12 @@ namespace TaskLeader.GUI
             this.Icon = TaskLeader.Properties.Resources.task_coach;
 
             // On mémorise l'action
-            this.v_action = action;
+            this._action = action;
 
             // Remplissage de la liste des bases disponibles
             foreach (String dbName in TrayIcon.dbs.Keys)
                 dbsBox.Items.Add(dbName);
-            dbsBox.Text = v_action.dbName;
+            dbsBox.Text = _action.dbName;
 
             if (action.isScratchpad)
                 this.Text += "Ajouter une action - TaskLeader";
@@ -95,11 +80,10 @@ namespace TaskLeader.GUI
             this.loadWidgets();
 
             // Affichage des pièces jointes
-            List<Enclosure> links = action.PJ;
-            foreach (Enclosure link in links)
-                this.addPJToView(link);
+            for (int i = 0; i < action.PJ.Count; i++)
+                this.addPJToView(action.PJ[i],i);
 
-            this.linksView.Visible = (links.Count > 0);
+            this.linksView.Visible = (action.PJ.Count > 0);
 
             // Affichage du descriptif de l'action
             desField.Text = action.Texte;
@@ -130,16 +114,16 @@ namespace TaskLeader.GUI
             }
 
             // Update de l'action avec les nouveaux champs
-            v_action.updateDefault(contexteBox.Text, sujetBox.Text, desField.Text, destBox.Text, statutBox.Text);
+            _action.updateDefault(contexteBox.Text, sujetBox.Text, desField.Text, destBox.Text, statutBox.Text);
 
             // Update de la DueDate que si c'est nécessaire
             if (noDueDate.Checked)
-                v_action.DueDate = DateTime.MinValue; // Remise à zéro de la dueDate
+                _action.DueDate = DateTime.MinValue; // Remise à zéro de la dueDate
             else
-                v_action.DueDate = actionDatePicker.Value;
+                _action.DueDate = actionDatePicker.Value;
 
             // On sauvegarde l'action
-            v_action.save();
+            _action.save();
 
             // Fermeture de la fenêtre
             this.Close();
@@ -157,12 +141,6 @@ namespace TaskLeader.GUI
             actionDatePicker.Enabled = !noDueDate.Checked;
         }
 
-        private void pj_Click(object sender, EventArgs e)
-        {
-            // On ouvre le lien
-            ((Enclosure)linksView.SelectedItems[0].Tag).open();
-        }
-
         /// <summary>
         /// Ajoute une PJ au formulaire et à l'action correspondante
         /// </summary>
@@ -170,14 +148,99 @@ namespace TaskLeader.GUI
         public void addPJToForm(Enclosure pj)
         {
             // Ajout du lien à l'action
-            v_action.addPJ(pj);
+            int index = _action.addPJ(pj);
             // Ajout à la linksView
-            this.addPJToView(pj);
+            this.addPJToView(pj,index);
             // Affichage de la linksView
             this.linksView.Visible = true;
         }
 
-        private void ajouterLink_Click(object sender, EventArgs e)
+        // Nettoyage sur fermeture de la fenêtre
+        private void ManipAction_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            if (this.addMailRequested)
+                OutlookIF.Instance.NewMail -= new NewMailEventHandler(addMail); // Désinscription de l'event NewMail
+        }
+
+        #region linksView
+
+        // Ajout d'un lien à la ListView
+        private void addPJToView(Enclosure pj, int encIndex)
+        {
+            // Ajout de l'image correspondant au lien dans la bibliothèque
+            if (!biblio.Images.Keys.Contains(pj.IconeKey))
+                this.biblio.Images.Add(pj.IconeKey, pj.BigIcon);
+
+            // Ajout du lien à la ListView
+            ListViewItem item = new ListViewItem(pj.Titre, pj.IconeKey);
+            item.Tag = encIndex;
+
+            // Ajout du lien à la listView
+            linksView.Items.Add(item);
+        }
+
+        // Gestion de l"ouverture de menu contextuel sur la linksView
+        private void linksViewMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            // On annule l'affichage si aucun lien n'est sélectionné
+            if (linksView.SelectedItems.Count == 0)
+                e.Cancel = true;
+        }
+
+        // Suppression d'une PJ
+        private void deleteEncItem_Click(object sender, EventArgs e)
+        {
+            // Suppression de la PJ sélectionnée de l'action associée
+            _action.removePJ((int)linksView.SelectedItems[0].Tag);
+
+            // Suppression de la pj de la vue
+            linksView.Items.Remove(linksView.SelectedItems[0]);
+            if (linksView.Items.Count == 0)
+                linksView.Visible = false;
+        }
+
+        // Passage de l'item en mode édition
+        private void renameEncItem_Click(object sender, EventArgs e)
+        {
+            linksView.SelectedItems[0].BeginEdit();
+        }
+
+        // Renommage de la PJ
+        private void linksView_AfterLabelEdit(object sender, LabelEditEventArgs e)
+        {
+            if (!String.IsNullOrEmpty(e.Label))
+                _action.renamePJ((int)linksView.Items[e.Item].Tag, e.Label);
+        }
+
+        private void pj_Click(object sender, EventArgs e)
+        {
+            // On ouvre le lien
+            _action.PJ[(int)linksView.SelectedItems[0].Tag].open();
+        }
+
+        #endregion
+
+        // Sélection d'une autre DB
+        private void changeDB(object sender, EventArgs e)
+        {
+            if (dbsBox.Text != _action.dbName)
+            {
+                // Mise à jour de l'action
+                _action.changeDB(dbsBox.Text);
+
+                // Mise à jour des widgets
+                this.loadWidgets();
+            }
+        }
+
+        private void desField_Enter(object sender, EventArgs e)
+        {
+            this.errorLabel.Visible = false;
+        }
+
+        #region Ajout de PJs
+
+        private void addLinkBut_Click(object sender, EventArgs e)
         {
             this.TopMost = false; // Passage de la fenêtre ManipAction en arrière plan temporairement
 
@@ -189,14 +252,9 @@ namespace TaskLeader.GUI
             this.TopMost = true;
         }
 
-        private void addPJBut_Click(object sender, EventArgs e)
-        {
-            this.addLinksMenu.Show(Cursor.Position);// Affichage du menu d'ajout des liens
-        }
-
         // Gestion de la demande d'ajout de mail
         private bool addMailRequested = false;
-        private void mailItem_Click(object sender, EventArgs e)
+        private void addMailBut_Click(object sender, EventArgs e)
         {
             // Mise en valeur de la fenêtre Outlook
             if (!OutlookIF.Instance.addMailInProgress)
@@ -205,6 +263,8 @@ namespace TaskLeader.GUI
                 this.addMailRequested = true;
                 this.AddMailLabel.Text = "Sélectionner le mail à ajouter";
                 this.AddMailLabel.ForeColor = SystemColors.HotTrack;
+                this.addLinkBut.Visible = false;
+                this.addMailBut.Visible = false;
                 this.AddMailLabel.Visible = true;
 
                 // Affichage en premier plan de la fenêtre Outlook
@@ -233,54 +293,12 @@ namespace TaskLeader.GUI
                 this.addMailRequested = false;
                 this.addPJToForm(e.Mail); // Ajout de mail à l'action
                 this.AddMailLabel.Visible = false; // Disparition du label de statut
+                this.addLinkBut.Visible = true;
+                this.addMailBut.Visible = true;
                 OutlookIF.Instance.NewMail -= new NewMailEventHandler(addMail); // Inscription à l'event NewMail
             }
         }
 
-        // Nettoyage sur fermeture de la fenêtre
-        private void ManipAction_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            if (this.addMailRequested)
-                OutlookIF.Instance.NewMail -= new NewMailEventHandler(addMail); // Désinscription de l'event NewMail
+        #endregion
         }
-
-        // Gestion de l"ouverture de menu contextuel sur la linksView
-        private void linksViewMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            // On annule l'affichage si aucun lien n'est sélectionné
-            if (linksView.SelectedItems.Count == 0)
-                e.Cancel = true;
-        }
-
-        // Suppression d'une PJ
-        private void deleteEncItem_Click(object sender, EventArgs e)
-        {
-            // Suppression de la PJ sélectionnée de l'action associée
-            v_action.removePJ((Enclosure)linksView.SelectedItems[0].Tag);
-
-            // Suppression de la pj de la vue
-            linksView.Items.Remove(linksView.SelectedItems[0]);
-            if (linksView.Items.Count == 0)
-                linksView.Visible = false;
-        }
-
-        // Sélection d'une autre DB
-        private void changeDB(object sender, EventArgs e)
-        {
-            if (dbsBox.Text != v_action.dbName)
-            {
-                // Mise à jour de l'action
-                v_action.changeDB(dbsBox.Text);
-
-                // Mise à jour des widgets
-                this.loadWidgets();
-            }
-        }
-
-        private void desField_Enter(object sender, EventArgs e)
-        {
-            this.errorLabel.Visible = false;
-        }
-
-    }
 }

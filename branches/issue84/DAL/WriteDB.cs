@@ -124,7 +124,7 @@ namespace TaskLeader.DAL
                             SQLiteParameter p_Titre = new SQLiteParameter("@Titre");
                             SQLCmd.Parameters.Add(p_Titre);
 
-                            foreach (String item in critere.selected)
+                        foreach (String item in critere.valuesSelected)
                             {
                                 selection = item.Replace("'", "''"); // On gère les simple quote
                                 p_Titre.Value = selection;
@@ -295,6 +295,35 @@ namespace TaskLeader.DAL
 
                             // Suppression de l'entrée dans la table de correspondance PJ/Action
                             SQLCmd.CommandText = "DELETE FROM Enclosures WHERE EncID=" + pj.ID + ";";
+                            SQLCmd.ExecuteNonQuery();
+                        }
+                        mytransaction.Commit();
+                    }
+                }
+            }
+
+            if (PJ.Count > 0)
+                this.OnActionEdited(actionID);
+        }
+
+        // Mise à jour d'une liste de PJs
+        public void renamePJ(String actionID, List<Enclosure> PJ)
+        {
+            foreach (Enclosure pj in PJ)
+            {
+                using (SQLiteConnection SQLC = new SQLiteConnection(this._connectionString))
+                {
+                    if (File.Exists(this.path))
+                        SQLC.Open();
+                    else
+                        throw new Exception("Base inaccessible");
+
+                    using (SQLiteTransaction mytransaction = SQLC.BeginTransaction())
+                    {
+                        using (SQLiteCommand SQLCmd = new SQLiteCommand(SQLC))
+                        {
+                            // Suppression de la pj dans la table correspondante
+                            SQLCmd.CommandText = "UPDATE " + pj.Type + " SET Titre='" + pj.Titre + "' WHERE id=" + pj.ID + ";";
                             SQLCmd.ExecuteNonQuery();
                         }
                         mytransaction.Commit();

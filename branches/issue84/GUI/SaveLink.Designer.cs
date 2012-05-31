@@ -93,6 +93,7 @@
             this.pathBox.Name = "pathBox";
             this.pathBox.Size = new System.Drawing.Size(180, 20);
             this.pathBox.TabIndex = 3;
+            this.pathBox.TextChanged += new System.EventHandler(this.pathBox_TextChanged);
             // 
             // label3
             // 

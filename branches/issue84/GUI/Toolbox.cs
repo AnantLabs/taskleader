@@ -222,6 +222,7 @@ namespace TaskLeader.GUI
                 {
                     errorLabel.Text = "Le nom du filtre ne peut être vide";
                     errorLabel.Visible = true;
+                    return;
                 }
                 else
                 {
@@ -230,6 +231,7 @@ namespace TaskLeader.GUI
                     {
                         errorLabel.Text = "Ce nom de filtre existe déjà.";
                         errorLabel.Visible = true;
+                        return;
                     }
                     else
                     {
@@ -240,14 +242,14 @@ namespace TaskLeader.GUI
                         // Raz du formulaire
                         saveFilterCheck.Checked = false;
                         nameBox.Text = "";
-
-                        // Affichage du filtre
-                        TrayIcon.displayedFilters.Add(filtre);
                     }
                 }
             }
-            else
+
+            if (!TrayIcon.displayedFilters.Contains(filtre))
                 TrayIcon.displayedFilters.Add(filtre);
+            else
+                TrayIcon.afficheMessage("Base d'actions " + filtre.dbName, "Le filtre " + filtre.ToString() + " est déjà affiché");
         }
 
         #endregion
@@ -259,8 +261,16 @@ namespace TaskLeader.GUI
         {
             if (!String.IsNullOrWhiteSpace(this.searchBox.Text))
             {
+                Filtre filtre;
                 foreach (DB db in this.dbSelect.getDBs())
-                    TrayIcon.displayedFilters.Add(new Filtre(searchBox.Text, db.name));
+                {
+                    filtre = new Filtre(searchBox.Text, db.name);
+                    if (!TrayIcon.displayedFilters.Contains(filtre))
+                        TrayIcon.displayedFilters.Add(filtre);
+                    else
+                        TrayIcon.afficheMessage("Base d'actions " + filtre.dbName, "La recherche " + filtre.ToString() + " est déjà affichée");
+                }
+
                 this.searchBox.Clear();
                 this.dbSelect.clearChecked(true);
             }

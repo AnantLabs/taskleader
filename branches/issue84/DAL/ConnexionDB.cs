@@ -9,7 +9,10 @@ namespace TaskLeader.DAL
     // Structure listant les différentes informations liées à une entité de la base (Contexte, Destinataire ...)
     public class DBentity
     {
-        public String nom; // Nom de l'entité pour IHM
+        /// <summary>
+        /// Nom de l'entité pour IHM, !!doit être unique !!
+        /// </summary>
+        public String nom;
         public String mainTable; // Nom de la table principale
         public String viewColName; // Nom de la colonne dans vueActions
         public String allColName; // Nom de la colonne "All" dans la table Filtre

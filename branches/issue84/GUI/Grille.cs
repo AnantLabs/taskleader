@@ -213,18 +213,22 @@ namespace TaskLeader.GUI
                     case ("0"):
                         e.Value = null; // Vidage la cellule
                         e.CellStyle.NullValue = null; // Aucun affichage si cellule vide
+                        grilleData[e.ColumnIndex, e.RowIndex].ToolTipText = String.Empty;
                         break;
                     case ("1"):
                         // Récupération de la PJ
                         DB db = TrayIcon.dbs[this.getDataFromRow(e.RowIndex, "DB")];
                         Enclosure pj = db.getPJ(this.getDataFromRow(e.RowIndex, "id"))[0];
-                        e.Value = pj.Icone; // Affichage de la bonne icône
+                        e.Value = pj.BigIcon; // Affichage de la bonne icône
                         grilleData[e.ColumnIndex, e.RowIndex].ToolTipText = pj.Titre; // Modification du tooltip de la cellule
+                        if (pj.Type == "Links")
+                            grilleData[e.ColumnIndex, e.RowIndex].ToolTipText += Environment.NewLine + ((Link)pj).url;
                         grilleData.Rows[e.RowIndex].Tag = pj; // Tag de la DataGridRow
                         break;
                     default:
                         // On diffère la récupération de liste
-                        e.Value = TaskLeader.Properties.Resources.PJ;
+                        grilleData[e.ColumnIndex, e.RowIndex].ToolTipText = e.Value.ToString() + " PJ associées";
+                        e.Value = TaskLeader.Properties.Resources.attach32;
                         break;
                 }
             }
@@ -256,7 +260,7 @@ namespace TaskLeader.GUI
 
                     foreach (Enclosure link in links)
                     {
-                        ToolStripMenuItem item = new ToolStripMenuItem(link.Titre, link.Icone, this.linksContext_ItemClicked); // Création du lien avec le titre et l'icône
+                        ToolStripMenuItem item = new ToolStripMenuItem(link.Titre, link.SmallIcon, this.linksContext_ItemClicked); // Création du lien avec le titre et l'icône
                         item.Tag = link; // Association du link
                         linksContext.Items.Add(item); // Ajout au menu
                     }
