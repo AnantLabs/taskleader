@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Configuration;
 using TaskLeader.BO;
-using System.Windows.Forms;
 
 namespace TaskLeader.DAL
 {
@@ -38,10 +37,7 @@ namespace TaskLeader.DAL
         /// <summary>
         /// Retourne le nom de la base
         /// </summary>
-        public override string ToString()
-        {
-            return this.name;
-        }
+        public override string ToString() { return this.name; }
 
         public DB(String chemin, String nom)
         {
@@ -57,35 +53,7 @@ namespace TaskLeader.DAL
             this.NewValue.Add(filtre.nom, null);
         }
 
-        private String _connectionString { get { return "Data Source=" + this.path + ";FailIfMissing=True;"; } }
-
-        // Connexion à la base SQLite
-        private SQLiteConnection v_connex = null;
-        // Renvoie la connection
-        private SQLiteConnection SQLC
-        {
-            get
-            {
-                if (v_connex == null)
-                {
-                    v_connex = new SQLiteConnection("Data Source=" + path + ";FailIfMissing=True;");
-                    MessageBox.Show("Création de la connection pour la base " + this.ToString());
-                }
-
-                if (v_connex.State == System.Data.ConnectionState.Closed)
-                {
-                    v_connex.Open();
-                    MessageBox.Show("Ouverture de la connection pour la base " + this.ToString());
-                }
-
-                return v_connex;
-            }
-        }
-        // Ferme la connection
-        private void closeConnection()
-        {
-            v_connex.Close();
-        }
+        private String _connectionString { get { return "Data Source=" + this.path + ";FailIfMissing=True;Version=3;Pooling=True;Max Pool Size=100;"; } }
 
         // "Schéma de base" = Nom de l'entité pour IHM, Nom de la colonne dans vueActions, Nom de la table principale, Nom de la colonne "All" dans la table Filtre
         public static DBentity contexte = new DBentity("Contextes", "Contexte", "Contextes", "AllCtxt");
@@ -93,7 +61,7 @@ namespace TaskLeader.DAL
         public static DBentity destinataire = new DBentity("Destinataires", "Destinataire", "Destinataires", "AllDest");
         public static DBentity statut = new DBentity("Statuts", "Statut", "Statuts", "AllStat");
         public static DBentity filtre = new DBentity("Filtres", "", "Filtres", "");
-        public static DBentity[] entities = { contexte, sujet, destinataire, statut};
+        public static DBentity[] entities = { contexte, sujet, destinataire, statut };
 
         #region Events
 
@@ -106,7 +74,7 @@ namespace TaskLeader.DAL
         /// </summary>
         /// <param name="entity">DBentity concernée</param>
         /// <param name="parentValue">La valeur courante de la DBentity parente</param>
-        private void OnNewValue(DBentity entity,String parentValue=null)
+        private void OnNewValue(DBentity entity, String parentValue = null)
         {
             ParentValueEventHandler handler;
             if (null != (handler = (ParentValueEventHandler)this.NewValue[entity.nom]))

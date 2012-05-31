@@ -4,6 +4,7 @@ using System.Data.SQLite;
 using System.Windows.Forms;
 using TaskLeader.BO;
 using TaskLeader.GUI;
+using System.IO;
 
 namespace TaskLeader.DAL
 {
@@ -30,12 +31,20 @@ namespace TaskLeader.DAL
 
             try
             {
-                using (SQLiteCommand SQLCmd = new SQLiteCommand(this.SQLC))
+                using (SQLiteConnection SQLC = new SQLiteConnection(this._connectionString))
                 {
-                    // Création d'une nouvelle commande à partir de la connexion
-                    SQLCmd.CommandText = requete;
-                    //Exécution de la commande
-                    return SQLCmd.ExecuteNonQuery();
+                    if (File.Exists(this.path))
+                        SQLC.Open();
+                    else
+                        throw new Exception("Base inaccessible");
+
+                    using (SQLiteCommand SQLCmd = new SQLiteCommand(SQLC))
+                    {
+                        // Création d'une nouvelle commande à partir de la connexion
+                        SQLCmd.CommandText = requete;
+                        //Exécution de la commande
+                        return SQLCmd.ExecuteNonQuery();
+                    }
                 }
             }
             catch (Exception Ex)
@@ -49,70 +58,86 @@ namespace TaskLeader.DAL
         // Insertion d'une valeur par défaut
         public void insertDefaut(object[] values)
         {
-            using (SQLiteTransaction mytransaction = this.SQLC.BeginTransaction())
+            using (SQLiteConnection SQLC = new SQLiteConnection(this._connectionString))
             {
-                using (SQLiteCommand SQLCmd = new SQLiteCommand(this.SQLC))
+                if (File.Exists(this.path))
+                    SQLC.Open();
+                else
+                    throw new Exception("Base inaccessible");
+
+                using (SQLiteTransaction mytransaction = SQLC.BeginTransaction())
                 {
-                    // On efface toutes les valeurs par défaut
-                    SQLCmd.CommandText = "UPDATE Contextes SET Defaut=NULL WHERE Defaut=1;";
-                    SQLCmd.CommandText += "UPDATE Sujets SET Defaut=NULL WHERE Defaut=1;";
-                    SQLCmd.CommandText += "UPDATE Destinataires SET Defaut=NULL WHERE Defaut=1;";
-                    SQLCmd.CommandText += "UPDATE Statuts SET Defaut=NULL WHERE Defaut=1;";
-                    SQLCmd.CommandText += "UPDATE Filtres SET Defaut=NULL WHERE Defaut=1;";
-                    SQLCmd.ExecuteNonQuery();
-
-                    // On insère les valeurs par défaut sélectionnées
-                    foreach (DBvalue DBvalue in values)
+                    using (SQLiteCommand SQLCmd = new SQLiteCommand(SQLC))
                     {
-                        SQLCmd.CommandText += "UPDATE " + DBvalue.entity.mainTable + " SET Defaut=1 WHERE Titre='" + DBvalue.value + "';";
+                        // On efface toutes les valeurs par défaut
+                        SQLCmd.CommandText = "UPDATE Contextes SET Defaut=NULL WHERE Defaut=1;";
+                        SQLCmd.CommandText += "UPDATE Sujets SET Defaut=NULL WHERE Defaut=1;";
+                        SQLCmd.CommandText += "UPDATE Destinataires SET Defaut=NULL WHERE Defaut=1;";
+                        SQLCmd.CommandText += "UPDATE Statuts SET Defaut=NULL WHERE Defaut=1;";
+                        SQLCmd.CommandText += "UPDATE Filtres SET Defaut=NULL WHERE Defaut=1;";
                         SQLCmd.ExecuteNonQuery();
-                    }
-                }
 
-                mytransaction.Commit();
+                        // On insère les valeurs par défaut sélectionnées
+                        foreach (DBvalue DBvalue in values)
+                        {
+                            SQLCmd.CommandText += "UPDATE " + DBvalue.entity.mainTable + " SET Defaut=1 WHERE Titre='" + DBvalue.value + "';";
+                            SQLCmd.ExecuteNonQuery();
+                        }
+                    }
+
+                    mytransaction.Commit();
+                }
             }
         }
 
         // Insertion en base d'un nouveau filtre
         public void insertFiltre(Filtre filtre)
         {
-            using (SQLiteTransaction mytransaction = this.SQLC.BeginTransaction())
+            using (SQLiteConnection SQLC = new SQLiteConnection(this._connectionString))
             {
-                using (SQLiteCommand SQLCmd = new SQLiteCommand(this.SQLC))
+                if (File.Exists(this.path))
+                    SQLC.Open();
+                else
+                    throw new Exception("Base inaccessible");
+
+                using (SQLiteTransaction mytransaction = SQLC.BeginTransaction())
                 {
-                    // On insère le nom du filtre
-                    String nomFiltre = "'" + filtre.nom.Replace("'", "''") + "'"; // Le titre du filtre ne doit pas contenir de quote
-                    SQLCmd.CommandText = "INSERT INTO Filtres (Titre) VALUES (" + nomFiltre + ");";
-                    SQLCmd.ExecuteNonQuery();
-
-                    // On insère ensuite dans les tables annexes les données sélectionnées
-                    foreach (Criterium critere in filtre.criteria)
+                    using (SQLiteCommand SQLCmd = new SQLiteCommand(SQLC))
                     {
-                        String selection;
-                        String table = critere.entity.mainTable;
+                        // On insère le nom du filtre
+                        String nomFiltre = "'" + filtre.nom.Replace("'", "''") + "'"; // Le titre du filtre ne doit pas contenir de quote
+                        SQLCmd.CommandText = "INSERT INTO Filtres (Titre) VALUES (" + nomFiltre + ");";
+                        SQLCmd.ExecuteNonQuery();
 
-                        // On crée la requête pour insertion des critères dans les tables annexes
-                        String requete = "INSERT INTO Filtres_cont VALUES (";
-                        requete += "(SELECT max(id) FROM Filtres),'" + table + "',(SELECT id FROM " + table + " WHERE Titre=@Titre));";
-                        // On récupère le rowid du filtre frâichement créé
-
-                        SQLCmd.CommandText = requete;
-                        SQLiteParameter p_Titre = new SQLiteParameter("@Titre");
-                        SQLCmd.Parameters.Add(p_Titre);
-
-                        foreach (String item in critere.selected)
+                        // On insère ensuite dans les tables annexes les données sélectionnées
+                        foreach (Criterium critere in filtre.criteria)
                         {
-                            selection = item.Replace("'", "''"); // On gère les simple quote
-                            p_Titre.Value = selection;
+                            String selection;
+                            String table = critere.entity.mainTable;
+
+                            // On crée la requête pour insertion des critères dans les tables annexes
+                            String requete = "INSERT INTO Filtres_cont VALUES (";
+                            requete += "(SELECT max(id) FROM Filtres),'" + table + "',(SELECT id FROM " + table + " WHERE Titre=@Titre));";
+                            // On récupère le rowid du filtre frâichement créé
+
+                            SQLCmd.CommandText = requete;
+                            SQLiteParameter p_Titre = new SQLiteParameter("@Titre");
+                            SQLCmd.Parameters.Add(p_Titre);
+
+                            foreach (String item in critere.selected)
+                            {
+                                selection = item.Replace("'", "''"); // On gère les simple quote
+                                p_Titre.Value = selection;
+                                SQLCmd.ExecuteNonQuery();
+                            }
+
+                            // On précise que la case ALL n'a pas été sélectionnée pour ce critère
+                            SQLCmd.CommandText = "UPDATE Filtres SET " + critere.entity.allColName + "=0 WHERE id = (SELECT max(id) FROM Filtres)";
                             SQLCmd.ExecuteNonQuery();
                         }
-
-                        // On précise que la case ALL n'a pas été sélectionnée pour ce critère
-                        SQLCmd.CommandText = "UPDATE Filtres SET " + critere.entity.allColName + "=0 WHERE id = (SELECT max(id) FROM Filtres)";
-                        SQLCmd.ExecuteNonQuery();
                     }
+                    mytransaction.Commit();
                 }
-                mytransaction.Commit();
             }
 
 
@@ -159,22 +184,29 @@ namespace TaskLeader.DAL
             String EncID = "";
             String titre = "'" + mail.Titre.Replace("'", "''") + "'";
 
-            using (SQLiteTransaction mytransaction = this.SQLC.BeginTransaction())
+            using (SQLiteConnection SQLC = new SQLiteConnection(this._connectionString))
             {
-                using (SQLiteCommand SQLCmd = new SQLiteCommand(this.SQLC))
+                if (File.Exists(this.path))
+                    SQLC.Open();
+                else
+                    throw new Exception("Base inaccessible");
+
+                using (SQLiteTransaction mytransaction = SQLC.BeginTransaction())
                 {
-                    // Insertion du mail
-                    SQLCmd.CommandText = "INSERT INTO Mails (Titre,StoreID,EntryID,MessageID) ";
-                    SQLCmd.CommandText += "VALUES(" + titre + "," + mail.StoreIDSQL + "," + mail.EntryIDSQL + "," + mail.MessageIDSQL + ");";
-                    SQLCmd.ExecuteNonQuery();
+                    using (SQLiteCommand SQLCmd = new SQLiteCommand(SQLC))
+                    {
+                        // Insertion du mail
+                        SQLCmd.CommandText = "INSERT INTO Mails (Titre,StoreID,EntryID,MessageID) ";
+                        SQLCmd.CommandText += "VALUES(" + titre + "," + mail.StoreIDSQL + "," + mail.EntryIDSQL + "," + mail.MessageIDSQL + ");";
+                        SQLCmd.ExecuteNonQuery();
 
-                    // Récupération du EncID
-                    SQLCmd.CommandText = "SELECT max(id) FROM Mails;";
-                    EncID = SQLCmd.ExecuteScalar().ToString();
+                        // Récupération du EncID
+                        SQLCmd.CommandText = "SELECT max(id) FROM Mails;";
+                        EncID = SQLCmd.ExecuteScalar().ToString();
+                    }
+                    mytransaction.Commit();
                 }
-                mytransaction.Commit();
             }
-
             return EncID;
         }
 
@@ -184,22 +216,29 @@ namespace TaskLeader.DAL
             String EncID = "";
             String titre = "'" + lien.Titre.Replace("'", "''") + "'";
 
-            using (SQLiteTransaction mytransaction = this.SQLC.BeginTransaction())
+            using (SQLiteConnection SQLC = new SQLiteConnection(this._connectionString))
             {
-                using (SQLiteCommand SQLCmd = new SQLiteCommand(this.SQLC))
+                if (File.Exists(this.path))
+                    SQLC.Open();
+                else
+                    throw new Exception("Base inaccessible");
+
+                using (SQLiteTransaction mytransaction = SQLC.BeginTransaction())
                 {
-                    // Insertion du mail
-                    SQLCmd.CommandText = "INSERT INTO Links (Titre,Path) ";
-                    SQLCmd.CommandText += "VALUES(" + titre + "," + lien.urlSQL + ");";
-                    SQLCmd.ExecuteNonQuery();
+                    using (SQLiteCommand SQLCmd = new SQLiteCommand(SQLC))
+                    {
+                        // Insertion du mail
+                        SQLCmd.CommandText = "INSERT INTO Links (Titre,Path) ";
+                        SQLCmd.CommandText += "VALUES(" + titre + "," + lien.urlSQL + ");";
+                        SQLCmd.ExecuteNonQuery();
 
-                    // Récupération du EncID
-                    SQLCmd.CommandText = "SELECT max(id) FROM Links;";
-                    EncID = SQLCmd.ExecuteScalar().ToString();
+                        // Récupération du EncID
+                        SQLCmd.CommandText = "SELECT max(id) FROM Links;";
+                        EncID = SQLCmd.ExecuteScalar().ToString();
+                    }
+                    mytransaction.Commit();
                 }
-                mytransaction.Commit();
             }
-
             return EncID;
         }
 
@@ -239,19 +278,27 @@ namespace TaskLeader.DAL
         {
             foreach (Enclosure pj in PJ)
             {
-                using (SQLiteTransaction mytransaction = this.SQLC.BeginTransaction())
+                using (SQLiteConnection SQLC = new SQLiteConnection(this._connectionString))
                 {
-                    using (SQLiteCommand SQLCmd = new SQLiteCommand(this.SQLC))
-                    {
-                        // Suppression de la pj dans la table correspondante
-                        SQLCmd.CommandText = "DELETE FROM " + pj.Type + " WHERE id=" + pj.ID + ";";
-                        SQLCmd.ExecuteNonQuery();
+                    if (File.Exists(this.path))
+                        SQLC.Open();
+                    else
+                        throw new Exception("Base inaccessible");
 
-                        // Suppression de l'entrée dans la table de correspondance PJ/Action
-                        SQLCmd.CommandText = "DELETE FROM Enclosures WHERE EncID=" + pj.ID + ";";
-                        SQLCmd.ExecuteNonQuery();
+                    using (SQLiteTransaction mytransaction = SQLC.BeginTransaction())
+                    {
+                        using (SQLiteCommand SQLCmd = new SQLiteCommand(SQLC))
+                        {
+                            // Suppression de la pj dans la table correspondante
+                            SQLCmd.CommandText = "DELETE FROM " + pj.Type + " WHERE id=" + pj.ID + ";";
+                            SQLCmd.ExecuteNonQuery();
+
+                            // Suppression de l'entrée dans la table de correspondance PJ/Action
+                            SQLCmd.CommandText = "DELETE FROM Enclosures WHERE EncID=" + pj.ID + ";";
+                            SQLCmd.ExecuteNonQuery();
+                        }
+                        mytransaction.Commit();
                     }
-                    mytransaction.Commit();
                 }
             }
 
@@ -265,55 +312,62 @@ namespace TaskLeader.DAL
         {
             String actionID;
 
-            using (SQLiteTransaction mytransaction = this.SQLC.BeginTransaction())
+            using (SQLiteConnection SQLC = new SQLiteConnection(this._connectionString))
             {
-                using (SQLiteCommand SQLCmd = new SQLiteCommand(this.SQLC))
+                if (File.Exists(this.path))
+                    SQLC.Open();
+                else
+                    throw new Exception("Base inaccessible");
+
+                using (SQLiteTransaction mytransaction = SQLC.BeginTransaction())
                 {
-                    //Syntaxe: INSERT INTO Actions (nom des colonnes avec ,) VALUES(valeurs avec ' et ,)     
-
-                    // Préparation des différents morceaux de la requête
-                    String insertPart = "INSERT INTO Actions (";
-                    String valuePart = " VALUES (";
-
-                    if (action.Contexte != "")
+                    using (SQLiteCommand SQLCmd = new SQLiteCommand(SQLC))
                     {
-                        insertPart += "CtxtID,";
-                        valuePart += "(SELECT id FROM Contextes WHERE Titre = " + action.ContexteSQL + "),";
+                        //Syntaxe: INSERT INTO Actions (nom des colonnes avec ,) VALUES(valeurs avec ' et ,)     
+
+                        // Préparation des différents morceaux de la requête
+                        String insertPart = "INSERT INTO Actions (";
+                        String valuePart = " VALUES (";
+
+                        if (action.Contexte != "")
+                        {
+                            insertPart += "CtxtID,";
+                            valuePart += "(SELECT id FROM Contextes WHERE Titre = " + action.ContexteSQL + "),";
+                        }
+
+                        if (action.Sujet != "")
+                        {
+                            insertPart += "SujtID,";
+                            valuePart += "(SELECT id FROM VueSujets WHERE Contexte=" + action.ContexteSQL + " AND Titre=" + action.SujetSQL + "),";
+                        }
+
+                        insertPart += "Titre,"; // On a déjà vérifié que la chaîne n'était pas nulle
+                        valuePart += action.TexteSQL + ",";
+
+                        if (action.hasDueDate)
+                        {
+                            insertPart += "DueDate,";
+                            valuePart += action.DueDateSQL + ",";
+                        }
+
+                        if (action.Destinataire != "")
+                        {
+                            insertPart += "DestID,";
+                            valuePart += "(SELECT id FROM Destinataires WHERE Titre =" + action.DestinataireSQL + "),";
+                        }
+
+                        insertPart += "StatID)";
+                        valuePart += "(SELECT id FROM Statuts WHERE Titre=" + action.StatutSQL + "))";
+
+                        SQLCmd.CommandText = insertPart + valuePart;
+                        SQLCmd.ExecuteNonQuery();
+
+                        SQLCmd.CommandText = "SELECT max(id) FROM Actions;";
+                        actionID = SQLCmd.ExecuteScalar().ToString();
                     }
-
-                    if (action.Sujet != "")
-                    {
-                        insertPart += "SujtID,";
-                        valuePart += "(SELECT id FROM VueSujets WHERE Contexte=" + action.ContexteSQL + " AND Titre=" + action.SujetSQL + "),";
-                    }
-
-                    insertPart += "Titre,"; // On a déjà vérifié que la chaîne n'était pas nulle
-                    valuePart += action.TexteSQL + ",";
-
-                    if (action.hasDueDate)
-                    {
-                        insertPart += "DueDate,";
-                        valuePart += action.DueDateSQL + ",";
-                    }
-
-                    if (action.Destinataire != "")
-                    {
-                        insertPart += "DestID,";
-                        valuePart += "(SELECT id FROM Destinataires WHERE Titre =" + action.DestinataireSQL + "),";
-                    }
-
-                    insertPart += "StatID)";
-                    valuePart += "(SELECT id FROM Statuts WHERE Titre=" + action.StatutSQL + "))";
-
-                    SQLCmd.CommandText = insertPart + valuePart;
-                    SQLCmd.ExecuteNonQuery();
-
-                    SQLCmd.CommandText = "SELECT max(id) FROM Actions;";
-                    actionID = SQLCmd.ExecuteScalar().ToString();
+                    mytransaction.Commit();
                 }
-                mytransaction.Commit();
             }
-
             this.OnActionEdited(actionID);
             return actionID;
         }

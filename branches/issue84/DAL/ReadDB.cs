@@ -46,7 +46,10 @@ namespace TaskLeader.DAL
             catch (Exception Ex)
             {
                 // On affiche l'erreur.
-                MessageBox.Show(Ex.Message + Ex.StackTrace, "Exception sur getList", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(Ex.Message + Environment.NewLine + Ex.StackTrace,
+                    "Exception sur getList",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Exclamation);
             }
 
             return liste.ToArray();
@@ -66,17 +69,22 @@ namespace TaskLeader.DAL
             {
                 using (SQLiteConnection SQLC = new SQLiteConnection(this._connectionString))
                 {
-                    SQLC.Open(); //TODO: la base est-elle accessible?
+                    if (File.Exists(this.path))
+                        SQLC.Open();
+                    else
+                        throw new Exception("Base inaccessible");
+
                     using (SQLiteDataAdapter SQLAdap = new SQLiteDataAdapter(requete, SQLC))
-                    {
-                        // Remplissage avec les données de l'adaptateur
-                        SQLAdap.Fill(data);
-                    }
+                        SQLAdap.Fill(data);// Remplissage avec les données de l'adaptateur
                 }
             }
             catch (Exception Ex)
             {
-                MessageBox.Show(Ex.Message, "Exception sur getTable", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                // On affiche l'erreur.
+                MessageBox.Show(Ex.Message + Environment.NewLine + Ex.StackTrace,
+                    "Exception sur getTable",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Exclamation);
             }
 
             return data;
@@ -93,7 +101,11 @@ namespace TaskLeader.DAL
             {
                 using (SQLiteConnection SQLC = new SQLiteConnection(this._connectionString))
                 {
-                    SQLC.Open();
+                    if (File.Exists(this.path))
+                        SQLC.Open();
+                    else
+                        throw new Exception("Base inaccessible");
+
                     using (SQLiteCommand SQLCmd = new SQLiteCommand(SQLC))
                     {
                         SQLCmd.CommandText = requete;
@@ -103,7 +115,10 @@ namespace TaskLeader.DAL
             }
             catch (Exception Ex)
             {
-                MessageBox.Show(Ex.Message, "Exception sur getInteger", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(Ex.Message + Environment.NewLine + Ex.StackTrace,
+                    "Exception sur getInteger",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Exclamation);
                 return -1;
             }
         }
@@ -117,7 +132,10 @@ namespace TaskLeader.DAL
             {
                 using (SQLiteConnection SQLC = new SQLiteConnection(this._connectionString))
                 {
-                    SQLC.Open();
+                    if (File.Exists(this.path))
+                        SQLC.Open();
+                    else
+                        throw new Exception("Base inaccessible");
 
                     if (SQLC.GetSchema("Tables").Select("Table_Name = 'Properties'").Length > 0) // Version >= 0.7                   
                         using (SQLiteCommand SQLCmd = new SQLiteCommand(SQLC))
@@ -141,7 +159,10 @@ namespace TaskLeader.DAL
             catch (SQLiteException Ex)
             {
                 // On affiche l'erreur.
-                MessageBox.Show(Ex.ErrorCode + Ex.Message + Ex.StackTrace, "Exception sur getList", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(Ex.Message + Environment.NewLine + Ex.StackTrace,
+                    "Exception sur isVersionComp",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Exclamation);
                 return false;
             }
         }
@@ -149,10 +170,31 @@ namespace TaskLeader.DAL
         // On vérifie la version la plus haute compatible avec cette base
         public String getLastVerComp()
         {
-            if (this.SQLC.GetSchema("Tables").Select("Table_Name = 'Properties'").Length > 0) // Version >= 0.7
-                return getList("SELECT Valeur FROM Properties WHERE Cle='ActionsDBVer';")[0].ToString();
-            else // Version < 0.7
-                return (String)getList("SELECT Num FROM VerComp WHERE rowid=(SELECT max(rowid) FROM VerComp)")[0];
+            try
+            {
+                using (SQLiteConnection SQLC = new SQLiteConnection(this._connectionString))
+                {
+                    if (File.Exists(this.path))
+                        SQLC.Open();
+                    else
+                        throw new Exception("Base inaccessible");
+
+                    if (SQLC.GetSchema("Tables").Select("Table_Name = 'Properties'").Length > 0) // Version >= 0.7
+                        return getList("SELECT Valeur FROM Properties WHERE Cle='ActionsDBVer';")[0].ToString();
+                    else // Version < 0.7
+                        return (String)getList("SELECT Num FROM VerComp WHERE rowid=(SELECT max(rowid) FROM VerComp)")[0];
+                }
+            }
+            catch (SQLiteException Ex)
+            {
+                // On affiche l'erreur.
+                MessageBox.Show(Ex.Message + Environment.NewLine + Ex.StackTrace,
+                    "Exception sur getInteger",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Exclamation);
+
+                return String.Empty;
+            }
         }
 
         // =====================================================================================
@@ -248,14 +290,14 @@ namespace TaskLeader.DAL
         /// Obtient un tableau de tous les filtres de la base
         /// </summary>
         /// <returns>Tableau de 'Filtre'</returns>
-        public object[] getFilters()
+        public List<Filtre> getFilters()
         {
-            ArrayList liste = new ArrayList();
+            List<Filtre> liste = new List<Filtre>();
 
             foreach (String filtreName in this.getTitres(DB.filtre))
                 liste.Add(this.getFilter(filtreName));
 
-            return liste.ToArray();
+            return liste;
         }
 
         // Renvoie un DataTable de toutes les actions

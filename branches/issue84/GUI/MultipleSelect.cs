@@ -316,7 +316,7 @@ namespace TaskLeader.GUI
             this.pictureBox1.Image = TaskLeader.Properties.Resources.database;
             this.pictureBox1.Visible = true;
 
-            this.liste.Items.AddRange(this.db.getFilters());
+            this.liste.Items.AddRange(this.db.getFilters().ToArray());
             this.db.subscribe_NewValue(DB.filtre, new ParentValueEventHandler(maj));
         }
 
@@ -326,7 +326,7 @@ namespace TaskLeader.GUI
         private void maj(String value)
         {
             this.liste.Items.Clear();
-            this.liste.Items.AddRange(this.db.getFilters());
+            this.liste.Items.AddRange(this.db.getFilters().ToArray());
         }
 
         public List<Filtre> getSelected()
