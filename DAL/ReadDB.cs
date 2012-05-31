@@ -1,29 +1,36 @@
- using System;
+using System;
+using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
 using System.Windows.Forms;
 using TaskLeader.BO;
-using TaskLeader.GUI;
 
 namespace TaskLeader.DAL
 {
     public partial class DB
-    {    
+    {
         // Méthode générique pour récupérer une seule colonne
         private object[] getList(String requete)
         {
             // Si le mode debug est activé, on affiche les requêtes
-            if(System.Configuration.ConfigurationManager.AppSettings["debugMode"] == "true")
+            if (System.Configuration.ConfigurationManager.AppSettings["debugMode"] == "true")
                 MessageBox.Show(requete, "Requête", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             ArrayList liste = new ArrayList();
 
             try
             {
-                using (SQLiteCommand SQLCmd = new SQLiteCommand(this.SQLC))
+                using (SQLiteConnection SQLC = new SQLiteConnection(this._connectionString))
                 {
+                    if (File.Exists(this.path))
+                        SQLC.Open();
+                    else
+                        throw new Exception("Base inaccessible");
+
+                    using (SQLiteCommand SQLCmd = new SQLiteCommand(SQLC))
+                    {
                     // Création d'une nouvelle commande à partir de la connexion
                     SQLCmd.CommandText = requete;
 
@@ -35,10 +42,14 @@ namespace TaskLeader.DAL
                     }
                 }
             }
+            }
             catch (Exception Ex)
             {
                 // On affiche l'erreur.
-                MessageBox.Show(Ex.Message, "Exception sur getList", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(Ex.Message + Environment.NewLine + Ex.StackTrace,
+                    "Exception sur getList",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Exclamation);
             }
 
             return liste.ToArray();
@@ -56,15 +67,24 @@ namespace TaskLeader.DAL
 
             try
             {
-                using (SQLiteDataAdapter SQLAdap = new SQLiteDataAdapter(requete,this.SQLC))
+                using (SQLiteConnection SQLC = new SQLiteConnection(this._connectionString))
                 {
-                    // Remplissage avec les données de l'adaptateur
-                    SQLAdap.Fill(data);
+                    if (File.Exists(this.path))
+                        SQLC.Open();
+                    else
+                        throw new Exception("Base inaccessible");
+
+                    using (SQLiteDataAdapter SQLAdap = new SQLiteDataAdapter(requete, SQLC))
+                        SQLAdap.Fill(data);// Remplissage avec les données de l'adaptateur
                 }
             }
             catch (Exception Ex)
             {
-                MessageBox.Show(Ex.Message, "Exception sur getTable", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                // On affiche l'erreur.
+                MessageBox.Show(Ex.Message + Environment.NewLine + Ex.StackTrace,
+                    "Exception sur getTable",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Exclamation);
             }
 
             return data;
@@ -79,50 +99,115 @@ namespace TaskLeader.DAL
 
             try
             {
-                using (SQLiteCommand SQLCmd = new SQLiteCommand(this.SQLC))
+                using (SQLiteConnection SQLC = new SQLiteConnection(this._connectionString))
                 {
+                    if (File.Exists(this.path))
+                        SQLC.Open();
+                    else
+                        throw new Exception("Base inaccessible");
+
+                    using (SQLiteCommand SQLCmd = new SQLiteCommand(SQLC))
+                    {
                     SQLCmd.CommandText = requete;
                     return Convert.ToInt32(SQLCmd.ExecuteScalar());
                 }
             }
+            }
             catch (Exception Ex)
             {
-                MessageBox.Show(Ex.Message, "Exception sur getInteger", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(Ex.Message + Environment.NewLine + Ex.StackTrace,
+                    "Exception sur getInteger",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Exclamation);
                 return -1;
             }
         }
 
 		// =====================================================================================
-		
+
         // Vérification si la table est bien compatible
         public bool isVersionComp(String version)
         {
-            if (this.SQLC.GetSchema("Tables").Select("Table_Name = 'Properties'").Length > 0) // Version >= 0.7
-                return (getList("SELECT rowid FROM Properties WHERE Cle='ActionsDBVer' AND Valeur='"+version+"';").Length > 0);
+            try
+            {
+                using (SQLiteConnection SQLC = new SQLiteConnection(this._connectionString))
+                {
+                    if (File.Exists(this.path))
+                        SQLC.Open();
             else
+                        throw new Exception("Base inaccessible");
+
+                    if (SQLC.GetSchema("Tables").Select("Table_Name = 'Properties'").Length > 0) // Version >= 0.7                   
+                        using (SQLiteCommand SQLCmd = new SQLiteCommand(SQLC))
+                        {
+                            // Création d'une nouvelle commande à partir de la connexion
+                            SQLCmd.CommandText = "SELECT rowid FROM Properties WHERE Cle='ActionsDBVer' AND Valeur='" + version + "';";
+
+                            using (SQLiteDataReader SQLDReader = SQLCmd.ExecuteReader())
+                            {
+                                ArrayList liste = new ArrayList();
+                                // La méthode Read() lit l'entrée actuelle puis renvoie true tant qu'il y a des entrées à lire.
+                                while (SQLDReader.Read())
+                                    liste.Add(SQLDReader[0]); // On retourne la seule et unique colonne
+                                return (liste.Count > 0);
+                            }
+                        }
+                    else
                 return false;
+        }
+            }
+            catch (SQLiteException Ex)
+            {
+                // On affiche l'erreur.
+                MessageBox.Show(Ex.Message + Environment.NewLine + Ex.StackTrace,
+                    "Exception sur isVersionComp",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Exclamation);
+                return false;
+            }
         }
 
         // On vérifie la version la plus haute compatible avec cette base
         public String getLastVerComp()
         {
-            if (this.SQLC.GetSchema("Tables").Select("Table_Name = 'Properties'").Length > 0) // Version >= 0.7
+            try
+            {
+                using (SQLiteConnection SQLC = new SQLiteConnection(this._connectionString))
+                {
+                    if (File.Exists(this.path))
+                        SQLC.Open();
+                    else
+                        throw new Exception("Base inaccessible");
+
+                    if (SQLC.GetSchema("Tables").Select("Table_Name = 'Properties'").Length > 0) // Version >= 0.7
                 return getList("SELECT Valeur FROM Properties WHERE Cle='ActionsDBVer';")[0].ToString();
             else // Version < 0.7
                 return (String)getList("SELECT Num FROM VerComp WHERE rowid=(SELECT max(rowid) FROM VerComp)")[0];
         }
+            }
+            catch (SQLiteException Ex)
+            {
+                // On affiche l'erreur.
+                MessageBox.Show(Ex.Message + Environment.NewLine + Ex.StackTrace,
+                    "Exception sur getInteger",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Exclamation);
+
+                return String.Empty;
+            }
+        }
 
 		// =====================================================================================
-		
+
 		// Vérification de la présence d'une nouvelle valeur d'une entité
 		public bool isNvo(DBentity entity, String title)
 		{
 			String titre = "'" + title.Replace("'", "''") + "'";
-            String requete = "SELECT count(id) FROM "+entity.mainTable+" WHERE Titre=" + titre;
+            String requete = "SELECT count(id) FROM " + entity.mainTable + " WHERE Titre=" + titre;
 
             return (getInteger(requete) == 0);
 		}
-    
+
         // Vérification de la présence d'un nouveau sujet
         public bool isNvoSujet(String contexte, String subject)
         {
@@ -136,14 +221,14 @@ namespace TaskLeader.DAL
             else
                 return false;
         }
-        
+
 		// =====================================================================================
-		
+
 		// Récupération de la liste des valeurs d'une entité. Obsolète: getCtxt, getDest, getStatut, getFilters(
-		public object[] getTitres(DBentity entity,String key=null)
+        public object[] getTitres(DBentity entity, String key = null)
 		{
-            if(entity.mainTable!="Sujets")
-			    return getList("SELECT Titre FROM "+entity.mainTable+" ORDER BY Titre ASC");
+            if (entity.mainTable != "Sujets")
+                return getList("SELECT Titre FROM " + entity.mainTable + " ORDER BY Titre ASC");
             else
                 return getList("SELECT Titre FROM VueSujets WHERE Contexte ='" + key + "' ORDER BY Titre ASC");
 		}
@@ -158,13 +243,14 @@ namespace TaskLeader.DAL
             Object[] resultat = getList("SELECT Titre FROM " + entity.mainTable + " WHERE Defaut='1'");
 
             if (resultat.Length == 1)
-                return (String)resultat[0];
+                return resultat[0] as String;
             else
                 return "";
         }
-   
+
         // Récupère un filtre en fonction de son titre
-        public Filtre getFilter(String name){
+        public Filtre getFilter(String name)
+        {
 
             // On récupère d'abord les checkbox all
             String titre = "'" + name.Replace("'", "''") + "'";
@@ -175,9 +261,9 @@ namespace TaskLeader.DAL
                 return null;
 
             DataRow resultat = results[0];
-            
+
             // On crée le filtre correspondant
-            Filtre filtre = new Filtre(this.name,(bool)resultat["AllCtxt"],(bool)resultat["AllSuj"],(bool)resultat["AllDest"],(bool)resultat["AllStat"]);
+            Filtre filtre = new Filtre(this.name, (bool)resultat["AllCtxt"], (bool)resultat["AllSuj"], (bool)resultat["AllDest"], (bool)resultat["AllStat"]);
             filtre.nom = name;
             object[] liste;
 
@@ -187,8 +273,8 @@ namespace TaskLeader.DAL
                 // Récupération du nom de la table correspondante
                 String table = critere.entity.mainTable;
                 // Création de la requête
-                requete = "SELECT TP.Titre FROM "+table+" TP, Filtres_cont TF, Filtres F ";
-                requete += "WHERE F.Titre =" + titre + " AND TF.FiltreID=F.rowid AND TF.FiltreType='"+table+"' AND TF.SelectedID=TP.rowid";
+                requete = "SELECT TP.Titre FROM " + table + " TP, Filtres_cont TF, Filtres F ";
+                requete += "WHERE F.Titre =" + titre + " AND TF.FiltreID=F.rowid AND TF.FiltreType='" + table + "' AND TF.SelectedID=TP.rowid";
                 // Récupération de la liste
                 liste = getList(requete);
 
@@ -199,19 +285,19 @@ namespace TaskLeader.DAL
 
             return filtre;
         }
-        
+
         /// <summary>
         /// Obtient un tableau de tous les filtres de la base
         /// </summary>
         /// <returns>Tableau de 'Filtre'</returns>
-        public object[] getFilters()
+        public List<Filtre> getFilters()
         {
-            ArrayList liste = new ArrayList();
+            List<Filtre> liste = new List<Filtre>();
 
             foreach (String filtreName in this.getTitres(DB.filtre))
                 liste.Add(this.getFilter(filtreName));
 
-            return liste.ToArray();
+            return liste;
         }
 
         // Renvoie un DataTable de toutes les actions
@@ -253,12 +339,12 @@ namespace TaskLeader.DAL
 
             return getTable(requete);
         }
-        
+
         /// <summary>Renvoie les données liées à une action</summary>
         /// <param name="ID">ID de l'action dans la base</param>
 		public DataRow getAction(String ID)
 		{
-			DataTable result = getTable("SELECT * FROM VueActions WHERE id='"+ID+"'");
+            DataTable result = getTable("SELECT * FROM VueActions WHERE id='" + ID + "'");
 			return result.Rows[0];
 		}
 
@@ -271,11 +357,11 @@ namespace TaskLeader.DAL
             foreach (DataRow pj in linksData.Rows)
                 switch (pj["EncType"].ToString())
                 {
-                    case("Mails"):
-                        liste.Add(new Mail(pj["EncID"].ToString(),this));
+                    case ("Mails"):
+                        liste.Add(new Mail(pj["EncID"].ToString(), this));
                         break;
-                    case("Links"):
-                        liste.Add(new Link(pj["EncID"].ToString(),this));
+                    case ("Links"):
+                        liste.Add(new Link(pj["EncID"].ToString(), this));
                         break;
                 }
 
@@ -288,7 +374,7 @@ namespace TaskLeader.DAL
 			DataTable result = getTable("SELECT * FROM Mails WHERE id=" + id);
             return result.Rows[0];
         }
-		
+
 		// Récupération des informations d'un lien à partir de son ID
 		public DataRow getLinkData(String id)
 		{
@@ -301,7 +387,7 @@ namespace TaskLeader.DAL
         {
             String words = keywords.Replace("'", "''");
 
-            String requete = "SELECT * FROM VueActions WHERE Titre LIKE '%"+words+"%' OR ";
+            String requete = "SELECT * FROM VueActions WHERE Titre LIKE '%" + words + "%' OR ";
             requete += "id IN("; // Recherche dans les titres de mail
             requete += "   SELECT E.ActionID FROM Mails M, Enclosures E";
             requete += "      WHERE M.Titre LIKE '%" + words + "%'";
