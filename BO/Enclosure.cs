@@ -35,8 +35,8 @@ namespace TaskLeader.BO
             switch (type)
             {
                 case "Mails":
-                    _iconeBig = TaskLeader.Properties.Resources.outlook;
-                    _iconeSmall = TaskLeader.Properties.Resources.outlook;
+                    _iconeBig = TaskLeader.Properties.Resources.email32;
+                    _iconeSmall = TaskLeader.Properties.Resources.email;
                     break;
 				case "Links":
 					_iconeBig = TaskLeader.Properties.Resources.link32;

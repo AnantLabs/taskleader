@@ -54,8 +54,8 @@
             this.AddMailLabel = new System.Windows.Forms.Label();
             this.linksView = new System.Windows.Forms.ListView();
             this.linksViewMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.deleteEncItem = new System.Windows.Forms.ToolStripMenuItem();
             this.renameEncItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.deleteEncItem = new System.Windows.Forms.ToolStripMenuItem();
             this.biblio = new System.Windows.Forms.ImageList(this.components);
             this.flowLayoutPanel4 = new System.Windows.Forms.FlowLayoutPanel();
             this.flowLayoutPanel5 = new System.Windows.Forms.FlowLayoutPanel();
@@ -303,11 +303,11 @@
             // 
             // addMailBut
             // 
-            this.addMailBut.Image = global::TaskLeader.Properties.Resources.outlook;
+            this.addMailBut.Image = global::TaskLeader.Properties.Resources.email_add;
             this.addMailBut.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.addMailBut.Location = new System.Drawing.Point(61, 57);
             this.addMailBut.Name = "addMailBut";
-            this.addMailBut.Size = new System.Drawing.Size(99, 30);
+            this.addMailBut.Size = new System.Drawing.Size(90, 25);
             this.addMailBut.TabIndex = 28;
             this.addMailBut.Text = "Ajouter mail";
             this.addMailBut.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -316,11 +316,11 @@
             // 
             // addLinkBut
             // 
-            this.addLinkBut.Image = global::TaskLeader.Properties.Resources.link;
+            this.addLinkBut.Image = global::TaskLeader.Properties.Resources.link_add;
             this.addLinkBut.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.addLinkBut.Location = new System.Drawing.Point(166, 57);
+            this.addLinkBut.Location = new System.Drawing.Point(157, 57);
             this.addLinkBut.Name = "addLinkBut";
-            this.addLinkBut.Size = new System.Drawing.Size(109, 30);
+            this.addLinkBut.Size = new System.Drawing.Size(115, 25);
             this.addLinkBut.TabIndex = 30;
             this.addLinkBut.Text = "Ajouter fichier/url";
             this.addLinkBut.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -330,7 +330,7 @@
             // AddMailLabel
             // 
             this.AddMailLabel.AutoSize = true;
-            this.AddMailLabel.Location = new System.Drawing.Point(281, 62);
+            this.AddMailLabel.Location = new System.Drawing.Point(278, 62);
             this.AddMailLabel.Margin = new System.Windows.Forms.Padding(3, 8, 3, 0);
             this.AddMailLabel.Name = "AddMailLabel";
             this.AddMailLabel.Size = new System.Drawing.Size(0, 13);
@@ -342,7 +342,7 @@
             this.linksView.ContextMenuStrip = this.linksViewMenu;
             this.linksView.HoverSelection = true;
             this.linksView.LabelEdit = true;
-            this.linksView.Location = new System.Drawing.Point(3, 93);
+            this.linksView.Location = new System.Drawing.Point(3, 88);
             this.linksView.MultiSelect = false;
             this.linksView.Name = "linksView";
             this.linksView.Size = new System.Drawing.Size(280, 90);
@@ -360,8 +360,16 @@
             this.renameEncItem,
             this.deleteEncItem});
             this.linksViewMenu.Name = "linksViewMenu";
-            this.linksViewMenu.Size = new System.Drawing.Size(168, 70);
+            this.linksViewMenu.Size = new System.Drawing.Size(168, 48);
             this.linksViewMenu.Opening += new System.ComponentModel.CancelEventHandler(this.linksViewMenu_Opening);
+            // 
+            // renameEncItem
+            // 
+            this.renameEncItem.Image = global::TaskLeader.Properties.Resources.textfield_rename;
+            this.renameEncItem.Name = "renameEncItem";
+            this.renameEncItem.Size = new System.Drawing.Size(167, 22);
+            this.renameEncItem.Text = "Renommer le lien";
+            this.renameEncItem.Click += new System.EventHandler(this.renameEncItem_Click);
             // 
             // deleteEncItem
             // 
@@ -370,13 +378,6 @@
             this.deleteEncItem.Size = new System.Drawing.Size(167, 22);
             this.deleteEncItem.Text = "Supprimer le lien";
             this.deleteEncItem.Click += new System.EventHandler(this.deleteEncItem_Click);
-            // 
-            // renameEncItem
-            // 
-            this.renameEncItem.Name = "renameEncItem";
-            this.renameEncItem.Size = new System.Drawing.Size(167, 22);
-            this.renameEncItem.Text = "Renommer le lien";
-            this.renameEncItem.Click += new System.EventHandler(this.renameEncItem_Click);
             // 
             // biblio
             // 
