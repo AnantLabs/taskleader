@@ -217,8 +217,8 @@ namespace TaskLeader.GUI
                         break;
                     case ("1"):
                         // Récupération de la PJ
-                        DB db = TrayIcon.dbs[this.getDataFromRow(e.RowIndex, "DB")];
-                        Enclosure pj = db.getPJ(this.getDataFromRow(e.RowIndex, "id"))[0];
+                        Enclosure pj = TrayIcon.dbs[this.getDataFromRow(e.RowIndex, "DB")].
+                            getPJ(this.getDataFromRow(e.RowIndex, "id"))[0];
                         e.Value = pj.BigIcon; // Affichage de la bonne icône
                         grilleData[e.ColumnIndex, e.RowIndex].ToolTipText = pj.Titre; // Modification du tooltip de la cellule
                         if (pj.Type == "Links")

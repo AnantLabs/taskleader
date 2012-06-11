@@ -10,7 +10,7 @@ using System.Resources;
 [assembly: AssemblyDescription("Outil de gestion d'actions")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("TdM")]
-[assembly: AssemblyProduct("TaskLeader.Properties")]
+[assembly: AssemblyProduct("TaskLeader")]
 [assembly: AssemblyCopyright("")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -30,6 +30,6 @@ using System.Resources;
 //      Numéro de build
 //      Révision
 //
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("0.7.3.0")]
+[assembly: AssemblyVersion("0.7.3.1")]
+[assembly: AssemblyFileVersion("0.7.3.1")]
 [assembly: NeutralResourcesLanguageAttribute("fr")]

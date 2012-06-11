@@ -17,14 +17,13 @@ namespace TaskLeader.GUI
         {
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                String path = openFileDialog.FileName;
-                this.pathBox.Text = path;
+                this.pathBox.Text = openFileDialog.FileName;
             }
         }
 
         private void saveBut_Click(object sender, EventArgs e)
         {
-            lien = new Link(titreBox.Text, pathBox.Text);
+            this.lien = new Link(titreBox.Text, pathBox.Text);
             this.DialogResult = DialogResult.OK;
         }
 

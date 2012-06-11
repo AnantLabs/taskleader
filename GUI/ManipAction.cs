@@ -177,6 +177,7 @@ namespace TaskLeader.GUI
 
             // Ajout du lien à la listView
             linksView.Items.Add(item);
+            this.pjListViewCol.Width = -1;
         }
 
         // Gestion de l"ouverture de menu contextuel sur la linksView

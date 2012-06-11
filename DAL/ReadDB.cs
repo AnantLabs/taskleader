@@ -16,7 +16,7 @@ namespace TaskLeader.DAL
         {
             // Si le mode debug est activé, on affiche les requêtes
             if (System.Configuration.ConfigurationManager.AppSettings["debugMode"] == "true")
-                MessageBox.Show(requete, "Requête", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(requete, "Base " + this.name, MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             ArrayList liste = new ArrayList();
 
@@ -31,17 +31,17 @@ namespace TaskLeader.DAL
 
                     using (SQLiteCommand SQLCmd = new SQLiteCommand(SQLC))
                     {
-                    // Création d'une nouvelle commande à partir de la connexion
-                    SQLCmd.CommandText = requete;
+                        // Création d'une nouvelle commande à partir de la connexion
+                        SQLCmd.CommandText = requete;
 
-                    using (SQLiteDataReader SQLDReader = SQLCmd.ExecuteReader())
-                    {
-                        // La méthode Read() lit l'entrée actuelle puis renvoie true tant qu'il y a des entrées à lire.
-                        while (SQLDReader.Read())
-                            liste.Add(SQLDReader[0]); // On retourne la seule et unique colonne
+                        using (SQLiteDataReader SQLDReader = SQLCmd.ExecuteReader())
+                        {
+                            // La méthode Read() lit l'entrée actuelle puis renvoie true tant qu'il y a des entrées à lire.
+                            while (SQLDReader.Read())
+                                liste.Add(SQLDReader[0]); // On retourne la seule et unique colonne
+                        }
                     }
                 }
-            }
             }
             catch (Exception Ex)
             {
@@ -60,7 +60,7 @@ namespace TaskLeader.DAL
         {
             // Si le mode debug est activé, on affiche les requêtes
             if (System.Configuration.ConfigurationManager.AppSettings["debugMode"] == "true")
-                MessageBox.Show(requete, "Requête", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(requete, "Base " + this.name, MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             // Création de la DataTable
             DataTable data = new DataTable();
@@ -69,10 +69,8 @@ namespace TaskLeader.DAL
             {
                 using (SQLiteConnection SQLC = new SQLiteConnection(this._connectionString))
                 {
-                    if (File.Exists(this.path))
+
                         SQLC.Open();
-                    else
-                        throw new Exception("Base inaccessible");
 
                     using (SQLiteDataAdapter SQLAdap = new SQLiteDataAdapter(requete, SQLC))
                         SQLAdap.Fill(data);// Remplissage avec les données de l'adaptateur
@@ -80,9 +78,16 @@ namespace TaskLeader.DAL
             }
             catch (Exception Ex)
             {
+                SQLiteException ex = Ex as SQLiteException;
+
                 // On affiche l'erreur.
-                MessageBox.Show(Ex.Message + Environment.NewLine + Ex.StackTrace,
-                    "Exception sur getTable",
+                String message = requete + Environment.NewLine +
+                    ex.ErrorCode.ToString() + Environment.NewLine +
+                    Ex.Message + Environment.NewLine +
+                    Ex.StackTrace;
+
+                MessageBox.Show(message,
+                    "Fichier: " + this.path,
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Exclamation);
             }
@@ -108,10 +113,10 @@ namespace TaskLeader.DAL
 
                     using (SQLiteCommand SQLCmd = new SQLiteCommand(SQLC))
                     {
-                    SQLCmd.CommandText = requete;
-                    return Convert.ToInt32(SQLCmd.ExecuteScalar());
+                        SQLCmd.CommandText = requete;
+                        return Convert.ToInt32(SQLCmd.ExecuteScalar());
+                    }
                 }
-            }
             }
             catch (Exception Ex)
             {
@@ -123,7 +128,7 @@ namespace TaskLeader.DAL
             }
         }
 
-		// =====================================================================================
+        // =====================================================================================
 
         // Vérification si la table est bien compatible
         public bool isVersionComp(String version)
@@ -134,7 +139,7 @@ namespace TaskLeader.DAL
                 {
                     if (File.Exists(this.path))
                         SQLC.Open();
-            else
+                    else
                         throw new Exception("Base inaccessible");
 
                     if (SQLC.GetSchema("Tables").Select("Table_Name = 'Properties'").Length > 0) // Version >= 0.7                   
@@ -153,8 +158,8 @@ namespace TaskLeader.DAL
                             }
                         }
                     else
-                return false;
-        }
+                        return false;
+                }
             }
             catch (SQLiteException Ex)
             {
@@ -180,10 +185,10 @@ namespace TaskLeader.DAL
                         throw new Exception("Base inaccessible");
 
                     if (SQLC.GetSchema("Tables").Select("Table_Name = 'Properties'").Length > 0) // Version >= 0.7
-                return getList("SELECT Valeur FROM Properties WHERE Cle='ActionsDBVer';")[0].ToString();
-            else // Version < 0.7
-                return (String)getList("SELECT Num FROM VerComp WHERE rowid=(SELECT max(rowid) FROM VerComp)")[0];
-        }
+                        return getList("SELECT Valeur FROM Properties WHERE Cle='ActionsDBVer';")[0].ToString();
+                    else // Version < 0.7
+                        return (String)getList("SELECT Num FROM VerComp WHERE rowid=(SELECT max(rowid) FROM VerComp)")[0];
+                }
             }
             catch (SQLiteException Ex)
             {
@@ -197,16 +202,16 @@ namespace TaskLeader.DAL
             }
         }
 
-		// =====================================================================================
+        // =====================================================================================
 
-		// Vérification de la présence d'une nouvelle valeur d'une entité
-		public bool isNvo(DBentity entity, String title)
-		{
-			String titre = "'" + title.Replace("'", "''") + "'";
+        // Vérification de la présence d'une nouvelle valeur d'une entité
+        public bool isNvo(DBentity entity, String title)
+        {
+            String titre = "'" + title.Replace("'", "''") + "'";
             String requete = "SELECT count(id) FROM " + entity.mainTable + " WHERE Titre=" + titre;
 
             return (getInteger(requete) == 0);
-		}
+        }
 
         // Vérification de la présence d'un nouveau sujet
         public bool isNvoSujet(String contexte, String subject)
@@ -222,16 +227,16 @@ namespace TaskLeader.DAL
                 return false;
         }
 
-		// =====================================================================================
+        // =====================================================================================
 
-		// Récupération de la liste des valeurs d'une entité. Obsolète: getCtxt, getDest, getStatut, getFilters(
+        // Récupération de la liste des valeurs d'une entité. Obsolète: getCtxt, getDest, getStatut, getFilters(
         public object[] getTitres(DBentity entity, String key = null)
-		{
+        {
             if (entity.mainTable != "Sujets")
                 return getList("SELECT Titre FROM " + entity.mainTable + " ORDER BY Titre ASC");
             else
                 return getList("SELECT Titre FROM VueSujets WHERE Contexte ='" + key + "' ORDER BY Titre ASC");
-		}
+        }
 
         /// <summary>
         /// Récupération des valeurs par défaut
@@ -279,8 +284,8 @@ namespace TaskLeader.DAL
                 liste = getList(requete);
 
                 // On met à jour le critère du filtre correspondant
-                foreach(String item in liste)
-                    critere.valuesSelected.Add(item);            
+                foreach (String item in liste)
+                    critere.valuesSelected.Add(item);
             }
 
             return filtre;
@@ -342,11 +347,11 @@ namespace TaskLeader.DAL
 
         /// <summary>Renvoie les données liées à une action</summary>
         /// <param name="ID">ID de l'action dans la base</param>
-		public DataRow getAction(String ID)
-		{
+        public DataRow getAction(String ID)
+        {
             DataTable result = getTable("SELECT * FROM VueActions WHERE id='" + ID + "'");
-			return result.Rows[0];
-		}
+            return result.Rows[0];
+        }
 
         /// <summary>Récupération des liens attachés à une action</summary>
         public List<Enclosure> getPJ(String actionID)
@@ -371,16 +376,16 @@ namespace TaskLeader.DAL
         // Récupération des informations d'un mail à partir de son ID
         public DataRow getMailData(String id)
         {
-			DataTable result = getTable("SELECT * FROM Mails WHERE id=" + id);
+            DataTable result = getTable("SELECT * FROM Mails WHERE id=" + id);
             return result.Rows[0];
         }
 
-		// Récupération des informations d'un lien à partir de son ID
-		public DataRow getLinkData(String id)
-		{
-			DataTable result = getTable("SELECT * FROM Links WHERE id=" + id);
+        // Récupération des informations d'un lien à partir de son ID
+        public DataRow getLinkData(String id)
+        {
+            DataTable result = getTable("SELECT * FROM Links WHERE id=" + id);
             return result.Rows[0];
-		}
+        }
 
         // Recherche de mots clés dans la colonne Action
         public DataTable searchActions(String keywords)
