@@ -53,6 +53,7 @@
             this.addLinkBut = new System.Windows.Forms.Button();
             this.AddMailLabel = new System.Windows.Forms.Label();
             this.linksView = new System.Windows.Forms.ListView();
+            this.pjListViewCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.linksViewMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.renameEncItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteEncItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -74,7 +75,7 @@
             // 
             // saveButton
             // 
-            this.saveButton.Location = new System.Drawing.Point(203, 30);
+            this.saveButton.Location = new System.Drawing.Point(217, 30);
             this.saveButton.Margin = new System.Windows.Forms.Padding(3, 3, 10, 3);
             this.saveButton.Name = "saveButton";
             this.saveButton.Size = new System.Drawing.Size(81, 23);
@@ -139,7 +140,7 @@
             this.sujetBox.FormattingEnabled = true;
             this.sujetBox.Location = new System.Drawing.Point(61, 30);
             this.sujetBox.Name = "sujetBox";
-            this.sujetBox.Size = new System.Drawing.Size(222, 21);
+            this.sujetBox.Size = new System.Drawing.Size(240, 21);
             this.sujetBox.TabIndex = 14;
             // 
             // label2
@@ -170,7 +171,7 @@
             this.contexteBox.FormattingEnabled = true;
             this.contexteBox.Location = new System.Drawing.Point(61, 3);
             this.contexteBox.Name = "contexteBox";
-            this.contexteBox.Size = new System.Drawing.Size(222, 21);
+            this.contexteBox.Size = new System.Drawing.Size(240, 21);
             this.contexteBox.TabIndex = 11;
             this.contexteBox.SelectedIndexChanged += new System.EventHandler(this.contexteBox_SelectedIndexChanged);
             // 
@@ -178,7 +179,7 @@
             // 
             this.label6.AutoSize = true;
             this.flowLayoutPanel4.SetFlowBreak(this.label6, true);
-            this.label6.Location = new System.Drawing.Point(106, 7);
+            this.label6.Location = new System.Drawing.Point(120, 7);
             this.label6.Margin = new System.Windows.Forms.Padding(3, 7, 3, 0);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(38, 13);
@@ -189,7 +190,7 @@
             // 
             this.statutBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.statutBox.FormattingEnabled = true;
-            this.statutBox.Location = new System.Drawing.Point(150, 3);
+            this.statutBox.Location = new System.Drawing.Point(164, 3);
             this.statutBox.Margin = new System.Windows.Forms.Padding(3, 3, 10, 3);
             this.statutBox.Name = "statutBox";
             this.statutBox.Size = new System.Drawing.Size(134, 21);
@@ -224,7 +225,7 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 42F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 189F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 8F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(630, 299);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(644, 299);
             this.tableLayoutPanel1.TabIndex = 27;
             // 
             // flowLayoutPanel1
@@ -288,7 +289,7 @@
             this.flowLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel3.Location = new System.Drawing.Point(333, 45);
             this.flowLayoutPanel3.Name = "flowLayoutPanel3";
-            this.flowLayoutPanel3.Size = new System.Drawing.Size(294, 183);
+            this.flowLayoutPanel3.Size = new System.Drawing.Size(308, 183);
             this.flowLayoutPanel3.TabIndex = 19;
             // 
             // linksLabel
@@ -333,26 +334,35 @@
             this.AddMailLabel.Location = new System.Drawing.Point(278, 62);
             this.AddMailLabel.Margin = new System.Windows.Forms.Padding(3, 8, 3, 0);
             this.AddMailLabel.Name = "AddMailLabel";
-            this.AddMailLabel.Size = new System.Drawing.Size(0, 13);
+            this.AddMailLabel.Size = new System.Drawing.Size(25, 13);
             this.AddMailLabel.TabIndex = 29;
+            this.AddMailLabel.Text = "add";
             this.AddMailLabel.Visible = false;
             // 
             // linksView
             // 
+            this.linksView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.pjListViewCol});
             this.linksView.ContextMenuStrip = this.linksViewMenu;
+            this.linksView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
             this.linksView.HoverSelection = true;
             this.linksView.LabelEdit = true;
             this.linksView.Location = new System.Drawing.Point(3, 88);
             this.linksView.MultiSelect = false;
             this.linksView.Name = "linksView";
-            this.linksView.Size = new System.Drawing.Size(280, 90);
+            this.linksView.Size = new System.Drawing.Size(300, 90);
             this.linksView.SmallImageList = this.biblio;
             this.linksView.TabIndex = 27;
             this.linksView.UseCompatibleStateImageBehavior = false;
-            this.linksView.View = System.Windows.Forms.View.SmallIcon;
+            this.linksView.View = System.Windows.Forms.View.Details;
             this.linksView.Visible = false;
             this.linksView.AfterLabelEdit += new System.Windows.Forms.LabelEditEventHandler(this.linksView_AfterLabelEdit);
             this.linksView.DoubleClick += new System.EventHandler(this.pj_Click);
+            // 
+            // pjListViewCol
+            // 
+            this.pjListViewCol.Text = "PJ";
+            this.pjListViewCol.Width = 25;
             // 
             // linksViewMenu
             // 
@@ -394,7 +404,7 @@
             this.flowLayoutPanel4.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
             this.flowLayoutPanel4.Location = new System.Drawing.Point(333, 234);
             this.flowLayoutPanel4.Name = "flowLayoutPanel4";
-            this.flowLayoutPanel4.Size = new System.Drawing.Size(294, 62);
+            this.flowLayoutPanel4.Size = new System.Drawing.Size(308, 62);
             this.flowLayoutPanel4.TabIndex = 20;
             // 
             // flowLayoutPanel5
@@ -406,7 +416,7 @@
             this.flowLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel5.Location = new System.Drawing.Point(3, 3);
             this.flowLayoutPanel5.Name = "flowLayoutPanel5";
-            this.flowLayoutPanel5.Size = new System.Drawing.Size(624, 36);
+            this.flowLayoutPanel5.Size = new System.Drawing.Size(638, 36);
             this.flowLayoutPanel5.TabIndex = 21;
             // 
             // pictureBox1
@@ -445,7 +455,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(630, 299);
+            this.ClientSize = new System.Drawing.Size(644, 299);
             this.Controls.Add(this.tableLayoutPanel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.MaximizeBox = false;
@@ -506,6 +516,7 @@
         private System.Windows.Forms.Label errorLabel;
         private System.Windows.Forms.Button addLinkBut;
         private System.Windows.Forms.ToolStripMenuItem renameEncItem;
+        private System.Windows.Forms.ColumnHeader pjListViewCol;
 
 
     }

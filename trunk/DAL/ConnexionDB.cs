@@ -44,8 +44,13 @@ namespace TaskLeader.DAL
 
         public DB(String chemin, String nom)
         {
-            this.path = chemin;
+            this.path = System.IO.Path.GetFullPath(chemin);
             this.name = nom;
+
+            // ConnectionString definition
+            _builder.DataSource = this.path;
+            _builder.FailIfMissing = true;
+            _builder.Pooling = true;
 
             //TODO: ne pas harcoder les différents types
             sujet.parent = contexte;
@@ -56,7 +61,8 @@ namespace TaskLeader.DAL
             this.NewValue.Add(filtre.nom, null);
         }
 
-        private String _connectionString { get { return "Data Source=" + this.path + ";FailIfMissing=True;Version=3;Pooling=True;Max Pool Size=100;"; } }
+        SQLiteConnectionStringBuilder _builder = new SQLiteConnectionStringBuilder();
+        private String _connectionString { get { return _builder.ConnectionString; } }
 
         // "Schéma de base" = Nom de l'entité pour IHM, Nom de la colonne dans vueActions, Nom de la table principale, Nom de la colonne "All" dans la table Filtre
         public static DBentity contexte = new DBentity("Contextes", "Contexte", "Contextes", "AllCtxt");
